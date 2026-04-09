@@ -200,15 +200,20 @@ export const NotificationProvider = ({ children }) => {
       fetchNotifications(token);
       fetchCounts(token);
       
+      const joinRoomId = user._id || user.id || localStorage.getItem("userId");
+      
       const handleSocketConnect = () => {
-        socket.emit("join", user._id);
+        socket.emit("join", joinRoomId);
       };
+      
       socket.on("connect", handleSocketConnect);
+      
+      // Always tell socket to join right away. If it's connected, it sends immediately.
+      // If it's disconnected or connecting, socket.io will queue it until it's connected.
+      socket.emit("join", joinRoomId);
 
       if (!socket.connected) {
         socket.connect();
-      } else {
-        socket.emit("join", user._id);
       }
       
       const processIncomingNotification = (notification) => {

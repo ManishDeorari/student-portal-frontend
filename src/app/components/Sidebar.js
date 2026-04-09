@@ -68,13 +68,15 @@ export default function Sidebar() {
     initialize();
 
     // ✅ Listen for live points updates to sync UI
-    socket.on("pointsUpdated", () => {
+    const handlePointsUpdate = () => {
       const token = localStorage.getItem("token");
       if (token) fetchUser(token);
-    });
+    };
+
+    socket.on("pointsUpdated", handlePointsUpdate);
 
     return () => {
-      socket.off("pointsUpdated");
+      socket.off("pointsUpdated", handlePointsUpdate);
     };
   }, [fetchUser]);
 

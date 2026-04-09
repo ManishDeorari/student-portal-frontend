@@ -25,21 +25,25 @@ const PointsScenario = ({ darkMode = false }) => {
     useEffect(() => {
         fetchConfig();
         
-        // Live updates for admin config changes
-        socket.on("pointsConfigUpdated", () => {
+        const handlePointsConfig = () => {
             fetchConfig();
-        });
+        };
 
-        // Live updates for personal point achievements
-        socket.on("newNotification", (notif) => {
+        const handleNewNotification = (notif) => {
             if (notif.type === "points_earned") {
                 fetchConfig();
             }
-        });
+        };
+
+        // Live updates for admin config changes
+        socket.on("pointsConfigUpdated", handlePointsConfig);
+
+        // Live updates for personal point achievements
+        socket.on("newNotification", handleNewNotification);
 
         return () => {
-            socket.off("pointsConfigUpdated");
-            socket.off("newNotification");
+            socket.off("pointsConfigUpdated", handlePointsConfig);
+            socket.off("newNotification", handleNewNotification);
         };
     }, [fetchConfig]);
 
