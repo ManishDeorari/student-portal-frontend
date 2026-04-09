@@ -89,7 +89,7 @@ const LoginPopup = () => {
                 {/* Header outside card */}
                 <div className="text-center mb-6 pt-0">
                     <h1 className="text-4xl font-black text-white tracking-tight drop-shadow-lg">
-                        Alumni Portal
+                        Student Portal
                     </h1>
                     <p className="text-white/70 mt-2 font-medium text-sm">Reconnect. Network. Grow.</p>
                 </div>

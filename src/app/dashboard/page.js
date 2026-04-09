@@ -7,7 +7,7 @@ import AdminSidebar from "../components/AdminSidebar"; // <-- Admin sidebar
 import CreatePost from "../components/Post/CreatePost";
 import PostCard from "../components/Post/PostCard";
 import { motion, AnimatePresence } from "framer-motion";
-import socket from "../../utils/socket";
+import socket from "@/utils/socket";
 
 import PointsScenario from "../components/dashboard/PointsScenario";
 import { useTheme } from "@/context/ThemeContext";

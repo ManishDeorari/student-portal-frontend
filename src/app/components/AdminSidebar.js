@@ -70,7 +70,7 @@ export default function AdminSidebar() {
     <>
       {/* Top Navbar - Desktop */}
       <nav className="hidden md:flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-6 py-4 shadow-md sticky top-0 z-50">
-        <div className="text-2xl font-bold">Alumni Portal</div>
+        <div className="text-2xl font-bold">Student Portal</div>
         <div className="flex space-x-8 items-center text-2xl">
           <Link href="/dashboard/admin" onClick={() => markSectionAsSeen("admin-requests")} className="hover:text-gray-200 relative group" title="Admin Panel">
             <FaUserShield className="transition-colors" />
@@ -127,7 +127,7 @@ export default function AdminSidebar() {
 
       {/* Mobile Top Bar */}
       <nav className="flex md:hidden justify-between items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-5 py-3 shadow-md sticky top-0 z-50">
-        <div className="text-xl font-bold">Alumni Portal (Admin)</div>
+        <div className="text-xl font-bold">Student Portal (Admin)</div>
         <button onClick={() => setShowSettings(true)} className="text-2xl pt-1">
           <FaCog className={showSettings ? "rotate-90 transition-transform duration-300" : "transition-transform duration-300"} />
         </button>

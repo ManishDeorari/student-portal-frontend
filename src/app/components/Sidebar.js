@@ -7,7 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import ResetPasswordModal from "./ResetPasswordModal";
 import SettingsDrawer from "./SettingsDrawer";
 import NotificationPreview from "./NotificationPreview";
-import { useNotifications } from "@/context/NotificationContext";
+import socket from "@/utils/socket";
 import { AnimatePresence } from "framer-motion";
 
 export default function Sidebar() {
@@ -67,17 +67,13 @@ export default function Sidebar() {
     initialize();
 
     // ✅ Listen for live points updates to sync UI
-    import("@/utils/socket").then(({ default: socket }) => {
-      socket.on("pointsUpdated", () => {
-        const token = localStorage.getItem("token");
-        if (token) fetchUser(token);
-      });
+    socket.on("pointsUpdated", () => {
+      const token = localStorage.getItem("token");
+      if (token) fetchUser(token);
     });
 
     return () => {
-      import("@/utils/socket").then(({ default: socket }) => {
-        socket.off("pointsUpdated");
-      });
+      socket.off("pointsUpdated");
     };
   }, [fetchUser]);
 
@@ -94,7 +90,7 @@ export default function Sidebar() {
       <nav className="hidden md:flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-6 py-4 shadow-md贯 sticky top-0 z-50">
         {/* Logo or App Name */}
         <div className="text-2xl font-bold">
-          Alumni Portal
+          Student Portal
         </div>
 
         {/* Navigation Links - Icon Only */}
@@ -206,7 +202,7 @@ export default function Sidebar() {
 
       {/* Mobile Top Bar - Only Logo and Settings */}
       <nav className="flex md:hidden justify-between items-center bg-gradient-to-r from-blue-600 to-purple-700 text-white px-5 py-3 shadow-md sticky top-0 z-50">
-        <div className="text-xl font-bold">Alumni Portal</div>
+        <div className="text-xl font-bold">Student Portal</div>
         <button
           onClick={() => setShowSettings(true)}
           className="text-2xl pt-1"
