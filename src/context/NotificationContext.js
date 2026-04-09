@@ -18,7 +18,7 @@ export const useNotifications = () => {
   return context;
 };
 
-export  const NotificationProvider = ({ children }) => {
+export const NotificationProvider = ({ children }) => {
   const { darkMode } = useTheme();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -209,7 +209,8 @@ export  const NotificationProvider = ({ children }) => {
       };
       socket.on("connect", handleSocketConnect);
       
-      const handleNewNotification = (notification) => {
+      const processIncomingNotification = (notification) => {
+        if (!notification) return;
         let isNew = false;
         setNotifications(prev => {
           if (prev.some(n => n?._id === notification?._id)) return prev;
@@ -227,7 +228,7 @@ export  const NotificationProvider = ({ children }) => {
             const type = notification.type;
             let theme = {
               gradient: "from-blue-500 via-purple-500 to-indigo-500",
-              icon: <ShieldAlert className="w-3.5 h-3.5" />,
+              icon: <Bell className="w-3.5 h-3.5" />,
               label: "Notification",
               accent: "text-blue-400",
               bgAccent: "bg-blue-500/20"
@@ -253,19 +254,27 @@ export  const NotificationProvider = ({ children }) => {
               theme = {
                 gradient: "from-blue-400 to-blue-600",
                 icon: <UserPlus className="w-3.5 h-3.5 text-blue-400" />,
-                label: "Network",
+                label: "Network Request",
                 accent: "text-blue-400",
                 bgAccent: "bg-blue-500/10"
               };
+            } else if (type === "connect_accept") {
+                theme = {
+                  gradient: "from-green-400 to-emerald-600",
+                  icon: <UserPlus className="w-3.5 h-3.5 text-green-400" />,
+                  label: "Network Connected",
+                  accent: "text-green-400",
+                  bgAccent: "bg-green-500/10"
+                };
             } else if (type === "group_joined" || type === "group_added") {
               theme = {
                 gradient: "from-amber-400 to-orange-500",
                 icon: <Users className="w-3.5 h-3.5" />,
-                label: "Group",
+                label: "Group Update",
                 accent: "text-amber-400",
                 bgAccent: "bg-amber-500/20"
               };
-            } else if (type.includes("post") || type.includes("comment") || type.includes("like")) {
+            } else if (type.includes("post") || type.includes("comment") || type.includes("like") || type.includes("reaction")) {
               theme = {
                 gradient: "from-pink-500 to-rose-600",
                 icon: <MessageSquare className="w-3.5 h-3.5" />,
@@ -281,6 +290,22 @@ export  const NotificationProvider = ({ children }) => {
                 accent: "text-yellow-400",
                 bgAccent: "bg-yellow-500/20"
               };
+            } else if (type === "profile_visit") {
+                theme = {
+                  gradient: "from-purple-400 to-indigo-600",
+                  icon: <Eye className="w-3.5 h-3.5 text-purple-400" />,
+                  label: "Profile Visit",
+                  accent: "text-purple-400",
+                  bgAccent: "bg-purple-500/10"
+                };
+            } else if (type === "admin_notice") {
+                theme = {
+                  gradient: "from-red-500 to-rose-700",
+                  icon: <ShieldAlert className="w-3.5 h-3.5 text-red-100" />,
+                  label: "Admin Notice",
+                  accent: "text-red-400",
+                  bgAccent: "bg-red-500/10"
+                };
             }
 
             return (
@@ -315,7 +340,7 @@ export  const NotificationProvider = ({ children }) => {
                         </p>
                       </div>
                       <p className={`text-[15px] font-black ${darkMode ? "text-white" : "text-black"} leading-none mb-1`}>
-                        {notification.sender?.name || "System"}
+                        {notification.sender?.name || (typeof notification.sender === 'string' ? 'User' : 'System')}
                       </p>
                       <p className={`text-xs font-bold ${darkMode ? "text-gray-300" : "text-slate-600"} line-clamp-3 italic leading-relaxed`}>
                         &quot;{notification.message}&quot;
@@ -345,106 +370,8 @@ export  const NotificationProvider = ({ children }) => {
         }
       };
 
-      const handleNewPost = () => setNewPostsCount(prev => prev + 1);
-      const handleNewGroupMessage = () => setUnreadGroupMessagesCount(prev => prev + 1);
-      const handleNewSignupRequest = (notification) => {
-        setAdminSignupRequestsCount(prev => prev + 1);
-        
-        // 🚀 SHOW TOAST FOR NEW SIGNUP (For Admins)
-        toast.custom((t) => (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className={`p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 shadow-2xl pointer-events-auto`}
-            >
-              <div className={`px-5 py-3 rounded-[calc(1rem-2px)] flex items-center gap-4 ${darkMode ? 'bg-black' : 'bg-white'}`}>
-                <div className={`p-2 rounded-xl bg-blue-500/10 text-blue-500`}>
-                  <UserPlus className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className={`text-[10px] font-black uppercase tracking-widest text-blue-500 mb-0.5`}>New Signup Request</p>
-                  <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-slate-900'}`}>
-                    {notification.name || "A new user"} (<span className="capitalize">{notification.role}</span>)
-                  </p>
-                </div>
-                <button 
-                  onClick={() => {
-                    toast.dismiss(t.id);
-                    window.location.href = "/dashboard/admin";
-                  }}
-                  className="p-2 ml-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold text-xs"
-                >
-                  Review
-                </button>
-              </div>
-            </motion.div>
-        ));
-      };
-
-      const handlePointsUpdated = (data) => {
-        const { awardedPoints, reason } = data;
-        
-        if (reason === "Daily Login Reward") {
-          handleDailyLoginPoints(awardedPoints);
-        } else {
-          toast.success(
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">🏆</span>
-                <span className="font-black text-yellow-400">Points Awarded!</span>
-              </div>
-              <div className="text-xs font-bold text-gray-300">
-                You earned <span className="text-blue-400">+{awardedPoints}</span> points
-              </div>
-              <div className="text-[10px] uppercase tracking-widest opacity-50 font-black">
-                {reason || "Activity Reward"}
-              </div>
-            </div>,
-            {
-              duration: 5000,
-              icon: null,
-              style: {
-                background: "#1e293b",
-                border: "1px solid #334155",
-                padding: "16px",
-                color: "#fff",
-                borderRadius: "20px"
-              }
-            }
-          );
-        }
-        
-        const token = localStorage.getItem("token");
-        if (token) fetchCounts(token);
-      };
-
-      const handleLiveNotification = (notification) => {
-        if (!notification) return;
-        let isNew = false;
-        setNotifications(prev => {
-          if (prev.some(n => n?._id === notification?._id)) return prev;
-          isNew = true;
-          return [{ ...notification, isRead: false }, ...prev];
-        });
-        
-        if (isNew) {
-          setUnreadCount(prev => prev + 1);
-          setShakeNotification(true);
-          setTimeout(() => setShakeNotification(false), 1000);
-        }
-      };
-
-      const handleForceLogout = () => {
-        console.warn("🔐 Account deleted by admin. Forcing logout...");
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        // Use window.location for a hard reset of all states
-        window.location.href = "/auth/login?reason=deleted";
-      };
-
-      socket.on("newNotification", handleNewNotification);
-      socket.on("liveNotification", handleLiveNotification);
+      socket.on("newNotification", processIncomingNotification);
+      socket.on("liveNotification", processIncomingNotification);
       socket.on("newPost", handleNewPost);
       socket.on("receiveGroupMessage", handleNewGroupMessage);
       socket.on("newSignupRequest", handleNewSignupRequest);

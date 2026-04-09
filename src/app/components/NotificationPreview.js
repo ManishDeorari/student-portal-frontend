@@ -34,6 +34,12 @@ const getNotificationIcon = (type, darkMode) => {
 };
 
 export default function NotificationPreview({ notifications = [], darkMode }) {
+    const [mounted, setMounted] = React.useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
     // Helper to check if a notification is unread
     const isNoteUnread = (note) => {
         return note.isRead === false || note.isRead === "false" || note.isRead === 0;
@@ -150,7 +156,7 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                                     <div className={`flex items-center gap-2 px-2.5 py-1 rounded-lg ${darkMode ? "bg-white/5" : "bg-slate-100"}`}>
                                                         <Clock className={`w-3 h-3 ${darkMode ? "text-white/40" : "text-slate-400"}`} />
                                                         <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-white/40" : "text-slate-500"}`}>
-                                                            {note.createdAt ? new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Recently"}
+                                                            {mounted && note.createdAt ? new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Recently"}
                                                         </span>
                                                     </div>
                                                     {unread && (

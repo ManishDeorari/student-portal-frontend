@@ -7,7 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import ResetPasswordModal from "./ResetPasswordModal";
 import SettingsDrawer from "./SettingsDrawer";
 import NotificationPreview from "./NotificationPreview";
-import { useNotifications } from "@/context/NotificationContext";
+import { useNotifications } from "../../context/NotificationContext";
 import { AnimatePresence } from "framer-motion";
 
 export default function AdminSidebar() {

@@ -40,6 +40,12 @@ const TABS = [
 import { useNotifications } from "@/context/NotificationContext";
 
 export default function NotificationsPage() {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+      setMounted(true);
+  }, []);
+
   const { darkMode } = useTheme();
   const { 
     notifications, 
@@ -509,11 +515,11 @@ export default function NotificationsPage() {
                                 <div className="flex items-center gap-3 mt-2">
                                   <span className={`text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 px-2 py-0.5 rounded-md ${darkMode ? 'bg-[#FAFAFA]/10 text-white/90' : 'bg-gray-200/50 text-slate-700'}`}>
                                     <Clock className="w-3 h-3" />
-                                    {new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    {mounted ? new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Recently"}
                                   </span>
                                   <span className={`text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 px-2 py-0.5 rounded-md ${darkMode ? 'bg-[#FAFAFA]/10 text-white/90' : 'bg-gray-200/50 text-slate-700'}`}>
                                     <Calendar className="w-3 h-3" />
-                                    {new Date(note.createdAt).toLocaleDateString()}
+                                    {mounted ? new Date(note.createdAt).toLocaleDateString() : "Date"}
                                   </span>
                                 </div>
                               </div>

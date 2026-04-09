@@ -7,6 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import ResetPasswordModal from "./ResetPasswordModal";
 import SettingsDrawer from "./SettingsDrawer";
 import NotificationPreview from "./NotificationPreview";
+import { useNotifications } from "@/context/NotificationContext";
 import socket from "@/utils/socket";
 import { AnimatePresence } from "framer-motion";
 
