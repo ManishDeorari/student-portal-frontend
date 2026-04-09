@@ -18,6 +18,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
           alt="User profile"
           width={48}
           height={48}
+          unoptimized={profileImg === "/default-profile.jpg"}
           onContextMenu={(e) => isRestricted && e.preventDefault()}
           onDragStart={(e) => isRestricted && e.preventDefault()}
           className={`rounded-full border-2 ${darkMode ? "border-blue-500" : "border-black"} object-cover w-full h-full cursor-pointer hover:scale-110 transition-transform ${isRestricted ? 'select-none' : ''}`}

@@ -29,7 +29,7 @@ export default function Sidebar() {
   
   const router = useRouter();
   const pathname = usePathname();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const fetchUser = useCallback(async (token) => {
     try {

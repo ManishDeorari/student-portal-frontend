@@ -27,7 +27,7 @@ export default function AdminSidebar() {
 
   const router = useRouter();
   const pathname = usePathname();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   
   const fetchUser = React.useCallback(async (token) => {
     try {

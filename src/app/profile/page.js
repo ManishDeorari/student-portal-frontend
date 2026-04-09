@@ -70,7 +70,7 @@ function ProfileContent() {
         return;
       }
 
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
       // 1) Define endpoints
       const profileEndpoint = viewingOther

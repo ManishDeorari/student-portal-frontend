@@ -29,7 +29,7 @@ export  const NotificationProvider = ({ children }) => {
   const [shakeNotification, setShakeNotification] = useState(false);
   const [authTrigger, setAuthTrigger] = useState(0);
   
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const userRef = useRef(null);
 
   const fetchNotifications = useCallback(async (token) => {

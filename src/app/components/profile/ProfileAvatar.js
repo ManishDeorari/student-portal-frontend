@@ -21,7 +21,7 @@ export default function ProfileAvatar({ image, onUpload, userId, isPublicView })
           alt="Profile"
           width={160}
           height={160}
-          priority={true}
+          unoptimized={profileImg === "/default-profile.jpg"}
           onClick={() => setShowViewer(true)} // open full view
           onContextMenu={(e) => isRestricted && e.preventDefault()}
           onDragStart={(e) => isRestricted && e.preventDefault()}

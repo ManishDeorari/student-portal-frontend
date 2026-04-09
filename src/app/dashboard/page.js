@@ -61,7 +61,7 @@ export default function DashboardPage() {
         }
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/user/me`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/user/me`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (!res.ok) throw new Error("User fetch failed");
@@ -89,7 +89,7 @@ export default function DashboardPage() {
     setIsFetchingFeed(true);
     try {
       const token = localStorage.getItem("token");
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       let url = `${API_URL}/api/posts?page=${pageNum}&limit=${limit}`;
       let headers = { Authorization: `Bearer ${token}` };
 
