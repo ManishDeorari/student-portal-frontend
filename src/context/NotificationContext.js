@@ -200,7 +200,9 @@ export const NotificationProvider = ({ children }) => {
       fetchNotifications(token);
       fetchCounts(token);
       
-      if (socket.connected) {
+      if (!socket.connected) {
+        socket.connect();
+      } else {
         socket.emit("join", user._id);
       }
       
@@ -478,6 +480,9 @@ export const NotificationProvider = ({ children }) => {
       setNewPostsCount(0);
       setAdminSignupRequestsCount(0);
       userRef.current = null;
+      if (socket.connected) {
+        socket.disconnect();
+      }
     }
   }, [fetchNotifications, fetchCounts, authTrigger, darkMode]);
 
