@@ -11,12 +11,12 @@ import { useNotifications } from "../../context/NotificationContext";
 import { AnimatePresence } from "framer-motion";
 
 export default function AdminSidebar() {
-  const { 
-    unreadCount, 
-    notifications, 
-    pendingRequestsCount, 
-    unreadGroupMessagesCount, 
-    newPostsCount, 
+  const {
+    unreadCount,
+    notifications,
+    pendingRequestsCount,
+    unreadGroupMessagesCount,
+    newPostsCount,
     adminSignupRequestsCount,
     markSectionAsSeen
   } = useNotifications();
@@ -28,7 +28,7 @@ export default function AdminSidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  
+
   const fetchUser = React.useCallback(async (token) => {
     try {
       const res = await fetch(`${API_URL}/api/user/me`, {
@@ -81,8 +81,8 @@ export default function AdminSidebar() {
             {newPostsCount > 0 && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>}
           </Link>
           <Link href="/dashboard/network" onClick={() => markSectionAsSeen("network")} className="hover:text-gray-200 relative group" title="Network">
-            <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-colors">
-              <path d="M6.5 8.75V12.25L10 14.5L13.5 12.25V8.75L10 6.5L6.5 8.75ZM6.5 8.75L3.813 6.18M17.696 18.815L11.728 13.389M18.5 10.5H13.5M7.952 13.184L3.682 17.739M16.318 4.261L12.632 8.192M4.5 5.75L2.5 7L0.5 5.75V3.75L2.5 2.5L4.5 3.75V5.75ZM19.5 3.75L17.5 5L15.5 3.75V1.75L17.5 0.5L19.5 1.75V3.75ZM4.5 20.25L2.5 21.5L0.5 20.25V18.25L2.5 17L4.5 18.25V20.25ZM21 21.25L19 22.5L17 21.25V19.25L19 18L21 19.25V21.25ZM22.5 11.5L20.5 12.75L18.5 11.5V9.5L20.5 8.25L22.5 9.5V11.5Z" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg width="231" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-colors">
+              <path d="M6.5 8.75V12.25L10 14.5L13.5 12.25V8.75L10 6.5L6.5 8.75ZM6.5 8.75L3.813 6.18M17.696 18.815L11.728 13.389M18.5 10.5H13.5M7.952 13.184L3.682 17.739M16.318 4.261L12.632 8.192M4.5 5.75L2.5 7L0.5 5.75V3.75L2.5 2.5L4.5 3.75V5.75ZM19.5 3.75L17.5 5L15.5 3.75V1.75L17.5 0.5L19.5 1.75V3.75ZM4.5 20.25L2.5 21.5L0.5 20.25V18.25L2.5 17L4.5 18.25V20.25ZM21 21.25L19 22.5L17 21.25V19.25L19 18L21 19.25V21.25ZM22.5 11.5L20.5 12.75L18.5 11.5V9.5L20.5 8.25L22.5 9.5V11.5Z" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             {pendingRequestsCount > 0 && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>}
           </Link>
@@ -141,7 +141,7 @@ export default function AdminSidebar() {
         </Link>
         <Link href="/dashboard/network" onClick={() => markSectionAsSeen("network")} className={`${pathname === "/dashboard/network" ? "text-blue-600 dark:text-blue-400" : ""} relative tap-target active:scale-90 transition-transform`}>
           <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" className="">
-            <path d="M6.5 8.75V12.25L10 14.5L13.5 12.25V8.75L10 6.5L6.5 8.75ZM6.5 8.75L3.813 6.18M17.696 18.815L11.728 13.389M18.5 10.5H13.5M7.952 13.184L3.682 17.739M16.318 4.261L12.632 8.192M4.5 5.75L2.5 7L0.5 5.75V3.75L2.5 2.5L4.5 3.75V5.75ZM19.5 3.75L17.5 5L15.5 3.75V1.75L17.5 0.5L19.5 1.75V3.75ZM4.5 20.25L2.5 21.5L0.5 20.25V18.25L2.5 17L4.5 18.25V20.25ZM21 21.25L19 22.5L17 21.25V19.25L19 18L21 19.25V21.25ZM22.5 11.5L20.5 12.75L18.5 11.5V9.5L20.5 8.25L22.5 9.5V11.5Z" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M6.5 8.75V12.25L10 14.5L13.5 12.25V8.75L10 6.5L6.5 8.75ZM6.5 8.75L3.813 6.18M17.696 18.815L11.728 13.389M18.5 10.5H13.5M7.952 13.184L3.682 17.739M16.318 4.261L12.632 8.192M4.5 5.75L2.5 7L0.5 5.75V3.75L2.5 2.5L4.5 3.75V5.75ZM19.5 3.75L17.5 5L15.5 3.75V1.75L17.5 0.5L19.5 1.75V3.75ZM4.5 20.25L2.5 21.5L0.5 20.25V18.25L2.5 17L4.5 18.25V20.25ZM21 21.25L19 22.5L17 21.25V19.25L19 18L21 19.25V21.25ZM22.5 11.5L20.5 12.75L18.5 11.5V9.5L20.5 8.25L22.5 9.5V11.5Z" stroke="currentColor" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           {pendingRequestsCount > 0 && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>}
         </Link>
