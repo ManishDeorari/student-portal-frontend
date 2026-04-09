@@ -370,6 +370,87 @@ export const NotificationProvider = ({ children }) => {
         }
       };
 
+      const handleNewPost = () => setNewPostsCount(prev => prev + 1);
+      const handleNewGroupMessage = () => setUnreadGroupMessagesCount(prev => prev + 1);
+      const handleNewSignupRequest = (notification) => {
+        setAdminSignupRequestsCount(prev => prev + 1);
+        
+        // 🚀 SHOW TOAST FOR NEW SIGNUP (For Admins)
+        toast.custom((t) => (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className={`p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 shadow-2xl pointer-events-auto`}
+            >
+              <div className={`px-5 py-3 rounded-[calc(1rem-2px)] flex items-center gap-4 ${darkMode ? 'bg-black' : 'bg-white'}`}>
+                <div className={`p-2 rounded-xl bg-blue-500/10 text-blue-500`}>
+                  <UserPlus className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className={`text-[10px] font-black uppercase tracking-widest text-blue-500 mb-0.5`}>New Signup Request</p>
+                  <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-slate-900'}`}>
+                    {notification.name || "A new user"} (<span className="capitalize">{notification.role}</span>)
+                  </p>
+                </div>
+                <button 
+                  onClick={() => {
+                    toast.dismiss(t.id);
+                    window.location.href = "/dashboard/admin";
+                  }}
+                  className="p-2 ml-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold text-xs"
+                >
+                  Review
+                </button>
+              </div>
+            </motion.div>
+        ));
+      };
+
+      const handlePointsUpdated = (data) => {
+        const { awardedPoints, reason } = data;
+        
+        if (reason === "Daily Login Reward") {
+          handleDailyLoginPoints(awardedPoints);
+        } else {
+          toast.success(
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🏆</span>
+                <span className="font-black text-yellow-400">Points Awarded!</span>
+              </div>
+              <div className="text-xs font-bold text-gray-300">
+                You earned <span className="text-blue-400">+{awardedPoints}</span> points
+              </div>
+              <div className="text-[10px] uppercase tracking-widest opacity-50 font-black">
+                {reason || "Activity Reward"}
+              </div>
+            </div>,
+            {
+              duration: 5000,
+              icon: null,
+              style: {
+                background: "#1e293b",
+                border: "1px solid #334155",
+                padding: "16px",
+                color: "#fff",
+                borderRadius: "20px"
+              }
+            }
+          );
+        }
+        
+        const token = localStorage.getItem("token");
+        if (token) fetchCounts(token);
+      };
+
+      const handleForceLogout = () => {
+        console.warn("🔐 Account deleted by admin. Forcing logout...");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/auth/login?reason=deleted";
+      };
+
       socket.on("newNotification", processIncomingNotification);
       socket.on("liveNotification", processIncomingNotification);
       socket.on("newPost", handleNewPost);
@@ -380,8 +461,8 @@ export const NotificationProvider = ({ children }) => {
 
       return () => {
         socket.off("connect", handleSocketConnect);
-        socket.off("newNotification", handleNewNotification);
-        socket.off("liveNotification", handleLiveNotification);
+        socket.off("newNotification", processIncomingNotification);
+        socket.off("liveNotification", processIncomingNotification);
         socket.off("newPost", handleNewPost);
         socket.off("receiveGroupMessage", handleNewGroupMessage);
         socket.off("newSignupRequest", handleNewSignupRequest);
