@@ -200,16 +200,16 @@ export const NotificationProvider = ({ children }) => {
       fetchNotifications(token);
       fetchCounts(token);
       
+      const handleSocketConnect = () => {
+        socket.emit("join", user._id);
+      };
+      socket.on("connect", handleSocketConnect);
+
       if (!socket.connected) {
         socket.connect();
       } else {
         socket.emit("join", user._id);
       }
-      
-      const handleSocketConnect = () => {
-        socket.emit("join", user._id);
-      };
-      socket.on("connect", handleSocketConnect);
       
       const processIncomingNotification = (notification) => {
         if (!notification) return;
