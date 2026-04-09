@@ -10,10 +10,10 @@ import { useTheme } from "@/context/ThemeContext";
 
 const sectionVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 50 },
-  visible: { 
-    opacity: 1, 
-    scale: 1, 
-    y: 0, 
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
     transition: { duration: 0.8, ease: "easeOut" },
     willChange: "opacity, transform"
   },
@@ -31,9 +31,9 @@ const SectionWrapper = ({ title, subtitle, icon: Icon, children, id, darkMode })
       <div className="text-center mb-12">
         {Icon && (
           <div className="inline-flex p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl mb-6 shadow-xl">
-             <div className={`${darkMode ? "bg-black/40" : "bg-white/40"} backdrop-blur-md p-4 rounded-[calc(1rem-1.5px)]`}>
-                <Icon size={32} className="text-blue-500" />
-             </div>
+            <div className={`${darkMode ? "bg-black/40" : "bg-white/40"} backdrop-blur-md p-4 rounded-[calc(1rem-1.5px)]`}>
+              <Icon size={32} className="text-blue-500" />
+            </div>
           </div>
         )}
         <h2 className="text-5xl md:text-6xl font-black tracking-tighter mb-4 italic text-white">
@@ -69,9 +69,9 @@ export default function HomePage() {
     if (!email) return toast.error("Please enter your email");
     setIsSending(true);
     setTimeout(() => {
-        toast.success("✅ Inquiry Sent Successfully! We'll reach out soon.");
-        setEmail("");
-        setIsSending(false);
+      toast.success("✅ Inquiry Sent Successfully! We'll reach out soon.");
+      setEmail("");
+      setIsSending(false);
     }, 1500);
   };
 
@@ -96,14 +96,14 @@ export default function HomePage() {
                 <FaRocket className="text-blue-500" />
               </div>
             </div>
-            <h1 className="text-xl font-black tracking-tighter uppercase italic">Alumni Portal</h1>
+            <h1 className="text-xl font-black tracking-tighter uppercase italic">Student Portal</h1>
           </div>
-          
+
           <div className="hidden lg:flex items-center gap-8">
             {["About", "Events", "Testimonials", "Contact"].map((item) => (
-              <a 
-                key={item} 
-                href={`#${item.toLowerCase()}`} 
+              <a
+                key={item}
+                href={`#${item.toLowerCase()}`}
                 className="text-[10px] font-black uppercase tracking-[0.3em] transition-colors relative group text-white/50 hover:text-white"
               >
                 {item}
@@ -122,40 +122,40 @@ export default function HomePage() {
       {/* 🌌 Hero Section */}
       <section className="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-20">
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 1 }}
-           className="relative z-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="relative z-10"
         >
           <div className="inline-flex px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.4em] mb-8 shadow-2xl bg-white/10 border border-white/20 text-white leading-none">
-             ✨ Reconnect • Network • Grow ✨
+            ✨ Reconnect • Network • Grow ✨
           </div>
           <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-6 leading-none italic uppercase text-white">
-             ALUMNI<br/>
-             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">PORTAL</span>
+            STUDENT<br />
+            <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">PORTAL</span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg md:text-2xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-12 text-white/60">
-            The next generation professional ecosystem<br/>for university graduates worldwide.
+            The next generation professional ecosystem<br />for active students worldwide.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link href="/auth/signup" className="group relative p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl shadow-3xl transform hover:-translate-y-2 transition-all duration-500">
-               <div className="bg-black/40 hover:bg-transparent backdrop-blur-md px-12 py-6 rounded-[calc(1rem-2px)] flex items-center gap-4 transition-all">
-                  <span className="text-white font-black text-sm uppercase tracking-[0.4em]">Create Account</span>
-                  <ArrowRight className="text-blue-500 group-hover:text-white transition-colors" />
-               </div>
+              <div className="bg-black/40 hover:bg-transparent backdrop-blur-md px-12 py-6 rounded-[calc(1rem-2px)] flex items-center gap-4 transition-all">
+                <span className="text-white font-black text-sm uppercase tracking-[0.4em]">Create Account</span>
+                <ArrowRight className="text-blue-500 group-hover:text-white transition-colors" />
+              </div>
             </Link>
-            
+
             <Link href="/auth/login" className="p-[1.5px] bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 rounded-2xl hover:from-blue-500 hover:to-pink-500 transition-all shadow-xl active:scale-95 group">
-               <div className="bg-black/60 px-8 py-5 rounded-[calc(1rem-1.5px)] flex items-center gap-3 transition-colors backdrop-blur-lg">
-                  <ShieldCheck className="text-blue-500" /> 
-                  <span className="text-white font-black text-xs uppercase tracking-[0.3em]">Member Login</span>
-               </div>
+              <div className="bg-black/60 px-8 py-5 rounded-[calc(1rem-1.5px)] flex items-center gap-3 transition-colors backdrop-blur-lg">
+                <ShieldCheck className="text-blue-500" />
+                <span className="text-white font-black text-xs uppercase tracking-[0.3em]">Member Login</span>
+              </div>
             </Link>
           </div>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10"
@@ -167,91 +167,91 @@ export default function HomePage() {
       {/* 🔷 Sections */}
       <SectionWrapper id="about" title="Our Mission" subtitle="Community First" icon={FaGlobe} darkMode={darkMode}>
         <div className="grid md:grid-cols-2 gap-16 items-center text-left">
-           <div className={`space-y-8 text-xl md:text-2xl font-bold leading-relaxed ${darkMode ? "text-white" : "text-slate-800"}`}>
-              <p>
-                Empowering graduates through technology, mentorship, and global professional networking.
-              </p>
-              <p className={`text-base font-medium leading-loose ${darkMode ? "text-white/40" : "text-slate-500"}`}>
-                The Alumni Portal serves as the primary bridge between our university's legacy and its future. We provide tools for seamless networking, career acceleration, and lifecycle engagement for every graduate.
-              </p>
-              <div className="flex flex-wrap gap-5 pt-4">
-                 <div className={`px-5 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-blue-400 shadow-xl" : "bg-slate-50 border-slate-200 text-blue-700 shadow-lg"}`}>✨ Global Elite</div>
-                 <div className={`px-5 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-purple-400 shadow-xl" : "bg-slate-50 border-slate-200 text-purple-700 shadow-lg"}`}>🔥 Future Proof</div>
-              </div>
-           </div>
-           <div className="relative group">
-              <div className={`absolute inset-0 blur-[80px] rounded-full opacity-40 group-hover:opacity-70 transition-all duration-700 ${darkMode ? "bg-blue-600" : "bg-blue-400"}`} />
-              <div className={`relative p-12 border rounded-[3rem] shadow-4xl flex items-center justify-center bg-white/5 border-white/10 ${!darkMode && "bg-white/40 border-slate-200 backdrop-blur-md"}`}>
-                  <FaRocket size={100} className="text-blue-500 group-hover:scale-125 transition-transform duration-700 rotate-12 group-hover:rotate-0" />
-              </div>
-           </div>
+          <div className={`space-y-8 text-xl md:text-2xl font-bold leading-relaxed ${darkMode ? "text-white" : "text-slate-800"}`}>
+            <p>
+              Empowering graduates through technology, mentorship, and global professional networking.
+            </p>
+            <p className={`text-base font-medium leading-loose ${darkMode ? "text-white/40" : "text-slate-500"}`}>
+              The Student Portal serves as the primary bridge between our university's current academic life and professional success. We provide tools for seamless networking, career acceleration, and lifecycle engagement for every student.
+            </p>
+            <div className="flex flex-wrap gap-5 pt-4">
+              <div className={`px-5 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-blue-400 shadow-xl" : "bg-slate-50 border-slate-200 text-blue-700 shadow-lg"}`}>✨ Global Elite</div>
+              <div className={`px-5 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-purple-400 shadow-xl" : "bg-slate-50 border-slate-200 text-purple-700 shadow-lg"}`}>🔥 Future Proof</div>
+            </div>
+          </div>
+          <div className="relative group">
+            <div className={`absolute inset-0 blur-[80px] rounded-full opacity-40 group-hover:opacity-70 transition-all duration-700 ${darkMode ? "bg-blue-600" : "bg-blue-400"}`} />
+            <div className={`relative p-12 border rounded-[3rem] shadow-4xl flex items-center justify-center bg-white/5 border-white/10 ${!darkMode && "bg-white/40 border-slate-200 backdrop-blur-md"}`}>
+              <FaRocket size={100} className="text-blue-500 group-hover:scale-125 transition-transform duration-700 rotate-12 group-hover:rotate-0" />
+            </div>
+          </div>
         </div>
       </SectionWrapper>
 
       <SectionWrapper id="events" title="Events" subtitle="Meet the Community" icon={FaCalendarAlt} darkMode={darkMode}>
         <div className="grid md:grid-cols-3 gap-8 text-left">
-           {[
-             { title: "Alumni Meet 2026", date: "June 15, 2026", type: "Conference" },
-             { title: "Innovation Day", date: "April 20, 2026", type: "Workshop" },
-             { title: "Founder's Gala", date: "Aug 10, 2026", type: "Social" }
-           ].map((ev, i) => (
-             <div key={i} className="p-[1.5px] bg-gradient-to-b from-blue-500/30 to-transparent rounded-[2.5rem] hover:from-blue-500 transition-all group shadow-2xl">
-                <div className={`h-full p-10 rounded-[calc(2.5rem-1.5px)] relative overflow-hidden ${darkMode ? "bg-slate-950" : "bg-white"}`}>
-                    <p className="text-blue-500 text-[10px] font-black uppercase tracking-[0.3em] mb-3">{ev.type}</p>
-                    <h3 className={`text-2xl font-black mb-5 italic ${darkMode ? "text-white" : "text-slate-950"}`}>{ev.title}</h3>
-                    <p className={`text-[10px] font-bold uppercase tracking-widest mb-8 ${darkMode ? "text-white/40" : "text-slate-400"}`}>{ev.date}</p>
-                    <button onClick={handleActionClick} className={`text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 group-hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-slate-950"}`}>
-                       RSVP NOW <ArrowRight size={14} className="text-blue-500" />
-                    </button>
-                </div>
-             </div>
-           ))}
+          {[
+            { title: "Student Meet 2026", date: "June 15, 2026", type: "Conference" },
+            { title: "Innovation Day", date: "April 20, 2026", type: "Workshop" },
+            { title: "Student Gala", date: "Aug 10, 2026", type: "Social" }
+          ].map((ev, i) => (
+            <div key={i} className="p-[1.5px] bg-gradient-to-b from-blue-500/30 to-transparent rounded-[2.5rem] hover:from-blue-500 transition-all group shadow-2xl">
+              <div className={`h-full p-10 rounded-[calc(2.5rem-1.5px)] relative overflow-hidden ${darkMode ? "bg-slate-950" : "bg-white"}`}>
+                <p className="text-blue-500 text-[10px] font-black uppercase tracking-[0.3em] mb-3">{ev.type}</p>
+                <h3 className={`text-2xl font-black mb-5 italic ${darkMode ? "text-white" : "text-slate-950"}`}>{ev.title}</h3>
+                <p className={`text-[10px] font-bold uppercase tracking-widest mb-8 ${darkMode ? "text-white/40" : "text-slate-400"}`}>{ev.date}</p>
+                <button onClick={handleActionClick} className={`text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 group-hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-slate-950"}`}>
+                  RSVP NOW <ArrowRight size={14} className="text-blue-500" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </SectionWrapper>
 
       <SectionWrapper id="testimonials" title="Stories" subtitle="Voices of Impact" icon={FaQuoteLeft} darkMode={darkMode}>
         <div className="max-w-3xl mx-auto text-center space-y-10 py-10">
-           <FaQuoteLeft size={60} className="text-blue-500 opacity-20 mx-auto" />
-           <p className={`text-2xl md:text-4xl font-black leading-tight italic ${darkMode ? "text-white/90" : "text-slate-900"}`}>
-             "Authentic connections are the foundation of any great career. This portal makes it effortless."
-           </p>
-           <div className="flex items-center justify-center gap-6 pt-6">
-              <div className="w-16 h-16 p-[2px] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
-                 <div className="w-full h-full bg-slate-800 rounded-full flex items-center justify-center">
-                    <User size={28} className="text-slate-400" />
-                 </div>
+          <FaQuoteLeft size={60} className="text-blue-500 opacity-20 mx-auto" />
+          <p className={`text-2xl md:text-4xl font-black leading-tight italic ${darkMode ? "text-white/90" : "text-slate-900"}`}>
+            "Authentic connections are the foundation of any great career. This portal makes it effortless."
+          </p>
+          <div className="flex items-center justify-center gap-6 pt-6">
+            <div className="w-16 h-16 p-[2px] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+              <div className="w-full h-full bg-slate-800 rounded-full flex items-center justify-center">
+                <User size={28} className="text-slate-400" />
               </div>
-              <div className="text-left">
-                 <p className={`font-black uppercase tracking-widest text-xs ${darkMode ? "text-white" : "text-slate-950"}`}>Manish Chandra Deorari</p>
-                 <p className={`font-bold uppercase tracking-widest text-[10px] ${darkMode ? "text-white" : "text-slate-900"}`}>MCA - 2024-26</p>
-              </div>
-           </div>
+            </div>
+            <div className="text-left">
+              <p className={`font-black uppercase tracking-widest text-xs ${darkMode ? "text-white" : "text-slate-950"}`}>Manish Chandra Deorari</p>
+              <p className={`font-bold uppercase tracking-widest text-[10px] ${darkMode ? "text-white" : "text-slate-900"}`}>MCA - 2024-26</p>
+            </div>
+          </div>
         </div>
       </SectionWrapper>
 
       <SectionWrapper id="contact" title="Connect" subtitle="Reach Out" icon={Mail} darkMode={darkMode}>
         <div className="max-w-2xl mx-auto text-center">
-           <p className={`mb-12 font-bold uppercase tracking-widest text-xs italic ${darkMode ? "text-white/40" : "text-slate-500"}`}>
-             Have questions about registration or events?
-           </p>
-           <form onSubmit={handleContactSubmit} className="flex flex-col sm:flex-row items-stretch gap-5">
-              <div className="flex-1 p-[1.5px] bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 rounded-3xl focus-within:from-blue-500 focus-within:to-purple-500 transition-all shadow-3xl">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@university.edu"
-                  className={`w-full px-8 py-5 rounded-[calc(1.5rem-1.5px)] text-sm font-black outline-none border-none ${darkMode ? "bg-black text-white" : "bg-white text-slate-950"}`}
-                />
-              </div>
-              <button 
-                type="submit"
-                disabled={isSending}
-                className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-12 py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-[0.4em] shadow-4xl active:scale-95 disabled:opacity-50 transition-all"
-              >
-                {isSending ? "..." : "Send Request"}
-              </button>
-           </form>
+          <p className={`mb-12 font-bold uppercase tracking-widest text-xs italic ${darkMode ? "text-white/40" : "text-slate-500"}`}>
+            Have questions about registration or events?
+          </p>
+          <form onSubmit={handleContactSubmit} className="flex flex-col sm:flex-row items-stretch gap-5">
+            <div className="flex-1 p-[1.5px] bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 rounded-3xl focus-within:from-blue-500 focus-within:to-purple-500 transition-all shadow-3xl">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@university.edu"
+                className={`w-full px-8 py-5 rounded-[calc(1.5rem-1.5px)] text-sm font-black outline-none border-none ${darkMode ? "bg-black text-white" : "bg-white text-slate-950"}`}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isSending}
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-12 py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-[0.4em] shadow-4xl active:scale-95 disabled:opacity-50 transition-all"
+            >
+              {isSending ? "..." : "Send Request"}
+            </button>
+          </form>
         </div>
       </SectionWrapper>
 
@@ -259,10 +259,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row justify-between items-center gap-16 text-center lg:text-left">
           <div className="space-y-8">
             <div>
-               <h1 className="text-4xl font-black italic tracking-tighter uppercase mb-4">ALUMNI PORTAL</h1>
-               <p className={`text-[11px] font-black uppercase tracking-[0.2em] max-w-sm ${darkMode ? "text-white/20" : "text-slate-400"}`}>
-                 Empowering university graduates through a premium digital ecosystem.
-               </p>
+              <h1 className="text-4xl font-black italic tracking-tighter uppercase mb-4">STUDENT PORTAL</h1>
+              <p className={`text-[11px] font-black uppercase tracking-[0.2em] max-w-sm ${darkMode ? "text-white/20" : "text-slate-400"}`}>
+                Empowering university students through a premium digital ecosystem.
+              </p>
             </div>
             <div className="flex justify-center lg:justify-start gap-8">
               {[FaFacebook, FaTwitter, FaInstagram, FaLinkedin].map((Icon, i) => (
@@ -271,25 +271,25 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex flex-col items-center lg:items-end">
-             <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full mb-8 shadow-3xl">
-                <div className={`px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest italic ${darkMode ? "bg-black" : "bg-white"}`}>
-                   Graphic ERA Hill University
-                </div>
-             </div>
-             <p className="text-[9px] font-black uppercase tracking-[0.6em] text-white">
-               © 2025 ALL RIGHTS RESERVED
-             </p>
+            <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full mb-8 shadow-3xl">
+              <div className={`px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-widest italic ${darkMode ? "bg-black" : "bg-white"}`}>
+                Graphic ERA Hill University
+              </div>
+            </div>
+            <p className="text-[9px] font-black uppercase tracking-[0.6em] text-white">
+              © 2025 ALL RIGHTS RESERVED
+            </p>
           </div>
         </div>
       </footer>
 
       <div className="fixed bottom-8 right-8 z-[100] flex flex-col gap-4">
-          <button
-              onClick={toggleDarkMode}
-              className={`p-5 rounded-[2rem] backdrop-blur-xl shadow-4xl border-2 transition-all duration-700 hover:scale-110 active:scale-90 ${darkMode ? "bg-white/10 border-white/20 text-yellow-400" : "bg-slate-950/10 border-slate-950/20 text-slate-950 hover:bg-slate-950 hover:text-white"}`}
-          >
-              {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
+        <button
+          onClick={toggleDarkMode}
+          className={`p-5 rounded-[2rem] backdrop-blur-xl shadow-4xl border-2 transition-all duration-700 hover:scale-110 active:scale-90 ${darkMode ? "bg-white/10 border-white/20 text-yellow-400" : "bg-slate-950/10 border-slate-950/20 text-slate-950 hover:bg-slate-950 hover:text-white"}`}
+        >
+          {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+        </button>
       </div>
     </div>
   );

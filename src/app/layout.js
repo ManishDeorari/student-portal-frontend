@@ -18,13 +18,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Alumni Portal",
-  description: "Connect with your alumni network",
+  title: "Student Portal",
+  description: "Connect with your student network",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Alumni Portal",
+    title: "Student Portal",
   },
 };
 

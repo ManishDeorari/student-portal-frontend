@@ -130,7 +130,7 @@ function LoginContent() {
           const seconds = Math.round(delay / 1000);
           console.warn(`⚠️ Server may be waking up. Retry ${retryCount + 1}/${RETRY_DELAYS.length} in ${seconds}s...`);
           setError(`Server is starting up... retrying in ${seconds}s (attempt ${retryCount + 1}/${RETRY_DELAYS.length})`);
-          
+
           // Fire another wake ping during the wait
           wakeServer();
           await new Promise(resolve => setTimeout(resolve, delay));
@@ -459,10 +459,10 @@ function LoginContent() {
           className="w-full lg:w-1/2 text-center lg:text-right hidden lg:block"
         >
           <h1 className="text-9xl xl:text-[10rem] font-black text-white tracking-tighter drop-shadow-2xl leading-[0.85] opacity-90">
-            Alumni Portal
+            Student Portal
           </h1>
           <p className="text-white/80 mt-6 font-medium text-xl xl:text-2xl max-w-[600px] ml-auto">
-            Reconnect with your roots. Network with professionals. Grow your future together.
+            Build lifelong connections, share opportunities, and keep the university spirit alive.
           </p>
           <div className="mt-8 flex justify-end gap-4">
             <div className="w-12 h-1.5 bg-[#FAFAFA] rounded-full opacity-20"></div>
@@ -474,7 +474,7 @@ function LoginContent() {
         {/* Mobile Header (Shows above form on small screens) */}
         <div className="lg:hidden text-center mb-0 order-first">
           <h1 className="text-5xl font-black text-white tracking-tight drop-shadow-lg">
-            Alumni Portal
+            Student Portal
           </h1>
           <p className="text-white/70 mt-2 font-medium text-sm">Reconnect. Network. Grow.</p>
         </div>

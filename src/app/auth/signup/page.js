@@ -79,7 +79,7 @@ export default function SignupPage() {
           const seconds = Math.round(delay / 1000);
           console.warn(`⚠️ Server may be waking up. Retry ${retryCount + 1}/${RETRY_DELAYS.length} in ${seconds}s...`);
           setError(`Server is starting up... retrying in ${seconds}s (attempt ${retryCount + 1}/${RETRY_DELAYS.length})`);
-          
+
           wakeServer();
           await new Promise(resolve => setTimeout(resolve, delay));
           return attemptSignup(retryCount + 1);
@@ -120,7 +120,7 @@ export default function SignupPage() {
             <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:px-8 md:py-5 md:px-10 space-y-3 relative overflow-hidden transition-all duration-500`}>
               <div className="space-y-0.5 text-center">
                 <h2 className={`text-2xl sm:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Join Global Network</h2>
-                <p className={`text-xs sm:text-sm ${darkMode ? "text-white font-bold" : "text-black font-bold"} opacity-70`}>Create account to connect with fellow alumni</p>
+                <p className={`text-xs sm:text-sm ${darkMode ? "text-white font-bold" : "text-black font-bold"} opacity-70`}>Create account to connect with fellow students</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -151,7 +151,7 @@ export default function SignupPage() {
                         <div className={`absolute inset-1 rounded-full scale-0 peer-checked:scale-100 transition-transform ${darkMode ? "bg-blue-500" : "bg-blue-600"}`}></div>
                       </div>
                       <span className={`text-[10px] uppercase tracking-widest font-black transition-colors ${form.role === r ? (darkMode ? "text-blue-400" : "text-blue-600") : (darkMode ? "text-white" : "text-black")}`}>
-                        {r}
+                        {r === "alumni" ? "Student" : r}
                       </span>
                     </label>
                   ))}
@@ -279,7 +279,7 @@ export default function SignupPage() {
           className="w-full lg:w-1/2 text-center lg:text-right hidden lg:block"
         >
           <h1 className="text-9xl xl:text-[10rem] font-black text-white tracking-tighter drop-shadow-2xl leading-[0.85] opacity-90">
-            Alumni Portal
+            Student Portal
           </h1>
           <p className="text-white/80 mt-6 font-medium text-xl xl:text-2xl max-w-[600px] ml-auto">
             Build lifelong connections, share opportunities, and keep the university spirit alive.
@@ -294,7 +294,7 @@ export default function SignupPage() {
         {/* Mobile Header (Shows above form on small screens) */}
         <div className="lg:hidden text-center mb-0 order-first">
           <h1 className="text-5xl font-black text-white tracking-tight drop-shadow-lg">
-            Alumni Portal
+            Student Portal
           </h1>
           <p className="text-white/70 mt-2 font-medium text-sm">Reconnect. Network. Grow.</p>
         </div>
@@ -335,7 +335,7 @@ export default function SignupPage() {
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl shadow-xl shadow-blue-500/20">
                   🎉
                 </div>
-                
+
                 <div className="space-y-4">
                   <h3 className={`text-3xl font-black tracking-tight ${darkMode ? "text-white" : "text-black"}`}>
                     Sign up Successful!
