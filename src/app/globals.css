@@ -181,6 +181,10 @@ body {
 /* Smooth scrolling for PWA feel */
 html {
   scroll-behavior: smooth;
+  /* Fluid typography: 1rem dynamically scales from 14px on mobile to 18px on desktop. 
+     This automatically makes all text sizes and div dimensions (paddings, margins, widths) 
+     that use Tailwind's default rem scaling device-independent! */
+  font-size: clamp(14px, 1vw + 10px, 18px);
 }
 
 /* Hide scrollbar but keep functionality for a cleaner mobile look */
