@@ -240,9 +240,9 @@ export default function NotificationsPage() {
     <div className={`min-h-screen pb-24 md:pb-20 bg-gradient-to-br from-blue-600 to-purple-700`}>
       <SidebarComponent />
 
-      <div className="max-w-5xl mx-auto px-3 sm:px-6 pt-6 sm:pt-10">
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 pt-4 sm:pt-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
           <div>
             <h1 className={`text-2xl sm:text-4xl font-black tracking-tight flex items-center gap-2 sm:gap-3 text-white`}>
               Notifications

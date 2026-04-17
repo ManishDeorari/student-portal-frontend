@@ -356,9 +356,9 @@ export default function GroupsPage() {
         <div className="min-h-screen bg-gradient-to-b from-blue-600 to-purple-700 relative text-white overflow-hidden">
             <SidebarComponent />
 
-            <main className="p-2 sm:p-4 max-w-[1200px] mx-auto h-[calc(100dvh-64px)] flex flex-col justify-center pb-20 md:pb-4">
+            <main className="p-2 sm:p-3 max-w-6xl mx-auto h-[calc(100dvh-64px)] flex flex-col justify-center pb-20 md:pb-4">
                 <div className="relative p-[2px] sm:p-[2.5px] rounded-2xl sm:rounded-[2.5rem] shadow-2xl overflow-hidden h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500">
-                    <div className={`relative flex flex-col md:flex-row gap-0 md:gap-4 px-3 py-4 sm:px-6 sm:py-8 rounded-[calc(1rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] transition-colors duration-300 h-full ${darkMode ? "bg-black/90" : "bg-white/90"}`}>
+                    <div className={`relative flex flex-col md:flex-row gap-0 md:gap-4 px-3 py-4 sm:px-6 sm:py-6 rounded-[calc(1rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] transition-colors duration-300 h-full ${darkMode ? "bg-black/90" : "bg-white/90"}`}>
                         
                         {/* Group Sidebar — hidden on mobile when chat is active */}
                         <div className={`${mobileShowChat ? 'hidden' : 'flex'} md:flex w-full md:w-[30%] flex-shrink-0 h-full`}>

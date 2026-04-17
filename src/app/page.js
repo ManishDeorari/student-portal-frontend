@@ -89,7 +89,7 @@ export default function HomePage() {
 
       {/* 🚀 Sticky Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-4 bg-black/60 border-white/5 shadow-2xl backdrop-blur-xl border-b" : "py-6 bg-transparent"}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-white">
+        <div className="max-w-6xl mx-auto px-6 flex justify-between items-center text-white">
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl group-hover:scale-110 transition-all shadow-lg shadow-blue-500/20">
               <div className="bg-black p-2 rounded-[calc(0.75rem-1.5px)]">
@@ -134,7 +134,7 @@ export default function HomePage() {
             STUDENT<br />
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">PORTAL</span>
           </h1>
-          <p className="max-w-2xl mx-auto text-lg md:text-2xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-12 text-white/60">
+          <p className="max-w-2xl mx-auto text-base md:text-xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-8 text-white/60">
             The next generation professional ecosystem<br />for active students worldwide.
           </p>
 
@@ -166,7 +166,7 @@ export default function HomePage() {
 
       {/* 🔷 Sections */}
       <SectionWrapper id="about" title="Our Mission" subtitle="Community First" icon={FaGlobe} darkMode={darkMode}>
-        <div className="grid md:grid-cols-2 gap-16 items-center text-left">
+        <div className="grid md:grid-cols-2 gap-12 items-center text-left">
           <div className={`space-y-8 text-xl md:text-2xl font-bold leading-relaxed ${darkMode ? "text-white" : "text-slate-800"}`}>
             <p>
               Empowering graduates through technology, mentorship, and global professional networking.
@@ -256,7 +256,7 @@ export default function HomePage() {
       </SectionWrapper>
 
       <footer className={`py-20 border-t transition-colors duration-700 ${darkMode ? "bg-black text-white border-white/5" : "bg-slate-50 text-slate-900 border-slate-200"}`}>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row justify-between items-center gap-16 text-center lg:text-left">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col lg:flex-row justify-between items-center gap-12 text-center lg:text-left">
           <div className="space-y-8">
             <div>
               <h1 className="text-4xl font-black italic tracking-tighter uppercase mb-4">STUDENT PORTAL</h1>

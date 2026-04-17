@@ -128,7 +128,7 @@ const NetworkPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white relative">
       <SidebarComponent />
 
-      <main className="max-w-6xl mx-auto px-3 sm:px-4 py-6 sm:py-8 space-y-6 sm:space-y-8 relative z-10 pb-24 md:pb-8">
+      <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative z-10 pb-24 md:pb-6">
         {/* Header Section */}
         <div className="relative p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden">
           <div className={`px-4 sm:px-8 py-5 sm:py-6 rounded-[calc(1.5rem-2.5px)] ${darkMode ? 'bg-black text-white' : 'bg-[#FAFAFA] text-slate-900'} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6`}>

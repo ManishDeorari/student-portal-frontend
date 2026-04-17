@@ -86,9 +86,9 @@ const MyConnectionsContent = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white relative">
             <SidebarComponent />
-            <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-10 space-y-4 sm:space-y-10 pb-24 md:pb-8">
+            <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-24 md:pb-6">
                 <div className="relative p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden">
-                    <div className={`px-4 sm:px-8 py-4 sm:py-8 rounded-[calc(1.5rem-2.5px)] ${darkMode ? 'bg-black text-white' : 'bg-white text-slate-900'} flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-8`}>
+                    <div className={`px-4 sm:px-8 py-4 sm:py-6 rounded-[calc(1.5rem-2.5px)] ${darkMode ? 'bg-black text-white' : 'bg-white text-slate-900'} flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6`}>
                         <div className="flex items-center gap-3 sm:gap-6">
                             <Link href="/dashboard/network" className={`p-3 rounded-2xl transition-all border ${darkMode ? 'bg-white/5 border-white/10 hover:bg-white/10 hover:scale-105' : 'bg-slate-50 border-gray-200 hover:bg-gray-100 hover:scale-105 text-slate-900 shadow-sm'}`}>
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
