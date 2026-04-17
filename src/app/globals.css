@@ -178,6 +178,11 @@ body {
   height: 100dvh;
 }
 
+.min-h-screen-safe {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 /* Smooth scrolling for PWA feel */
 html {
   scroll-behavior: smooth;
@@ -248,4 +253,26 @@ html {
 }
 .scroll-tabs::-webkit-scrollbar {
   display: none;
+}
+
+/* Settings drawer scrollbar — ultra-thin, themed */
+.drawer-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+.drawer-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.drawer-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(147, 51, 234, 0.25);
+  border-radius: 999px;
+}
+.drawer-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(147, 51, 234, 0.45);
+}
+
+/* Cross-browser full-height panels (drawers, sidebars) */
+/* Uses dvh (dynamic viewport height) with vh fallback for older browsers */
+.panel-full-height {
+  height: 100vh;
+  height: 100dvh;
 }

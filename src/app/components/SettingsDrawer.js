@@ -29,13 +29,13 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
                         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                        className="fixed right-0 top-0 h-full w-full sm:w-80 z-[101] p-[2px] bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 shadow-2xl"
+                        className="fixed right-0 top-0 panel-full-height w-full sm:w-80 z-[101] p-[2px] bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 shadow-2xl"
                     >
                         {/* Main Drawer Body */}
-                        <div className={`h-full w-full flex flex-col p-6 shadow-inner overscroll-none safe-bottom ${darkMode ? "bg-black/95 text-white" : "bg-[#FAFAFA] text-gray-900"}`}>
+                        <div className={`h-full w-full flex flex-col p-6 shadow-inner overscroll-none safe-bottom min-h-0 ${darkMode ? "bg-black/95 text-white" : "bg-[#FAFAFA] text-gray-900"}`}>
 
                             {/* Header */}
-                            <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center justify-between mb-8 flex-shrink-0">
                                 <div className="flex items-center gap-3">
                                     <div className={`p-2 rounded-lg ${darkMode ? "bg-blue-500/20" : "bg-blue-50"}`}>
                                         <FaCog className="text-blue-500 text-xl" />
@@ -51,7 +51,7 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                             </div>
 
                             {/* Options List */}
-                            <div className="flex-1 space-y-4">
+                            <div className="flex-1 space-y-4 overflow-y-auto pr-2 min-h-0 drawer-scrollbar">
                                 {/* Theme Section Label */}
                                 <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
                                     Appearance
@@ -95,7 +95,7 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                                     </button>
                                 </div>
 
-                                <div className="pt-6 mt-6 border-t border-gray-100 dark:border-white/10 space-y-4">
+                                <div className={`pt-6 mt-6 border-t ${darkMode ? "border-white/10" : "border-gray-100"} space-y-4`}>
                                     <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
                                         Support & Feedback
                                     </p>
@@ -129,7 +129,7 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                             </div>
 
                             {/* Footer */}
-                            <div className="mt-auto pt-6 pb-12 text-center">
+                            <div className="mt-auto pt-6 pb-10 mb-4 text-center flex-shrink-0">
                                 <div className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] uppercase transition-all shadow-sm ${darkMode ? "bg-white/10 text-white" : "bg-slate-200 text-slate-900"}`}>
                                     Student Portal v0.1.0
                                 </div>

@@ -235,7 +235,9 @@ export default function DashboardPage() {
               </section>
             </div>
 
-            <CreatePost setPosts={setPosts} currentUser={user} darkMode={darkMode} />
+            {(user?.role?.toLowerCase() === "admin" || user?.role?.toLowerCase() === "faculty" || user?.isAdmin) && (
+              <CreatePost setPosts={setPosts} currentUser={user} darkMode={darkMode} />
+            )}
 
             <div className="flex justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
               {[
