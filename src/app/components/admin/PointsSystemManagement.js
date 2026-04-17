@@ -50,7 +50,7 @@ export default function PointsSystemManagement({ user }) {
         contentContribution: "Content Contribution",
         campusEngagement: "Campus Engagement",
         innovationSupport: "Innovation Support",
-        alumniParticipation: "Alumni Participation",
+        studentParticipation: "Student Participation",
         connections: "Networking",
         posts: "Posts",
         comments: "Comments",
@@ -170,7 +170,7 @@ export default function PointsSystemManagement({ user }) {
     };
 
     const triggerRollover = async () => {
-        if (!window.confirm("ARE YOU SURE? This will reset all current points and logs for ALL alumni!")) return;
+        if (!window.confirm("ARE YOU SURE? This will reset all current points and logs for ALL student!")) return;
         try {
             const res = await fetch(`${API}/api/admin-points-mgmt/trigger-rollover`, {
                 method: "POST",
@@ -359,7 +359,7 @@ export default function PointsSystemManagement({ user }) {
                                         value={search}
                                         onChange={(val) => setSearch(val)}
                                         onSelect={(user) => setSearch(user.name)}
-                                        role="alumni"
+                                        role="student"
                                         darkMode={darkMode}
                                         placeholder="Name or ID..."
                                         className={`!w-full !border-none !shadow-none font-black !py-3 sm:!py-4 !px-4 sm:!px-5 !h-[46px] sm:!h-[58px] ${
@@ -443,7 +443,7 @@ export default function PointsSystemManagement({ user }) {
                                         value={penaltySearch}
                                         onChange={(val) => setPenaltySearch(val)}
                                         onSelect={(user) => setPenaltySearch(user.name)}
-                                        role="alumni"
+                                        role="student"
                                         darkMode={darkMode}
                                         placeholder="Name or ID..."
                                         className={`!w-full !border-none !shadow-none font-black !py-3 sm:!py-4 !px-4 sm:!px-5 !h-[46px] sm:!h-[58px] ${

@@ -22,7 +22,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
   const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
 
   const availableTags = [];
-  if (currentUser?.role === "alumni") availableTags.push("Session");
+  if (currentUser?.role === "student") availableTags.push("Session");
   if (currentUser?.role === "faculty" || currentUser?.isAdmin) {
     availableTags.push("Event");
     availableTags.push("Announcement");
@@ -130,7 +130,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
 
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex gap-2 flex-nowrap overflow-x-auto pb-1 no-scrollbar">
-                    {(currentUser?.role === "alumni") && (
+                    {(currentUser?.role === "student") && (
                       <button
                         type="button"
                         onClick={() => setIsSessionModalOpen(true)}

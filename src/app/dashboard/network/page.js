@@ -19,7 +19,7 @@ const YEAR_OPTIONS = Array.from({ length: currentYearForDropdown + 5 - 2000 + 1 
 
 const NetworkPage = () => {
   const { darkMode } = useTheme();
-  const [alumni, setAlumni] = useState([]);
+  const [student, setStudent] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [requested, setRequested] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
@@ -94,7 +94,7 @@ const NetworkPage = () => {
       alert("Please enter a name or select a filter to search");
       return;
     }
-    setAlumni([]); // Clear previous results immediately
+    setStudent([]); // Clear previous results immediately
     setSearched(true); // Track that a search was performed
 
     const token = localStorage.getItem("token");
@@ -110,7 +110,7 @@ const NetworkPage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
-      setAlumni(data || []);
+      setStudent(data || []);
     } catch (err) {
       console.error("Search error:", err);
     }
@@ -134,7 +134,7 @@ const NetworkPage = () => {
           <div className={`px-4 sm:px-8 py-5 sm:py-6 rounded-[calc(1.5rem-2.5px)] ${darkMode ? 'bg-black text-white' : 'bg-[#FAFAFA] text-slate-900'} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6`}>
             <div>
               <h1 className={`text-2xl sm:text-4xl font-black tracking-tight ${darkMode ? 'text-white' : 'text-slate-900'}`}>Network</h1>
-              <p className={`text-xs sm:text-sm ${darkMode ? 'text-white font-bold' : 'text-slate-600 font-bold'} opacity-75`}>Build your professional circle with alumni</p>
+              <p className={`text-xs sm:text-sm ${darkMode ? 'text-white font-bold' : 'text-slate-600 font-bold'} opacity-75`}>Build your professional circle with student</p>
             </div>
             <div className="flex flex-wrap gap-3 sm:gap-4 w-full sm:w-auto">
               <div className="relative p-[1.5px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-2xl group transition-all duration-300 hover:shadow-lg">
@@ -183,7 +183,7 @@ const NetworkPage = () => {
                 onClick={handleSearch}
                 className="px-6 sm:px-10 py-2 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl sm:rounded-2xl font-black uppercase tracking-wider sm:tracking-[0.2em] text-[10px] sm:text-[11px] transition-all shadow-xl active:scale-95"
               >
-                Search Alumni
+                Search Student
               </button>
             </div>
 
@@ -215,14 +215,14 @@ const NetworkPage = () => {
         </div>
 
         {/* Search Results */}
-        {searched && alumni.length === 0 ? (
+        {searched && student.length === 0 ? (
           <div className="relative p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.5rem] shadow-xl overflow-hidden">
             <div className={`p-10 rounded-[calc(2.5rem-2.5px)] text-center ${darkMode ? 'bg-black text-white' : 'bg-[#FAFAFA] text-slate-900'}`}>
               <h2 className="text-2xl font-black">No Results Found</h2>
               <p className={`mt-2 text-sm font-bold ${darkMode ? 'text-white opacity-60' : 'text-slate-500'}`}>Try adjusting your filters or search terms</p>
             </div>
           </div>
-        ) : alumni.length > 0 && (
+        ) : student.length > 0 && (
           <div className="relative p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.5rem] shadow-2xl overflow-hidden">
             <div className={`px-4 sm:px-8 py-4 sm:py-8 rounded-[calc(2.5rem-2.5px)] ${darkMode ? 'bg-black' : 'bg-[#FAFAFA]'} space-y-4 sm:space-y-8`}>
               <div className="flex items-center gap-3">
@@ -230,7 +230,7 @@ const NetworkPage = () => {
                 <h2 className={`text-lg sm:text-2xl font-black tracking-tight ${darkMode ? 'text-white' : 'text-slate-900'}`}>Search Results</h2>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {alumni.map((user) => (
+                {student.map((user) => (
                   <div key={user._id} className="relative p-[1.5px] bg-gradient-to-br from-blue-500/50 via-purple-500/50 to-pink-500/50 rounded-2xl group transition-all duration-500 hover:from-blue-500 hover:via-purple-500 hover:to-pink-500 shadow-sm hover:shadow-xl">
                     <div className={`rounded-2xl p-3 sm:p-5 flex items-center justify-between gap-3 sm:gap-4 relative overflow-hidden h-full ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-900'} transition-colors`}>
                       <div className="flex items-center gap-3 sm:gap-4 min-w-0 relative z-10 w-full">
@@ -250,7 +250,7 @@ const NetworkPage = () => {
                           {/* Enrollment / Employee ID - Hidden for Main Admin */}
                           {user.role !== "admin" && (
                             <p className="text-[10px] font-black uppercase tracking-widest text-blue-500 mt-0.5">
-                              {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Alumni")}
+                              {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
                             </p>
                           )}
                           <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-white/60' : 'text-slate-500'} mt-1`}>{user.course} {user.year}</p>
@@ -318,7 +318,7 @@ const NetworkPage = () => {
                             {/* Enrollment ID */}
                             {user.role !== "admin" && (
                               <p className="text-[9px] font-black uppercase tracking-widest text-blue-500 mt-1">
-                                {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Alumni")}
+                                {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
                               </p>
                             )}
                             <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-white/60' : 'text-slate-500'} mt-1.5`}>{user.course} {user.year}</p>

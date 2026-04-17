@@ -9,7 +9,7 @@ const PostLoadingScreen = ({ type = "Regular", loading = false, darkMode = false
 
   const statuses = {
     Regular: ["Preparing your update...", "Uploading media...", "Broadcasting to feed...", "Finalizing post..."],
-    Session: ["Organizing alumni session...", "Verifying logistics...", "Setting up interactions...", "Ready to share..."],
+    Session: ["Organizing student session...", "Verifying logistics...", "Setting up interactions...", "Ready to share..."],
     Event: ["Coordinating event details...", "Setting up registrations...", "Generating insights...", "Almost live..."],
     Announcement: ["Drafting announcement...", "Alerting the network...", "Pinning to highlights...", "Sharing now..."],
   };

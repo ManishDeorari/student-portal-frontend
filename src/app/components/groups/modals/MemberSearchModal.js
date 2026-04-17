@@ -25,7 +25,7 @@ export default function MemberSearchModal({
     const [roleFilter, setRoleFilter] = useState("ALL");
     const [users, setUsers] = useState([]);
     const [selectedIds, setSelectedIds] = useState(initialSelected || []);
-    const [isAllAlumniFlag, setIsAllAlumniFlag] = useState(false);
+    const [isAllStudentFlag, setIsAllStudentFlag] = useState(false);
     const [isAllFacultyFlag, setIsAllFacultyFlag] = useState(false);
     const [loading, setLoading] = useState(false);
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -94,7 +94,7 @@ export default function MemberSearchModal({
     }, [course]);
 
     const handleSelectRole = (roleKey) => {
-        const roleUsers = users.filter(u => (u.role || "alumni").toUpperCase() === roleKey);
+        const roleUsers = users.filter(u => (u.role || "student").toUpperCase() === roleKey);
         const roleIds = roleUsers.map(u => String(u._id));
         
         // Check if all of THESE role users are already selected
@@ -131,10 +131,10 @@ export default function MemberSearchModal({
     };
 
     const handleConfirm = () => {
-        if (isAllAlumniFlag || isAllFacultyFlag) {
+        if (isAllStudentFlag || isAllFacultyFlag) {
             onSelect({
                 userIds: selectedIds,
-                isAllAlumni: isAllAlumniFlag,
+                isAllStudent: isAllStudentFlag,
                 isAllFaculty: isAllFacultyFlag
             });
         } else {
@@ -165,7 +165,7 @@ export default function MemberSearchModal({
                                 type="button"
                                 onClick={() => {
                                     setIsAllFacultyFlag(!isAllFacultyFlag);
-                                    if (!isAllFacultyFlag) setIsAllAlumniFlag(false);
+                                    if (!isAllFacultyFlag) setIsAllStudentFlag(false);
                                 }}
                                 className={`py-4 px-4 rounded-2xl border-2 transition-all flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest ${
                                     isAllFacultyFlag 
@@ -179,15 +179,15 @@ export default function MemberSearchModal({
 
                             <button
                                 type="button"
-                                onClick={() => setIsAllAlumniFlag(!isAllAlumniFlag)}
+                                onClick={() => setIsAllStudentFlag(!isAllStudentFlag)}
                                 className={`py-4 px-4 rounded-2xl border-2 transition-all flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest ${
-                                    isAllAlumniFlag 
+                                    isAllStudentFlag 
                                     ? "bg-gradient-to-br from-blue-600 to-blue-800 border-blue-400 text-white shadow-lg shadow-blue-500/40" 
                                     : (darkMode ? "bg-slate-950 border-slate-800 text-white hover:border-blue-500" : "bg-white border-slate-200 text-slate-900 hover:border-blue-500")
                                 }`}
                             >
-                                <span>Add All Alumni</span>
-                                {isAllAlumniFlag && <div className="w-2 h-2 rounded-full bg-white animate-pulse" />}
+                                <span>Add All Student</span>
+                                {isAllStudentFlag && <div className="w-2 h-2 rounded-full bg-white animate-pulse" />}
                             </button>
                         </div>
 
@@ -216,7 +216,7 @@ export default function MemberSearchModal({
                                         className={`w-full px-2 sm:px-4 py-1.5 sm:py-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] h-full appearance-none font-black text-[8px] sm:text-[10px] uppercase tracking-tighter sm:tracking-widest outline-none cursor-pointer ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
                                     >
                                         <option value="ALL">ALL ROLES</option>
-                                        <option value="ALUMNI">ALUMNI</option>
+                                        <option value="STUDENT">STUDENT</option>
                                         <option value="FACULTY">FACULTY</option>
                                     </select>
                                     <FaChevronDown className="w-3 h-3 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50 text-orange-500" />
@@ -271,8 +271,8 @@ export default function MemberSearchModal({
                                 <span>No members match your refinement</span>
                             </div>
                         ) : (
-                            ["FACULTY", "ALUMNI"].map(roleKey => {
-                                const groupUsers = users.filter(u => (u.role || "alumni").toUpperCase() === roleKey);
+                            ["FACULTY", "STUDENT"].map(roleKey => {
+                                const groupUsers = users.filter(u => (u.role || "student").toUpperCase() === roleKey);
                                 if (groupUsers.length === 0) return null;
                                 
                                 return (
@@ -324,11 +324,11 @@ export default function MemberSearchModal({
                                                                 user.role === 'faculty' ? 'bg-purple-500/20 text-purple-500' : 
                                                                 'bg-blue-500/20 text-blue-500'
                                                             }`}>
-                                                                {user.role || 'alumni'}
+                                                                {user.role || 'student'}
                                                             </span>
                                                         </div>
                                                         <p className={`text-[10px] font-black uppercase tracking-[0.2em] mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
-                                                            {user.role === 'faculty' ? user.employeeId : (user.enrollmentNumber || "Alumni")}
+                                                            {user.role === 'faculty' ? user.employeeId : (user.enrollmentNumber || "Student")}
                                                         </p>
                                                     </div>
                                                     {selectedIds.includes(String(user._id)) && (

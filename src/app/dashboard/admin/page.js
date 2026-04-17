@@ -11,7 +11,7 @@ import PendingUsers from "../../components/admin/PendingUsers";
 import AdminsManager from "../../components/admin/AdminsManager";
 import Leaderboard from "../../components/Leaderboard";
 import PointsSystemManagement from "../../components/admin/PointsSystemManagement";
-import AlumniExport from "../../components/admin/AlumniExport";
+import StudentExport from "../../components/admin/StudentExport";
 import UserManagement from "../../components/admin/UserManagement";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -408,9 +408,9 @@ export default function AdminDashboardPage() {
             <PointsSystemManagement user={user} />
           )}
 
-          {/* ALUMNI EXPORT */}
+          {/* STUDENT EXPORT */}
           {activeTab === "export" && (
-            <AlumniExport />
+            <StudentExport />
           )}
 
 

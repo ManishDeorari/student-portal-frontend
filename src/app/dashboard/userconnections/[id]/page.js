@@ -113,7 +113,7 @@ const UserConnectionsPage = () => {
                                             </Link>
                                             <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>{user.course} • {user.year}</p>
                                             <div className={`mt-2 text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border w-fit ${darkMode ? 'text-blue-400 border-blue-400/20 bg-blue-400/5' : 'text-blue-600 border-blue-100 bg-blue-50'}`}>
-                                                {user.workProfile?.industry || "Alumni"}
+                                                {user.workProfile?.industry || "Student"}
                                             </div>
                                         </div>
                                     </div>

@@ -23,17 +23,17 @@ export default function GroupMembersModal({
         const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (m.enrollmentNumber && m.enrollmentNumber.toLowerCase().includes(searchTerm.toLowerCase()));
         
-        const mRole = (m.role || (m.isMainAdmin ? "admin" : "alumni")).toUpperCase();
+        const mRole = (m.role || (m.isMainAdmin ? "admin" : "student")).toUpperCase();
         const matchesRole = roleFilter === "ALL" || mRole === roleFilter;
 
         return matchesSearch && matchesRole;
     });
 
-    // Sort: Admin -> Faculty -> Alumni
+    // Sort: Admin -> Faculty -> Student
     const sortedMembers = [...filtered].sort((a, b) => {
-        const roleOrder = { "admin": 1, "faculty": 2, "alumni": 3 };
-        const roleA = a.role || (a.isMainAdmin ? "admin" : "alumni");
-        const roleB = b.role || (b.isMainAdmin ? "admin" : "alumni");
+        const roleOrder = { "admin": 1, "faculty": 2, "student": 3 };
+        const roleA = a.role || (a.isMainAdmin ? "admin" : "student");
+        const roleB = b.role || (b.isMainAdmin ? "admin" : "student");
         return (roleOrder[roleA] || 4) - (roleOrder[roleB] || 4);
     });
 
@@ -77,7 +77,7 @@ export default function GroupMembersModal({
                                 <option value="ALL">ALL</option>
                                 <option value="ADMIN">ADMINS</option>
                                 <option value="FACULTY">FACULTY</option>
-                                <option value="ALUMNI">ALUMNI</option>
+                                <option value="STUDENT">STUDENT</option>
                             </select>
                             <FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50 text-purple-500" size={12} />
                         </div>
@@ -93,7 +93,7 @@ export default function GroupMembersModal({
                                 String(connId) === String(member._id)
                             );
                             
-                            const role = member.role || (member.isMainAdmin ? "admin" : "alumni");
+                            const role = member.role || (member.isMainAdmin ? "admin" : "student");
 
                             return (
                                 <div key={member._id} className="p-[1.5px] rounded-[2rem] bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 shadow-lg transition-all hover:scale-[1.01]">
@@ -129,7 +129,7 @@ export default function GroupMembersModal({
                                                     <p className={`text-[10px] font-black uppercase tracking-[0.1em] mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
                                                         {(role === 'faculty' || role === 'admin') 
                                                             ? (member.employeeId || "Faculty") 
-                                                            : (member.enrollmentNumber || "Alumni")}
+                                                            : (member.enrollmentNumber || "Student")}
                                                     </p>
                                                 ) : (
                                                     <div className="h-3" />

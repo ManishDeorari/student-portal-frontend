@@ -224,7 +224,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="text-center sm:text-left">
                     <h2 className={`text-xl sm:text-2xl md:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight mb-0.5 sm:mb-1`}>
-                      Welcome back, {user?.name || "Alumni"}!
+                      Welcome back, {user?.name || "Student"}!
                     </h2>
                     <div className="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-4 mt-2">
                       <span className={`text-[9px] md:text-[10px] ${darkMode ? "bg-white/10 text-white" : "bg-gray-200 text-black"} px-2 md:px-3 py-1 rounded-full font-black uppercase tracking-widest border border-white/10`}>{user?.enrollmentNumber || "N/A"}</span>

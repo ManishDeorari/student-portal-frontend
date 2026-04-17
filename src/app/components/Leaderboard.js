@@ -107,7 +107,7 @@ export default function Leaderboard() {
                           >
                             {user.name}
                           </Link>
-                          <p className={`text-[9px] sm:text-[10px] font-black ${darkMode ? "text-white/60" : "text-slate-500"} tracking-widest uppercase mt-0.5`}>{user.enrollmentNumber || "Alumni"}</p>
+                          <p className={`text-[9px] sm:text-[10px] font-black ${darkMode ? "text-white/60" : "text-slate-500"} tracking-widest uppercase mt-0.5`}>{user.enrollmentNumber || "Student"}</p>
                       </div>
                     </div>
                       <button
@@ -137,7 +137,7 @@ export default function Leaderboard() {
         <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-8 ${darkMode ? "bg-black" : "bg-[#FAFAFA]"} backdrop-blur-3xl p-5 sm:p-10 rounded-[calc(2.5rem-2px)] relative overflow-hidden`}>
           <div>
             <h1 className={`text-2xl sm:text-4xl font-black ${darkMode ? "text-white" : "text-slate-900"} tracking-tight mb-2 sm:mb-3 flex items-center gap-3 sm:gap-4`}>
-              🏆 Alumni Leaderboard
+              🏆 Student Leaderboard
             </h1>
             <p className={`${darkMode ? "text-white" : "text-slate-900"} text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]`}>Global Rankings &amp; Verified Points</p>
           </div>

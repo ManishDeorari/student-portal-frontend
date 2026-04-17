@@ -14,9 +14,9 @@ const COURSE_OPTIONS = ["B.Tech", "M.Tech", "MBA", "BCA", "MCA"];
 const currentYearForDropdown = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: currentYearForDropdown + 5 - 2000 + 1 }, (_, i) => String(2000 + i));
 
-export default function AlumniExport() {
+export default function StudentExport() {
     const { darkMode } = useTheme();
-    const [alumni, setAlumni] = useState([]);
+    const [student, setStudent] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [filters, setFilters] = useState({
@@ -29,7 +29,7 @@ export default function AlumniExport() {
     const handleSearch = async () => {
         setLoading(true);
         try {
-            let url = `${API}/api/admin/export-alumni?query=${searchQuery}`;
+            let url = `${API}/api/admin/export-student?query=${searchQuery}`;
             if (filters.course) url += `&course=${filters.course}`;
             if (filters.year) url += `&year=${filters.year}`;
 
@@ -38,9 +38,9 @@ export default function AlumniExport() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || "Search failed");
-            setAlumni(data || []);
-            if (data.length === 0) toast.error("No alumni found with these filters");
-            else toast.success(`Found ${data.length} alumni`);
+            setStudent(data || []);
+            if (data.length === 0) toast.error("No student found with these filters");
+            else toast.success(`Found ${data.length} student`);
         } catch (err) {
             console.error("Search error:", err);
             toast.error(err.message);
@@ -50,10 +50,10 @@ export default function AlumniExport() {
     };
 
     const downloadExcel = async () => {
-        if (alumni.length === 0) return;
+        if (student.length === 0) return;
 
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet("Alumni Data");
+        const worksheet = workbook.addWorksheet("Student Data");
 
         // Row 1: Group Headers
         const r1 = [
@@ -101,7 +101,7 @@ export default function AlumniExport() {
             return phone.startsWith("+") ? phone : `+${cleaned}`;
         };
 
-        alumni.forEach((u, index) => {
+        student.forEach((u, index) => {
             const getEdu = (degreeName) => (u.education || []).find(e => e.degree === degreeName) || {};
 
             const hs = getEdu(MANDATORY_DEGREES[0]);
@@ -166,7 +166,7 @@ export default function AlumniExport() {
 
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-        saveAs(blob, `alumni_data_${new Date().toISOString().split('T')[0]}.xlsx`);
+        saveAs(blob, `student_data_${new Date().toISOString().split('T')[0]}.xlsx`);
         toast.success("Excel File Downloaded Successfully");
     };
 
@@ -193,7 +193,7 @@ export default function AlumniExport() {
                             onClick={handleSearch}
                             className="px-6 sm:px-10 py-1.5 sm:py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl sm:rounded-2xl font-black uppercase tracking-widest text-xs sm:text-sm transition-all shadow-lg active:scale-95"
                         >
-                            Search Alumni
+                            Search Student
                         </button>
                     </div>
 
@@ -231,13 +231,13 @@ export default function AlumniExport() {
             </div>
 
             {/* Results & Export */}
-            {alumni.length > 0 && (
+            {student.length > 0 && (
                 <div className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden mb-10">
                     <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-8 rounded-xl sm:rounded-[calc(1.5rem-2px)] space-y-4 sm:space-y-6`}>
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                                 <div className="h-10 w-2.5 bg-green-500 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.6)]"></div>
-                                <h2 className={`text-2xl font-black ${darkMode ? "text-white" : "text-slate-900"} tracking-tight`}>Export Preview ({alumni.length})</h2>
+                                <h2 className={`text-2xl font-black ${darkMode ? "text-white" : "text-slate-900"} tracking-tight`}>Export Preview ({student.length})</h2>
                             </div>
                             <button
                                 onClick={downloadExcel}
@@ -257,8 +257,8 @@ export default function AlumniExport() {
                                 <div className="w-32 font-black text-right"></div>
                             </div>
 
-                            {/* Alumni Preview Rows */}
-                            {alumni.slice(0, 10).map((u) => (
+                            {/* Student Preview Rows */}
+                            {student.slice(0, 10).map((u) => (
                                 <div 
                                     key={u._id} 
                                     className="relative p-[1.5px] sm:p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl shadow-xl transition-all hover:scale-[1.01] hover:shadow-blue-500/20"
@@ -304,10 +304,10 @@ export default function AlumniExport() {
                                 </div>
                             ))}
 
-                            {alumni.length > 10 && (
+                            {student.length > 10 && (
                                 <div className={`p-6 text-center rounded-3xl border-2 ${darkMode ? "bg-white/5 border-white/10" : "bg-gray-50 border-gray-100"}`}>
                                     <p className={`text-xs ${darkMode ? "text-white" : "text-slate-900"} font-black uppercase tracking-[0.3em] italic`}>
-                                        Viewing {Math.min(10, alumni.length)} of {alumni.length} results. Download for full dataset.
+                                        Viewing {Math.min(10, student.length)} of {student.length} results. Download for full dataset.
                                     </p>
                                 </div>
                             )}

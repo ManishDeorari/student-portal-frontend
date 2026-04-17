@@ -1,7 +1,7 @@
 {
-  "name": "Alumni Portal",
-  "short_name": "Alumni",
-  "description": "A comprehensive portal for alumni to connect and engage.",
+  "name": "Student Portal",
+  "short_name": "Student",
+  "description": "A comprehensive portal for student to connect and engage.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#2563eb",

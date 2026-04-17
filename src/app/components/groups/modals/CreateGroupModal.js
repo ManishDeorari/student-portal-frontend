@@ -11,10 +11,10 @@ export default function CreateGroupModal({ isOpen, onClose, onCreate }) {
     const { darkMode } = useTheme();
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [isAllAlumni, setIsAllAlumni] = useState(false);
+    const [isAllStudent, setIsAllStudent] = useState(false);
     const [isAllFaculty, setIsAllFaculty] = useState(false);
     const [allowFacultyMessaging, setAllowFacultyMessaging] = useState(false);
-    const [allowAlumniMessaging, setAllowAlumniMessaging] = useState(false);
+    const [allowStudentMessaging, setAllowStudentMessaging] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
     const [profileImageSettings, setProfileImageSettings] = useState({ x: 0, y: 0, zoom: 1, width: 100, height: 100 });
     const [imagePreview, setImagePreview] = useState(null);
@@ -86,25 +86,25 @@ export default function CreateGroupModal({ isOpen, onClose, onCreate }) {
         onCreate({ 
             name, 
             description, 
-            isAllAlumniGroup: isAllAlumni,
+            isAllStudentGroup: isAllStudent,
             isAllFacultyGroup: isAllFaculty,
             profileImage: finalImageUrl,
             profileImagePublicId: finalPublicId,
             profileImageSettings,
             allowFacultyMessaging,
-            allowAlumniMessaging,
+            allowStudentMessaging,
             members: selectedMemberIds 
         });
 
         // Reset
         setName("");
         setDescription("");
-        setIsAllAlumni(false);
+        setIsAllStudent(false);
         setIsAllFaculty(false);
         setProfileImage(null);
         setImagePreview(null);
         setAllowFacultyMessaging(false);
-        setAllowAlumniMessaging(true);
+        setAllowStudentMessaging(true);
         setSelectedMemberIds([]);
         setUploading(false);
     };
@@ -170,7 +170,7 @@ export default function CreateGroupModal({ isOpen, onClose, onCreate }) {
                                             value={description}
                                             onChange={(e) => setDescription(e.target.value)}
                                             className={`w-full rounded-[calc(1rem-1.5px)] px-6 py-4 font-black text-sm outline-none resize-none h-24 transition-all ${darkMode ? "bg-slate-950 text-white focus:bg-black" : "bg-white text-slate-900 focus:bg-slate-50"}`}
-                                            placeholder="Describe the purpose of this alumni circle..."
+                                            placeholder="Describe the purpose of this student circle..."
                                         />
                                     </div>
                                 </div>
@@ -193,14 +193,14 @@ export default function CreateGroupModal({ isOpen, onClose, onCreate }) {
 
                                         <button
                                             type="button"
-                                            onClick={() => setIsAllAlumni(!isAllAlumni)}
-                                            className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-1 group relative overflow-hidden ${isAllAlumni
+                                            onClick={() => setIsAllStudent(!isAllStudent)}
+                                            className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-1 group relative overflow-hidden ${isAllStudent
                                                 ? "bg-gradient-to-br from-blue-600 to-blue-800 border-blue-400 text-white shadow-lg shadow-blue-500/40"
                                                 : (darkMode ? "bg-slate-950 border-slate-800 text-white hover:border-blue-500" : "bg-white border-slate-200 text-slate-900 hover:border-blue-500")
                                                 }`}
                                         >
-                                            <span className="text-[10px] font-black uppercase tracking-widest relative z-10">Add All Alumni</span>
-                                            {isAllAlumni && <span className="text-[8px] font-black relative z-10">ACTIVE ✨</span>}
+                                            <span className="text-[10px] font-black uppercase tracking-widest relative z-10">Add All Student</span>
+                                            {isAllStudent && <span className="text-[8px] font-black relative z-10">ACTIVE ✨</span>}
                                         </button>
                                     </div>
                                     
@@ -226,14 +226,14 @@ export default function CreateGroupModal({ isOpen, onClose, onCreate }) {
                                             <div className="p-[1.5px] rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 shadow-lg">
                                                 <div className={`p-4 rounded-[calc(1rem-1.5px)] flex flex-col items-center justify-between gap-3 h-full transition-all ${darkMode ? "bg-slate-950" : "bg-white"}`}>
                                                     <div className="text-center">
-                                                        <h3 className={`font-black text-[9px] uppercase tracking-tighter ${darkMode ? "text-white" : "text-slate-900"}`}>Alumni Message</h3>
+                                                        <h3 className={`font-black text-[9px] uppercase tracking-tighter ${darkMode ? "text-white" : "text-slate-900"}`}>Student Message</h3>
                                                     </div>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setAllowAlumniMessaging(!allowAlumniMessaging)}
-                                                        className={`w-12 h-6 rounded-full relative transition-all duration-300 shadow-inner ${allowAlumniMessaging ? "bg-blue-600" : "bg-slate-800"}`}
+                                                        onClick={() => setAllowStudentMessaging(!allowStudentMessaging)}
+                                                        className={`w-12 h-6 rounded-full relative transition-all duration-300 shadow-inner ${allowStudentMessaging ? "bg-blue-600" : "bg-slate-800"}`}
                                                     >
-                                                        <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-md transition-all duration-300 ${allowAlumniMessaging ? "right-1" : "left-1"}`} />
+                                                        <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-md transition-all duration-300 ${allowStudentMessaging ? "right-1" : "left-1"}`} />
                                                     </button>
                                                 </div>
                                             </div>

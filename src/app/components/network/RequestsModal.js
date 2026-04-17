@@ -122,11 +122,11 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
                                                 {/* Enrollment ID */}
                                                 {user.role !== "admin" && (
                                                     <p className="text-[9px] font-black uppercase tracking-widest text-blue-500 mt-0.5">
-                                                        {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Alumni")}
+                                                        {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
                                                     </p>
                                                 )}
                                                 <p className={`text-[9px] font-black uppercase tracking-widest truncate mt-1 ${darkMode ? 'text-white' : 'text-slate-600'}`}>
-                                                    {user.course || (user.role === "faculty" ? "Faculty" : "Alumni")}
+                                                    {user.course || (user.role === "faculty" ? "Faculty" : "Student")}
                                                 </p>
                                             </div>
                                         </div>

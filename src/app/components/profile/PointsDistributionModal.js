@@ -50,8 +50,8 @@ const CATEGORY_GROUPS = [
         icon: "💡",
     },
     {
-        id: "alumniParticipation",
-        label: "Alumni Participation",
+        id: "studentParticipation",
+        label: "Student Participation",
         icon: "🎓",
     },
     {
@@ -70,7 +70,7 @@ export default function PointsDistributionModal({ isOpen, onClose, user }) {
     const [expanded, setExpanded] = React.useState({});
     const { darkMode } = useTheme();
 
-    if (!user || user.role !== "alumni") return null;
+    if (!user || user.role !== "student") return null;
 
     const points = user.points || {};
 

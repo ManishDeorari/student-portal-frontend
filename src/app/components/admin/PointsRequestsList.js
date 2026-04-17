@@ -206,7 +206,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
               <div className="flex items-center gap-3">
                  <h3 className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-slate-900"} flex items-center gap-2 sm:gap-3`}>
                     <span className="p-2 bg-orange-600/20 rounded-xl text-orange-400">🤝</span>
-                    Alumni Session Points
+                    Student Session Points
                  </h3>
                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
                   sessionRequests.length > 0 

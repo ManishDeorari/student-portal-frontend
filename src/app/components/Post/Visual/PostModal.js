@@ -211,7 +211,7 @@ export default function PostModal({
                         )}
                         </>
                       ) : (
-                        currentUser?.role === 'alumni' && (
+                        currentUser?.role === 'student' && (
                           Date.now() < new Date(post.registrationCloseDate) ? (
                             <button
                               onClick={() => setShowRegistrationModal(true)}
@@ -343,7 +343,7 @@ export default function PostModal({
                 )}
                 {post.pointsStatus === "approved" && (
                   <div className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-green-500 italic">
-                    <span>✅</span> Points Awarded to Alumni
+                    <span>✅</span> Points Awarded to Student
                   </div>
                 )}
               </div>

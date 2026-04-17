@@ -91,8 +91,8 @@ export default function ProfileStats({ profile: initialProfile, isPublicView }) 
                     <p className={`text-3xl font-normal ${darkMode ? 'text-green-400' : 'text-green-600'}`}>{stats.todayVisits}</p>
                 </div>
 
-                {/* My Points (Alumni Only) */}
-                {initialProfile.role === "alumni" && (
+                {/* My Points (Student Only) */}
+                {initialProfile.role === "student" && (
                     <div
                         className="flex flex-col items-center text-center cursor-pointer group flex-1 min-w-[120px]"
                         onClick={() => setIsPointsModalOpen(true)}

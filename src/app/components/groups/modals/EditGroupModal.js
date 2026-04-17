@@ -13,7 +13,7 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
     const [name, setName] = useState(group?.name || "");
     const [description, setDescription] = useState(group?.description || "");
     const [allowFacultyMessaging, setAllowFacultyMessaging] = useState(group?.allowFacultyMessaging ?? false);
-    const [allowAlumniMessaging, setAllowAlumniMessaging] = useState(group?.allowAlumniMessaging ?? false);
+    const [allowStudentMessaging, setAllowStudentMessaging] = useState(group?.allowStudentMessaging ?? false);
     const [profileImage, setProfileImage] = useState(null);
     const [profileImageSettings, setProfileImageSettings] = useState(group?.profileImageSettings || { x: 0, y: 0, zoom: 1, width: 100, height: 100 });
     const [imagePreview, setImagePreview] = useState(group?.profileImage || "/default-group.jpg");
@@ -32,7 +32,7 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
             setName(group.name || "");
             setDescription(group.description || "");
             setAllowFacultyMessaging(group.allowFacultyMessaging ?? false);
-            setAllowAlumniMessaging(group.allowAlumniMessaging ?? false);
+            setAllowStudentMessaging(group.allowStudentMessaging ?? false);
             setImagePreview(group.profileImage || "/default-group.jpg");
             setProfileImageSettings(group.profileImageSettings || { x: 0, y: 0, zoom: 1, width: 100, height: 100 });
         }
@@ -98,7 +98,7 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
             name, 
             description, 
             allowFacultyMessaging: allowFacultyMessaging,
-            allowAlumniMessaging: allowAlumniMessaging,
+            allowStudentMessaging: allowStudentMessaging,
             profileImage: finalImageUrl,
             profileImagePublicId: finalPublicId,
             profileImageSettings,
@@ -252,14 +252,14 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
                                 <div className="p-[1.5px] rounded-3xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 shadow-lg">
                                     <div className={`p-5 rounded-[calc(1.5rem-1.5px)] flex flex-col items-center justify-between gap-3 h-full transition-all ${darkMode ? "bg-slate-950" : "bg-white"}`}>
                                         <div className="text-center">
-                                            <h3 className={`font-black text-[10px] uppercase tracking-tighter ${darkMode ? "text-white" : "text-slate-900"}`}>Alumni Messaging</h3>
+                                            <h3 className={`font-black text-[10px] uppercase tracking-tighter ${darkMode ? "text-white" : "text-slate-900"}`}>Student Messaging</h3>
                                         </div>
                                         <button
                                             type="button"
-                                            onClick={() => setAllowAlumniMessaging(!allowAlumniMessaging)}
-                                            className={`w-14 h-8 rounded-full relative transition-all duration-500 shadow-inner ${allowAlumniMessaging ? "bg-blue-600" : "bg-slate-800"}`}
+                                            onClick={() => setAllowStudentMessaging(!allowStudentMessaging)}
+                                            className={`w-14 h-8 rounded-full relative transition-all duration-500 shadow-inner ${allowStudentMessaging ? "bg-blue-600" : "bg-slate-800"}`}
                                         >
-                                            <div className={`absolute top-1 w-6 h-6 rounded-full bg-white shadow-xl transition-all duration-500 ${allowAlumniMessaging ? "right-1" : "left-1"}`} />
+                                            <div className={`absolute top-1 w-6 h-6 rounded-full bg-white shadow-xl transition-all duration-500 ${allowStudentMessaging ? "right-1" : "left-1"}`} />
                                         </button>
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
                                                     className={`bg-transparent outline-none font-black text-[10px] uppercase tracking-widest cursor-pointer px-3 py-1 rounded-[calc(0.75rem-1.5px)] h-8 ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
                                                 >
                                                     <option value="ALL">ALL ROLES</option>
-                                                    <option value="ALUMNI">ALUMNI</option>
+                                                    <option value="STUDENT">STUDENT</option>
                                                     <option value="FACULTY">FACULTY</option>
                                                 </select>
                                             </div>
@@ -301,10 +301,10 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
                                         <div className="flex-1 p-[1.5px] rounded-2xl bg-gradient-to-br from-blue-500 to-blue-800 shadow-lg shadow-blue-500/20">
                                             <button 
                                                 type="button"
-                                                onClick={() => handleRemoveBulk("alumni")}
+                                                onClick={() => handleRemoveBulk("student")}
                                                 className={`w-full py-3 rounded-[calc(1rem-1.5px)] text-[10px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 flex items-center justify-center gap-2 ${darkMode ? "bg-black text-blue-400 hover:bg-blue-900/20" : "bg-white text-blue-600 hover:bg-blue-50"}`}
                                             >
-                                                <span>Bulk Alumni</span>
+                                                <span>Bulk Student</span>
                                                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                                             </button>
                                         </div>
@@ -330,7 +330,7 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
                                         const mIsAdmin = m.role === 'admin' || m.isAdmin || String(m._id) === String(group.admin?._id);
                                         const matchesSearch = (m.name || "").toLowerCase().includes(memberSearch.toLowerCase()) || 
                                                              (m.enrollmentNumber || m.employeeId || "").toLowerCase().includes(memberSearch.toLowerCase());
-                                        const matchesRole = roleFilter === "ALL" || (m.role || "alumni").toUpperCase() === roleFilter;
+                                        const matchesRole = roleFilter === "ALL" || (m.role || "student").toUpperCase() === roleFilter;
                                         return !mIsAdmin && matchesSearch && matchesRole;
                                     }).map(member => (
                                         <div key={member._id} className="p-[1.5px] rounded-3xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 transition-all hover:scale-[1.01] hover:shadow-xl group">
@@ -349,11 +349,11 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
                                                                 member.role === 'faculty' ? 'bg-purple-500/20 text-purple-500' : 
                                                                 'bg-blue-500/20 text-blue-500'
                                                             }`}>
-                                                                {member.role || 'alumni'}
+                                                                {member.role || 'student'}
                                                             </span>
                                                         </div>
                                                         <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-[0.1em] mt-1 truncate ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
-                                                            {member.role === 'faculty' ? member.employeeId : (member.enrollmentNumber || "Alumni")}
+                                                            {member.role === 'faculty' ? member.employeeId : (member.enrollmentNumber || "Student")}
                                                         </span>
                                                     </div>
                                                 </div>

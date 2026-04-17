@@ -443,7 +443,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                       <div className={`p-[2px] h-[52px] flex-1 flex items-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 ${errors.includes(`winner-name-${idx}`) ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
                                         <UserSearchInput 
                                           darkMode={darkMode}
-                                          role="alumni"
+                                          role="student"
                                           placeholder={winner.groupId ? "Search member name..." : "Search student name..."} 
                                           value={winner.name}
                                           className={`!bg-transparent !border-none !shadow-none font-black !py-3 !text-[12px] h-[52px] ${darkMode ? "!text-white" : "!text-black"}`}

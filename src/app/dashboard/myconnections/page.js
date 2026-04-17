@@ -42,7 +42,7 @@ const MyConnectionsContent = () => {
                     
                     // Also try to get the owner name if possible (or title logic)
                     if (userIdInParam !== meData?._id) {
-                        setOwnerName("Alumni's"); // Generic fallback or fetch logic
+                        setOwnerName("Student's"); // Generic fallback or fetch logic
                     }
                 } else {
                     data = await getMyConnections();
@@ -167,12 +167,12 @@ const MyConnectionsContent = () => {
                                             {/* Enrollment / Employee ID */}
                                             {user.role !== "admin" && (
                                                 <p className="text-[10px] font-black uppercase tracking-[0.1em] text-blue-500">
-                                                    {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Alumni")}
+                                                    {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
                                                 </p>
                                             )}
                                             
                                             <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-white' : 'text-slate-900'}`}>
-                                                {user.course || "Alumni"} {user.year}
+                                                {user.course || "Student"} {user.year}
                                             </p>
                                         </div>
  

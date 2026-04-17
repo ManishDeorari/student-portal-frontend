@@ -12,7 +12,7 @@ export default function SignupPage() {
     email: "",
     password: "",
     enrollmentNumber: "",
-    role: "alumni", // default
+    role: "student", // default
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,7 +39,7 @@ export default function SignupPage() {
           name: form.name,
           email: form.email,
           password: form.password,
-          role: "alumni",
+          role: "student",
           enrollmentNumber: form.enrollmentNumber,
         };
 
@@ -136,7 +136,7 @@ export default function SignupPage() {
 
                 {/* Role Selector */}
                 <div className="flex justify-center gap-8 py-0.5">
-                  {["alumni", "faculty"].map((r) => (
+                  {["student", "faculty"].map((r) => (
                     <label key={r} className="flex items-center gap-3 cursor-pointer group">
                       <div className="relative">
                         <input
@@ -151,7 +151,7 @@ export default function SignupPage() {
                         <div className={`absolute inset-1 rounded-full scale-0 peer-checked:scale-100 transition-transform ${darkMode ? "bg-blue-500" : "bg-blue-600"}`}></div>
                       </div>
                       <span className={`text-[10px] uppercase tracking-widest font-black transition-colors ${form.role === r ? (darkMode ? "text-blue-400" : "text-blue-600") : (darkMode ? "text-white" : "text-black")}`}>
-                        {r === "alumni" ? "Student" : r}
+                        {r === "student" ? "Student" : r}
                       </span>
                     </label>
                   ))}

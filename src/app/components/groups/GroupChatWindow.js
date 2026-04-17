@@ -122,14 +122,14 @@ export default function GroupChatWindow({
     }
 
     const isFaculty = currentUser?.role === "faculty";
-    const isAlumni = currentUser?.role === "alumni" || currentUser?.role === "user";
+    const isStudent = currentUser?.role === "student" || currentUser?.role === "user";
     
     let canMessage = isAdmin; // Admins always message
     if (!isAdmin) {
         if (isFaculty) {
             canMessage = selectedGroup.allowFacultyMessaging;
-        } else if (isAlumni) {
-            canMessage = selectedGroup.allowAlumniMessaging;
+        } else if (isStudent) {
+            canMessage = selectedGroup.allowStudentMessaging;
         }
     }
 

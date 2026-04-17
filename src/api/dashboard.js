@@ -26,7 +26,7 @@ export const createPost = async (contentOrData, image, video, type = "Regular") 
       const imageData = new FormData();
       imageData.append("file", img);
       imageData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      imageData.append("folder", "alumni/images"); // Optional folder for better management
+      imageData.append("folder", "student/images"); // Optional folder for better management
 
       const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, {
         method: "POST",
@@ -53,7 +53,7 @@ export const createPost = async (contentOrData, image, video, type = "Regular") 
     const videoData = new FormData();
     videoData.append("file", video);
     videoData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-    videoData.append("folder", "alumni/videos");
+    videoData.append("folder", "student/videos");
 
     const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, {
       method: "POST",
@@ -102,7 +102,7 @@ export const createAnnouncement = async (announcementData, images = [], video = 
       const imageData = new FormData();
       imageData.append("file", img);
       imageData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      imageData.append("folder", "alumni/announcements/images");
+      imageData.append("folder", "student/announcements/images");
 
       const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, {
         method: "POST",
@@ -120,7 +120,7 @@ export const createAnnouncement = async (announcementData, images = [], video = 
     const videoData = new FormData();
     videoData.append("file", video);
     videoData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-    videoData.append("folder", "alumni/announcements/videos");
+    videoData.append("folder", "student/announcements/videos");
     const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, {
       method: "POST",
       body: videoData,
@@ -309,7 +309,7 @@ export const createEvent = async (eventData, images = [], video = null) => {
       const imageData = new FormData();
       imageData.append("file", img);
       imageData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      imageData.append("folder", "alumni/events/images");
+      imageData.append("folder", "student/events/images");
 
       const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, {
         method: "POST",
@@ -327,7 +327,7 @@ export const createEvent = async (eventData, images = [], video = null) => {
     const videoData = new FormData();
     videoData.append("file", video);
     videoData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-    videoData.append("folder", "alumni/events/videos");
+    videoData.append("folder", "student/events/videos");
     const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, {
       method: "POST",
       body: videoData,

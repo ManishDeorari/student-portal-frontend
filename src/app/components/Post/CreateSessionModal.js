@@ -119,7 +119,7 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
                <span className="text-3xl">🤝</span>
                <div>
                   <h2 className={`text-lg sm:text-2xl font-black ${darkMode ? "text-white" : "text-gray-900"} tracking-tight leading-none`}>
-                    Create Alumni Session
+                    Create Student Session
                   </h2>
                   <p className={`text-[10px] uppercase tracking-widest font-bold mt-1 ${darkMode ? "text-blue-500" : "text-blue-400"}`}>
                     Earn Points for Campus Engagement
