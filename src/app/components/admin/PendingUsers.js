@@ -310,10 +310,26 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
             </div>
 
             {/* Identity */}
-            <div className="w-40 md:block hidden flex-shrink-0">
-              <span className={`text-[10px] font-black ${darkMode ? "text-white bg-white/5 border-white/20" : "text-slate-900 bg-gray-100 border-gray-300"} px-4 py-2 rounded-xl border-2 whitespace-nowrap uppercase tracking-widest`}>
-                {u.enrollmentNumber || u.employeeId || "N/A"}
-              </span>
+            <div className="w-48 md:block hidden flex-shrink-0">
+              {u.role === "student" ? (
+                <div className="flex flex-col gap-1">
+                  <span className={`text-[10px] font-black ${darkMode ? "text-white bg-white/5 border-white/20" : "text-slate-900 bg-gray-100 border-gray-300"} px-3 py-1 rounded-xl border-2 whitespace-nowrap uppercase tracking-widest`}>
+                    {u.enrollmentNumber || "N/A"}
+                  </span>
+                  <p className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-blue-400" : "text-blue-600"} ml-1`}>
+                    {u.course || "N/A"} • Sem {u.semester || "N/A"}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-1">
+                  <span className={`text-[10px] font-black ${darkMode ? "text-white bg-white/5 border-white/20" : "text-slate-900 bg-gray-100 border-gray-300"} px-3 py-1 rounded-xl border-2 whitespace-nowrap uppercase tracking-widest`}>
+                    {u.employeeId || "N/A"}
+                  </span>
+                  <p className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-purple-400" : "text-purple-600"} ml-1`}>
+                    {u.position || "N/A"} • {u.department || "N/A"}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Actions */}

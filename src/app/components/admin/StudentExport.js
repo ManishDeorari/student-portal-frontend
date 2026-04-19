@@ -21,7 +21,8 @@ export default function StudentExport() {
     const [searchQuery, setSearchQuery] = useState("");
     const [filters, setFilters] = useState({
         course: "",
-        year: ""
+        semester: "",
+        section: ""
     });
 
     const getToken = () => localStorage.getItem("token");
@@ -31,7 +32,8 @@ export default function StudentExport() {
         try {
             let url = `${API}/api/admin/export-student?query=${searchQuery}`;
             if (filters.course) url += `&course=${filters.course}`;
-            if (filters.year) url += `&year=${filters.year}`;
+            if (filters.semester) url += `&semester=${filters.semester}`;
+            if (filters.section) url += `&section=${filters.section}`;
 
             const res = await fetch(url, {
                 headers: { Authorization: `Bearer ${getToken()}` }
@@ -57,20 +59,19 @@ export default function StudentExport() {
 
         // Row 1: Group Headers
         const r1 = [
-            "", "", "", "", "", "ADDRESS", "", "", "EDUCATION",
+            "", "", "", "", "", "CURRENT COURSE", "", "", "ADDRESS", "", "", "EDUCATION",
             ...Array(17).fill(""), // Spanning Education
             "EXPERIENCE"
         ];
 
         // Row 2: Sub-Groups
         const r2 = [
-            "", "", "", "", "", "", "", "", "High School", "", "", "Intermediate", "", "", "Undergraduate", "", "", "", "", "", "Postgraduate", "", "", "", "", "", ""
+            "", "", "", "", "", "", "", "", "", "", "", "High School", "", "", "Intermediate", "", "", "Undergraduate", "", "", "", "", "", "Postgraduate", "", "", "", "", "", ""
         ];
 
         // Row 3: Column Names
         const r3 = [
-            "S.No", "ID", "Enrollment No", "Name", "Email", "Linkedin URL", "Phone",
-            "City", "State", "Country",
+            "S.No", "ID", "Enrollment No", "Name", "Linkedin URL", "Course", "Semester", "Section", "City", "State", "Country", "Phone",
             "School Name", "Passing Year", "Grades/%",
             "School Name", "Passing Year", "Grades/%",
             "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%",
@@ -81,6 +82,13 @@ export default function StudentExport() {
         worksheet.addRow(r1);
         worksheet.addRow(r2);
         worksheet.addRow(r3);
+
+        // Merging for Group Headers
+        worksheet.mergeCells('F1:H2'); // Current Course (Merged F,G,H across Row 1 and 2)
+        worksheet.mergeCells('I1:K2'); // Address (Merged I,J,K across Row 1 and 2)
+        
+        // Fix r1 indices for ADDRESS, EDUCATION, etc. (They shifted)
+        // Note: r1 is just for visual structure, mergeCells does the heavy lifting.
 
         const MANDATORY_DEGREES = [
             "High School (Secondary - Class 10)",
@@ -134,10 +142,12 @@ export default function StudentExport() {
                 publicIdText,
                 u.enrollmentNumber || "N/A",
                 u.name,
-                u.email,
                 linkedinText,
-                formatPhone(u.phone),
+                u.course || "N/A",
+                u.semester || "N/A",
+                u.section || "N/A",
                 city, state, country,
+                formatPhone(u.phone),
                 hs.institution || "NA", hs.endDate?.split(" ").pop() || "NA", hs.grade || "NA",
                 inter.institution || "NA", inter.endDate?.split(" ").pop() || "NA", inter.grade || "NA",
                 ug.institution || "NA", ug.campus || "NA", ug.course || ug.fieldOfStudy || "NA", ug.startDate?.split(" ").pop() || "NA", ug.endDate?.split(" ").pop() || "NA", ug.grade || "NA",
@@ -197,7 +207,7 @@ export default function StudentExport() {
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-6">
                         <div className="space-y-2 z-[60]">
                             <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-slate-900"} ml-2 font-black`}>Course</label>
                             <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
@@ -213,17 +223,31 @@ export default function StudentExport() {
                             </div>
                         </div>
                         <div className="space-y-2 relative">
-                            <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-slate-900"} ml-2 font-black`}>Graduation / Passing Year</label>
+                            <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-slate-900"} ml-2 font-black`}>Semester</label>
                             <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
                                 <select
-                                    value={filters.year}
-                                    onChange={(e) => setFilters({ ...filters, year: e.target.value })}
+                                    value={filters.semester}
+                                    onChange={(e) => setFilters({ ...filters, semester: e.target.value })}
                                     className={`w-full px-4 py-1.5 sm:py-[15px] ${darkMode ? "bg-black text-white" : "bg-white text-slate-900 border-gray-200"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black appearance-none cursor-pointer`}
                                 >
-                                    <option value="">All Years</option>
-                                    {YEAR_OPTIONS.map(y => <option key={y} value={y}>{y}</option>)}
+                                    <option value="">All Semesters</option>
+                                    {[...Array(10)].map((_, i) => (
+                                        <option key={i + 1} value={String(i + 1)}>Semester {i + 1}</option>
+                                    ))}
                                 </select>
                                 <svg className={`w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none ${darkMode ? "text-blue-400" : "text-gray-900"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                            </div>
+                        </div>
+                        <div className="space-y-2 relative">
+                            <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-slate-900"} ml-2 font-black`}>Section</label>
+                            <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
+                                <input
+                                    type="text"
+                                    placeholder="All Sections"
+                                    value={filters.section}
+                                    onChange={(e) => setFilters({ ...filters, section: e.target.value.toUpperCase() })}
+                                    className={`w-full px-4 py-1.5 sm:py-4 ${darkMode ? "bg-black text-white placeholder-white/30" : "bg-white text-slate-900 border-gray-200"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black`}
+                                />
                             </div>
                         </div>
                     </div>
@@ -275,30 +299,24 @@ export default function StudentExport() {
                                                 />
                                             </div>
 
-                                            {/* Name */}
+                                            {/* Name & Academic Details */}
                                             <div className="min-w-0 flex-1">
-                                                <p className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"} font-black mb-0.5`}>Full Name</p>
-                                                <p className={`font-black text-xs sm:text-base ${darkMode ? "text-white" : "text-slate-900"} truncate`}>{u.name}</p>
-                                            </div>
-
-                                            {/* Enrollment Number */}
-                                            <div className="hidden md:block w-40">
-                                                <p className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-purple-400" : "text-purple-600"} font-black mb-0.5`}>Enrollment</p>
-                                                <p className={`font-black text-sm ${darkMode ? "text-white" : "text-slate-900"} truncate opacity-80`}>{u.enrollmentNumber || "N/A"}</p>
+                                                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
+                                                    <p className={`font-black text-xs sm:text-base ${darkMode ? "text-white" : "text-slate-900"} truncate`}>{u.name}</p>
+                                                    <span className={`text-[8px] px-2 py-0.5 rounded-md font-black uppercase tracking-widest ${darkMode ? "bg-white/10 text-blue-400" : "bg-blue-50 text-blue-600"}`}>
+                                                        {u.course || "N/A"} • Sem {u.semester || "N/A"} • Sec {u.section || "N/A"}
+                                                    </span>
+                                                </div>
+                                                <p className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-purple-400" : "text-purple-600"} font-black`}>
+                                                    {u.enrollmentNumber || "N/A"}
+                                                </p>
                                             </div>
 
                                             {/* Email */}
                                             <div className="hidden lg:block flex-1 min-w-0">
-                                                <p className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-pink-400" : "text-pink-600"} font-black mb-0.5`}>Email Address</p>
+                                                <p className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-500"} font-black mb-0.5`}>Email Address</p>
                                                 <p className={`font-black text-sm ${darkMode ? "text-white" : "text-slate-900"} truncate opacity-80`}>{u.email}</p>
                                             </div>
-                                        </div>
-
-                                        {/* Status Tag (Optional, for visual balance) */}
-                                        <div className="hidden sm:block">
-                                            <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border-2 ${darkMode ? "border-white/10 text-white/40" : "border-slate-100 text-slate-400"}`}>
-                                                Ready for Export
-                                            </span>
                                         </div>
                                     </div>
                                 </div>

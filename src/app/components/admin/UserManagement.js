@@ -21,7 +21,8 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
     const [searchQuery, setSearchQuery] = useState("");
     const [filters, setFilters] = useState({
         course: "",
-        year: "",
+        semester: "",
+        section: "",
     });
     const [displayedUsers, setDisplayedUsers] = useState(users);
     const [isSearching, setIsSearching] = useState(false);
@@ -60,14 +61,15 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                     uCourse.includes(targetCourse) || 
                     eduCourses.some(ec => ec.includes(targetCourse));
 
-                // 3. Year Filter (Check root AND education history end years)
-                const uYear = String(u.year || u.graduationYear || u.batch || "");
-                const eduYears = (u.education || []).map(e => String(e.endYear || e.year || ""));
-                const yearMatch = !filters.year || 
-                    uYear === filters.year || 
-                    eduYears.includes(filters.year);
+                // 3. Semester Filter
+                const uSemester = String(u.semester || "");
+                const semesterMatch = !filters.semester || uSemester === filters.semester;
 
-                return textMatch && courseMatch && yearMatch;
+                // 4. Section Filter
+                const uSection = (u.section || "").toLowerCase();
+                const sectionMatch = !filters.section || uSection.includes(filters.section.toLowerCase());
+
+                return textMatch && courseMatch && semesterMatch && sectionMatch;
             });
             setDisplayedUsers(results);
             setIsSearching(false);
@@ -286,7 +288,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                         </div>
 
                         {/* Filter Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-6">
                             <div className="space-y-2 z-[60]">
                                 <label className={`text-[10px] uppercase tracking-[0.2em] ${darkMode ? "text-white" : "text-slate-900"} ml-3 font-black`}>Course</label>
                                 <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
@@ -302,17 +304,31 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                 </div>
                             </div>
                             <div className="space-y-2 relative">
-                                <label className={`text-[10px] uppercase tracking-[0.2em] ${darkMode ? "text-white" : "text-slate-900"} ml-3 font-black`}>Batch / Graduation Year</label>
+                                <label className={`text-[10px] uppercase tracking-[0.2em] ${darkMode ? "text-white" : "text-slate-900"} ml-3 font-black`}>Semester</label>
                                 <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
                                     <select
-                                        value={filters.year}
-                                        onChange={(e) => setFilters({ ...filters, year: e.target.value })}
+                                        value={filters.semester}
+                                        onChange={(e) => setFilters({ ...filters, semester: e.target.value })}
                                         className={`w-full px-4 sm:px-5 py-1.5 sm:py-[15px] ${darkMode ? "bg-black text-white" : "bg-white text-slate-900 border-gray-200"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black appearance-none cursor-pointer`}
                                     >
-                                        <option value="">All Years</option>
-                                        {YEAR_OPTIONS.map(y => <option key={y} value={y}>{y}</option>)}
+                                        <option value="">All Semesters</option>
+                                        {[...Array(10)].map((_, i) => (
+                                            <option key={i + 1} value={String(i + 1)}>Semester {i + 1}</option>
+                                        ))}
                                     </select>
                                     <svg className={`w-5 h-5 absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none ${darkMode ? "text-blue-400" : "text-gray-900"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                                </div>
+                            </div>
+                            <div className="space-y-2 relative">
+                                <label className={`text-[10px] uppercase tracking-[0.2em] ${darkMode ? "text-white" : "text-slate-900"} ml-3 font-black`}>Section</label>
+                                <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
+                                    <input
+                                        type="text"
+                                        placeholder="All Sections"
+                                        value={filters.section}
+                                        onChange={(e) => setFilters({ ...filters, section: e.target.value.toUpperCase() })}
+                                        className={`w-full px-4 sm:px-5 py-1.5 sm:py-4 ${darkMode ? "bg-black text-white placeholder-white/30" : "bg-white text-slate-900 placeholder-slate-400"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black`}
+                                    />
                                 </div>
                             </div>
                         </div>

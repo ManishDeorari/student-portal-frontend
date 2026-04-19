@@ -101,13 +101,20 @@ export default function Leaderboard() {
                           className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl object-cover border-2 border-white/10 bg-gray-800 shadow-2xl group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="min-w-0">
-                          <Link
+                           <Link
                             href={`/profile/${user.publicId || user._id}`}
                             className={`font-black text-xs sm:text-base ${darkMode ? "text-white" : "text-slate-900"} hover:text-blue-500 transition-colors block truncate`}
                           >
                             {user.name}
                           </Link>
-                          <p className={`text-[9px] sm:text-[10px] font-black ${darkMode ? "text-white/60" : "text-slate-500"} tracking-widest uppercase mt-0.5`}>{user.enrollmentNumber || "Student"}</p>
+                          <div className="flex flex-col gap-0.5">
+                            <p className={`text-[9px] sm:text-[10px] font-black ${darkMode ? "text-white/60" : "text-slate-500"} tracking-widest uppercase truncate`}>
+                                {user.enrollmentNumber || "Student"}
+                            </p>
+                            <p className={`text-[8px] sm:text-[9px] font-black ${darkMode ? "text-blue-400" : "text-blue-600"} tracking-tighter uppercase`}>
+                                {user.course || "N/A"} • SEM {user.semester || "N/A"} • SEC {user.section || "N/A"}
+                            </p>
+                          </div>
                       </div>
                     </div>
                       <button
