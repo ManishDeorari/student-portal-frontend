@@ -284,8 +284,9 @@ export default function StudentExport() {
                             {student.slice(0, 10).map((u) => (
                                 <div 
                                     key={u._id} 
-                                    className={`${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-2xl sm:rounded-3xl p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 border-2 transition-all hover:scale-[1.01] shadow-lg`}
+                                    className={`relative p-[1.5px] rounded-2xl sm:rounded-3xl transition-all hover:scale-[1.01] shadow-xl bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-pink-500/50 border border-white/5`}
                                 >
+                                    <div className={`${darkMode ? "bg-black" : "bg-white"} rounded-[calc(1.5rem-1.5px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 relative z-10`}>
                                         {/* Profile Column */}
                                         <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
                                             <div className="relative shrink-0">
@@ -330,6 +331,7 @@ export default function StudentExport() {
                                             </p>
                                         </div>
                                     </div>
+                                </div>
                             ))}
 
                             {student.length > 10 && (

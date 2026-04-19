@@ -274,89 +274,94 @@ function Table({
       </div>
 
       {/* User Card Rows */}
-      {users.map((u) => (
-        <div 
-          key={u._id} 
-          className={`${darkMode ? (selected.includes(u._id) ? "bg-purple-900/10 border-purple-500/50" : "bg-black border-white/10") : (selected.includes(u._id) ? "bg-purple-50 border-purple-200" : "bg-white border-gray-100")} rounded-2xl sm:rounded-3xl p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 border-2 transition-all hover:scale-[1.01] shadow-lg`}
-        >
-            {/* Checkbox */}
-            <div className="w-8 sm:w-12 flex items-center justify-center">
-              <input
-                type="checkbox"
-                className="w-5 h-5 sm:w-6 sm:h-6 bg-transparent border-2 border-blue-500 rounded cursor-pointer accent-blue-600"
-                checked={selected.includes(u._id)}
-                onChange={() => toggleUser(u._id)}
-                disabled={u.isMainAdmin}
-              />
-            </div>
+      {users.map((u) => {
+        const isSelected = selected.includes(u._id);
+        return (
+          <div 
+            key={u._id} 
+            className={`relative p-[1.5px] rounded-2xl sm:rounded-3xl transition-all hover:scale-[1.01] shadow-xl ${isSelected ? "bg-gradient-to-r from-purple-600 to-indigo-600 shadow-purple-500/20" : "bg-gradient-to-r from-purple-500/50 via-indigo-500/50 to-blue-500/50 border border-white/5"}`}
+          >
+              <div className={`${darkMode ? "bg-black" : "bg-white"} rounded-[calc(1.5rem-1.5px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 relative z-10 transition-colors ${isSelected ? (darkMode ? "bg-purple-950/20" : "bg-purple-50/50") : ""}`}>
+                  {/* Checkbox */}
+                  <div className="w-8 sm:w-12 flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      className="w-5 h-5 sm:w-6 sm:h-6 bg-transparent border-2 border-blue-500 rounded cursor-pointer accent-blue-600"
+                      checked={selected.includes(u._id)}
+                      onChange={() => toggleUser(u._id)}
+                      disabled={u.isMainAdmin}
+                    />
+                  </div>
 
-            {/* Profile Column */}
-            <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
-              <div className="relative shrink-0">
-                <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 bg-purple-500`}></div>
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-purple-500/20 text-purple-300" : "bg-purple-100 text-purple-700"} border-2 border-purple-500/30 flex items-center justify-center font-black text-sm sm:text-lg`}>
-                  {u.name.charAt(0)}
-                </div>
+                  {/* Profile Column */}
+                  <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
+                    <div className="relative shrink-0">
+                      <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 bg-purple-500`}></div>
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-purple-500/20 text-purple-300" : "bg-purple-100 text-purple-700"} border-2 border-purple-500/30 flex items-center justify-center font-black text-sm sm:text-lg`}>
+                        {u.name.charAt(0)}
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
+                      <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white/40" : "text-slate-500"} truncate`}>{u.email}</p>
+                    </div>
+                  </div>
+
+                  {/* Staff Details Column */}
+                  <div className="flex-1 flex flex-wrap items-center gap-2">
+                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black uppercase tracking-widest border ${darkMode ? "bg-purple-500/10 text-purple-400 border-purple-500/20" : "bg-purple-50 text-purple-700 border-purple-100"}`}>
+                      {u.role}
+                    </span>
+                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                      {u.position || "NA"}
+                    </span>
+                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-indigo-500/10 border border-indigo-500/20 text-indigo-400`}>
+                      {u.department || "NA"}
+                    </span>
+                  </div>
+
+                  {/* Identity Column */}
+                  <div className="w-40 md:block hidden shrink-0">
+                    <div className={`text-[10px] font-black ${darkMode ? "text-white/60 bg-white/5 border-white/10" : "text-slate-900 bg-gray-50 border-gray-200"} px-4 py-2 rounded-xl border flex items-center justify-center gap-2`}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+                      <span className="truncate">{u.employeeId || "—"}</span>
+                    </div>
+                  </div>
+
+                  {/* Actions Column */}
+                  <div className="w-full md:w-48 flex items-center justify-end gap-2 shrink-0 md:ml-auto mt-2 md:mt-0">
+                    {type === "admin" ? (
+                       onDemote && !u.isMainAdmin && (
+                        <button
+                          onClick={() => onDemote(u)}
+                          className="p-2.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl transition-all shadow-xl active:scale-95"
+                          title="Demote to Faculty"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                      )
+                    ) : (
+                      onPromote && (
+                        <button
+                          onClick={() => onPromote(u)}
+                          className="p-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all shadow-xl active:scale-90"
+                          title="Promote to Admin"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 11l7-7 7 7M5 19l7-7 7 7" /></svg>
+                        </button>
+                      )
+                    )}
+                    
+                    {u.isMainAdmin && (
+                      <span className="px-3 py-1.5 bg-blue-500/10 text-blue-400 text-[9px] font-black uppercase tracking-widest rounded-lg border border-blue-500/20">
+                        Main Admin
+                      </span>
+                    )}
+                  </div>
               </div>
-              <div className="min-w-0">
-                <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
-                <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white/40" : "text-slate-500"} truncate`}>{u.email}</p>
-              </div>
-            </div>
-
-            {/* Staff Details Column */}
-            <div className="flex-1 flex flex-wrap items-center gap-2">
-              <span className={`text-[9px] px-2 py-1 rounded-lg font-black uppercase tracking-widest border ${darkMode ? "bg-purple-500/10 text-purple-400 border-purple-500/20" : "bg-purple-50 text-purple-700 border-purple-100"}`}>
-                {u.role}
-              </span>
-              <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
-                {u.position || "NA"}
-              </span>
-              <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-indigo-500/10 border border-indigo-500/20 text-indigo-400`}>
-                {u.department || "NA"}
-              </span>
-            </div>
-
-            {/* Identity Column */}
-            <div className="w-40 md:block hidden shrink-0">
-              <div className={`text-[10px] font-black ${darkMode ? "text-white/60 bg-white/5 border-white/10" : "text-slate-900 bg-gray-50 border-gray-200"} px-4 py-2 rounded-xl border flex items-center justify-center gap-2`}>
-                <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
-                <span className="truncate">{u.employeeId || "—"}</span>
-              </div>
-            </div>
-
-            {/* Actions Column */}
-            <div className="w-full md:w-48 flex items-center justify-end gap-2 shrink-0 md:ml-auto mt-2 md:mt-0">
-              {type === "admin" ? (
-                 onDemote && !u.isMainAdmin && (
-                  <button
-                    onClick={() => onDemote(u)}
-                    className="p-2.5 bg-orange-600 hover:bg-orange-500 text-white rounded-xl transition-all shadow-xl active:scale-95"
-                    title="Demote to Faculty"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
-                  </button>
-                )
-              ) : (
-                onPromote && (
-                  <button
-                    onClick={() => onPromote(u)}
-                    className="p-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all shadow-xl active:scale-90"
-                    title="Promote to Admin"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 11l7-7 7 7M5 19l7-7 7 7" /></svg>
-                  </button>
-                )
-              )}
-              
-              {u.isMainAdmin && (
-                <span className="px-3 py-1.5 bg-blue-500/10 text-blue-400 text-[9px] font-black uppercase tracking-widest rounded-lg border border-blue-500/20">
-                  Main Admin
-                </span>
-              )}
-            </div>
-            </div>
-        ))}
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -375,109 +375,113 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                             return (
                                 <div 
                                     key={u._id} 
-                                    onClick={() => toggleSelect(u._id)}
-                                    className={`${darkMode ? (isSelected ? "bg-blue-900/10 border-blue-500/50" : "bg-black border-white/10") : (isSelected ? "bg-blue-50 border-blue-200" : "bg-white border-gray-100")} rounded-3xl p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 cursor-pointer border-2 transition-all hover:scale-[1.01] shadow-lg`}
+                                    className={`relative p-[1.5px] rounded-[2rem] transition-all hover:scale-[1.01] shadow-xl ${isSelected ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-blue-500/20" : "bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-pink-500/50 border border-white/5"}`}
                                 >
-                                    {/* Checkbox */}
-                                    <div className="w-8 sm:w-12 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-                                            <div 
-                                                onClick={() => toggleSelect(u._id)}
-                                                className={`w-5 h-5 sm:w-6 sm:h-6 rounded border-2 flex items-center justify-center cursor-pointer transition-all ${
-                                                    isSelected 
-                                                        ? "bg-blue-500 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
-                                                        : `${darkMode ? "border-white/20 group-hover:border-white/40" : "border-gray-300 group-hover:border-gray-400"}`
-                                                }`}
-                                            >
-                                                {isSelected && <Check className="w-4 h-4 text-white stroke-[4]" />}
+                                    <div 
+                                        onClick={() => toggleSelect(u._id)}
+                                        className={`${darkMode ? "bg-black" : "bg-white"} rounded-[calc(2rem-1.5px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 cursor-pointer relative z-10 transition-colors ${isSelected ? (darkMode ? "bg-blue-950/20" : "bg-blue-50/50") : ""}`}
+                                    >
+                                        {/* Checkbox */}
+                                        <div className="w-8 sm:w-12 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                                                <div 
+                                                    onClick={() => toggleSelect(u._id)}
+                                                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded border-2 flex items-center justify-center cursor-pointer transition-all ${
+                                                        isSelected 
+                                                            ? "bg-blue-500 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
+                                                            : `${darkMode ? "border-white/20 group-hover:border-white/40" : "border-gray-300 group-hover:border-gray-400"}`
+                                                    }`}
+                                                >
+                                                    {isSelected && <Check className="w-4 h-4 text-white stroke-[4]" />}
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        {/* Profile Column */}
-                                        <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
-                                            <div className="relative shrink-0">
-                                                <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 ${u.isAdmin ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
-                                                {u.profilePicture ? (
-                                                    <img 
-                                                        src={u.profilePicture} 
-                                                        alt={u.name} 
-                                                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover relative z-10 border-2 ${darkMode ? "border-white/10" : "border-white"}`}
-                                                    />
+                                            {/* Profile Column */}
+                                            <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
+                                                <div className="relative shrink-0">
+                                                    <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 ${u.isAdmin ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
+                                                    {u.profilePicture ? (
+                                                        <img 
+                                                            src={u.profilePicture} 
+                                                            alt={u.name} 
+                                                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover relative z-10 border-2 ${darkMode ? "border-white/10" : "border-white"}`}
+                                                        />
+                                                    ) : (
+                                                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg`}>
+                                                            {u.name.charAt(0)}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
+                                                    <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white/40" : "text-slate-500"} truncate`}>{u.email}</p>
+                                                </div>
+                                            </div>
+
+                                            {/* Academic / Staff Info Column */}
+                                            <div className="flex-1 flex flex-wrap items-center gap-2">
+                                                <span className={`text-[9px] px-2 py-1 rounded-lg font-black uppercase tracking-widest border ${u.isAdmin
+                                                    ? (darkMode ? "bg-purple-500/10 text-purple-400 border-purple-500/20" : "bg-purple-50 text-purple-700 border-purple-100")
+                                                    : (darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : "bg-blue-50 text-blue-700 border-blue-100")
+                                                    }`}>
+                                                    {u.role || (u.isAdmin ? 'Admin' : 'Member')}
+                                                </span>
+                                                
+                                                {u.role === "student" ? (
+                                                    <>
+                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                                                            {u.course || "NA"}
+                                                        </span>
+                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
+                                                            SEM {u.semester || "NA"}
+                                                        </span>
+                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-purple-500/10 border border-purple-500/20 text-purple-400`}>
+                                                            SEC {u.section || "NA"}
+                                                        </span>
+                                                    </>
                                                 ) : (
-                                                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg`}>
-                                                        {u.name.charAt(0)}
-                                                    </div>
+                                                    <>
+                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                                                            {u.position || "NA"}
+                                                        </span>
+                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-indigo-500/10 border border-indigo-500/20 text-indigo-400`}>
+                                                            {u.department || "NA"}
+                                                        </span>
+                                                    </>
                                                 )}
                                             </div>
-                                            <div className="min-w-0">
-                                                <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
-                                                <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white/40" : "text-slate-500"} truncate`}>{u.email}</p>
+
+                                            {/* Identity Column */}
+                                            <div className="w-40 md:block hidden shrink-0">
+                                                <div className={`text-[10px] font-black ${darkMode ? "text-white/60 bg-white/5 border-white/10" : "text-slate-900 bg-gray-50 border-gray-200"} px-4 py-2 rounded-xl border flex items-center justify-center gap-2`}>
+                                                    <div className={`w-1.5 h-1.5 rounded-full ${u.role === "student" ? "bg-blue-500" : "bg-purple-500"}`}></div>
+                                                    <span className="truncate">{u.enrollmentNumber || u.employeeId || u.studentId || "—"}</span>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        {/* Academic / Staff Info Column */}
-                                        <div className="flex-1 flex flex-wrap items-center gap-2">
-                                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black uppercase tracking-widest border ${u.isAdmin
-                                                ? (darkMode ? "bg-purple-500/10 text-purple-400 border-purple-500/20" : "bg-purple-50 text-purple-700 border-purple-100")
-                                                : (darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : "bg-blue-50 text-blue-700 border-blue-100")
-                                                }`}>
-                                                {u.role || (u.isAdmin ? 'Admin' : 'Member')}
-                                            </span>
-                                            
-                                            {u.role === "student" ? (
-                                                <>
-                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
-                                                        {u.course || "NA"}
-                                                    </span>
-                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
-                                                        SEM {u.semester || "NA"}
-                                                    </span>
-                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-purple-500/10 border border-purple-500/20 text-purple-400`}>
-                                                        SEC {u.section || "NA"}
-                                                    </span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
-                                                        {u.position || "NA"}
-                                                    </span>
-                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-indigo-500/10 border border-indigo-500/20 text-indigo-400`}>
-                                                        {u.department || "NA"}
-                                                    </span>
-                                                </>
-                                            )}
-                                        </div>
-
-                                        {/* Identity Column */}
-                                        <div className="w-40 md:block hidden shrink-0">
-                                            <div className={`text-[10px] font-black ${darkMode ? "text-white/60 bg-white/5 border-white/10" : "text-slate-900 bg-gray-50 border-gray-200"} px-4 py-2 rounded-xl border flex items-center justify-center gap-2`}>
-                                                <div className={`w-1.5 h-1.5 rounded-full ${u.role === "student" ? "bg-blue-500" : "bg-purple-500"}`}></div>
-                                                <span className="truncate">{u.enrollmentNumber || u.employeeId || u.studentId || "—"}</span>
+                                            <div className="w-full md:w-48 flex items-center justify-end gap-2 shrink-0 md:ml-auto" onClick={(e) => e.stopPropagation()}>
+                                                <button
+                                                    onClick={() => setEditUserModal(u)}
+                                                    className={`p-2.5 bg-purple-600/5 hover:bg-purple-600 border border-purple-500/20 text-purple-500 hover:text-white rounded-xl transition-all active:scale-95`}
+                                                    title="Edit User"
+                                                >
+                                                    <Edit2 className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleMessageClick(u)}
+                                                    className={`p-2.5 bg-blue-600/5 hover:bg-blue-600 border border-blue-500/20 text-blue-500 hover:text-white rounded-xl transition-all active:scale-95`}
+                                                    title="Message User"
+                                                >
+                                                    <Mail className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteClick(u)}
+                                                    disabled={u.isMainAdmin}
+                                                    className={`p-2.5 bg-red-600/5 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white rounded-xl transition-all active:scale-95 ${u.isMainAdmin ? "opacity-20 cursor-not-allowed" : ""}`}
+                                                    title="Delete User"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
                                             </div>
-                                        </div>
-
-                                        <div className="w-full md:w-48 flex items-center justify-end gap-2 shrink-0 md:ml-auto" onClick={(e) => e.stopPropagation()}>
-                                            <button
-                                                onClick={() => setEditUserModal(u)}
-                                                className={`p-2.5 bg-purple-600/5 hover:bg-purple-600 border border-purple-500/20 text-purple-500 hover:text-white rounded-xl transition-all active:scale-95`}
-                                                title="Edit User"
-                                            >
-                                                <Edit2 className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleMessageClick(u)}
-                                                className={`p-2.5 bg-blue-600/5 hover:bg-blue-600 border border-blue-500/20 text-blue-500 hover:text-white rounded-xl transition-all active:scale-95`}
-                                                title="Message User"
-                                            >
-                                                <Mail className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDeleteClick(u)}
-                                                disabled={u.isMainAdmin}
-                                                className={`p-2.5 bg-red-600/5 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white rounded-xl transition-all active:scale-95 ${u.isMainAdmin ? "opacity-20 cursor-not-allowed" : ""}`}
-                                                title="Delete User"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
                                         </div>
                                     </div>
                                 );
