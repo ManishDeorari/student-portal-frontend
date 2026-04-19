@@ -57,38 +57,58 @@ export default function StudentExport() {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Student Data");
 
-        // Row 1: Group Headers
+        // Row 1: Top Group Headers
         const r1 = [
-            "", "", "", "", "", "CURRENT COURSE", "", "", "ADDRESS", "", "", "EDUCATION",
-            ...Array(17).fill(""), // Spanning Education
-            "EXPERIENCE"
+            "", "", "", "", "", // A-E (Rowspanned)
+            "CURRENT COURSE", "", "", // F-H
+            "ADDRESS / CONTACT", "", "", // I-K
+            "EDUCATION DETAILS", ...Array(17).fill("") // L-AC (18 columns: L to AC)
         ];
 
         // Row 2: Sub-Groups
         const r2 = [
-            "", "", "", "", "", "", "", "", "", "", "", "High School", "", "", "Intermediate", "", "", "Undergraduate", "", "", "", "", "", "Postgraduate", "", "", "", "", "", ""
+            "", "", "", "", "", // A-E
+            "", "", "", // F-H
+            "", "", "", // I-K
+            "High School", "", "", // L-N
+            "Intermediate", "", "", // O-Q
+            "Undergraduate", "", "", "", "", "", // R-W
+            "Postgraduate", "", "", "", "", "" // X-AC
         ];
 
         // Row 3: Column Names
         const r3 = [
-            "S.No", "ID", "Enrollment No", "Name", "Linkedin URL", "Course", "Semester", "Section", "City", "State", "Country", "Phone",
-            "School Name", "Passing Year", "Grades/%",
-            "School Name", "Passing Year", "Grades/%",
-            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%",
-            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%",
-            "Recent Role", "Company", "Duration"
+            "S.No", "ID", "Enrollment No", "Name", "Linkedin URL", // A-E
+            "Course", "Semester", "Section", // F-H
+            "Address (City/State)", "Country", "Phone", // I-K
+            "School Name", "Passing Year", "Grades/%", // L-N (High School)
+            "School Name", "Passing Year", "Grades/%", // O-Q (Intermediate)
+            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%", // R-W (Undergraduate)
+            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%" // X-AC (Postgraduate)
         ];
 
         worksheet.addRow(r1);
         worksheet.addRow(r2);
         worksheet.addRow(r3);
 
-        // Merging for Group Headers
-        worksheet.mergeCells('F1:H2'); // Current Course (Merged F,G,H across Row 1 and 2)
-        worksheet.mergeCells('I1:K2'); // Address (Merged I,J,K across Row 1 and 2)
-        
-        // Fix r1 indices for ADDRESS, EDUCATION, etc. (They shifted)
-        // Note: r1 is just for visual structure, mergeCells does the heavy lifting.
+        // Merging logic
+        // Rowspans for A-E (Vertical Centering across 3 rows)
+        worksheet.mergeCells("A1:A3");
+        worksheet.mergeCells("B1:B3");
+        worksheet.mergeCells("C1:C3");
+        worksheet.mergeCells("D1:D3");
+        worksheet.mergeCells("E1:E3");
+
+        // Top Group Colspans
+        worksheet.mergeCells("F1:H2"); // Current Course
+        worksheet.mergeCells("I1:K2"); // Contact Info
+        worksheet.mergeCells("L1:AC1"); // Education Details (Master Header)
+
+        // Sub-group Colspans (Row 2) per degree
+        worksheet.mergeCells("L2:N2"); // High School
+        worksheet.mergeCells("O2:Q2"); // Intermediate
+        worksheet.mergeCells("R2:W2"); // Undergraduate
+        worksheet.mergeCells("X2:AC2"); // Postgraduate
 
         const MANDATORY_DEGREES = [
             "High School (Secondary - Class 10)",
@@ -117,22 +137,11 @@ export default function StudentExport() {
             const ug = getEdu(MANDATORY_DEGREES[2]);
             const pg = getEdu(MANDATORY_DEGREES[3]);
 
-            let recentExp = (u.experience || []).find(e => !e.endDate || e.endDate.toLowerCase().includes("present") || e.endDate.toLowerCase().includes("current"));
-            if (!recentExp && u.experience?.length > 0) {
-                recentExp = [...u.experience].sort((a, b) => {
-                    const yearA = parseInt(a.endDate?.split(" ").pop()) || 0;
-                    const yearB = parseInt(b.endDate?.split(" ").pop()) || 0;
-                    return yearB - yearA;
-                })[0];
-            }
-            recentExp = recentExp || {};
-
             const addrParts = (u.address || "").split(",").map(p => p.trim());
             const city = addrParts[0] || "N/A";
             const state = addrParts[1] || "N/A";
             const country = addrParts[2] || "N/A";
 
-            // Format plain text values for Excel
             const publicIdText = u.publicId ? `@${u.publicId}` : "N/A";
             const linkedinText = u.linkedin && u.linkedin.startsWith("http") ? u.linkedin : 
                                 u.linkedin ? `https://linkedin.com/in/${u.linkedin.replace(/[^a-zA-Z0-9-]/g, '')}` : "N/A";
@@ -146,13 +155,11 @@ export default function StudentExport() {
                 u.course || "N/A",
                 u.semester || "N/A",
                 u.section || "N/A",
-                city, state, country,
-                formatPhone(u.phone),
+                `${city}, ${state}`, country, formatPhone(u.phone),
                 hs.institution || "NA", hs.endDate?.split(" ").pop() || "NA", hs.grade || "NA",
                 inter.institution || "NA", inter.endDate?.split(" ").pop() || "NA", inter.grade || "NA",
                 ug.institution || "NA", ug.campus || "NA", ug.course || ug.fieldOfStudy || "NA", ug.startDate?.split(" ").pop() || "NA", ug.endDate?.split(" ").pop() || "NA", ug.grade || "NA",
-                pg.institution || "NA", pg.campus || "NA", pg.course || pg.fieldOfStudy || "NA", pg.startDate?.split(" ").pop() || "NA", pg.endDate?.split(" ").pop() || "NA", pg.grade || "NA",
-                recentExp.title || "NA", recentExp.company || "NA", recentExp.startDate && recentExp.endDate ? `${recentExp.startDate} - ${recentExp.endDate}` : "NA"
+                pg.institution || "NA", pg.campus || "NA", pg.course || pg.fieldOfStudy || "NA", pg.startDate?.split(" ").pop() || "NA", pg.endDate?.split(" ").pop() || "NA", pg.grade || "NA"
             ]);
         });
 
