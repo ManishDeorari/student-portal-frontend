@@ -31,7 +31,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
     const [isSendingMessage, setIsSendingMessage] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [editUserModal, setEditUserModal] = useState(null); // userData
-    const [searchEditModalOpen, setSearchEditModalOpen] = useState(false);
+    const [semesterConfirmModal, setSemesterConfirmModal] = useState(null); // "increase" | "decrease" | null
     const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
     // Sync displayedUsers with users prop whenever prop changes (for initials or updates)
@@ -169,12 +169,6 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
     };
 
     const handleBulkSemesterUpdate = async (action) => {
-        const confirmMsg = action === "increase"
-            ? "Are you sure you want to INCREASE all students' semester by 1? (Max 10)"
-            : "Are you sure you want to DECREASE all students' semester by 1? (Min 1)";
-
-        if (!confirm(confirmMsg)) return;
-
         setIsBulkProcessing(true);
         try {
             const res = await fetch(`${API}/api/admin/bulk-semester`, {
@@ -190,6 +184,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
 
             toast.success(data.message);
             onRefresh();
+            setSemesterConfirmModal(null);
         } catch (err) {
             console.error(err);
             toast.error(err.message || "Bulk update failed");
@@ -215,12 +210,11 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                 </div>
                                 <div className="text-left">
                                     <h3 className={`text-lg font-black tracking-tight ${darkMode ? "text-white" : "text-slate-900"} leading-none uppercase`}>Academic Controls</h3>
-                                    <p className={`${darkMode ? "text-blue-400" : "text-blue-600"} text-[9px] font-black uppercase tracking-widest mt-1`}>Bulk Operations (Student Only)</p>
                                 </div>
                             </div>
                             <div className="flex flex-wrap items-center justify-center gap-3">
                                 <button
-                                    onClick={() => handleBulkSemesterUpdate("increase")}
+                                    onClick={() => setSemesterConfirmModal("increase")}
                                     disabled={isBulkProcessing}
                                     className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-emerald-400/20 shadow-lg shadow-emerald-500/10 active:scale-95 flex items-center gap-2 transition-all disabled:opacity-50"
                                 >
@@ -228,19 +222,12 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                     Increase Semester (+1)
                                 </button>
                                 <button
-                                    onClick={() => handleBulkSemesterUpdate("decrease")}
+                                    onClick={() => setSemesterConfirmModal("decrease")}
                                     disabled={isBulkProcessing}
                                     className="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-rose-500 hover:from-orange-500 hover:to-rose-400 text-white rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-orange-400/20 shadow-lg shadow-orange-500/10 active:scale-95 flex items-center gap-2 transition-all disabled:opacity-50"
                                 >
                                     <Minus className="w-4 h-4 stroke-[3]" />
                                     Decrease Semester (-1)
-                                </button>
-                                <button
-                                    onClick={() => setSearchEditModalOpen(true)}
-                                    className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-purple-400/20 shadow-lg shadow-purple-500/10 active:scale-95 flex items-center gap-2 transition-all"
-                                >
-                                    <Search className="w-4 h-4" />
-                                    Global Search & Edit
                                 </button>
                             </div>
                         </div>
@@ -684,17 +671,56 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                 darkMode={darkMode}
             />
 
-            {/* Global Search & Edit Modal */}
-            <AdminSearchEditModal
-                isOpen={searchEditModalOpen}
-                onClose={() => setSearchEditModalOpen(false)}
-                users={users}
-                onEditUser={(u) => {
-                    setSearchEditModalOpen(false);
-                    setEditUserModal(u);
-                }}
-                darkMode={darkMode}
-            />
+            {/* Custom Semester Action Confirmation Modal */}
+            <AnimatePresence>
+                {semesterConfirmModal && (
+                    <div className="fixed inset-0 z-[200] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className={`p-[3px] rounded-[2.5rem] shadow-2xl max-w-sm w-full bg-gradient-to-tr ${semesterConfirmModal === "increase" ? "from-emerald-500 via-green-500 to-teal-500" : "from-orange-500 via-rose-500 to-red-600"}`}
+                        >
+                            <div className={`p-8 sm:p-10 rounded-[calc(2.5rem-3px)] flex flex-col items-center text-center relative overflow-hidden ${darkMode ? 'bg-[#0A0A0B]' : 'bg-white'}`}>
+                                <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-8 shadow-2xl relative z-10 ${semesterConfirmModal === "increase" ? (darkMode ? 'bg-emerald-500/10 text-emerald-500' : 'bg-emerald-50 text-emerald-600') : (darkMode ? 'bg-orange-500/10 text-orange-500' : 'bg-orange-50 text-orange-600')}`}>
+                                    {semesterConfirmModal === "increase" ? <Plus className="w-10 h-10" /> : <Minus className="w-10 h-10" />}
+                                    <div className={`absolute inset-0 blur-xl rounded-3xl -z-10 ${semesterConfirmModal === "increase" ? "bg-emerald-500/20" : "bg-orange-500/20"}`}></div>
+                                </div>
+
+                                <h3 className={`text-2xl sm:text-3xl font-black mb-4 tracking-tighter relative z-10 ${darkMode ? 'text-white' : 'text-slate-900'}`}>
+                                    {semesterConfirmModal === "increase" ? "Increase Semesters?" : "Decrease Semesters?"}
+                                </h3>
+                                
+                                <p className={`text-sm sm:text-base font-bold mb-10 leading-relaxed relative z-10 ${darkMode ? 'text-gray-400' : 'text-slate-500'}`}>
+                                    Are you sure you want to <span className={semesterConfirmModal === "increase" ? "text-emerald-500 font-black" : "text-orange-500 font-black"}>{semesterConfirmModal.toUpperCase()}</span> all students' semester by 1?
+                                    <br />
+                                    <span className="text-[10px] opacity-70 mt-2 block">(Range: 1 to 10)</span>
+                                </p>
+
+                                <div className="grid grid-cols-2 gap-4 w-full relative z-10">
+                                    <button
+                                        onClick={() => setSemesterConfirmModal(null)}
+                                        className={`py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all hover:scale-[1.02] active:scale-95 border-2 ${
+                                            darkMode 
+                                                ? 'bg-white/5 border-white/10 text-white hover:bg-white/10' 
+                                                : 'bg-gray-50 border-gray-100 text-slate-600 hover:bg-gray-100'
+                                        }`}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={() => handleBulkSemesterUpdate(semesterConfirmModal)}
+                                        disabled={isBulkProcessing}
+                                        className={`py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all hover:scale-[1.02] active:scale-95 text-white bg-gradient-to-r ${semesterConfirmModal === "increase" ? "from-emerald-600 to-teal-600" : "from-orange-600 to-rose-600"} shadow-xl disabled:opacity-50`}
+                                    >
+                                        {isBulkProcessing ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" /> : "Confirm"}
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
