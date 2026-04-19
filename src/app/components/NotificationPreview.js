@@ -101,13 +101,19 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                                     ? (isPenalty ? "border-red-500 shadow-lg shadow-red-500/40" : "border-blue-500 shadow-lg shadow-blue-500/40")
                                                     : "border-transparent opacity-80"
                                                     }`}>
-                                                    <Image
-                                                        src={note.sender?.profilePicture || "/default-profile.jpg"}
-                                                        alt={note.sender?.name || "User"}
-                                                        width={40}
-                                                        height={40}
-                                                        className="w-10 h-10 rounded-[0.7rem] object-cover"
-                                                    />
+                                                    {note.type === "academic_update" || note.type === "admin_notice" || note.type === "points_earned" ? (
+                                                        <div className={`w-10 h-10 rounded-[0.7rem] flex items-center justify-center ${darkMode ? "bg-white/10" : "bg-slate-100"}`}>
+                                                            {getNotificationIcon(note.type, darkMode)}
+                                                        </div>
+                                                    ) : (
+                                                        <Image
+                                                            src={note.sender?.profilePicture || "/default-profile.jpg"}
+                                                            alt={note.sender?.name || "User"}
+                                                            width={40}
+                                                            height={40}
+                                                            className="w-10 h-10 rounded-[0.7rem] object-cover"
+                                                        />
+                                                    )}
                                                 </div>
                                                 <div className={`absolute -bottom-1 -right-1 p-1 rounded-full border-2 ${darkMode ? "bg-slate-900 border-slate-950" : "bg-white border-gray-100"} shadow-md`}>
                                                     {isPenalty ? <ShieldAlert className={`w-3 h-3 ${darkMode ? "text-red-400" : "text-red-600"}`} /> : getNotificationIcon(note.type, darkMode)}
