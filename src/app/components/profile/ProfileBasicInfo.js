@@ -249,6 +249,47 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                 </div>
                             </div>
                         </div>
+                        
+                        {/* New Level: Role Specific Info */}
+                        {profile.role === 'student' ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div className="p-[2.5px] bg-gradient-to-tr from-pink-600/40 to-rose-600/40 rounded-2xl shadow-lg">
+                                    <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Course</label>
+                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.course || "N/A"}</span>
+                                    </div>
+                                </div>
+                                <div className="p-[2.5px] bg-gradient-to-tr from-cyan-600/40 to-blue-600/40 rounded-2xl shadow-lg">
+                                    <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Semester</label>
+                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.semester || "N/A"}</span>
+                                    </div>
+                                </div>
+                                <div className="p-[2.5px] bg-gradient-to-tr from-amber-600/40 to-orange-600/40 rounded-2xl shadow-lg">
+                                    <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Section</label>
+                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.section || "N/A"}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="p-[2.5px] bg-gradient-to-tr from-violet-600/40 to-purple-600/40 rounded-2xl shadow-lg">
+                                    <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Position</label>
+                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+                                            {profile.isMainAdmin ? "Main Admin" : (profile.position || "N/A")}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="p-[2.5px] bg-gradient-to-tr from-fuchsia-600/40 to-pink-600/40 rounded-2xl shadow-lg">
+                                    <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Department</label>
+                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.department || "N/A"}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Level 2: Connect Icons (Phone, WhatsApp, LinkedIn) */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

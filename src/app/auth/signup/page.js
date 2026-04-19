@@ -13,12 +13,23 @@ export default function SignupPage() {
     password: "",
     enrollmentNumber: "",
     role: "student", // default
+    position: "",
+    department: "",
+    course: "",
+    semester: "",
+    section: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    let { name, value } = e.target;
+    if (name === "course" || name === "section") {
+      value = value.toUpperCase();
+    }
+    setForm({ ...form, [name]: value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +45,8 @@ export default function SignupPage() {
           password: form.password,
           role: "faculty",
           employeeId: form.enrollmentNumber, // mapping faculty field to employeeId
+          position: form.position,
+          department: form.department,
         }
         : {
           name: form.name,
@@ -41,6 +54,9 @@ export default function SignupPage() {
           password: form.password,
           role: "student",
           enrollmentNumber: form.enrollmentNumber,
+          course: form.course,
+          semester: Number(form.semester),
+          section: form.section,
         };
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -189,6 +205,85 @@ export default function SignupPage() {
                       />
                     </div>
                   </div>
+
+                  {form.role === "faculty" ? (
+                    <>
+                      <div className="space-y-0.5">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Position</label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <input
+                            type="text"
+                            name="position"
+                            placeholder="Ex: Assistant Professor"
+                            value={form.position}
+                            onChange={handleChange}
+                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Department</label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <input
+                            type="text"
+                            name="department"
+                            placeholder="Ex: CS"
+                            value={form.department}
+                            onChange={handleChange}
+                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-0.5">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course</label>
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <input
+                              type="text"
+                              name="course"
+                              placeholder="Ex: BTECH"
+                              value={form.course}
+                              onChange={handleChange}
+                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-0.5">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Semester</label>
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <input
+                              type="number"
+                              name="semester"
+                              placeholder="1-8"
+                              value={form.semester}
+                              onChange={handleChange}
+                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section (Optional)</label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <input
+                            type="text"
+                            name="section"
+                            placeholder="Ex: A"
+                            value={form.section}
+                            onChange={handleChange}
+                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
 
                   <div className="space-y-0.5">
                     <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>

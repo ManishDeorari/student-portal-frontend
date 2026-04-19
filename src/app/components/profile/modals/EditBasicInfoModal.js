@@ -14,6 +14,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
         phone: "", // Will store the full phone number from PhoneInput
         whatsapp: "",
         linkedin: "",
+        section: "",
     });
 
     // Address structure
@@ -31,6 +32,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                 phone: currentProfile.phone || "",
                 whatsapp: currentProfile.whatsapp || "",
                 linkedin: currentProfile.linkedin || "",
+                section: currentProfile.section || "",
             });
 
             // Parse existing address (expected format: "City, State, Country")
@@ -63,7 +65,10 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
     if (!isOpen) return null;
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
+        if (name === "section") {
+            value = value.toUpperCase();
+        }
         setFormData((prev) => ({ ...prev, [name]: value }));
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: null }));
@@ -317,6 +322,25 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                         </div>
                         {errors.linkedin && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors.linkedin}</p>}
                     </div>
+
+                    {/* Section (Only for students) */}
+                    {currentProfile?.role === "student" && (
+                        <div>
+                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-amber-400' : 'text-amber-600'}`}>
+                                <User className="w-3.5 h-3.5" /> Section
+                            </label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                <input
+                                    type="text"
+                                    name="section"
+                                    value={formData.section}
+                                    onChange={handleChange}
+                                    placeholder="Ex: A"
+                                    className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className={`p-4 flex justify-end gap-3 flex-shrink-0 ${darkMode ? 'bg-slate-800/50 border-t border-white/5' : 'bg-gray-50 border-t'}`}>
