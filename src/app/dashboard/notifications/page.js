@@ -373,6 +373,10 @@ export default function NotificationsPage() {
                                 <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-[0.9rem] flex items-center justify-center ${darkMode ? 'bg-white/10' : 'bg-black/5'}`}>
                                   <Award className={`w-5 h-5 sm:w-8 sm:h-8 ${darkMode ? 'text-white' : 'text-slate-900'}`} />
                                 </div>
+                              ) : note.type === "academic_update" || note.type === "admin_notice" ? (
+                                <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-[0.9rem] flex items-center justify-center ${darkMode ? 'bg-white/10' : 'bg-black/5'}`}>
+                                  <ShieldAlert className={`w-5 h-5 sm:w-8 sm:h-8 ${darkMode ? 'text-white' : 'text-slate-900'}`} />
+                                </div>
                               ) : (
                                 <Image
                                   src={note.sender?.profilePicture || "/default-profile.jpg"}

@@ -336,13 +336,19 @@ export const NotificationProvider = ({ children }) => {
                   <div className="flex items-start z-10">
                     <div className="flex-shrink-0 pt-0.5">
                       <div className={`p-[2.5px] rounded-2xl bg-gradient-to-br ${theme.gradient} shadow-lg`}>
-                        <Image
-                          className="h-11 w-11 rounded-[0.9rem] object-cover"
-                          src={notification.sender?.profilePicture || "/default-profile.jpg"}
-                          alt={notification.sender?.name || "User"}
-                          width={44}
-                          height={44}
-                        />
+                        {notification.type === "academic_update" || notification.type === "admin_notice" || notification.type === "points_earned" ? (
+                          <div className={`h-11 w-11 rounded-[0.9rem] flex items-center justify-center ${darkMode ? 'bg-black' : 'bg-white'}`}>
+                            {theme.icon}
+                          </div>
+                        ) : (
+                          <Image
+                            className="h-11 w-11 rounded-[0.9rem] object-cover"
+                            src={notification.sender?.profilePicture || "/default-profile.jpg"}
+                            alt={notification.sender?.name || "User"}
+                            width={44}
+                            height={44}
+                          />
+                        )}
                       </div>
                     </div>
                     <div className="ml-4 flex-1 pr-6">
