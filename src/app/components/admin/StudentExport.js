@@ -183,10 +183,10 @@ export default function StudentExport() {
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
             {/* Search & Filters */}
-            <div className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden">
-                <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-8 rounded-xl sm:rounded-[calc(1.5rem-2px)] space-y-3 sm:space-y-8`}>
+            <div className={`border-2 ${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-3xl shadow-lg overflow-hidden`}>
+                <section className={`p-4 sm:p-8 space-y-3 sm:space-y-8`}>
                     <div className="flex flex-col md:flex-row gap-4">
-                        <div className="relative flex-1 p-[2px] bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl sm:rounded-2xl">
+                        <div className="relative flex-1 border-2 border-gray-200 rounded-xl sm:rounded-2xl">
                             <div className="relative h-full">
                                 <input
                                     type="text"
@@ -210,7 +210,7 @@ export default function StudentExport() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-6">
                         <div className="space-y-2 z-[60]">
                             <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-slate-900"} ml-2 font-black`}>Course</label>
-                            <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
+                            <div className="border-2 border-gray-200 rounded-lg sm:rounded-xl relative shadow-sm">
                                 <HybridInput
                                     value={filters.course}
                                     onChange={(val) => setFilters({ ...filters, course: val })}
@@ -218,17 +218,17 @@ export default function StudentExport() {
                                     placeholder="All Courses"
                                     uppercase={true}
                                     placement="top"
-                                    className={`w-full px-4 py-1.5 sm:py-4 ${darkMode ? "bg-black text-white" : "bg-white text-slate-900 border-gray-200"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black`}
+                                    className={`w-full px-4 py-1.5 sm:py-4 ${darkMode ? "bg-black text-white" : "bg-white text-slate-900 underline-none"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black`}
                                 />
                             </div>
                         </div>
                         <div className="space-y-2 relative">
                             <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-slate-900"} ml-2 font-black`}>Semester</label>
-                            <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
+                            <div className="border-2 border-gray-200 rounded-lg sm:rounded-xl relative shadow-sm">
                                 <select
                                     value={filters.semester}
                                     onChange={(e) => setFilters({ ...filters, semester: e.target.value })}
-                                    className={`w-full px-4 py-1.5 sm:py-[15px] ${darkMode ? "bg-black text-white" : "bg-white text-slate-900 border-gray-200"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black appearance-none cursor-pointer`}
+                                    className={`w-full px-4 py-1.5 sm:py-[15px] ${darkMode ? "bg-black text-white" : "bg-white text-slate-900 border-none"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black appearance-none cursor-pointer`}
                                 >
                                     <option value="">All Semesters</option>
                                     {[...Array(10)].map((_, i) => (
@@ -240,13 +240,13 @@ export default function StudentExport() {
                         </div>
                         <div className="space-y-2 relative">
                             <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-slate-900"} ml-2 font-black`}>Section</label>
-                            <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg sm:rounded-xl relative shadow-md">
+                            <div className="border-2 border-gray-200 rounded-lg sm:rounded-xl relative shadow-sm">
                                 <input
                                     type="text"
                                     placeholder="All Sections"
                                     value={filters.section}
                                     onChange={(e) => setFilters({ ...filters, section: e.target.value.toUpperCase() })}
-                                    className={`w-full px-4 py-1.5 sm:py-4 ${darkMode ? "bg-black text-white placeholder-white/30" : "bg-white text-slate-900 border-gray-200"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black`}
+                                    className={`w-full px-4 py-1.5 sm:py-4 ${darkMode ? "bg-black text-white placeholder-white/30" : "bg-white text-slate-900 border-none"} rounded-lg sm:rounded-[calc(0.75rem-2px)] text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.2em] outline-none font-black`}
                                 />
                             </div>
                         </div>
@@ -256,8 +256,8 @@ export default function StudentExport() {
 
             {/* Results & Export */}
             {student.length > 0 && (
-                <div className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden mb-10">
-                    <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-8 rounded-xl sm:rounded-[calc(1.5rem-2px)] space-y-4 sm:space-y-6`}>
+                <div className={`border-2 ${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-3xl shadow-lg overflow-hidden mb-10`}>
+                    <section className={`p-4 sm:p-8 space-y-4 sm:space-y-6`}>
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                                 <div className="h-10 w-2.5 bg-green-500 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.6)]"></div>
@@ -284,9 +284,8 @@ export default function StudentExport() {
                             {student.slice(0, 10).map((u) => (
                                 <div 
                                     key={u._id} 
-                                    className="relative p-[1.5px] sm:p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl shadow-xl transition-all hover:scale-[1.01] hover:shadow-blue-500/20"
+                                    className={`${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-2xl sm:rounded-3xl p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 border-2 transition-all hover:scale-[1.01] shadow-lg`}
                                 >
-                                    <div className={`rounded-[calc(1rem-1.5px)] sm:rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 transition-colors group-hover:bg-white/5`}>
                                         {/* Profile Column */}
                                         <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
                                             <div className="relative shrink-0">
@@ -331,7 +330,6 @@ export default function StudentExport() {
                                             </p>
                                         </div>
                                     </div>
-                                </div>
                             ))}
 
                             {student.length > 10 && (

@@ -19,11 +19,7 @@ export default function PendingUsers({
   const [selected, setSelected] = useState([]);
 
   // Safety filter
-  const safePendingUsers = pendingUsers.filter(u =>
-    !u.isMainAdmin &&
-    u.email !== "admin@studentportal.com" &&
-    u.email !== "manishdeorari377@gmail.com"
-  );
+  const safePendingUsers = pendingUsers.filter(u => !u.isMainAdmin);
 
   const filterUsers = (role) =>
     pendingUsers.filter(
@@ -66,9 +62,8 @@ export default function PendingUsers({
   };
 
   const Card = ({ title, users, badgeColor, actions, children }) => (
-    <div className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden mb-10 transition-all hover:shadow-blue-500/10">
-      <div className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} rounded-[calc(1.5rem-2px)] overflow-hidden`}>
-        <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-3 sm:py-6 relative">
+    <div className={`border-2 ${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-3xl shadow-lg overflow-hidden mb-10`}>
+        <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-3 sm:py-6 border-b border-gray-100/10">
           <h3 className={`font-extrabold ${darkMode ? "text-white" : "text-slate-900"} text-base sm:text-xl flex items-center gap-2 sm:gap-3`}>
             {title}
             <span className={`text-[11px] px-3 py-1 rounded-full font-black uppercase tracking-tighter ${badgeColor}`}>
@@ -78,8 +73,6 @@ export default function PendingUsers({
           <div className="mt-4 sm:mt-0">
             {actions}
           </div>
-          {/* Hard Gradient Divider */}
-          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-50" />
         </div>
         <div className="p-2 sm:p-4">
           {users.length === 0 ? (
@@ -90,7 +83,6 @@ export default function PendingUsers({
             children
           )}
         </div>
-      </div>
     </div>
   );
 
@@ -102,16 +94,16 @@ export default function PendingUsers({
         animate={{ opacity: 1, y: 0 }}
         className="space-y-8"
       >
-        <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] shadow-2xl overflow-hidden">
-          <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 ${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-8 rounded-[calc(2rem-2px)] relative overflow-hidden backdrop-blur-xl`}>
-            <div className="relative flex-1 max-w-md p-[2px] bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl">
+        <div className={`border-2 ${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-[2rem] shadow-lg overflow-hidden`}>
+          <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 p-4 sm:p-8 relative overflow-hidden`}>
+            <div className="relative flex-1 max-w-md border-2 border-gray-200 rounded-2xl">
               <div className="relative h-full">
                 <input
                   type="text"
                   placeholder="Search by name, email, ID…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className={`w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3.5 text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white" : "bg-[#FAFAFA] text-black placeholder-slate-400"} rounded-[calc(1rem-2px)] outline-none transition-all font-bold`}
+                  className={`w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3.5 text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white" : "bg-white text-black placeholder-slate-400"} rounded-[calc(1rem-2px)] outline-none transition-all font-bold`}
                 />
                 <svg className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${darkMode ? "text-white" : "text-gray-900"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               </div>
@@ -214,19 +206,17 @@ export default function PendingUsers({
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden"
+              className={`border-2 ${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden`}
             >
-              <div className={`relative ${darkMode ? "bg-black" : "bg-white"} rounded-[calc(2rem-2px)] p-8 h-full w-full overflow-hidden`}>
+              <div className={`relative p-8 h-full w-full overflow-hidden`}>
                 <h3 className={`text-2xl font-black ${darkMode ? "text-white" : "text-slate-900"} mb-6 uppercase tracking-tighter`}>
                   {confirm.type.includes("approve") ? "Approve User?" : "Reject User?"}
                 </h3>
 
                 {confirm.user && (
-                  <div className="relative p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl mb-8">
-                    <div className={`p-6 rounded-[calc(1rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
+                  <div className={`border-2 ${darkMode ? "border-white/10" : "border-gray-100"} rounded-2xl mb-8 p-6`}>
                       <p className={`font-black ${darkMode ? "text-white" : "text-slate-900"} text-2xl mb-1`}>{confirm.user.name}</p>
                       <p className={`${darkMode ? "text-blue-400" : "text-slate-500"} text-xs font-black uppercase tracking-widest truncate`}>{confirm.user.email}</p>
-                    </div>
                   </div>
                 )}
 
@@ -286,9 +276,8 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
       {users.map((u) => (
         <div 
           key={u._id} 
-          className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-xl transition-all hover:scale-[1.01] hover:shadow-blue-500/20"
+          className={`${darkMode ? (selected.includes(u._id) ? "bg-blue-900/10 border-blue-500/50" : "bg-black border-white/10") : (selected.includes(u._id) ? "bg-blue-50 border-blue-200" : "bg-white border-gray-100")} rounded-3xl p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 border-2 transition-all hover:scale-[1.01] shadow-lg`}
         >
-          <div className={`rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 transition-colors group-hover:bg-white/5`}>
             {/* Checkbox */}
             <div className="w-12 flex items-center justify-center">
               <input
@@ -372,9 +361,8 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
-          </div>
-        </div>
-      ))}
+            </div>
+        ))}
     </div>
   );
 }

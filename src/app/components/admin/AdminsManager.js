@@ -62,9 +62,8 @@ export default function AdminsManager({
   /* ---------------- CARD ---------------- */
 
   const Card = ({ title, users, badge, children, actions }) => (
-    <div className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden mb-6 sm:mb-10 transition-all hover:shadow-blue-500/10">
-      <div className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} rounded-[calc(1.5rem-2px)] overflow-hidden`}>
-        <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-4 sm:py-6 relative">
+    <div className={`border-2 ${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-2xl sm:rounded-3xl shadow-lg overflow-hidden mb-6 sm:mb-10`}>
+        <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-4 sm:py-6 relative border-b border-gray-100/10">
           <h3 className={`font-extrabold ${darkMode ? "text-white" : "text-slate-900"} text-base sm:text-xl flex items-center gap-2 sm:gap-3`}>
             {title}
             <span className={`text-[11px] px-3 py-1 rounded-full font-black uppercase tracking-tighter ${badge}`}>
@@ -86,7 +85,6 @@ export default function AdminsManager({
             children
           )}
         </div>
-      </div>
     </div>
   );
 
@@ -98,9 +96,9 @@ export default function AdminsManager({
         animate={{ opacity: 1, y: 0 }}
         className="space-y-8"
       >
-        <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] shadow-2xl overflow-hidden">
-          <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 ${darkMode ? "bg-black" : "bg-[#FAFAFA]"} backdrop-blur-xl p-4 sm:p-8 rounded-[calc(2rem-2px)] relative overflow-hidden`}>
-            <div className="relative flex-1 max-w-md p-[2px] bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl">
+        <div className={`border-2 ${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-[2rem] shadow-lg overflow-hidden`}>
+          <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 p-4 sm:p-8 relative overflow-hidden`}>
+            <div className="relative flex-1 max-w-md border-2 border-gray-200 rounded-2xl">
               <div className="relative h-full">
                 <input
                   type="text"
@@ -198,19 +196,17 @@ export default function AdminsManager({
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden"
+              className={`border-2 ${darkMode ? "bg-black border-white/10" : "bg-white border-gray-100"} rounded-[2rem] w-full max-w-md shadow-2xl overflow-hidden`}
             >
-              <div className={`relative ${darkMode ? "bg-black" : "bg-white"} rounded-[calc(2rem-2px)] p-8 h-full w-full overflow-hidden`}>
+              <div className={`relative p-8 h-full w-full overflow-hidden`}>
                 <h3 className={`text-2xl font-black ${darkMode ? "text-white" : "text-slate-900"} mb-6 uppercase tracking-tighter`}>
                   {confirm.action.includes("promote") ? "Promote User?" : "Demote User?"}
                 </h3>
 
                 {confirm.user && (
-                  <div className="relative p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl mb-8">
-                    <div className={`p-6 rounded-[calc(1rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
+                  <div className={`border-2 ${darkMode ? "border-white/10" : "border-gray-100"} rounded-2xl mb-8 p-6`}>
                       <p className={`font-black ${darkMode ? "text-white" : "text-slate-900"} text-2xl mb-1`}>{confirm.user.name}</p>
                       <p className={`${darkMode ? "text-blue-400" : "text-slate-500"} text-xs font-black uppercase tracking-widest truncate`}>{confirm.user.email}</p>
-                    </div>
                   </div>
                 )}
 
@@ -281,9 +277,8 @@ function Table({
       {users.map((u) => (
         <div 
           key={u._id} 
-          className="relative p-[1.5px] sm:p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl shadow-xl transition-all hover:scale-[1.01] hover:shadow-blue-500/20"
+          className={`${darkMode ? (selected.includes(u._id) ? "bg-purple-900/10 border-purple-500/50" : "bg-black border-white/10") : (selected.includes(u._id) ? "bg-purple-50 border-purple-200" : "bg-white border-gray-100")} rounded-2xl sm:rounded-3xl p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 border-2 transition-all hover:scale-[1.01] shadow-lg`}
         >
-          <div className={`rounded-[calc(1rem-1.5px)] sm:rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 transition-colors group-hover:bg-white/5`}>
             {/* Checkbox */}
             <div className="w-8 sm:w-12 flex items-center justify-center">
               <input
@@ -360,9 +355,8 @@ function Table({
                 </span>
               )}
             </div>
-          </div>
-        </div>
-      ))}
+            </div>
+        ))}
     </div>
   );
 }

@@ -37,7 +37,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
 
     // Sync displayedUsers with users prop whenever prop changes (for initials or updates)
     useEffect(() => {
-        const filtered = (users || []).filter(u => !(u.isMainAdmin || u.email === "manishdeorari377@gmail.com"));
+        const filtered = (users || []).filter(u => !u.isMainAdmin);
         setDisplayedUsers(filtered);
     }, [users]);
 
@@ -47,7 +47,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
         setTimeout(() => {
             const results = (users || []).filter((u) => {
                 // Exclusion check for Main Admin
-                if (u.isMainAdmin || u.email === "manishdeorari377@gmail.com") return false;
+                if (u.isMainAdmin) return false;
 
                 // 1. Text Search (Name, Email, Enrollment, StudentID, EmployeeID, Role)
                 const searchStr = `${u.name || ""} ${u.email || ""} ${u.enrollmentNumber || ""} ${u.studentId || ""} ${u.employeeId || ""} ${u.role || ""}`.toLowerCase();
@@ -375,14 +375,11 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                             return (
                                 <div 
                                     key={u._id} 
-                                    className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-xl transition-all hover:scale-[1.01] hover:shadow-blue-500/20"
+                                    onClick={() => toggleSelect(u._id)}
+                                    className={`${darkMode ? (isSelected ? "bg-blue-900/10 border-blue-500/50" : "bg-black border-white/10") : (isSelected ? "bg-blue-50 border-blue-200" : "bg-white border-gray-100")} rounded-3xl p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 cursor-pointer border-2 transition-all hover:scale-[1.01] shadow-lg`}
                                 >
-                                    <div 
-                                        onClick={() => toggleSelect(u._id)}
-                                        className={`rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 cursor-pointer transition-colors`}
-                                    >
-                                        {/* Checkbox */}
-                                        <div className="w-8 sm:w-12 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                                    {/* Checkbox */}
+                                    <div className="w-8 sm:w-12 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                                             <div 
                                                 onClick={() => toggleSelect(u._id)}
                                                 className={`w-5 h-5 sm:w-6 sm:h-6 rounded border-2 flex items-center justify-center cursor-pointer transition-all ${
@@ -458,35 +455,33 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                             </div>
                                         </div>
 
-                                        {/* Actions Column */}
                                         <div className="w-full md:w-48 flex items-center justify-end gap-2 shrink-0 md:ml-auto" onClick={(e) => e.stopPropagation()}>
                                             <button
                                                 onClick={() => setEditUserModal(u)}
-                                                className={`p-2.5 bg-purple-600/5 hover:bg-purple-600 border border-purple-500/20 text-purple-500 hover:text-white rounded-xl transition-all active:scale-90`}
+                                                className={`p-2.5 bg-purple-600/5 hover:bg-purple-600 border border-purple-500/20 text-purple-500 hover:text-white rounded-xl transition-all active:scale-95`}
                                                 title="Edit User"
                                             >
                                                 <Edit2 className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleMessageClick(u)}
-                                                className={`p-2.5 bg-blue-600/5 hover:bg-blue-600 border border-blue-500/20 text-blue-500 hover:text-white rounded-xl transition-all active:scale-90`}
+                                                className={`p-2.5 bg-blue-600/5 hover:bg-blue-600 border border-blue-500/20 text-blue-500 hover:text-white rounded-xl transition-all active:scale-95`}
                                                 title="Message User"
                                             >
                                                 <Mail className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteClick(u)}
-                                                disabled={u.isMainAdmin || u.email === "manishdeorari377@gmail.com"}
-                                                className={`p-2.5 bg-red-600/5 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white rounded-xl transition-all active:scale-90 ${(u.isMainAdmin || u.email === "manishdeorari377@gmail.com") ? "opacity-20 cursor-not-allowed" : ""}`}
+                                                disabled={u.isMainAdmin}
+                                                className={`p-2.5 bg-red-600/5 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white rounded-xl transition-all active:scale-95 ${u.isMainAdmin ? "opacity-20 cursor-not-allowed" : ""}`}
                                                 title="Delete User"
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
 
                         {displayedUsers.length === 0 && (
                             <div className="py-20 text-center">
