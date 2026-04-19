@@ -59,32 +59,35 @@ export default function StudentExport() {
 
         // Row 1: Top Group Headers
         const r1 = [
-            "S.No", "ID", "Enrollment No", "Name", "Linkedin URL", // A-E (Labels moved here for merge)
-            "CURRENT COURSE", "", "", // F-H
-            "ADDRESS / CONTACT", "", "", // I-K
-            "EDUCATION DETAILS", ...Array(17).fill("") // L-AC (18 columns: L to AC)
+            "S.No", "ID", "Enrollment No", "Name", "Linkedin URL", // A-E (Labels for merge)
+            "PHONE", // F
+            "CURRENT COURSE", "", "", // G-I
+            "ADDRESS", "", "", // J-L
+            "EDUCATION DETAILS", ...Array(17).fill("") // M-AD (18 columns)
         ];
 
         // Row 2: Sub-Groups
         const r2 = [
             "", "", "", "", "", // A-E
-            "", "", "", // F-H
-            "", "", "", // I-K
-            "High School", "", "", // L-N
-            "Intermediate", "", "", // O-Q
-            "Undergraduate", "", "", "", "", "", // R-W
-            "Postgraduate", "", "", "", "", "" // X-AC
+            "", // F
+            "", "", "", // G-I
+            "", "", "", // J-L
+            "High School", "", "", // M-O
+            "Intermediate", "", "", // P-R
+            "Undergraduate", "", "", "", "", "", // S-X
+            "Postgraduate", "", "", "", "", "" // Y-AD
         ];
 
         // Row 3: Column Names
         const r3 = [
-            "", "", "", "", "", // A-E (Cleared as they are merged with R1)
-            "Course", "Semester", "Section", // F-H
-            "Address (City/State)", "Country", "Phone", // I-K
-            "School Name", "Passing Year", "Grades/%", // L-N (High School)
-            "School Name", "Passing Year", "Grades/%", // O-Q (Intermediate)
-            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%", // R-W (Undergraduate)
-            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%" // X-AC (Postgraduate)
+            "", "", "", "", "", // A-E
+            "", // F
+            "Course", "Semester", "Section", // G-I
+            "City", "State", "Country", // J-L
+            "School Name", "Passing Year", "Grades/%", // M-O
+            "School Name", "Passing Year", "Grades/%", // P-R
+            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%", // S-X
+            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%" // Y-AD
         ];
 
         worksheet.addRow(r1);
@@ -92,23 +95,29 @@ export default function StudentExport() {
         worksheet.addRow(r3);
 
         // Merging logic
-        // Rowspans for A-E (Vertical Centering across 3 rows)
+        // Rowspans for A-E (3 rows)
         worksheet.mergeCells("A1:A3");
         worksheet.mergeCells("B1:B3");
         worksheet.mergeCells("C1:C3");
         worksheet.mergeCells("D1:D3");
         worksheet.mergeCells("E1:E3");
 
-        // Top Group Colspans
-        worksheet.mergeCells("F1:H2"); // Current Course
-        worksheet.mergeCells("I1:K2"); // Contact Info
-        worksheet.mergeCells("L1:AC1"); // Education Details (Master Header)
+        // Phone Rowspan (1-2)
+        worksheet.mergeCells("F1:F2");
+        // Worksheet.mergeCells("F1:F3") would be cleaner but following user's "1 and 2"
+        // Let's put a label in F3 if F1:F2 is merged
+        worksheet.getCell("F3").value = "Contact No"; 
 
-        // Sub-group Colspans (Row 2) per degree
-        worksheet.mergeCells("L2:N2"); // High School
-        worksheet.mergeCells("O2:Q2"); // Intermediate
-        worksheet.mergeCells("R2:W2"); // Undergraduate
-        worksheet.mergeCells("X2:AC2"); // Postgraduate
+        // Top Group Colspans
+        worksheet.mergeCells("G1:I2"); // Current Course
+        worksheet.mergeCells("J1:L2"); // Address
+        worksheet.mergeCells("M1:AD1"); // Education Details
+
+        // Sub-group Colspans (Row 2)
+        worksheet.mergeCells("M2:O2"); // High School
+        worksheet.mergeCells("P2:R2"); // Intermediate
+        worksheet.mergeCells("S2:X2"); // Undergraduate
+        worksheet.mergeCells("Y2:AD2"); // Postgraduate
 
         const MANDATORY_DEGREES = [
             "High School (Secondary - Class 10)",
@@ -152,10 +161,9 @@ export default function StudentExport() {
                 u.enrollmentNumber || "N/A",
                 u.name,
                 linkedinText,
-                u.course || "N/A",
-                u.semester || "N/A",
-                u.section || "N/A",
-                `${city}, ${state}`, country, formatPhone(u.phone),
+                formatPhone(u.phone), // F
+                u.course || "N/A", u.semester || "N/A", u.section || "N/A", // G-I
+                city, state, country, // J-L
                 hs.institution || "NA", hs.endDate?.split(" ").pop() || "NA", hs.grade || "NA",
                 inter.institution || "NA", inter.endDate?.split(" ").pop() || "NA", inter.grade || "NA",
                 ug.institution || "NA", ug.campus || "NA", ug.course || ug.fieldOfStudy || "NA", ug.startDate?.split(" ").pop() || "NA", ug.endDate?.split(" ").pop() || "NA", ug.grade || "NA",
