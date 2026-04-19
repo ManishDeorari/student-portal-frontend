@@ -285,7 +285,9 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                 <div className="p-[2.5px] bg-gradient-to-tr from-fuchsia-600/40 to-pink-600/40 rounded-2xl shadow-lg">
                                     <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                         <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Department</label>
-                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.department || "N/A"}</span>
+                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+                                            {profile.isMainAdmin ? "Server" : (profile.department || "N/A")}
+                                        </span>
                                     </div>
                                 </div>
                             </div>

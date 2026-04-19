@@ -25,6 +25,7 @@ const getNotificationIcon = (type, darkMode) => {
         case "profile_visit":
             return <Eye className={`${iconClass} ${darkMode ? "text-purple-400" : "text-purple-600"}`} />;
         case "admin_notice":
+        case "academic_update":
             return <ShieldAlert className={`${iconClass} ${darkMode ? "text-red-400" : "text-red-600"}`} />;
         case "points_earned":
             return <Award className={`${iconClass} ${darkMode ? "text-yellow-400" : "text-yellow-600"}`} />;

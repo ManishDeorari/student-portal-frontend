@@ -180,7 +180,7 @@ export default function NotificationsPage() {
     } else if (activeTab === "VISIT") {
       filtered = notifications.filter(n => n.type === "profile_visit");
     } else if (activeTab === "NOTICE") {
-      filtered = notifications.filter(n => n.type === "admin_notice");
+      filtered = notifications.filter(n => ["admin_notice", "academic_update"].includes(n.type));
     } else if (activeTab === "POINTS") {
       filtered = notifications.filter(n => n.type === "points_earned");
     } else if (activeTab === "GROUP") {
@@ -486,6 +486,7 @@ export default function NotificationsPage() {
                                         else if (typeStr.includes("profile_visit")) cat = "Profile Visit";
                                         else if (typeStr.includes("connect")) cat = "Network";
                                         else if (typeStr.includes("notice")) cat = "Announcement";
+                                        else if (typeStr === "academic_update") cat = "Academic Update";
 
                                         const gradient = note.type === "feedback" 
                                           ? "from-indigo-600 via-blue-600 to-indigo-600" 

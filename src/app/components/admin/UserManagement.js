@@ -2,10 +2,12 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Trash2, Mail, UserX, Shield, Check, Minus, X, AlertTriangle, Filter, Send } from "lucide-react";
+import { Search, Trash2, Mail, UserX, Shield, Check, Minus, X, AlertTriangle, Filter, Send, GraduationCap, Plus, Edit2 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import HybridInput from "../ui/HybridInput";
 import EmojiPickerToggle from "../Post/utils/EmojiPickerToggle";
+import AdminEditUserModal from "./modals/AdminEditUserModal";
+import AdminSearchEditModal from "./modals/AdminSearchEditModal";
 import { toast } from "react-hot-toast";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -28,6 +30,9 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
     const [messageText, setMessageText] = useState("");
     const [isSendingMessage, setIsSendingMessage] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
+    const [editUserModal, setEditUserModal] = useState(null); // userData
+    const [searchEditModalOpen, setSearchEditModalOpen] = useState(false);
+    const [isBulkProcessing, setIsBulkProcessing] = useState(false);
 
     // Sync displayedUsers with users prop whenever prop changes (for initials or updates)
     useEffect(() => {
@@ -163,13 +168,85 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
         setMessageText(prev => prev + emoji.native);
     };
 
+    const handleBulkSemesterUpdate = async (action) => {
+        const confirmMsg = action === "increase"
+            ? "Are you sure you want to INCREASE all students' semester by 1? (Max 10)"
+            : "Are you sure you want to DECREASE all students' semester by 1? (Min 1)";
+
+        if (!confirm(confirmMsg)) return;
+
+        setIsBulkProcessing(true);
+        try {
+            const res = await fetch(`${API}/api/admin/bulk-semester`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({ action })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || "Bulk update failed");
+
+            toast.success(data.message);
+            onRefresh();
+        } catch (err) {
+            console.error(err);
+            toast.error(err.message || "Bulk update failed");
+        } finally {
+            setIsBulkProcessing(false);
+        }
+    };
+
     return (
         <div className="space-y-6 relative pb-20">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="space-y-8"
+                className="space-y-6 sm:space-y-8"
             >
+                {/* Academic Controls Section */}
+                <div className="relative p-[2px] bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 rounded-3xl shadow-xl overflow-hidden">
+                    <div className={`${darkMode ? "bg-black" : "bg-white"} p-4 sm:p-6 rounded-[calc(1.5rem-1px)]`}>
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center border-2 border-blue-500/20 shadow-lg">
+                                    <GraduationCap className="w-6 h-6 text-blue-500" />
+                                </div>
+                                <div className="text-left">
+                                    <h3 className={`text-lg font-black tracking-tight ${darkMode ? "text-white" : "text-slate-900"} leading-none uppercase`}>Academic Controls</h3>
+                                    <p className={`${darkMode ? "text-blue-400" : "text-blue-600"} text-[9px] font-black uppercase tracking-widest mt-1`}>Bulk Operations (Student Only)</p>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap items-center justify-center gap-3">
+                                <button
+                                    onClick={() => handleBulkSemesterUpdate("increase")}
+                                    disabled={isBulkProcessing}
+                                    className="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 text-white rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-emerald-400/20 shadow-lg shadow-emerald-500/10 active:scale-95 flex items-center gap-2 transition-all disabled:opacity-50"
+                                >
+                                    <Plus className="w-4 h-4 stroke-[3]" />
+                                    Increase Semester (+1)
+                                </button>
+                                <button
+                                    onClick={() => handleBulkSemesterUpdate("decrease")}
+                                    disabled={isBulkProcessing}
+                                    className="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-rose-500 hover:from-orange-500 hover:to-rose-400 text-white rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-orange-400/20 shadow-lg shadow-orange-500/10 active:scale-95 flex items-center gap-2 transition-all disabled:opacity-50"
+                                >
+                                    <Minus className="w-4 h-4 stroke-[3]" />
+                                    Decrease Semester (-1)
+                                </button>
+                                <button
+                                    onClick={() => setSearchEditModalOpen(true)}
+                                    className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-purple-400/20 shadow-lg shadow-purple-500/10 active:scale-95 flex items-center gap-2 transition-all"
+                                >
+                                    <Search className="w-4 h-4" />
+                                    Global Search & Edit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Advanced Search Header (Copied from Export Section) */}
                 <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-2xl overflow-hidden">
                     <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-8 rounded-[calc(1.5rem-1px)] space-y-4 sm:space-y-8`}>
@@ -354,7 +431,14 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                         </div>
 
                                         {/* Actions */}
-                                        <div className="w-full md:w-32 flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0 md:ml-auto mt-2 md:mt-0" onClick={(e) => e.stopPropagation()}>
+                                        <div className="w-full md:w-40 flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0 md:ml-auto mt-2 md:mt-0" onClick={(e) => e.stopPropagation()}>
+                                            <button
+                                                onClick={() => setEditUserModal(u)}
+                                                className={`p-2 sm:p-3 bg-purple-600/10 hover:bg-purple-600 border-2 border-purple-500/20 text-purple-400 hover:text-white rounded-xl sm:rounded-2xl transition-all active:scale-90`}
+                                                title="Edit User"
+                                            >
+                                                <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                                            </button>
                                             <button
                                                 onClick={() => handleMessageClick(u)}
                                                 className={`p-2 sm:p-3 bg-blue-600/10 hover:bg-blue-600 border-2 border-blue-500/20 text-blue-400 hover:text-white rounded-xl sm:rounded-2xl transition-all active:scale-90`}
@@ -587,9 +671,30 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                 </div>
                             </div>
                         </motion.div>
-                    </motion.div>
+                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Admin Edit User Modal */}
+            <AdminEditUserModal
+                isOpen={!!editUserModal}
+                onClose={() => setEditUserModal(null)}
+                user={editUserModal}
+                onUpdate={onRefresh}
+                darkMode={darkMode}
+            />
+
+            {/* Global Search & Edit Modal */}
+            <AdminSearchEditModal
+                isOpen={searchEditModalOpen}
+                onClose={() => setSearchEditModalOpen(false)}
+                users={users}
+                onEditUser={(u) => {
+                    setSearchEditModalOpen(false);
+                    setEditUserModal(u);
+                }}
+                darkMode={darkMode}
+            />
         </div>
     );
 }

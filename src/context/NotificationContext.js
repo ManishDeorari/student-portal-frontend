@@ -313,6 +313,14 @@ export const NotificationProvider = ({ children }) => {
                   accent: "text-red-400",
                   bgAccent: "bg-red-500/10"
                 };
+            } else if (type === "academic_update") {
+                theme = {
+                  gradient: "from-blue-600 via-indigo-600 to-blue-600",
+                  icon: <ShieldAlert className="w-3.5 h-3.5 text-white" />,
+                  label: "Academic Update",
+                  accent: "text-blue-400",
+                  bgAccent: "bg-blue-500/10"
+                };
             }
 
             return (
