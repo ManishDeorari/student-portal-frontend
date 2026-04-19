@@ -59,7 +59,7 @@ export default function StudentExport() {
 
         // Row 1: Top Group Headers
         const r1 = [
-            "", "", "", "", "", // A-E (Rowspanned)
+            "S.No", "ID", "Enrollment No", "Name", "Linkedin URL", // A-E (Labels moved here for merge)
             "CURRENT COURSE", "", "", // F-H
             "ADDRESS / CONTACT", "", "", // I-K
             "EDUCATION DETAILS", ...Array(17).fill("") // L-AC (18 columns: L to AC)
@@ -78,7 +78,7 @@ export default function StudentExport() {
 
         // Row 3: Column Names
         const r3 = [
-            "S.No", "ID", "Enrollment No", "Name", "Linkedin URL", // A-E
+            "", "", "", "", "", // A-E (Cleared as they are merged with R1)
             "Course", "Semester", "Section", // F-H
             "Address (City/State)", "Country", "Phone", // I-K
             "School Name", "Passing Year", "Grades/%", // L-N (High School)
