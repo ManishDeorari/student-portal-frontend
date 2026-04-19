@@ -273,12 +273,11 @@ export default function StudentExport() {
                         </div>
 
                         <div className="space-y-4">
-                            {/* Header Row */}
-                            <div className={`flex items-center gap-4 px-8 py-4 ${darkMode ? "text-white/60" : "text-slate-500"} text-[10px] uppercase font-black tracking-[0.3em]`}>
-                                <div className="flex-1"></div>
-                                <div className="w-48"></div>
-                                <div className="w-48 font-black"></div>
-                                <div className="w-32 font-black text-right"></div>
+                            {/* Table Headers */}
+                            <div className={`hidden md:flex items-center gap-4 px-8 py-4 ${darkMode ? "text-white/60" : "text-slate-500"} text-[10px] uppercase font-black tracking-[0.3em]`}>
+                                <div className="w-64">User Profile</div>
+                                <div className="flex-1">Academic Details</div>
+                                <div className="w-48">Contact Email</div>
                             </div>
 
                             {/* Student Preview Rows */}
@@ -287,36 +286,49 @@ export default function StudentExport() {
                                     key={u._id} 
                                     className="relative p-[1.5px] sm:p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl sm:rounded-3xl shadow-xl transition-all hover:scale-[1.01] hover:shadow-blue-500/20"
                                 >
-                                    <div className={`${darkMode ? "bg-black" : "bg-white"} rounded-[calc(1rem-1.5px)] sm:rounded-[calc(1.5rem-2px)] p-3 sm:p-4 flex items-center justify-between gap-3 sm:gap-6`}>
-                                        <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
-                                            {/* Profile Image */}
-                                            <div className="relative flex-shrink-0">
-                                                <div className="absolute -inset-1 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-2xl blur-[2px] opacity-30"></div>
-                                                <img 
-                                                    src={u.profilePicture || "/default-profile.jpg"} 
-                                                    alt={u.name}
-                                                    className="h-9 w-9 sm:h-12 sm:w-12 rounded-xl object-cover relative z-10 border-2 border-white/10"
-                                                />
+                                    <div className={`${darkMode ? "bg-black/40" : "bg-white/80"} rounded-[calc(1rem-1.5px)] sm:rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 backdrop-blur-md transition-colors hover:bg-white/5`}>
+                                        {/* Profile Column */}
+                                        <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
+                                            <div className="relative shrink-0">
+                                                <div className="absolute -inset-1 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full blur-[2px] opacity-30"></div>
+                                                {u.profilePicture ? (
+                                                    <img 
+                                                        src={u.profilePicture} 
+                                                        alt={u.name}
+                                                        className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover relative z-10 border-2 border-white/10"
+                                                    />
+                                                ) : (
+                                                    <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg text-blue-500`}>
+                                                        {u.name.charAt(0)}
+                                                    </div>
+                                                )}
                                             </div>
-
-                                            {/* Name & Academic Details */}
-                                            <div className="min-w-0 flex-1">
-                                                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
-                                                    <p className={`font-black text-xs sm:text-base ${darkMode ? "text-white" : "text-slate-900"} truncate`}>{u.name}</p>
-                                                    <span className={`text-[8px] px-2 py-0.5 rounded-md font-black uppercase tracking-widest ${darkMode ? "bg-white/10 text-blue-400" : "bg-blue-50 text-blue-600"}`}>
-                                                        {u.course || "N/A"} • Sem {u.semester || "N/A"} • Sec {u.section || "N/A"}
-                                                    </span>
-                                                </div>
-                                                <p className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-purple-400" : "text-purple-600"} font-black`}>
-                                                    {u.enrollmentNumber || "N/A"}
+                                            <div className="min-w-0">
+                                                <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
+                                                <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-purple-400" : "text-slate-500"} truncate`}>
+                                                    {u.enrollmentNumber || "—"}
                                                 </p>
                                             </div>
+                                        </div>
 
-                                            {/* Email */}
-                                            <div className="hidden lg:block flex-1 min-w-0">
-                                                <p className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-500"} font-black mb-0.5`}>Email Address</p>
-                                                <p className={`font-black text-sm ${darkMode ? "text-white" : "text-slate-900"} truncate opacity-80`}>{u.email}</p>
-                                            </div>
+                                        {/* Academic Column */}
+                                        <div className="flex-1 flex flex-wrap items-center gap-2">
+                                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                                                {u.course || "NA"}
+                                            </span>
+                                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
+                                                SEM {u.semester || "NA"}
+                                            </span>
+                                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-purple-500/10 border border-purple-500/20 text-purple-400`}>
+                                                SEC {u.section || "NA"}
+                                            </span>
+                                        </div>
+
+                                        {/* contact Column */}
+                                        <div className="w-48 hidden md:block shrink-0">
+                                            <p className={`text-[10px] font-black ${darkMode ? "text-white/60 bg-white/5 border-white/10" : "text-slate-900 bg-gray-50 border-gray-200"} px-4 py-2 rounded-xl border truncate`}>
+                                                {u.email}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

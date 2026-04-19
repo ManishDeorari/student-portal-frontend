@@ -100,22 +100,38 @@ export default function Leaderboard() {
                           height={48}
                           className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl object-cover border-2 border-white/10 bg-gray-800 shadow-2xl group-hover:scale-110 transition-transform duration-500"
                         />
-                        <div className="min-w-0">
-                           <Link
-                            href={`/profile/${user.publicId || user._id}`}
-                            className={`font-black text-xs sm:text-base ${darkMode ? "text-white" : "text-slate-900"} hover:text-blue-500 transition-colors block truncate`}
-                          >
-                            {user.name}
-                          </Link>
-                          <div className="flex flex-col gap-0.5">
-                            <p className={`text-[9px] sm:text-[10px] font-black ${darkMode ? "text-white/60" : "text-slate-500"} tracking-widest uppercase truncate`}>
+                        <div className="flex flex-col md:flex-row md:items-center gap-2 sm:gap-6 min-w-0">
+                          <div className="w-48 sm:w-56 shrink-0">
+                             <Link
+                              href={`/profile/${user.publicId || user._id}`}
+                              className={`font-black text-xs sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} hover:text-blue-500 transition-colors block truncate`}
+                            >
+                              {user.name}
+                            </Link>
+                            <p className={`text-[9px] sm:text-[10px] font-black ${darkMode ? "text-white/40" : "text-slate-500"} tracking-widest uppercase truncate`}>
                                 {user.enrollmentNumber || "Student"}
                             </p>
-                            <p className={`text-[8px] sm:text-[9px] font-black ${darkMode ? "text-blue-400" : "text-blue-600"} tracking-tighter uppercase`}>
-                                {user.course || "N/A"} • SEM {user.semester || "N/A"} • SEC {user.section || "N/A"}
+                          </div>
+
+                          <div className="hidden md:flex items-center gap-2">
+                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/40" : "border-gray-200 text-slate-500"}`}>
+                              {user.course || "NA"}
+                            </span>
+                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
+                              SEM {user.semester || "NA"}
+                            </span>
+                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-purple-500/10 border border-purple-500/20 text-purple-400`}>
+                              SEC {user.section || "NA"}
+                            </span>
+                          </div>
+
+                          {/* Mobile only academic info */}
+                          <div className="md:hidden flex flex-wrap gap-1">
+                            <p className={`text-[8px] font-black ${darkMode ? "text-blue-400" : "text-blue-600"} uppercase tracking-tighter`}>
+                              {user.course || "N/A"} • SEM {user.semester || "N/A"} • SEC {user.section || "N/A"}
                             </p>
                           </div>
-                      </div>
+                        </div>
                     </div>
                       <button
                         onClick={() => handlePointClick(user)}

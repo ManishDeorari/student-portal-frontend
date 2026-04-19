@@ -347,13 +347,13 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                         <div className={`${darkMode ? "bg-black" : "bg-white"} rounded-[calc(2.5rem-2px)] overflow-hidden`}>
                         <div className="space-y-4 p-2 sm:p-4">
                         {/* Header Row — desktop only */}
-                        <div className={`hidden md:flex items-center gap-4 px-8 py-4 ${darkMode ? "text-white" : "text-slate-900"} text-[10px] uppercase font-black tracking-[0.3em]`}>
+                        <div className={`hidden md:flex items-center gap-4 px-8 py-4 ${darkMode ? "text-white/60" : "text-slate-500"} text-[10px] uppercase font-black tracking-[0.3em]`}>
                             <div className="w-12 flex items-center justify-center">
                                 <div 
                                     onClick={handleSelectAll}
                                     className={`w-6 h-6 rounded border-2 flex items-center justify-center cursor-pointer transition-all ${
                                         isAllSelected 
-                                            ? "bg-blue-500 border-blue-500" 
+                                            ? "bg-blue-500 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]" 
                                             : isIndeterminate 
                                                 ? "bg-blue-500/50 border-blue-500" 
                                                 : `${darkMode ? "border-white/20 hover:border-white/40" : "border-gray-300 hover:border-gray-400"}`
@@ -363,10 +363,10 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                     {isIndeterminate && <Minus className="w-4 h-4 text-white stroke-[4]" />}
                                 </div>
                             </div>
-                            <div className="flex-1">User Profile</div>
-                            <div className="w-32">Role</div>
-                            <div className="w-40 md:block hidden">Identity</div>
-                            <div className="w-32 text-right">Actions</div>
+                            <div className="w-64">User Profile</div>
+                            <div className="flex-1">Academic / Staff Info</div>
+                            <div className="w-40 md:block hidden">System ID</div>
+                            <div className="w-48 text-right pr-4">Management Actions</div>
                         </div>
 
                         {/* Member Card Rows */}
@@ -379,7 +379,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                 >
                                     <div 
                                         onClick={() => toggleSelect(u._id)}
-                                        className={`${darkMode ? (isSelected ? "bg-blue-900/20" : "bg-black") : (isSelected ? "bg-blue-50" : "bg-white")} rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 cursor-pointer`}
+                                        className={`${darkMode ? (isSelected ? "bg-blue-900/10" : "bg-black/40") : (isSelected ? "bg-blue-50" : "bg-white/80")} rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 cursor-pointer backdrop-blur-md group-hover:bg-white/5 transition-colors`}
                                     >
                                         {/* Checkbox */}
                                         <div className="w-8 sm:w-12 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
@@ -387,7 +387,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                 onClick={() => toggleSelect(u._id)}
                                                 className={`w-5 h-5 sm:w-6 sm:h-6 rounded border-2 flex items-center justify-center cursor-pointer transition-all ${
                                                     isSelected 
-                                                        ? "bg-blue-500 border-blue-500" 
+                                                        ? "bg-blue-500 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
                                                         : `${darkMode ? "border-white/20 group-hover:border-white/40" : "border-gray-300 group-hover:border-gray-400"}`
                                                 }`}
                                             >
@@ -395,68 +395,92 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                             </div>
                                         </div>
 
-                                        {/* Profile */}
-                                        <div className="flex-1 flex items-center gap-3 sm:gap-5 min-w-0">
+                                        {/* Profile Column */}
+                                        <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
                                             <div className="relative shrink-0">
+                                                <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 ${u.isAdmin ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
                                                 {u.profilePicture ? (
                                                     <img 
                                                         src={u.profilePicture} 
                                                         alt={u.name} 
-                                                        className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full object-cover border-2 ${darkMode ? "border-white/10" : "border-gray-200"}`}
+                                                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover relative z-10 border-2 ${darkMode ? "border-white/10" : "border-white"}`}
                                                     />
                                                 ) : (
-                                                    <div className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full ${darkMode ? "bg-blue-500/20 text-blue-300 shadow-[0_0_15px_rgba(37,99,235,0.2)]" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg`}>
+                                                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg`}>
                                                         {u.name.charAt(0)}
                                                     </div>
                                                 )}
                                             </div>
                                             <div className="min-w-0">
-                                                <p className={`font-black text-xs sm:text-base ${darkMode ? "text-white" : "text-slate-900"} truncate`}>{u.name}</p>
-                                                <p className={`text-[9px] sm:text-[11px] font-black uppercase tracking-wider sm:tracking-widest ${darkMode ? "text-blue-400" : "text-slate-600"} truncate`}>{u.email}</p>
+                                                <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
+                                                <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white/40" : "text-slate-500"} truncate`}>{u.email}</p>
                                             </div>
                                         </div>
 
-                                        {/* Role */}
-                                        <div className="hidden md:block w-32">
-                                            <span className={`text-[10px] px-3 py-1.5 rounded-full font-black uppercase tracking-widest border-2 ${u.isAdmin
-                                                ? (darkMode ? "bg-purple-500/20 text-purple-400 border-purple-500/30" : "bg-purple-100 text-purple-700 border-purple-200")
-                                                : (darkMode ? "bg-blue-500/20 text-blue-400 border-blue-500/30" : "bg-blue-100 text-blue-700 border-blue-200")
+                                        {/* Academic / Staff Info Column */}
+                                        <div className="flex-1 flex flex-wrap items-center gap-2">
+                                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black uppercase tracking-widest border ${u.isAdmin
+                                                ? (darkMode ? "bg-purple-500/10 text-purple-400 border-purple-500/20" : "bg-purple-50 text-purple-700 border-purple-100")
+                                                : (darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : "bg-blue-50 text-blue-700 border-blue-100")
                                                 }`}>
                                                 {u.role || (u.isAdmin ? 'Admin' : 'Member')}
                                             </span>
+                                            
+                                            {u.role === "student" ? (
+                                                <>
+                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                                                        {u.course || "NA"}
+                                                    </span>
+                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
+                                                        SEM {u.semester || "NA"}
+                                                    </span>
+                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-purple-500/10 border border-purple-500/20 text-purple-400`}>
+                                                        SEC {u.section || "NA"}
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                                                        {u.position || "NA"}
+                                                    </span>
+                                                    <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-indigo-500/10 border border-indigo-500/20 text-indigo-400`}>
+                                                        {u.department || "NA"}
+                                                    </span>
+                                                </>
+                                            )}
                                         </div>
 
-                                        {/* Identity */}
-                                        <div className="w-40 md:block hidden flex-shrink-0">
-                                            <span className={`text-[10px] font-black ${darkMode ? "text-white bg-white/5 border-white/20" : "text-slate-900 bg-gray-100 border-gray-300"} px-4 py-2 rounded-xl border-2 whitespace-nowrap uppercase tracking-widest`}>
-                                                {u.enrollmentNumber || u.employeeId || u.studentId || "N/A"}
-                                            </span>
+                                        {/* Identity Column */}
+                                        <div className="w-40 md:block hidden shrink-0">
+                                            <div className={`text-[10px] font-black ${darkMode ? "text-white/60 bg-white/5 border-white/10" : "text-slate-900 bg-gray-50 border-gray-200"} px-4 py-2 rounded-xl border flex items-center justify-center gap-2`}>
+                                                <div className={`w-1.5 h-1.5 rounded-full ${u.role === "student" ? "bg-blue-500" : "bg-purple-500"}`}></div>
+                                                <span className="truncate">{u.enrollmentNumber || u.employeeId || u.studentId || "—"}</span>
+                                            </div>
                                         </div>
 
-                                        {/* Actions */}
-                                        <div className="w-full md:w-40 flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0 md:ml-auto mt-2 md:mt-0" onClick={(e) => e.stopPropagation()}>
+                                        {/* Actions Column */}
+                                        <div className="w-full md:w-48 flex items-center justify-end gap-2 shrink-0 md:ml-auto" onClick={(e) => e.stopPropagation()}>
                                             <button
                                                 onClick={() => setEditUserModal(u)}
-                                                className={`p-2 sm:p-3 bg-purple-600/10 hover:bg-purple-600 border-2 border-purple-500/20 text-purple-400 hover:text-white rounded-xl sm:rounded-2xl transition-all active:scale-90`}
+                                                className={`p-2.5 bg-purple-600/5 hover:bg-purple-600 border border-purple-500/20 text-purple-500 hover:text-white rounded-xl transition-all active:scale-90`}
                                                 title="Edit User"
                                             >
-                                                <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                <Edit2 className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleMessageClick(u)}
-                                                className={`p-2 sm:p-3 bg-blue-600/10 hover:bg-blue-600 border-2 border-blue-500/20 text-blue-400 hover:text-white rounded-xl sm:rounded-2xl transition-all active:scale-90`}
+                                                className={`p-2.5 bg-blue-600/5 hover:bg-blue-600 border border-blue-500/20 text-blue-500 hover:text-white rounded-xl transition-all active:scale-90`}
                                                 title="Message User"
                                             >
-                                                <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                <Mail className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteClick(u)}
                                                 disabled={u.isMainAdmin || u.email === "manishdeorari377@gmail.com"}
-                                                className={`p-2 sm:p-3 bg-red-600/10 hover:bg-red-600 border-2 border-red-500/20 text-red-400 hover:text-white rounded-xl sm:rounded-2xl transition-all active:scale-90 ${(u.isMainAdmin || u.email === "manishdeorari377@gmail.com") ? "opacity-20 cursor-not-allowed" : ""
-                                                    }`}
+                                                className={`p-2.5 bg-red-600/5 hover:bg-red-600 border border-red-500/20 text-red-500 hover:text-white rounded-xl transition-all active:scale-90 ${(u.isMainAdmin || u.email === "manishdeorari377@gmail.com") ? "opacity-20 cursor-not-allowed" : ""}`}
                                                 title="Delete User"
                                             >
-                                                <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
                                     </div>

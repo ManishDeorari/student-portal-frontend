@@ -266,8 +266,8 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
 
   return (
     <div className="space-y-4">
-      {/* Header Row */}
-      <div className={`flex items-center gap-4 px-8 py-4 ${darkMode ? "text-white" : "text-slate-900"} text-[10px] uppercase font-black tracking-[0.3em]`}>
+      {/* Table Headers */}
+      <div className={`hidden md:flex items-center gap-4 px-8 py-4 ${darkMode ? "text-white/60" : "text-slate-500"} text-[10px] uppercase font-black tracking-[0.3em]`}>
         <div className="w-12 flex items-center justify-center">
           <input
             type="checkbox"
@@ -276,9 +276,10 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
             onChange={() => toggleSelectAll(users)}
           />
         </div>
-        <div className="flex-1">User Profile</div>
-        <div className="w-40 md:block hidden">Identification</div>
-        <div className="w-48 text-right">Actions</div>
+        <div className="w-64">User Profile</div>
+        <div className="flex-1">Academic / Staff Details</div>
+        <div className="w-40">System ID</div>
+        <div className="w-32 text-right">Actions</div>
       </div>
 
       {/* User Card Rows */}
@@ -287,66 +288,88 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
           key={u._id} 
           className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-xl transition-all hover:scale-[1.01] hover:shadow-blue-500/20"
         >
-          <div className={`${darkMode ? "bg-black" : "bg-white"} rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap items-center gap-2 sm:gap-4`}>
+          <div className={`${darkMode ? "bg-black/40" : "bg-white/80"} rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 backdrop-blur-md transition-colors hover:bg-white/5`}>
             {/* Checkbox */}
             <div className="w-12 flex items-center justify-center">
               <input
                 type="checkbox"
-                className="w-6 h-6 bg-transparent border-2 border-blue-500 rounded cursor-pointer accent-blue-600"
+                className="w-6 h-6 bg-transparent border-2 border-blue-500 rounded cursor-pointer accent-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
                 checked={selected.includes(u._id)}
                 onChange={() => toggleUser(u._id)}
               />
             </div>
 
-            {/* Profile */}
-            <div className="flex-1 flex items-center gap-5 min-w-0">
-              <div className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full flex-shrink-0 ${darkMode ? "bg-blue-600/20 shadow-[0_0_15px_rgba(37,99,235,0.2)]" : "bg-blue-100"} border-2 border-blue-500/30 flex items-center justify-center text-blue-500 font-black text-sm sm:text-lg`}>
-                {u.name.charAt(0)}
+            {/* Profile Column */}
+            <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
+              <div className="relative shrink-0">
+                <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 ${u.role === 'student' ? 'bg-blue-500' : 'bg-purple-500'}`}></div>
+                {u.profilePicture ? (
+                  <img 
+                    src={u.profilePicture} 
+                    alt={u.name} 
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover relative z-10 border-2 ${darkMode ? "border-white/10" : "border-white"}`} 
+                  />
+                ) : (
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg text-blue-500`}>
+                    {u.name.charAt(0)}
+                  </div>
+                )}
               </div>
               <div className="min-w-0">
-                <p className={`font-black text-sm sm:text-base ${darkMode ? "text-white" : "text-slate-900"} truncate`}>{u.name}</p>
-                <p className={`text-[11px] font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-slate-600"} truncate`}>{u.email}</p>
+                <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
+                <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white/40" : "text-slate-500"} truncate`}>{u.email}</p>
               </div>
             </div>
 
-            {/* Identity */}
-            <div className="w-48 md:block hidden flex-shrink-0">
+            {/* Academic / Staff Details Column */}
+            <div className="flex-1 flex flex-wrap items-center gap-2">
               {u.role === "student" ? (
-                <div className="flex flex-col gap-1">
-                  <span className={`text-[10px] font-black ${darkMode ? "text-white bg-white/5 border-white/20" : "text-slate-900 bg-gray-100 border-gray-300"} px-3 py-1 rounded-xl border-2 whitespace-nowrap uppercase tracking-widest`}>
-                    {u.enrollmentNumber || "N/A"}
+                <>
+                  <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                    {u.course || "NA"}
                   </span>
-                  <p className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-blue-400" : "text-blue-600"} ml-1`}>
-                    {u.course || "N/A"} • Sem {u.semester || "N/A"}
-                  </p>
-                </div>
+                  <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
+                    SEM {u.semester || "NA"}
+                  </span>
+                  <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-purple-500/10 border border-purple-500/20 text-purple-400`}>
+                    SEC {u.section || "NA"}
+                  </span>
+                </>
               ) : (
-                <div className="flex flex-col gap-1">
-                  <span className={`text-[10px] font-black ${darkMode ? "text-white bg-white/5 border-white/20" : "text-slate-900 bg-gray-100 border-gray-300"} px-3 py-1 rounded-xl border-2 whitespace-nowrap uppercase tracking-widest`}>
-                    {u.employeeId || "N/A"}
+                <>
+                  <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                    {u.position || "NA"}
                   </span>
-                  <p className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-purple-400" : "text-purple-600"} ml-1`}>
-                    {u.position || "N/A"} • {u.department || "N/A"}
-                  </p>
-                </div>
+                  <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-indigo-500/10 border border-indigo-500/20 text-indigo-400`}>
+                    {u.department || "NA"}
+                  </span>
+                </>
               )}
             </div>
 
-            {/* Actions */}
-            <div className="w-auto sm:w-48 flex items-center justify-end gap-2 sm:gap-3 flex-shrink-0 ml-auto">
+            {/* Identity Column */}
+            <div className="w-40 md:block hidden shrink-0">
+              <div className={`text-[10px] font-black ${darkMode ? "text-white/60 bg-white/5 border-white/10" : "text-slate-900 bg-gray-50 border-gray-200"} px-4 py-2 rounded-xl border flex items-center justify-center gap-2`}>
+                <div className={`w-1.5 h-1.5 rounded-full ${u.role === "student" ? "bg-blue-500" : "bg-purple-500"}`}></div>
+                <span className="truncate">{u.enrollmentNumber || u.employeeId || "—"}</span>
+              </div>
+            </div>
+
+            {/* Actions Column */}
+            <div className="w-full md:w-32 flex items-center justify-end gap-2 shrink-0 md:ml-auto mt-2 md:mt-0">
               <button
                 onClick={() => onApprove(u)}
-                className="p-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl transition-all shadow-xl active:scale-90"
+                className="p-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all shadow-xl active:scale-90"
                 title="Approve"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>
               </button>
               <button
                 onClick={() => onDelete(u)}
-                className="p-3 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white rounded-2xl border-2 border-red-500/20 transition-all active:scale-90"
+                className="p-2.5 bg-red-600/5 hover:bg-red-600 text-red-500 hover:text-white rounded-xl border border-red-500/20 transition-all active:scale-90"
                 title="Reject"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" /></svg>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
           </div>
