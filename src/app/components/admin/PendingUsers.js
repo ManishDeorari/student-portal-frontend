@@ -288,7 +288,7 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
           key={u._id} 
           className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-xl transition-all hover:scale-[1.01] hover:shadow-blue-500/20"
         >
-          <div className={`${darkMode ? "bg-black/40" : "bg-white/80"} rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 backdrop-blur-md transition-colors hover:bg-white/5`}>
+          <div className={`rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 transition-colors group-hover:bg-white/5`}>
             {/* Checkbox */}
             <div className="w-12 flex items-center justify-center">
               <input

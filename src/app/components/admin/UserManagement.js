@@ -379,7 +379,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                 >
                                     <div 
                                         onClick={() => toggleSelect(u._id)}
-                                        className={`${darkMode ? (isSelected ? "bg-blue-900/10" : "bg-black/40") : (isSelected ? "bg-blue-50" : "bg-white/80")} rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 cursor-pointer backdrop-blur-md group-hover:bg-white/5 transition-colors`}
+                                        className={`rounded-[calc(1.5rem-2px)] p-3 sm:p-5 flex flex-wrap md:flex-nowrap items-center gap-3 sm:gap-4 cursor-pointer transition-colors`}
                                     >
                                         {/* Checkbox */}
                                         <div className="w-8 sm:w-12 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
