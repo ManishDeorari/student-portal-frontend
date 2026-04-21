@@ -33,6 +33,7 @@
     "sharp": "^0.34.5",
     "socket.io-client": "^4.8.1",
     "tailwind-scrollbar": "^4.0.2",
+    "three": "^0.184.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

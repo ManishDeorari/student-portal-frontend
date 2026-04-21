@@ -7,6 +7,7 @@ import { Mail, ArrowRight, ShieldCheck, ChevronDown, Monitor, Moon, Sun, User } 
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { useTheme } from "@/context/ThemeContext";
+import { TubesBackground } from "@/app/components/TubesBackground";
 
 const sectionVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 50 },
@@ -80,12 +81,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className={`relative min-h-screen overflow-x-hidden transition-colors duration-500 selection:bg-blue-500/30 bg-gradient-to-br from-blue-600 via-purple-700 to-indigo-950 text-white scroll-smooth`}>
-      {/* 🔮 Dynamic Background Orbs */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className={`absolute top-[-10%] left-[-10%] w-[45%] h-[45%] rounded-full blur-[120px] animate-pulse bg-blue-400/20`} style={{ backfaceVisibility: 'hidden', transform: 'translateZ(0)' }}></div>
-        <div className={`absolute bottom-[-10%] right-[-10%] w-[45%] h-[45%] rounded-full blur-[120px] animate-pulse bg-purple-400/20`} style={{ animationDelay: '2s', backfaceVisibility: 'hidden', transform: 'translateZ(0)' }}></div>
-      </div>
+    <TubesBackground className="min-h-screen selection:bg-blue-500/30 text-white scroll-smooth">
 
       {/* 🚀 Sticky Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-4 bg-black/60 border-white/5 shadow-2xl backdrop-blur-xl border-b" : "py-6 bg-transparent"}`}>
@@ -291,6 +287,11 @@ export default function HomePage() {
           {darkMode ? <Sun size={24} /> : <Moon size={24} />}
         </button>
       </div>
-    </div>
+
+      {/* 🖱️ Subtle click hint */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 text-white/30 pointer-events-none">
+        <span className="text-[9px] font-black uppercase tracking-[0.4em]">Click background · Randomize Colors</span>
+      </div>
+    </TubesBackground>
   );
 }
