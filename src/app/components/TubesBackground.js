@@ -71,24 +71,6 @@ export function TubesBackground({
     let isPointerDown = false;
     let rafId;
 
-    const fireMove = (x, y) => {
-      if (!canvasRef.current) return;
-      if (Math.abs(x - lastDispX) < 0.5 && Math.abs(y - lastDispY) < 0.5) return;
-      
-      // Dispatch MouseEvent directly to the canvas so internal listeners see it
-      const event = new MouseEvent("mousemove", {
-        clientX: x,
-        clientY: y,
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      canvasRef.current.dispatchEvent(event);
-      
-      lastDispX = x;
-      lastDispY = y;
-    };
-
     const pickTarget = () => {
       const pad = 100;
       tgtX = pad + Math.random() * (window.innerWidth - pad * 2);
@@ -105,7 +87,26 @@ export function TubesBackground({
     };
 
     let isTouchDevice = false;
-    try { isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0); } catch (e) {}
+    try { isTouchDevice = window.matchMedia("(pointer: coarse)").matches || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0); } catch (e) {}
+
+    const fireMove = (x, y) => {
+      if (!canvasRef.current) return;
+      if (Math.abs(x - lastDispX) < 0.5 && Math.abs(y - lastDispY) < 0.5) return;
+      
+      // Use PointerEvent for better mobile compatibility
+      const event = new PointerEvent("pointermove", {
+        clientX: x,
+        clientY: y,
+        bubbles: true,
+        cancelable: true,
+        pointerType: isTouchDevice ? "touch" : "mouse",
+        view: window
+      });
+      canvasRef.current.dispatchEvent(event);
+      
+      lastDispX = x;
+      lastDispY = y;
+    };
 
     const idleLoop = () => {
       rafId = requestAnimationFrame(idleLoop);
@@ -114,8 +115,7 @@ export function TubesBackground({
       const idle = isTouchDevice || (Date.now() - lastActivity > idleDelay);
       if (!idle) return;
 
-      // Smoother, slightly faster wandering for touch devices
-      const speed = isTouchDevice ? 0.015 : 0.01;
+      const speed = isTouchDevice ? 0.012 : 0.01; // Slightly more rhythmic for mobile
       curX = lerp(curX, tgtX, speed);
       curY = lerp(curY, tgtY, speed);
 
@@ -125,8 +125,6 @@ export function TubesBackground({
 
     // ── Unified Pointer Events (Mobile & Desktop) ───────────────────────────
     const handlePointerAction = (e) => {
-      // On touch devices, we ignore move events to let it wander freely, 
-      // but we still update lastActivity for clicks/taps.
       lastActivity = Date.now();
       if (!isTouchDevice) {
         curX = e.clientX;
