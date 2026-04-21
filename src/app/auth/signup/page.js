@@ -133,7 +133,7 @@ export default function SignupPage() {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full lg:w-1/2 max-w-[310px] sm:max-w-[420px] lg:max-w-[450px] lg:-ml-12 mt-6 sm:mt-12 lg:mt-0 mb-8 mx-auto lg:mx-0"
+          className="w-full lg:w-1/2 max-w-[310px] sm:max-w-[420px] lg:max-w-[420px] lg:ml-8 mt-6 sm:mt-12 lg:mt-0 mb-8 mx-auto lg:mx-0"
         >
           <div className="p-[2px] sm:p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl relative">
             <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:px-8 md:py-5 md:px-10 space-y-3 relative overflow-hidden transition-all duration-500`}>
@@ -374,7 +374,7 @@ export default function SignupPage() {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full lg:w-1/2 text-center lg:text-right hidden lg:block"
+          className="w-full lg:w-1/2 text-center lg:text-right hidden lg:block lg:pt-20"
         >
           <h1 className="text-9xl xl:text-[10rem] font-black text-white tracking-tighter drop-shadow-2xl leading-[0.85] opacity-90">
             Student Portal
