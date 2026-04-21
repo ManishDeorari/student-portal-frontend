@@ -7,7 +7,6 @@ const randomColors = (count) =>
     .fill(0)
     .map(() => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0"));
 
-/** Check if the device supports WebGL */
 function supportsWebGL() {
   try {
     const canvas = document.createElement("canvas");
@@ -27,18 +26,14 @@ export function TubesBackground({
   className,
   enableClickInteraction = true,
   overlay = true,
-  // Number of tubes
-  tubeCount = 4,
-  // ms before auto-wandering starts
+  tubeCount = 5,
   idleDelay = 2000,
-  // Theme sync
   darkMode = true,
 }) {
   const canvasRef  = useRef(null);
   const tubesRef   = useRef(null);
   const [webglFailed, setWebglFailed] = useState(false);
 
-  // ── Color Schemes ──────────────────────────────────────────────────────────
   const colorSchemes = {
     dark: {
       tubes: ["#6366f1", "#a855f7", "#ec4899"],
@@ -52,137 +47,116 @@ export function TubesBackground({
     }
   };
 
-  // ── Theme Sync Effect ──────────────────────────────────────────────────────
   useEffect(() => {
     if (!tubesRef.current) return;
     const theme = darkMode ? colorSchemes.dark : colorSchemes.light;
     try {
-      if (tubesRef.current.tubes?.setColors) {
-        tubesRef.current.tubes.setColors(theme.tubes);
-      }
-      if (tubesRef.current.tubes?.setLightsColors) {
-        tubesRef.current.tubes.setLightsColors(theme.lights);
-      }
-    } catch (err) {
-      console.warn("Could not update tube colors dynamically", err);
-    }
+      tubesRef.current.tubes?.setColors?.(theme.tubes);
+      tubesRef.current.tubes?.setLightsColors?.(theme.lights);
+    } catch { /* ignore */ }
   }, [darkMode]);
 
-  // ── Main Effect ────────────────────────────────────────────────────────────
   useEffect(() => {
     let mounted = true;
-
     if (!supportsWebGL()) {
       setWebglFailed(true);
       return;
     }
 
-    // ── Shared mouse position state ──────────────────────────────────────────
-    let curX = window.innerWidth  / 2;
+    let curX = window.innerWidth / 2;
     let curY = window.innerHeight / 2;
-    let lastDispatchedX = -1;
-    let lastDispatchedY = -1;
-    let tgtX = curX;
-    let tgtY = curY;
+    let lastDispX = -1, lastDispY = -1;
+    let tgtX = curX, tgtY = curY;
     let lastActivity = Date.now();
+    let isPointerDown = false;
     let rafId;
 
     const fireMove = (x, y) => {
-      // Optimization: Avoid redundant events
-      if (Math.abs(x - lastDispatchedX) < 0.5 && Math.abs(y - lastDispatchedY) < 0.5) return;
+      if (!canvasRef.current) return;
+      if (Math.abs(x - lastDispX) < 0.5 && Math.abs(y - lastDispY) < 0.5) return;
       
-      const event = new MouseEvent("mousemove", { clientX: x, clientY: y, bubbles: true });
-      window.dispatchEvent(event);
+      // Dispatch MouseEvent directly to the canvas so internal listeners see it
+      const event = new MouseEvent("mousemove", {
+        clientX: x,
+        clientY: y,
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      canvasRef.current.dispatchEvent(event);
       
-      lastDispatchedX = x;
-      lastDispatchedY = y;
+      lastDispX = x;
+      lastDispY = y;
     };
 
-    // ── Idle auto-wander loop ──────────────────────────────────────────────
-    const pickNewTarget = () => {
+    const pickTarget = () => {
       const pad = 100;
-      tgtX = pad + Math.random() * (window.innerWidth  - pad * 2);
+      tgtX = pad + Math.random() * (window.innerWidth - pad * 2);
       tgtY = pad + Math.random() * (window.innerHeight - pad * 2);
     };
 
     const idleLoop = () => {
       rafId = requestAnimationFrame(idleLoop);
+      if (isPointerDown) return; // Stop wandering if user is touching/dragging
 
       const idle = Date.now() - lastActivity > idleDelay;
       if (!idle) return;
 
-      // Smooth lerp toward current target
-      curX = lerp(curX, tgtX, 0.008); // Even slower for elegance
-      curY = lerp(curY, tgtY, 0.008);
+      curX = lerp(curX, tgtX, 0.01);
+      curY = lerp(curY, tgtY, 0.01);
 
-      if (Math.hypot(curX - tgtX, curY - tgtY) < 10) pickNewTarget();
-
+      if (Math.hypot(curX - tgtX, curY - tgtY) < 10) pickTarget();
       fireMove(curX, curY);
     };
 
-    // ── Interaction Handlers ─────────────────────────────────────────────────
-    const handleInteraction = (clientX, clientY) => {
+    // ── Unified Pointer Events (Mobile & Desktop) ───────────────────────────
+    const handlePointerAction = (e) => {
       lastActivity = Date.now();
-      curX = clientX;
-      curY = clientY;
+      curX = e.clientX;
+      curY = e.clientY;
+      fireMove(e.clientX, e.clientY);
     };
 
-    const handleMouseMove = (e) => handleInteraction(e.clientX, e.clientY);
-    const handleTouch = (e) => {
-      if (e.touches.length > 0) {
-        const t = e.touches[0];
-        handleInteraction(t.clientX, t.clientY);
-        fireMove(t.clientX, t.clientY);
-      }
+    const onPointerDown = (e) => {
+      isPointerDown = true;
+      handlePointerAction(e);
+    };
+    const onPointerMove = (e) => handlePointerAction(e);
+    const onPointerUp = () => {
+      isPointerDown = false;
+      lastActivity = Date.now();
     };
 
-    window.addEventListener("mousemove",  handleMouseMove,  { passive: true });
-    window.addEventListener("touchstart", handleTouch,      { passive: true });
-    window.addEventListener("touchmove",  handleTouch,      { passive: true });
-    window.addEventListener("touchend",   handleTouch,      { passive: true });
+    window.addEventListener("pointerdown", onPointerDown, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerup",   onPointerUp,   { passive: true });
+    window.addEventListener("pointercancel", onPointerUp, { passive: true });
 
-    // ── Init Three.js tubes ──────────────────────────────────────────────────
     const initTubes = async () => {
       if (!canvasRef.current) return;
       try {
-        const module = await import(
-          /* webpackIgnore: true */
-          "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js"
-        );
+        const module = await import(/* webpackIgnore: true */ "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js");
         const TubesCursor = module.default;
         if (!mounted) return;
 
         const currentTheme = darkMode ? colorSchemes.dark : colorSchemes.light;
-
         const app = TubesCursor(canvasRef.current, {
           tubes: {
             count: tubeCount,
-            // Experimental: Reducing diameter/thickness
-            radius: 0.015,   // Smaller radius for slimmer lines
-            thickness: 0.005, // Thinner girth
+            radius: 0.015,
+            thickness: 0.005,
             colors: currentTheme.tubes,
-            lights: {
-              intensity: currentTheme.intensity,
-              colors: currentTheme.lights,
-            },
+            lights: { intensity: currentTheme.intensity, colors: currentTheme.lights },
           },
         });
-
         tubesRef.current = app;
 
         if (mounted) {
-          // ENSURE VISIBILITY: Force fire a move to current position twice
-          const initialPrime = () => {
-            fireMove(window.innerWidth / 2, window.innerHeight / 2);
-          };
-          initialPrime();
-          setTimeout(initialPrime, 100);
-          setTimeout(initialPrime, 500);
-
+          const prime = () => fireMove(window.innerWidth / 2, window.innerHeight / 2);
+          prime(); setTimeout(prime, 100); setTimeout(prime, 500);
           rafId = requestAnimationFrame(idleLoop);
         }
-      } catch (err) {
-        console.warn("TubesCursor failed to load", err);
+      } catch {
         if (mounted) setWebglFailed(true);
       }
     };
@@ -192,10 +166,10 @@ export function TubesBackground({
     return () => {
       mounted = false;
       cancelAnimationFrame(rafId);
-      window.removeEventListener("mousemove",  handleMouseMove);
-      window.removeEventListener("touchstart", handleTouch);
-      window.removeEventListener("touchmove",  handleTouch);
-      window.removeEventListener("touchend",   handleTouch);
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup",   onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
     };
   }, [tubeCount, idleDelay]);
 
@@ -203,9 +177,9 @@ export function TubesBackground({
     if (!enableClickInteraction || !tubesRef.current) return;
     if (e.target.closest("a, button, input, form")) return;
     try {
-      tubesRef.current.tubes?.setColors(randomColors(3));
-      tubesRef.current.tubes?.setLightsColors(randomColors(4));
-    } catch { /* silence */ }
+      tubesRef.current.tubes?.setColors?.(randomColors(3));
+      tubesRef.current.tubes?.setLightsColors?.(randomColors(4));
+    } catch { /* ignore */ }
   };
 
   return (
@@ -220,6 +194,7 @@ export function TubesBackground({
           }}
         />
       ) : (
+        /* The canvas is what receives the synthetic events. PointerEvents are captured by window and forwarded. */
         <canvas
           ref={canvasRef}
           className="fixed inset-0 w-full h-full block z-0"
