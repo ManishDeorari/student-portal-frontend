@@ -87,31 +87,31 @@ export default function HomePage() {
       idleDelay={3000}
       darkMode={darkMode}
     >
-      {/* 🚀 Sticky Navigation - Density refined without global scale for maximum performance */}
+      {/* 🚀 Sticky Navigation - Expanded layout with increased font sizes */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-2.5 bg-black/70 border-white/5 shadow-2xl backdrop-blur-xl border-b" : "py-4 bg-transparent"}`}>
-        <div className="max-w-5xl mx-auto px-6 flex justify-between items-center text-white">
-          <div className="flex items-center gap-2 group cursor-pointer">
+        <div className="max-w-[96%] mx-auto px-6 flex justify-between items-center text-white">
+          <div className="flex items-center gap-3 group cursor-pointer">
             <div className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg group-hover:scale-110 transition-all shadow-lg shadow-blue-500/20">
-              <div className="bg-black p-1 rounded-[calc(0.5rem-1px)]">
-                <FaRocket size={12} className="text-blue-500" />
+              <div className="bg-black p-1.5 rounded-[calc(0.5rem-1px)]">
+                <FaRocket size={14} className="text-blue-500" />
               </div>
             </div>
-            <h1 className="text-base font-black tracking-tighter uppercase italic">Student Portal</h1>
+            <h1 className="text-lg md:text-xl font-black tracking-tighter uppercase italic">Student Portal</h1>
           </div>
 
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-8">
             {["About", "Events", "Testimonials", "Contact"].map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="text-[8px] font-black uppercase tracking-[0.3em] transition-colors relative group text-white/50 hover:text-white"
+                className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] transition-colors relative group text-white/50 hover:text-white"
               >
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 group-hover:w-full transition-all duration-300" />
               </a>
             ))}
             <Link href="/auth/login" className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg active:scale-95 transition-all">
-              <div className="bg-black text-white hover:bg-transparent font-black text-[8px] uppercase tracking-[0.2em] px-5 py-2 rounded-full transition-all">
+              <div className="bg-black text-white hover:bg-transparent font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em] px-6 py-2.5 rounded-full transition-all">
                 Portal Login
               </div>
             </Link>
@@ -127,29 +127,29 @@ export default function HomePage() {
           transition={{ duration: 0.8 }}
           className="relative z-10"
         >
-          <div className="inline-flex px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-[0.4em] mb-6 shadow-2xl bg-white/10 border border-white/20 text-white leading-none">
+          <div className="inline-flex px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] mb-8 shadow-2xl bg-white/10 border border-white/20 text-white leading-none">
             ✨ Reconnect • Network • Grow ✨
           </div>
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-4 leading-none italic uppercase text-white">
+          <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-6 leading-none italic uppercase text-white">
             STUDENT<br />
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">PORTAL</span>
           </h1>
-          <p className="max-w-xl mx-auto text-sm md:text-base font-bold uppercase tracking-[0.1em] leading-relaxed mb-6 text-white/60">
+          <p className="max-w-2xl mx-auto text-base md:text-xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-8 text-white/60">
             The next generation professional ecosystem<br />for active students worldwide.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
             <Link href="/auth/signup" className="group relative p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-3xl transform hover:-translate-y-1 transition-all duration-500">
-              <div className="bg-black/40 hover:bg-transparent backdrop-blur-md px-10 py-4 rounded-[calc(0.75rem-1px)] flex items-center gap-3 transition-all">
-                <span className="text-white font-black text-xs uppercase tracking-[0.3em]">Create Account</span>
-                <ArrowRight className="text-blue-500 group-hover:text-white transition-colors" size={14} />
+              <div className="bg-black/40 hover:bg-transparent backdrop-blur-md px-12 py-5 rounded-[calc(0.75rem-1px)] flex items-center gap-4 transition-all">
+                <span className="text-white font-black text-sm uppercase tracking-[0.3em]">Create Account</span>
+                <ArrowRight className="text-blue-500 group-hover:text-white transition-colors" size={16} />
               </div>
             </Link>
 
             <Link href="/auth/login" className="p-px bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 rounded-xl hover:from-blue-500 hover:to-pink-500 transition-all shadow-xl active:scale-95 group">
-              <div className="bg-black/60 px-7 py-3.5 rounded-[calc(0.75rem-1px)] flex items-center gap-3 transition-colors backdrop-blur-lg">
-                <ShieldCheck className="text-blue-500" size={14} />
-                <span className="text-white font-black text-[10px] uppercase tracking-[0.3em]">Member Login</span>
+              <div className="bg-black/60 px-8 py-4.5 rounded-[calc(0.75rem-1px)] flex items-center gap-3 transition-colors backdrop-blur-lg">
+                <ShieldCheck className="text-blue-500" size={16} />
+                <span className="text-white font-black text-xs uppercase tracking-[0.3em]">Member Login</span>
               </div>
             </Link>
           </div>
@@ -255,28 +255,28 @@ export default function HomePage() {
         </div>
       </SectionWrapper>
 
-      <footer className={`py-16 border-t transition-colors duration-700 ${darkMode ? "bg-black text-white border-white/5" : "bg-slate-50 text-slate-900 border-slate-200"}`}>
-        <div className="max-w-5xl mx-auto px-6 flex flex-col lg:flex-row justify-between items-center gap-10 text-center lg:text-left">
-          <div className="space-y-6">
+      <footer className={`py-20 border-t transition-colors duration-700 ${darkMode ? "bg-black text-white border-white/5" : "bg-slate-50 text-slate-900 border-slate-200"}`}>
+        <div className="max-w-[96%] mx-auto px-6 flex flex-col lg:flex-row justify-between items-center gap-12 text-center lg:text-left">
+          <div className="space-y-8">
             <div>
-              <h1 className="text-3xl font-black italic tracking-tighter uppercase mb-3">STUDENT PORTAL</h1>
-              <p className={`text-[10px] font-black uppercase tracking-[0.2em] max-w-sm ${darkMode ? "text-white/20" : "text-slate-400"}`}>
+              <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase mb-4">STUDENT PORTAL</h1>
+              <p className={`text-[11px] md:text-xs font-black uppercase tracking-[0.2em] max-w-sm ${darkMode ? "text-white/40" : "text-slate-500"}`}>
                 Empowering university students through a premium digital ecosystem.
               </p>
             </div>
-            <div className="flex justify-center lg:justify-start gap-6">
+            <div className="flex justify-center lg:justify-start gap-8">
               {[FaFacebook, FaTwitter, FaInstagram, FaLinkedin].map((Icon, i) => (
-                <Icon key={i} className="text-xl hover:text-blue-500 transition-all cursor-pointer transform hover:scale-110" />
+                <Icon key={i} className="text-2xl hover:text-blue-500 transition-all cursor-pointer transform hover:scale-110" />
               ))}
             </div>
           </div>
           <div className="flex flex-col items-center lg:items-end">
-            <div className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full mb-6 shadow-3xl">
-              <div className={`px-8 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest italic ${darkMode ? "bg-black" : "bg-white"}`}>
+            <div className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full mb-8 shadow-3xl">
+              <div className={`px-10 py-3 rounded-full text-[12px] md:text-[13px] font-black uppercase tracking-widest italic ${darkMode ? "bg-black" : "bg-white"}`}>
                 Graphic ERA Hill University
               </div>
             </div>
-            <p className="text-[8px] font-black uppercase tracking-[0.6em] text-white/50">
+            <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.6em] text-white/40">
               © 2025 ALL RIGHTS RESERVED
             </p>
           </div>
