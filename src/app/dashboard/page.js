@@ -12,6 +12,7 @@ import socket from "@/utils/socket";
 import PointsScenario from "../components/dashboard/PointsScenario";
 import { useTheme } from "@/context/ThemeContext";
 import { useNotifications } from "@/context/NotificationContext";
+import { TubesBackground } from "../components/TubesBackground";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -202,7 +203,7 @@ export default function DashboardPage() {
   const SidebarComponent = user.isAdmin ? AdminSidebar : Sidebar;
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 bg-gradient-to-b from-blue-600 to-purple-700 text-white relative`}>
+    <TubesBackground className="min-h-screen transition-colors duration-500 text-white relative" darkMode={darkMode} tubeCount={10}>
       <SidebarComponent />
 
       <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-24 md:pb-6">
@@ -347,6 +348,6 @@ export default function DashboardPage() {
           </motion.button>
         )}
       </AnimatePresence>
-    </div>
+    </TubesBackground>
   );
 }
