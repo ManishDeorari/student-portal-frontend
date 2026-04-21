@@ -209,7 +209,7 @@ function LoginContent() {
     <TubesBackground 
       className="min-h-screen text-white bg-black" 
       darkMode={darkMode}
-      tubeCount={5}
+      tubeCount={10}
     >
       <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center px-4 sm:px-8 transition-colors duration-500">
       <LoadingOverlay isVisible={loading} message={view === "LOGIN" ? "Authenticating..." : "Processing..."} />
