@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import * as THREE from 'three';
 
 const randomColors = (count) =>
   new Array(count)
@@ -195,6 +196,11 @@ export function TubesBackground({
     const initTubes = async () => {
       if (!canvasRef.current) return;
       
+      if (isTouchDevice) {
+        initMobileThreeJS();
+        return;
+      }
+
       // Small delay for mobile stability before heavy WebGL init
       await new Promise(r => setTimeout(r, 200));
       if (!mounted) return;
@@ -230,11 +236,95 @@ export function TubesBackground({
       }
     };
 
+    let mobileRenderer, mobileRafId;
+    const initMobileThreeJS = () => {
+      const canvas = canvasRef.current;
+      mobileRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+      mobileRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      mobileRenderer.setSize(window.innerWidth, window.innerHeight);
+
+      const mobileScene = new THREE.Scene();
+      const mobileCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+      mobileCamera.position.z = 10;
+
+      const currentTheme = darkMode ? colorSchemes.dark : colorSchemes.light;
+      
+      // Create glowing particles that drift
+      const geometry = new THREE.BufferGeometry();
+      const particleCount = 150;
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+      const velocities = [];
+
+      const themeColors = currentTheme.tubes.map(c => new THREE.Color(c));
+
+      for (let i = 0; i < particleCount; i++) {
+          positions[i*3] = (Math.random() - 0.5) * 25;
+          positions[i*3+1] = (Math.random() - 0.5) * 25;
+          positions[i*3+2] = (Math.random() - 0.5) * 15 - 5;
+          
+          const col = themeColors[Math.floor(Math.random() * themeColors.length)];
+          colors[i*3] = col.r;
+          colors[i*3+1] = col.g;
+          colors[i*3+2] = col.b;
+
+          velocities.push({
+              x: (Math.random() - 0.5) * 0.02,
+              y: (Math.random() - 0.5) * 0.02,
+              z: (Math.random() - 0.5) * 0.01,
+          });
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      // Simple glowing material
+      const material = new THREE.PointsMaterial({
+          size: 0.2,
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.8,
+          blending: THREE.AdditiveBlending
+      });
+
+      const mobileParticles = new THREE.Points(geometry, material);
+      mobileScene.add(mobileParticles);
+
+      const animate = () => {
+          if (!mounted) return;
+          mobileRafId = requestAnimationFrame(animate);
+          
+          const posAttr = mobileParticles.geometry.attributes.position;
+          for (let i = 0; i < particleCount; i++) {
+              posAttr.array[i*3] += velocities[i].x;
+              posAttr.array[i*3+1] += velocities[i].y;
+              posAttr.array[i*3+2] += velocities[i].z;
+
+              // Bounds check
+              if (Math.abs(posAttr.array[i*3]) > 15) velocities[i].x *= -1;
+              if (Math.abs(posAttr.array[i*3+1]) > 15) velocities[i].y *= -1;
+              if (posAttr.array[i*3+2] > 5 || posAttr.array[i*3+2] < -15) velocities[i].z *= -1;
+          }
+          posAttr.needsUpdate = true;
+          
+          mobileParticles.rotation.y += 0.001;
+          mobileParticles.rotation.x += 0.0005;
+
+          mobileRenderer.render(mobileScene, mobileCamera);
+      };
+
+      animate();
+    };
+
     initTubes();
 
     return () => {
       mounted = false;
       cancelAnimationFrame(rafId);
+      if (mobileRafId) cancelAnimationFrame(mobileRafId);
+      if (mobileRenderer) {
+        mobileRenderer.dispose();
+      }
       window.removeEventListener("scroll",      onScroll);
       window.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);
