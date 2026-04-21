@@ -153,6 +153,11 @@ export function TubesBackground({
 
     const initTubes = async () => {
       if (!canvasRef.current) return;
+      
+      // Small delay for mobile stability before heavy WebGL init
+      await new Promise(r => setTimeout(r, 200));
+      if (!mounted) return;
+
       try {
         const module = await import(/* webpackIgnore: true */ "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js");
         const TubesCursor = module.default;
@@ -218,16 +223,16 @@ export function TubesBackground({
           }}
         />
       ) : (
-        /* The canvas is what receives the synthetic events. PointerEvents are captured by window and forwarded. */
+        /* Elevated z-index to ensure visibility above root backgrounds on mobile */
         <canvas
           ref={canvasRef}
-          className="fixed inset-0 w-full h-full block z-0"
+          className="fixed inset-0 w-full h-full block z-[1]"
           style={{ pointerEvents: "none", touchAction: "none" }}
         />
       )}
 
       {overlay && (
-        <div className="fixed inset-0 z-[1] pointer-events-none bg-black/25" />
+        <div className="fixed inset-0 z-[2] pointer-events-none bg-black/25" />
       )}
 
       <div className="relative z-10 w-full">{children}</div>

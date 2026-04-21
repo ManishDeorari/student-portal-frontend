@@ -207,7 +207,7 @@ function LoginContent() {
 
   return (
     <TubesBackground 
-      className="min-h-screen text-white bg-black" 
+      className="min-h-screen text-white" 
       darkMode={darkMode}
       tubeCount={10}
     >
