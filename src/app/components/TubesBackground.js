@@ -7,12 +7,13 @@ const randomColors = (count) =>
     .fill(0)
     .map(() => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0"));
 
+/** Check if the device supports WebGL */
 function supportsWebGL() {
   try {
-    const c = document.createElement("canvas");
+    const canvas = document.createElement("canvas");
     return !!(
       window.WebGLRenderingContext &&
-      (c.getContext("webgl") || c.getContext("experimental-webgl"))
+      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
     );
   } catch {
     return false;
@@ -26,40 +27,48 @@ export function TubesBackground({
   className,
   enableClickInteraction = true,
   overlay = true,
-  // CSS visual scale of the canvas — 1 = full size, 0.7 = 30% smaller appearing tubes
-  tubeScale = 1,
-  // Milliseconds with no interaction before idle wander kicks in
-  idleDelay = 5000,
-  // Delay (ms) before initialising Three.js — use ~500 on heavy pages to avoid blocking initial render
-  initDelay = 0,
+  // Number of tubes
+  tubeCount = 4,
+  // ms before auto-wandering starts
+  idleDelay = 2000,
+  // Theme sync
+  darkMode = true,
 }) {
-  const canvasRef     = useRef(null);
-  const tubesRef      = useRef(null);
-  const idleTimerRef  = useRef(null);
+  const canvasRef  = useRef(null);
+  const tubesRef   = useRef(null);
   const [webglFailed, setWebglFailed] = useState(false);
 
-  // ── Build canvas CSS for tube scaling ─────────────────────────────────────
-  // When tubeScale < 1 we make the canvas larger than viewport then CSS-scale
-  // it back down so the Three.js scene appears smaller while still covering
-  // the full viewport.
-  const invScale    = 1 / tubeScale;
-  const extraPct    = (invScale - 1) * 50; // half of the extra coverage
-  const canvasStyle =
-    tubeScale === 1
-      ? { pointerEvents: "none", touchAction: "none", willChange: "transform" }
-      : {
-          pointerEvents   : "none",
-          touchAction     : "none",
-          willChange      : "transform",
-          position        : "fixed",
-          width           : `${invScale * 100}vw`,
-          height          : `${invScale * 100}vh`,
-          top             : `-${extraPct}vh`,
-          left            : `-${extraPct}vw`,
-          transform       : `scale(${tubeScale})`,
-          transformOrigin : "center center",
-        };
+  // ── Color Schemes ──────────────────────────────────────────────────────────
+  const colorSchemes = {
+    dark: {
+      tubes: ["#6366f1", "#a855f7", "#ec4899"],
+      lights: ["#818cf8", "#c084fc", "#f472b6", "#60a5fa"],
+      intensity: 300,
+    },
+    light: {
+      tubes: ["#3b82f6", "#8b5cf6", "#d946ef"],
+      lights: ["#dbeafe", "#f3e8ff", "#fae8ff", "#eff6ff"],
+      intensity: 150,
+    }
+  };
 
+  // ── Theme Sync Effect ──────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!tubesRef.current) return;
+    const theme = darkMode ? colorSchemes.dark : colorSchemes.light;
+    try {
+      if (tubesRef.current.tubes?.setColors) {
+        tubesRef.current.tubes.setColors(theme.tubes);
+      }
+      if (tubesRef.current.tubes?.setLightsColors) {
+        tubesRef.current.tubes.setLightsColors(theme.lights);
+      }
+    } catch (err) {
+      console.warn("Could not update tube colors dynamically", err);
+    }
+  }, [darkMode]);
+
+  // ── Main Effect ────────────────────────────────────────────────────────────
   useEffect(() => {
     let mounted = true;
 
@@ -68,66 +77,73 @@ export function TubesBackground({
       return;
     }
 
-    // ── Shared state ─────────────────────────────────────────────────────────
+    // ── Shared mouse position state ──────────────────────────────────────────
     let curX = window.innerWidth  / 2;
     let curY = window.innerHeight / 2;
+    let lastDispatchedX = -1;
+    let lastDispatchedY = -1;
     let tgtX = curX;
     let tgtY = curY;
     let lastActivity = Date.now();
-    let idleInterval = null;
+    let rafId;
 
-    // Synthetic mouse-move dispatcher
-    const fireMove = (x, y) =>
-      window.dispatchEvent(
-        new MouseEvent("mousemove", { clientX: x, clientY: y, bubbles: true })
-      );
-
-    // ── Interaction tracking ─────────────────────────────────────────────────
-    const onInteract = (x, y) => {
-      lastActivity = Date.now();
-      curX = x;
-      curY = y;
+    const fireMove = (x, y) => {
+      // Optimization: Avoid redundant events
+      if (Math.abs(x - lastDispatchedX) < 0.5 && Math.abs(y - lastDispatchedY) < 0.5) return;
+      
+      const event = new MouseEvent("mousemove", { clientX: x, clientY: y, bubbles: true });
+      window.dispatchEvent(event);
+      
+      lastDispatchedX = x;
+      lastDispatchedY = y;
     };
 
-    const handleMouseMove = (e) => onInteract(e.clientX, e.clientY);
-
-    const handleTouchStart = (e) => {
-      if (e.touches.length) { const t = e.touches[0]; onInteract(t.clientX, t.clientY); fireMove(t.clientX, t.clientY); }
-    };
-    const handleTouchMove = (e) => {
-      if (e.touches.length) { const t = e.touches[0]; onInteract(t.clientX, t.clientY); fireMove(t.clientX, t.clientY); }
-    };
-    const handleTouchEnd = (e) => {
-      if (e.changedTouches.length) { const t = e.changedTouches[0]; onInteract(t.clientX, t.clientY); fireMove(t.clientX, t.clientY); }
-    };
-
-    window.addEventListener("mousemove",  handleMouseMove,  { passive: true });
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchmove",  handleTouchMove,  { passive: true });
-    window.addEventListener("touchend",   handleTouchEnd,   { passive: true });
-
-    // ── Idle wander — setInterval at ~20fps, much lighter than rAF ───────────
-    const pickTarget = () => {
+    // ── Idle auto-wander loop ──────────────────────────────────────────────
+    const pickNewTarget = () => {
       const pad = 100;
       tgtX = pad + Math.random() * (window.innerWidth  - pad * 2);
       tgtY = pad + Math.random() * (window.innerHeight - pad * 2);
     };
 
-    idleInterval = setInterval(() => {
-      if (!mounted) return;
-      if (Date.now() - lastActivity < idleDelay) return; // still active
+    const idleLoop = () => {
+      rafId = requestAnimationFrame(idleLoop);
 
-      curX = lerp(curX, tgtX, 0.04);
-      curY = lerp(curY, tgtY, 0.04);
+      const idle = Date.now() - lastActivity > idleDelay;
+      if (!idle) return;
 
-      if (Math.hypot(curX - tgtX, curY - tgtY) < 10) pickTarget();
+      // Smooth lerp toward current target
+      curX = lerp(curX, tgtX, 0.008); // Even slower for elegance
+      curY = lerp(curY, tgtY, 0.008);
 
-      fireMove(Math.round(curX), Math.round(curY));
-    }, 50); // 20fps — smooth but not expensive
+      if (Math.hypot(curX - tgtX, curY - tgtY) < 10) pickNewTarget();
 
-    // ── Three.js init (optionally delayed so heavy pages don't stutter) ──────
+      fireMove(curX, curY);
+    };
+
+    // ── Interaction Handlers ─────────────────────────────────────────────────
+    const handleInteraction = (clientX, clientY) => {
+      lastActivity = Date.now();
+      curX = clientX;
+      curY = clientY;
+    };
+
+    const handleMouseMove = (e) => handleInteraction(e.clientX, e.clientY);
+    const handleTouch = (e) => {
+      if (e.touches.length > 0) {
+        const t = e.touches[0];
+        handleInteraction(t.clientX, t.clientY);
+        fireMove(t.clientX, t.clientY);
+      }
+    };
+
+    window.addEventListener("mousemove",  handleMouseMove,  { passive: true });
+    window.addEventListener("touchstart", handleTouch,      { passive: true });
+    window.addEventListener("touchmove",  handleTouch,      { passive: true });
+    window.addEventListener("touchend",   handleTouch,      { passive: true });
+
+    // ── Init Three.js tubes ──────────────────────────────────────────────────
     const initTubes = async () => {
-      if (!mounted || !canvasRef.current) return;
+      if (!canvasRef.current) return;
       try {
         const module = await import(
           /* webpackIgnore: true */
@@ -136,47 +152,53 @@ export function TubesBackground({
         const TubesCursor = module.default;
         if (!mounted) return;
 
+        const currentTheme = darkMode ? colorSchemes.dark : colorSchemes.light;
+
         const app = TubesCursor(canvasRef.current, {
           tubes: {
-            colors: ["#6366f1", "#a855f7", "#ec4899"],
-            lights: { intensity: 200, colors: ["#818cf8", "#c084fc", "#f472b6", "#60a5fa"] },
+            count: tubeCount,
+            // Experimental: Reducing diameter/thickness
+            radius: 0.015,   // Smaller radius for slimmer lines
+            thickness: 0.005, // Thinner girth
+            colors: currentTheme.tubes,
+            lights: {
+              intensity: currentTheme.intensity,
+              colors: currentTheme.lights,
+            },
           },
         });
 
         tubesRef.current = app;
 
-        // Prime the renderer so tubes appear immediately without user input
         if (mounted) {
-          const prime = () => fireMove(
-            Math.round(window.innerWidth  / 2),
-            Math.round(window.innerHeight / 2)
-          );
-          // Multiple pulses to guarantee visibility through any timing variance
-          setTimeout(prime, 50);
-          setTimeout(prime, 200);
-          setTimeout(prime, 600);
+          // ENSURE VISIBILITY: Force fire a move to current position twice
+          const initialPrime = () => {
+            fireMove(window.innerWidth / 2, window.innerHeight / 2);
+          };
+          initialPrime();
+          setTimeout(initialPrime, 100);
+          setTimeout(initialPrime, 500);
+
+          rafId = requestAnimationFrame(idleLoop);
         }
       } catch (err) {
-        console.warn("TubesCursor failed, falling back.", err);
+        console.warn("TubesCursor failed to load", err);
         if (mounted) setWebglFailed(true);
       }
     };
 
-    // Delay init so heavy pages finish their initial render first
-    const initTimeout = setTimeout(initTubes, initDelay);
+    initTubes();
 
     return () => {
       mounted = false;
-      clearTimeout(initTimeout);
-      clearInterval(idleInterval);
+      cancelAnimationFrame(rafId);
       window.removeEventListener("mousemove",  handleMouseMove);
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove",  handleTouchMove);
-      window.removeEventListener("touchend",   handleTouchEnd);
+      window.removeEventListener("touchstart", handleTouch);
+      window.removeEventListener("touchmove",  handleTouch);
+      window.removeEventListener("touchend",   handleTouch);
     };
-  }, [tubeScale, idleDelay, initDelay]);
+  }, [tubeCount, idleDelay]);
 
-  // ── Click / Tap → randomize colors ────────────────────────────────────────
   const handleClick = (e) => {
     if (!enableClickInteraction || !tubesRef.current) return;
     if (e.target.closest("a, button, input, form")) return;
@@ -189,11 +211,12 @@ export function TubesBackground({
   return (
     <div className={`relative w-full ${className || ""}`} onClick={handleClick}>
       {webglFailed ? (
-        // Animated gradient fallback for devices without WebGL
         <div
-          className="fixed inset-0 z-0"
+          className="fixed inset-0 z-0 transition-colors duration-1000"
           style={{
-            background: "linear-gradient(135deg,#1e1b4b 0%,#312e81 25%,#4c1d95 50%,#6d28d9 75%,#1e1b4b 100%)",
+            background: darkMode 
+              ? "linear-gradient(135deg,#1e1b4b 0%,#312e81 25%,#4c1d95 50%,#6d28d9 75%,#1e1b4b 100%)"
+              : "linear-gradient(135deg,#eff6ff 0%,#e0e7ff 25%,#ede9fe 50%,#fae8ff 75%,#eff6ff 100%)",
             backgroundSize: "400% 400%",
             animation: "gradientShift 12s ease infinite",
           }}
@@ -202,15 +225,23 @@ export function TubesBackground({
         <canvas
           ref={canvasRef}
           className="fixed inset-0 w-full h-full block z-0"
-          style={canvasStyle}
+          style={{ pointerEvents: "none", touchAction: "none" }}
         />
       )}
 
-      {overlay && <div className="fixed inset-0 z-[1] pointer-events-none bg-black/25" />}
+      {overlay && (
+        <div className={`fixed inset-0 z-[1] pointer-events-none transition-colors duration-700 ${darkMode ? "bg-black/25" : "bg-white/10"}`} />
+      )}
 
       <div className="relative z-10 w-full">{children}</div>
 
-      <style>{`@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}`}</style>
+      <style>{`
+        @keyframes gradientShift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
     </div>
   );
 }
