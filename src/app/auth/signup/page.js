@@ -390,7 +390,7 @@ export default function SignupPage() {
         </motion.div>
 
         {/* Mobile Header (Shows above form on small screens) */}
-        <div className="lg:hidden text-center mb-0 order-first">
+        <div className="lg:hidden text-center mb-4 order-first pt-10 sm:pt-14">
           <h1 className="text-5xl font-black text-white tracking-tight drop-shadow-lg">
             Student Portal
           </h1>
