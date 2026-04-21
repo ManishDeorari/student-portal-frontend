@@ -211,18 +211,18 @@ function LoginContent() {
       darkMode={darkMode}
       tubeCount={10}
     >
-      <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center px-4 sm:px-8 transition-colors duration-500">
+      <div className="min-h-screen flex flex-col lg:flex-row items-center lg:items-start lg:pt-32 justify-center lg:justify-start px-4 sm:px-8 transition-colors duration-500">
       <LoadingOverlay isVisible={loading} message={view === "LOGIN" ? "Authenticating..." : "Processing..."} />
 
-      <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 z-10">
+      <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:items-start justify-between gap-12 z-10">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full lg:w-1/2 max-w-[500px] lg:pl-16 mt-8 sm:mt-12 lg:mt-0 mb-8"
+          className="w-full lg:w-1/2 max-w-[340px] sm:max-w-[420px] lg:max-w-[500px] lg:pl-16 mt-6 sm:mt-12 lg:mt-0 mb-8 mx-auto lg:mx-0"
         >
-          <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.5rem] shadow-2xl relative">
-            <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2.5rem-2.5px)] py-4 px-4 sm:py-6 sm:px-8 space-y-4 sm:space-y-5 relative overflow-hidden transition-all duration-500`}>
+          <div className="p-[2px] sm:p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl relative">
+            <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:py-6 sm:px-8 space-y-4 sm:space-y-5 relative overflow-hidden transition-all duration-500`}>
               {view === "LOGIN" && (
                 <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   <div className="space-y-1 sm:space-y-2 text-center">

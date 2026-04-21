@@ -84,13 +84,14 @@ export function TubesBackground({
         view: window
       };
       
-      // Dispatch PointerEvent and MouseEvent to window, document and canvas
+      // Dispatch PointerEvent and MouseEvent to window, document, body and canvas
       const types = window.PointerEvent ? ["pointermove", "mousemove"] : ["mousemove"];
       types.forEach((type) => {
         const EventClass = type === "pointermove" ? PointerEvent : MouseEvent;
         const e = new EventClass(type, eventData);
         window.dispatchEvent(e);
         document.dispatchEvent(new EventClass(type, eventData));
+        if (document.body) document.body.dispatchEvent(new EventClass(type, eventData));
         if (canvasRef.current) canvasRef.current.dispatchEvent(new EventClass(type, eventData));
       });
 
@@ -111,10 +112,19 @@ export function TubesBackground({
         });
         window.dispatchEvent(touchEvent);
         document.dispatchEvent(touchEvent);
+        if (document.body) document.body.dispatchEvent(touchEvent);
         if (canvasRef.current) canvasRef.current.dispatchEvent(touchEvent);
       } catch (e) {
         // Ignore if Touch API isn't fully supported
       }
+
+      // Try brute-force mutation on the library object itself if it exposes a cursor or mouse property
+      try {
+        if (tubesRef.current) {
+          if (tubesRef.current.cursor) { tubesRef.current.cursor.x = x; tubesRef.current.cursor.y = y; }
+          if (tubesRef.current.mouse) { tubesRef.current.mouse.x = x; tubesRef.current.mouse.y = y; }
+        }
+      } catch (e) {}
       
       lastDispX = x;
       lastDispY = y;
