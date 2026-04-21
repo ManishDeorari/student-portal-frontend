@@ -11,18 +11,37 @@ const randomColors = (count) => {
     );
 };
 
+/** Check if the device supports WebGL */
+function supportsWebGL() {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function TubesBackground({
   children,
   className,
   enableClickInteraction = true,
+  overlay = true,
 }) {
   const canvasRef = useRef(null);
   const tubesRef = useRef(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [webglFailed, setWebglFailed] = useState(false);
 
   useEffect(() => {
     let mounted = true;
-    let cleanup;
+
+    // ─── WebGL guard ────────────────────────────────────────────────────────
+    if (!supportsWebGL()) {
+      setWebglFailed(true);
+      return;
+    }
 
     const initTubes = async () => {
       if (!canvasRef.current) return;
@@ -47,27 +66,86 @@ export function TubesBackground({
         });
 
         tubesRef.current = app;
-        setIsLoaded(true);
 
-        cleanup = () => {
-          // cleanup if lib exposes it
-        };
+        // ── Prime the renderer: dispatch a mousemove to the viewport center
+        // immediately after init so tubes appear on page load without waiting
+        // for the first user interaction (fixes home page "blank until move" issue)
+        if (mounted) {
+          const fireCenter = () => {
+            window.dispatchEvent(
+              new MouseEvent("mousemove", {
+                clientX: window.innerWidth / 2,
+                clientY: window.innerHeight / 2,
+                bubbles: true,
+                cancelable: true,
+              })
+            );
+          };
+          // Small delay lets the lib finish its internal setup
+          setTimeout(fireCenter, 80);
+          // Second pulse ensures it's definitely visible after any transition
+          setTimeout(fireCenter, 400);
+        }
       } catch (error) {
-        console.error("Failed to load TubesCursor:", error);
+        console.warn("TubesCursor failed to load, using fallback.", error);
+        if (mounted) setWebglFailed(true);
       }
     };
+
+    // ─── Touch → Mouse bridge ───────────────────────────────────────────────
+    // Translates finger touches into synthetic MouseEvents so tubes follow touch
+    const fireMouseMove = (clientX, clientY) => {
+      window.dispatchEvent(
+        new MouseEvent("mousemove", {
+          clientX,
+          clientY,
+          bubbles: true,
+          cancelable: true,
+        })
+      );
+    };
+
+    // Immediate response on first finger contact
+    const handleTouchStart = (e) => {
+      if (e.touches.length > 0) {
+        const t = e.touches[0];
+        fireMouseMove(t.clientX, t.clientY);
+      }
+    };
+
+    // Continuous tracking while dragging
+    const handleTouchMove = (e) => {
+      if (e.touches.length > 0) {
+        const t = e.touches[0];
+        fireMouseMove(t.clientX, t.clientY);
+      }
+    };
+
+    // Keep tubes at last position when finger lifts
+    const handleTouchEnd = (e) => {
+      if (e.changedTouches.length > 0) {
+        const t = e.changedTouches[0];
+        fireMouseMove(t.clientX, t.clientY);
+      }
+    };
+
+    // passive:true — never blocks native scroll on mobile
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove",  handleTouchMove,  { passive: true });
+    window.addEventListener("touchend",   handleTouchEnd,   { passive: true });
 
     initTubes();
 
     return () => {
       mounted = false;
-      if (cleanup) cleanup();
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove",  handleTouchMove);
+      window.removeEventListener("touchend",   handleTouchEnd);
     };
   }, []);
 
+  // ─── Click / Tap → randomize colors ────────────────────────────────────────
   const handleClick = (e) => {
-    // Only randomize if clicking directly on the background canvas area
-    // i.e., not propagated clicks from child buttons/links
     if (!enableClickInteraction || !tubesRef.current) return;
     if (e.target.closest("a, button, input, form")) return;
 
@@ -77,28 +155,55 @@ export function TubesBackground({
     try {
       tubesRef.current.tubes?.setColors(colors);
       tubesRef.current.tubes?.setLightsColors(lightsColors);
-    } catch (err) {
-      // silence if method doesn't exist in this version
+    } catch {
+      // silence
     }
   };
 
   return (
     <div
-      className={`relative w-full h-full overflow-x-hidden ${className || ""}`}
+      className={`relative w-full ${className || ""}`}
       onClick={handleClick}
     >
-      {/* 3D Canvas — fixed so it persists through scroll */}
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 w-full h-full block z-0"
-        style={{ touchAction: "none", pointerEvents: "none" }}
-      />
+      {/* ── WebGL fallback: animated gradient if WebGL is unsupported ── */}
+      {webglFailed ? (
+        <div
+          className="fixed inset-0 z-0"
+          style={{
+            background:
+              "linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #4c1d95 50%, #6d28d9 75%, #1e1b4b 100%)",
+            backgroundSize: "400% 400%",
+            animation: "gradientShift 12s ease infinite",
+          }}
+        />
+      ) : (
+        /* ── 3D Canvas — fixed behind all content ── */
+        <canvas
+          ref={canvasRef}
+          className="fixed inset-0 w-full h-full block z-0"
+          style={{
+            pointerEvents: "none", // lets page content remain tappable/scrollable
+            touchAction: "none",
+          }}
+        />
+      )}
 
-      {/* Dark overlay for section readability */}
-      <div className="fixed inset-0 z-[1] pointer-events-none bg-black/40" />
+      {/* Subtle dark overlay for readability */}
+      {overlay && (
+        <div className="fixed inset-0 z-[1] pointer-events-none bg-black/25" />
+      )}
 
-      {/* Content */}
+      {/* Page content */}
       <div className="relative z-10 w-full">{children}</div>
+
+      {/* Keyframe injection for fallback gradient animation */}
+      <style>{`
+        @keyframes gradientShift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
     </div>
   );
 }

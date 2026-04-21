@@ -280,12 +280,14 @@ export default function HomePage() {
       </footer>
 
       <div className="fixed bottom-8 right-8 z-[100] flex flex-col gap-4">
-        <button
-          onClick={toggleDarkMode}
-          className={`p-5 rounded-[2rem] backdrop-blur-xl shadow-4xl border-2 transition-all duration-700 hover:scale-110 active:scale-90 ${darkMode ? "bg-white/10 border-white/20 text-yellow-400" : "bg-slate-950/10 border-slate-950/20 text-slate-950 hover:bg-slate-950 hover:text-white"}`}
-        >
-          {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-        </button>
+        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] shadow-xl">
+          <button
+            onClick={toggleDarkMode}
+            className={`p-5 rounded-[calc(2rem-1.5px)] backdrop-blur-xl transition-all duration-700 hover:scale-105 active:scale-90 ${darkMode ? "bg-black/60 text-yellow-400" : "bg-white/80 text-slate-900"}`}
+          >
+            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+          </button>
+        </div>
       </div>
 
     </TubesBackground>
