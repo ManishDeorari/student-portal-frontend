@@ -71,6 +71,24 @@ export function TubesBackground({
     let isPointerDown = false;
     let rafId;
 
+    const fireMove = (x, y) => {
+      if (!canvasRef.current) return;
+      if (Math.abs(x - lastDispX) < 0.5 && Math.abs(y - lastDispY) < 0.5) return;
+      
+      // Dispatch MouseEvent directly to the canvas so internal listeners see it
+      const event = new MouseEvent("mousemove", {
+        clientX: x,
+        clientY: y,
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      canvasRef.current.dispatchEvent(event);
+      
+      lastDispX = x;
+      lastDispY = y;
+    };
+
     const pickTarget = () => {
       const pad = 100;
       tgtX = pad + Math.random() * (window.innerWidth - pad * 2);
@@ -87,35 +105,19 @@ export function TubesBackground({
     };
 
     let isTouchDevice = false;
-    try { isTouchDevice = window.matchMedia("(pointer: coarse)").matches || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0); } catch (e) {}
-
-    const fireMove = (x, y) => {
-      if (!canvasRef.current) return;
-      if (Math.abs(x - lastDispX) < 0.5 && Math.abs(y - lastDispY) < 0.5) return;
-      
-      // Use PointerEvent for better mobile compatibility
-      const event = new PointerEvent("pointermove", {
-        clientX: x,
-        clientY: y,
-        bubbles: true,
-        cancelable: true,
-        pointerType: isTouchDevice ? "touch" : "mouse",
-        view: window
-      });
-      canvasRef.current.dispatchEvent(event);
-      
-      lastDispX = x;
-      lastDispY = y;
-    };
+    try { isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0); } catch (e) {}
 
     const idleLoop = () => {
       rafId = requestAnimationFrame(idleLoop);
-      if (isPointerDown || isScrolling) return;
+      // On touch devices, we don't pause for pointer down, only for active scrolling
+      const shouldPause = isTouchDevice ? isScrolling : (isPointerDown || isScrolling);
+      if (shouldPause) return;
 
       const idle = isTouchDevice || (Date.now() - lastActivity > idleDelay);
       if (!idle) return;
 
-      const speed = isTouchDevice ? 0.012 : 0.01; // Slightly more rhythmic for mobile
+      // Smoother, slightly faster wandering for touch devices
+      const speed = isTouchDevice ? 0.015 : 0.01;
       curX = lerp(curX, tgtX, speed);
       curY = lerp(curY, tgtY, speed);
 
@@ -157,13 +159,17 @@ export function TubesBackground({
         if (!mounted) return;
 
         const currentTheme = darkMode ? colorSchemes.dark : colorSchemes.light;
+        
+        // Increase intensity for mobile visibility
+        const intensity = isTouchDevice ? (currentTheme.intensity * 1.5) : currentTheme.intensity;
+
         const app = TubesCursor(canvasRef.current, {
           tubes: {
             count: tubeCount,
             radius: 0.015,
             thickness: 0.005,
             colors: currentTheme.tubes,
-            lights: { intensity: currentTheme.intensity, colors: currentTheme.lights },
+            lights: { intensity: intensity, colors: currentTheme.lights },
           },
         });
         tubesRef.current = app;
