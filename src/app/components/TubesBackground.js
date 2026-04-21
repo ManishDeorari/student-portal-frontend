@@ -104,26 +104,35 @@ export function TubesBackground({
       scrollTimeout = setTimeout(() => { isScrolling = false; }, 150);
     };
 
+    let isTouchDevice = false;
+    try { isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0); } catch (e) {}
+
     const idleLoop = () => {
       rafId = requestAnimationFrame(idleLoop);
-      if (isPointerDown || isScrolling) return; // Stop heavy logic during scroll/drag
+      if (isPointerDown || isScrolling) return;
 
-      const idle = Date.now() - lastActivity > idleDelay;
+      const idle = isTouchDevice || (Date.now() - lastActivity > idleDelay);
       if (!idle) return;
 
-      curX = lerp(curX, tgtX, 0.01);
-      curY = lerp(curY, tgtY, 0.01);
+      // Smoother, slightly faster wandering for touch devices
+      const speed = isTouchDevice ? 0.015 : 0.01;
+      curX = lerp(curX, tgtX, speed);
+      curY = lerp(curY, tgtY, speed);
 
-      if (Math.hypot(curX - tgtX, curY - tgtY) < 10) pickTarget();
+      if (Math.hypot(curX - tgtX, curY - tgtY) < 15) pickTarget();
       fireMove(curX, curY);
     };
 
     // ── Unified Pointer Events (Mobile & Desktop) ───────────────────────────
     const handlePointerAction = (e) => {
+      // On touch devices, we ignore move events to let it wander freely, 
+      // but we still update lastActivity for clicks/taps.
       lastActivity = Date.now();
-      curX = e.clientX;
-      curY = e.clientY;
-      fireMove(e.clientX, e.clientY);
+      if (!isTouchDevice) {
+        curX = e.clientX;
+        curY = e.clientY;
+        fireMove(e.clientX, e.clientY);
+      }
     };
 
     const onPointerDown = (e) => {
