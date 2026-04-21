@@ -95,9 +95,18 @@ export function TubesBackground({
       tgtY = pad + Math.random() * (window.innerHeight - pad * 2);
     };
 
+    let isScrolling = false;
+    let scrollTimeout;
+
+    const onScroll = () => {
+      isScrolling = true;
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => { isScrolling = false; }, 150);
+    };
+
     const idleLoop = () => {
       rafId = requestAnimationFrame(idleLoop);
-      if (isPointerDown) return; // Stop wandering if user is touching/dragging
+      if (isPointerDown || isScrolling) return; // Stop heavy logic during scroll/drag
 
       const idle = Date.now() - lastActivity > idleDelay;
       if (!idle) return;
@@ -127,6 +136,7 @@ export function TubesBackground({
       lastActivity = Date.now();
     };
 
+    window.addEventListener("scroll",      onScroll,      { passive: true });
     window.addEventListener("pointerdown", onPointerDown, { passive: true });
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerup",   onPointerUp,   { passive: true });
@@ -166,6 +176,7 @@ export function TubesBackground({
     return () => {
       mounted = false;
       cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll",      onScroll);
       window.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup",   onPointerUp);
@@ -183,7 +194,7 @@ export function TubesBackground({
   };
 
   return (
-    <div className={`relative w-full ${className || ""}`} onClick={handleClick}>
+    <div className={`relative w-full overflow-x-hidden ${className || ""}`} onClick={handleClick}>
       {webglFailed ? (
         <div
           className="fixed inset-0 z-0"
