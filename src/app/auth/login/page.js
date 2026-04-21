@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
+import { TubesBackground } from "@/app/components/TubesBackground";
 
 export default function LoginPage() {
   return (
@@ -205,11 +206,9 @@ function LoginContent() {
   const [darkMode, setDarkMode] = useState(false);
 
   return (
-    <div className={`min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700 relative overflow-hidden px-4 sm:px-8 transition-colors duration-500`}>
+    <TubesBackground className="min-h-screen text-white">
+      <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center px-4 sm:px-8 transition-colors duration-500">
       <LoadingOverlay isVisible={loading} message={view === "LOGIN" ? "Authenticating..." : "Processing..."} />
-      {/* Background Orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px] animate-pulse"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
 
       <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 z-10">
         <motion.div
@@ -500,6 +499,7 @@ function LoginContent() {
           )}
         </button>
       </div>
-    </div>
+      </div>
+    </TubesBackground>
   );
 }

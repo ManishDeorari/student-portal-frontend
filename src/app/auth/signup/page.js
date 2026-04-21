@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
+import { TubesBackground } from "@/app/components/TubesBackground";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -119,11 +120,9 @@ export default function SignupPage() {
   const [darkMode, setDarkMode] = useState(false);
 
   return (
-    <div className={`min-h-screen flex flex-col lg:flex-row items-center justify-center bg-gradient-to-br from-blue-600 to-purple-700 relative overflow-hidden px-4 sm:px-8 pb-32 sm:pb-0 transition-colors duration-500 text-white`}>
+    <TubesBackground className="min-h-screen text-white">
+      <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center px-4 sm:px-8 pb-32 sm:pb-0 transition-colors duration-500 text-white">
       <LoadingOverlay isVisible={loading} message="Creating Account..." />
-      {/* Background Orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px] animate-pulse"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
 
       <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 z-10">
         <motion.div
@@ -455,6 +454,7 @@ export default function SignupPage() {
           </div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </TubesBackground>
   );
 }

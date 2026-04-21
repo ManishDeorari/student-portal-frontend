@@ -288,10 +288,6 @@ export default function HomePage() {
         </button>
       </div>
 
-      {/* 🖱️ Subtle click hint */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 text-white/30 pointer-events-none">
-        <span className="text-[9px] font-black uppercase tracking-[0.4em]">Click background · Randomize Colors</span>
-      </div>
     </TubesBackground>
   );
 }
