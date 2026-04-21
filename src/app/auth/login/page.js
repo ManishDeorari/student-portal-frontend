@@ -206,7 +206,11 @@ function LoginContent() {
   const [darkMode, setDarkMode] = useState(false);
 
   return (
-    <TubesBackground className="min-h-screen text-white" darkMode={darkMode}>
+    <TubesBackground 
+      className={`min-h-screen text-white transition-colors duration-700 ${darkMode ? "bg-black" : "bg-white"}`} 
+      darkMode={darkMode}
+      tubeCount={5}
+    >
       <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center px-4 sm:px-8 transition-colors duration-500">
       <LoadingOverlay isVisible={loading} message={view === "LOGIN" ? "Authenticating..." : "Processing..."} />
 

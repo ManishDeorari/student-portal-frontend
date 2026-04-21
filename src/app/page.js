@@ -82,7 +82,7 @@ export default function HomePage() {
 
   return (
     <TubesBackground
-      className="min-h-screen selection:bg-blue-500/30 text-white scroll-smooth"
+      className={`min-h-screen selection:bg-blue-500/30 text-white scroll-smooth transition-colors duration-700 ${darkMode ? "bg-black" : "bg-white"}`}
       tubeCount={5}
       idleDelay={3000}
       darkMode={darkMode}
