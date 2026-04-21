@@ -83,8 +83,9 @@ export default function HomePage() {
   return (
     <TubesBackground
       className="min-h-screen selection:bg-blue-500/30 text-white scroll-smooth"
-      tubeCount={2}
-      idleDelay={2000}
+      tubeScale={0.7}
+      initDelay={500}
+      idleDelay={5000}
     >
       {/* 🚀 Sticky Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-4 bg-black/60 border-white/5 shadow-2xl backdrop-blur-xl border-b" : "py-6 bg-transparent"}`}>
