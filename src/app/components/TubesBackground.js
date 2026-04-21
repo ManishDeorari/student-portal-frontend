@@ -76,7 +76,6 @@ export function TubesBackground({
       if (!mounted) return;
       if (Math.abs(x - lastDispX) < 0.5 && Math.abs(y - lastDispY) < 0.5) return;
       
-      // Dispatch MouseEvent to both window and canvas for maximum library compatibility
       const eventData = {
         clientX: x,
         clientY: y,
@@ -85,10 +84,36 @@ export function TubesBackground({
         view: window
       };
       
-      const event = new MouseEvent("mousemove", eventData);
-      window.dispatchEvent(event);
-      if (canvasRef.current) {
-        canvasRef.current.dispatchEvent(new MouseEvent("mousemove", eventData));
+      // Dispatch PointerEvent and MouseEvent to window, document and canvas
+      const types = window.PointerEvent ? ["pointermove", "mousemove"] : ["mousemove"];
+      types.forEach((type) => {
+        const EventClass = type === "pointermove" ? PointerEvent : MouseEvent;
+        const e = new EventClass(type, eventData);
+        window.dispatchEvent(e);
+        document.dispatchEvent(new EventClass(type, eventData));
+        if (canvasRef.current) canvasRef.current.dispatchEvent(new EventClass(type, eventData));
+      });
+
+      // Dispatch TouchEvent for mobile-specific listeners
+      try {
+        const touch = new Touch({
+          identifier: 0,
+          target: canvasRef.current || document.body,
+          clientX: x,
+          clientY: y
+        });
+        const touchEvent = new TouchEvent("touchmove", {
+          cancelable: true,
+          bubbles: true,
+          touches: [touch],
+          targetTouches: [touch],
+          changedTouches: [touch]
+        });
+        window.dispatchEvent(touchEvent);
+        document.dispatchEvent(touchEvent);
+        if (canvasRef.current) canvasRef.current.dispatchEvent(touchEvent);
+      } catch (e) {
+        // Ignore if Touch API isn't fully supported
       }
       
       lastDispX = x;
