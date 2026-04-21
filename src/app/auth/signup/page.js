@@ -121,7 +121,7 @@ export default function SignupPage() {
 
   return (
     <TubesBackground 
-      className={`min-h-screen text-white transition-colors duration-700 ${darkMode ? "bg-black" : "bg-white"}`} 
+      className="min-h-screen text-white bg-black" 
       darkMode={darkMode}
       tubeCount={5}
     >

@@ -212,11 +212,9 @@ export function TubesBackground({
     <div className={`relative w-full ${className || ""}`} onClick={handleClick}>
       {webglFailed ? (
         <div
-          className="fixed inset-0 z-0 transition-colors duration-1000"
+          className="fixed inset-0 z-0"
           style={{
-            background: darkMode 
-              ? "linear-gradient(135deg,#1e1b4b 0%,#312e81 25%,#4c1d95 50%,#6d28d9 75%,#1e1b4b 100%)"
-              : "linear-gradient(135deg,#eff6ff 0%,#e0e7ff 25%,#ede9fe 50%,#fae8ff 75%,#eff6ff 100%)",
+            background: "linear-gradient(135deg,#1e1b4b 0%,#312e81 25%,#4c1d95 50%,#6d28d9 75%,#1e1b4b 100%)",
             backgroundSize: "400% 400%",
             animation: "gradientShift 12s ease infinite",
           }}
@@ -230,7 +228,7 @@ export function TubesBackground({
       )}
 
       {overlay && (
-        <div className={`fixed inset-0 z-[1] pointer-events-none transition-colors duration-700 ${darkMode ? "bg-black/25" : "bg-white/10"}`} />
+        <div className="fixed inset-0 z-[1] pointer-events-none bg-black/25" />
       )}
 
       <div className="relative z-10 w-full">{children}</div>
