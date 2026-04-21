@@ -212,10 +212,10 @@ export function TubesBackground({
   };
 
   return (
-    <div className={`relative w-full overflow-x-hidden ${className || ""}`} onClick={handleClick}>
+    <div className={`w-full ${className || ""}`} onClick={handleClick}>
       {webglFailed ? (
         <div
-          className="fixed inset-0 z-0"
+          className="fixed inset-0 z-0 w-screen h-[100dvh]"
           style={{
             background: "linear-gradient(135deg,#1e1b4b 0%,#312e81 25%,#4c1d95 50%,#6d28d9 75%,#1e1b4b 100%)",
             backgroundSize: "400% 400%",
@@ -223,19 +223,19 @@ export function TubesBackground({
           }}
         />
       ) : (
-        /* Elevated z-index to ensure visibility above root backgrounds on mobile */
+        /* Detached z-index and forced viewport binding for mobile reliability */
         <canvas
           ref={canvasRef}
-          className="fixed inset-0 w-full h-full block z-[1]"
+          className="fixed inset-0 w-screen h-[100dvh] block z-[1]"
           style={{ pointerEvents: "none", touchAction: "none" }}
         />
       )}
 
       {overlay && (
-        <div className="fixed inset-0 z-[2] pointer-events-none bg-black/25" />
+        <div className="fixed inset-0 w-screen h-[100dvh] z-[2] pointer-events-none bg-black/30" />
       )}
 
-      <div className="relative z-10 w-full">{children}</div>
+      <div className="relative z-10 w-full overflow-x-hidden">{children}</div>
 
       <style>{`
         @keyframes gradientShift {

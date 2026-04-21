@@ -44,8 +44,8 @@ const SectionWrapper = ({ title, subtitle, icon: Icon, children, id, darkMode })
         {subtitle && <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-blue-300">{subtitle}</p>}
       </div>
 
-      <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-blue-500/10">
-        <div className={`${darkMode ? "bg-slate-900/40 sm:bg-slate-900/60" : "bg-white/40 sm:bg-white/60"} backdrop-blur-xl sm:backdrop-blur-3xl rounded-[calc(2.5rem-2.5px)] p-8 md:p-12`}>
+      <div className="p-[2px] md:p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-blue-500/10">
+        <div className={`transition-all duration-500 ${darkMode ? "bg-slate-900/20 sm:bg-slate-900/60" : "bg-white/20 sm:bg-white/60"} backdrop-blur-lg sm:backdrop-blur-3xl rounded-[calc(2.5rem-2.5px)] p-8 md:p-12`}>
           {children}
         </div>
       </div>
@@ -81,8 +81,8 @@ export default function HomePage() {
   };
 
   return (
-    <TubesBackground
-      className="min-h-screen selection:bg-blue-500/30 text-white scroll-smooth bg-black"
+    <TubesBackground 
+      className="text-white" 
       tubeCount={5}
       idleDelay={3000}
       darkMode={darkMode}
