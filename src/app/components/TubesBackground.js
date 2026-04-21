@@ -66,24 +66,30 @@ export function TubesBackground({
     let curX = window.innerWidth / 2;
     let curY = window.innerHeight / 2;
     let lastDispX = -1, lastDispY = -1;
-    let tgtX = curX, tgtY = curY;
-    let lastActivity = Date.now();
+    let tgtX = curX + 1; // Slight offset to ensure first move is registered
+    let tgtY = curY + 1;
+    let lastActivity = 0; // Force idle wandering to start immediately
     let isPointerDown = false;
     let rafId;
 
     const fireMove = (x, y) => {
-      if (!canvasRef.current) return;
+      if (!mounted) return;
       if (Math.abs(x - lastDispX) < 0.5 && Math.abs(y - lastDispY) < 0.5) return;
       
-      // Dispatch MouseEvent directly to the canvas so internal listeners see it
-      const event = new MouseEvent("mousemove", {
+      // Dispatch MouseEvent to both window and canvas for maximum library compatibility
+      const eventData = {
         clientX: x,
         clientY: y,
         bubbles: true,
         cancelable: true,
         view: window
-      });
-      canvasRef.current.dispatchEvent(event);
+      };
+      
+      const event = new MouseEvent("mousemove", eventData);
+      window.dispatchEvent(event);
+      if (canvasRef.current) {
+        canvasRef.current.dispatchEvent(new MouseEvent("mousemove", eventData));
+      }
       
       lastDispX = x;
       lastDispY = y;
