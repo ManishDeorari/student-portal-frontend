@@ -169,6 +169,7 @@ export function TubesBackground({
 
     // ── Unified Pointer Events (Mobile & Desktop) ───────────────────────────
     const handlePointerAction = (e) => {
+      if (!e.isTrusted) return;
       lastActivity = Date.now();
       if (!isTouchDevice) {
         curX = e.clientX;
@@ -178,11 +179,13 @@ export function TubesBackground({
     };
 
     const onPointerDown = (e) => {
+      if (!e.isTrusted) return;
       isPointerDown = true;
       handlePointerAction(e);
     };
     const onPointerMove = (e) => handlePointerAction(e);
-    const onPointerUp = () => {
+    const onPointerUp = (e) => {
+      if (!e.isTrusted) return;
       isPointerDown = false;
       lastActivity = Date.now();
     };
