@@ -92,12 +92,12 @@ export default function Sidebar() {
       {/* Top Navbar - Hidden on Mobile, Visible on Desktop */}
       <nav className="hidden md:flex justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-6 py-4 sticky top-0 z-50">
         {/* Logo or App Name */}
-        <div className="text-2xl font-black [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_2px_2px_0_#000] tracking-tight">
+        <div className="text-2xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">
           Student Portal
         </div>
 
         {/* Navigation Links - Icon Only */}
-        <div className="flex space-x-8 items-center text-2xl drop-shadow-[0_2px_0_rgba(0,0,0,1)] [filter:drop-shadow(-1px_-1px_0_black)_drop-shadow(1px_-1px_0_black)_drop-shadow(-1px_1px_0_black)_drop-shadow(1px_1px_0_black)]">
+        <div className="flex space-x-8 items-center text-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
           {/* Admin (Only for admins) */}
           {isAdmin && (
             <Link
@@ -205,10 +205,10 @@ export default function Sidebar() {
 
       {/* Mobile Top Bar - Only Logo and Settings */}
       <nav className="flex md:hidden justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-5 py-3 sticky top-0 z-50">
-        <div className="text-xl font-black [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_2px_2px_0_#000] tracking-tight">Student Portal</div>
+        <div className="text-xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">Student Portal</div>
         <button
           onClick={() => setShowSettings(true)}
-          className="text-2xl pt-1 drop-shadow-[0_2px_0_rgba(0,0,0,1)] [filter:drop-shadow(-1px_-1px_0_black)_drop-shadow(1px_-1px_0_black)_drop-shadow(-1px_1px_0_black)_drop-shadow(1px_1px_0_black)]"
+          className="text-2xl pt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
         >
           <FaCog className={showSettings ? "rotate-90 transition-transform duration-300" : "transition-transform duration-300"} />
         </button>
