@@ -14,6 +14,7 @@ import PointsSystemManagement from "../../components/admin/PointsSystemManagemen
 import StudentExport from "../../components/admin/StudentExport";
 import UserManagement from "../../components/admin/UserManagement";
 import { useTheme } from "@/context/ThemeContext";
+import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -324,7 +325,7 @@ export default function AdminDashboardPage() {
   const SidebarComponent = user?.isAdmin || user?.role === 'admin' ? AdminSidebar : Sidebar;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white relative">
+    <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
       <SidebarComponent />
 
       <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 relative z-10 space-y-4 sm:space-y-6 pb-24 md:pb-6">
@@ -416,6 +417,6 @@ export default function AdminDashboardPage() {
 
         </section>
       </main>
-    </div>
+    </GooeyGradientBackground>
   );
 }

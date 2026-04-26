@@ -7,6 +7,7 @@ import GroupChatWindow from "../../components/groups/GroupChatWindow";
 import GroupDetailsPanel from "../../components/groups/GroupDetailsPanel";
 import socket from "@/utils/socket";
 import { useTheme } from "@/context/ThemeContext";
+import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 import CreateGroupModal from "../../components/groups/modals/CreateGroupModal";
 import EditGroupModal from "../../components/groups/modals/EditGroupModal";
 import InviteMembersModal from "../../components/groups/modals/InviteMembersModal";
@@ -353,7 +354,7 @@ export default function GroupsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-blue-600 to-purple-700 relative text-white overflow-hidden">
+        <GooeyGradientBackground className="min-h-screen text-white overflow-hidden" darkMode={darkMode}>
             <SidebarComponent />
 
             <main className="p-2 sm:p-3 max-w-6xl mx-auto h-[calc(100dvh-64px)] flex flex-col justify-center pb-20 md:pb-4">
@@ -490,6 +491,6 @@ export default function GroupsPage() {
                 onClose={() => setShowImageViewer(false)}
                 imageUrl={viewerImageUrl}
             />
-        </div>
+        </GooeyGradientBackground>
     );
 }

@@ -3,8 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import PostCard from "../../components/Post/PostCard";
+import { useTheme } from "@/context/ThemeContext";
+import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 
 export default function MyActivityPage() {
+  const { darkMode } = useTheme();
   const [activity, setActivity] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +32,7 @@ export default function MyActivityPage() {
   if (loading) return <div className="p-10 text-center">Loading activity...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white">
+    <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
       <Sidebar />
       <div className="max-w-3xl mx-auto py-8 px-4">
         <h1 className="text-2xl font-bold mb-6">My Activity</h1>
@@ -52,6 +55,6 @@ export default function MyActivityPage() {
           <p className="text-gray-200">No activity yet.</p>
         )}
       </div>
-    </div>
+    </GooeyGradientBackground>
   );
 }

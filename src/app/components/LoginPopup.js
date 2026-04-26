@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { X, User, Lock, LogIn, ArrowLeft, UserPlus } from "lucide-react";
+import { GooeyGradientBackground } from "./GooeyGradientBackground";
 
 const LoginPopup = () => {
     const router = useRouter();
@@ -75,11 +76,7 @@ const LoginPopup = () => {
     };
 
     return (
-        <div className={`fixed inset-0 z-[9999] flex items-center justify-start pt-8 md:pt-12 bg-gradient-to-br from-blue-600/80 to-purple-700/80 backdrop-blur-xl px-4 transition-colors duration-500`}>
-            {/* Background Orbs */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px] animate-pulse"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-
+        <GooeyGradientBackground className={`fixed inset-0 z-[9999] flex items-center justify-start pt-8 md:pt-12 backdrop-blur-xl px-4 transition-colors duration-500`} darkMode={darkMode}>
             <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -229,7 +226,7 @@ const LoginPopup = () => {
                     </button>
                 </div>
             </motion.div>
-        </div>
+        </GooeyGradientBackground>
     );
 };
 

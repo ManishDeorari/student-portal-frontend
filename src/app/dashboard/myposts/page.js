@@ -6,6 +6,7 @@ import PostCard from "../../components/Post/PostCard";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
+import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 
 export default function MyPostsPage() {
   const router = useRouter();
@@ -97,7 +98,7 @@ export default function MyPostsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white relative">
+    <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
       <Sidebar />
 
       {/* 🔷 Left-most Back Button */}
@@ -157,7 +158,7 @@ export default function MyPostsPage() {
           </div>
         )}
       </div>
-    </div>
+    </GooeyGradientBackground>
   );
 }
 

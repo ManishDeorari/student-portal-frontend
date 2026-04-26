@@ -9,6 +9,7 @@ import PostCard from "../../components/Post/PostCard";
 import Image from "next/image";
 import socket from "@/utils/socket";
 import { motion, AnimatePresence } from "framer-motion";
+import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 import {
   Bell,
   Layers,
@@ -225,19 +226,19 @@ export default function NotificationsPage() {
   }, [user]);
 
   if (loading) return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white flex items-center justify-center">
+    <GooeyGradientBackground className="min-h-screen text-white flex items-center justify-center" darkMode={true}>
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         className="w-10 h-10 border-4 border-white border-t-transparent rounded-full"
       />
-    </div>
+    </GooeyGradientBackground>
   );
 
   const SidebarComponent = isAdmin ? AdminSidebar : Sidebar;
 
   return (
-    <div className={`min-h-screen pb-24 md:pb-20 bg-gradient-to-br from-blue-600 to-purple-700`}>
+    <GooeyGradientBackground className="min-h-screen pb-24 md:pb-20 text-white" darkMode={darkMode}>
       <SidebarComponent />
 
       <div className="max-w-5xl mx-auto px-3 sm:px-6 pt-4 sm:pt-6">
@@ -685,7 +686,7 @@ export default function NotificationsPage() {
           </motion.button>
         )}
       </AnimatePresence>
-    </div>
+    </GooeyGradientBackground>
   );
 }
 

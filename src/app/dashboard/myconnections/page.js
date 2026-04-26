@@ -7,6 +7,7 @@ import Image from "next/image";
 import { getMyConnections, getUserConnections, sendConnectionRequest } from "@/api/connect";
 import { useTheme } from "@/context/ThemeContext";
 import { useSearchParams } from "next/navigation";
+import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 
 const MyConnectionsContent = () => {
     const { darkMode } = useTheme();
@@ -84,7 +85,7 @@ const MyConnectionsContent = () => {
     const SidebarComponent = isAdmin ? AdminSidebar : Sidebar;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white relative">
+        <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
             <SidebarComponent />
             <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 pb-24 md:pb-6">
                 <div className="relative p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden">
@@ -202,7 +203,7 @@ const MyConnectionsContent = () => {
                     </div>
                 )}
             </main>
-        </div>
+        </GooeyGradientBackground>
     );
 };
 

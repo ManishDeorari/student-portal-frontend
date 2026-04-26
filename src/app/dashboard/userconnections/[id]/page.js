@@ -6,6 +6,7 @@ import Image from "next/image";
 import { getUserConnections, sendConnectionRequest } from "@/api/connect";
 import { useParams } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
+import { GooeyGradientBackground } from "../../../components/GooeyGradientBackground";
 
 const UserConnectionsPage = () => {
     const { id } = useParams();
@@ -60,7 +61,7 @@ const UserConnectionsPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white relative">
+        <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
             <Sidebar />
             <main className="max-w-4xl mx-auto px-4 py-10 space-y-8">
                 <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-2xl overflow-hidden">
@@ -146,7 +147,7 @@ const UserConnectionsPage = () => {
                     </div>
                 )}
             </main>
-        </div>
+        </GooeyGradientBackground>
     );
 };
 

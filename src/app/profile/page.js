@@ -16,6 +16,7 @@ import { ArrowLeft } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import AuthGuard from "../components/AuthGuard";
 import { useNotifications } from "@/context/NotificationContext";
+import { GooeyGradientBackground } from "../components/GooeyGradientBackground";
 
 function ProfileContent() {
   const router = useRouter();
@@ -125,7 +126,7 @@ function ProfileContent() {
   }, [fetchProfile]);
 
   if (loading) return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-white p-4">
+    <GooeyGradientBackground className="min-h-screen text-white flex items-center justify-center p-4" darkMode={true}>
       <div className="flex flex-col items-center gap-6 animate-pulse">
         <div className="w-20 h-20 border-4 border-white/10 border-t-white rounded-full animate-spin shadow-2xl shadow-white/10"></div>
         <div className="text-center space-y-2">
@@ -133,13 +134,13 @@ function ProfileContent() {
             <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Optimizing profile experience...</p>
         </div>
       </div>
-    </div>
+    </GooeyGradientBackground>
   );
 
   const SidebarComponent = isAdmin ? AdminSidebar : Sidebar;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 text-white relative">
+    <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
       <SidebarComponent />
 
       {/* 🔷 Top-Left Back Button (Fixed) */}
@@ -174,7 +175,7 @@ function ProfileContent() {
         <ProfileWorkProfile profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileJobPreference profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
       </div>
-    </div>
+    </GooeyGradientBackground>
   );
 }
 
@@ -182,14 +183,14 @@ export default function ProfilePage() {
   return (
     <AuthGuard>
       <Suspense fallback={
-        <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-white p-4">
+        <GooeyGradientBackground className="min-h-screen text-white flex items-center justify-center p-4" darkMode={true}>
           <div className="flex flex-col items-center gap-6 animate-pulse">
             <div className="w-20 h-20 border-4 border-white/10 border-t-white rounded-full animate-spin shadow-2xl shadow-white/10"></div>
             <div className="text-center space-y-2">
                 <h2 className="font-black tracking-[0.3em] uppercase text-sm">Authenticating Route...</h2>
             </div>
           </div>
-        </div>
+        </GooeyGradientBackground>
       }>
         <ProfileContent />
       </Suspense>
