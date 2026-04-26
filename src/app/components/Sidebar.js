@@ -10,7 +10,6 @@ import NotificationPreview from "./NotificationPreview";
 import { useNotifications } from "@/context/NotificationContext";
 import socket from "@/utils/socket";
 import { AnimatePresence } from "framer-motion";
-import { useTheme } from "@/context/ThemeContext";
 
 export default function Sidebar() {
   const { 
@@ -23,7 +22,6 @@ export default function Sidebar() {
     shakeNotification,
     markSectionAsSeen
   } = useNotifications();
-  const { darkMode } = useTheme();
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -92,14 +90,14 @@ export default function Sidebar() {
   return (
     <>
       {/* Top Navbar - Hidden on Mobile, Visible on Desktop */}
-      <nav className={`hidden md:flex justify-between items-center ${darkMode ? 'bg-black/10 border-white/5' : 'bg-white/20 border-black/5'} backdrop-blur-xl border-b px-6 py-4 sticky top-0 z-50`}>
+      <nav className="hidden md:flex justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-6 py-4 sticky top-0 z-50">
         {/* Logo or App Name */}
-        <div className={`text-2xl font-black tracking-tighter ${darkMode ? 'text-white' : 'text-blue-900'} drop-shadow-sm`}>
+        <div className="text-2xl font-black [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_2px_2px_0_#000] tracking-tight">
           Student Portal
         </div>
 
         {/* Navigation Links - Icon Only */}
-        <div className={`flex space-x-8 items-center text-2xl ${darkMode ? 'text-white' : 'text-blue-900'}`}>
+        <div className="flex space-x-8 items-center text-2xl drop-shadow-[0_2px_0_rgba(0,0,0,1)] [filter:drop-shadow(-1px_-1px_0_black)_drop-shadow(1px_-1px_0_black)_drop-shadow(-1px_1px_0_black)_drop-shadow(1px_1px_0_black)]">
           {/* Admin (Only for admins) */}
           {isAdmin && (
             <Link
@@ -108,7 +106,7 @@ export default function Sidebar() {
               onClick={() => markSectionAsSeen("admin-requests")}
               title="Admin Panel"
             >
-              <FaUserShield size={24} className="transition-colors" />
+              <FaUserShield className="" />
               {adminSignupRequestsCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
               )}
@@ -122,7 +120,7 @@ export default function Sidebar() {
             onClick={() => markSectionAsSeen("home")}
             title="Home"
           >
-            <FaHome size={24} className="transition-colors" />
+            <FaHome className="transition-colors" />
             {newPostsCount > 0 && (
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
             )}
@@ -135,7 +133,7 @@ export default function Sidebar() {
             onClick={() => markSectionAsSeen("network")}
             title="Network"
           >
-            <svg width="24" height="24" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-colors">
+            <svg width="24" height="24" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-colors w-6 h-6">
               <path d="M6.5 8.75V12.25L10 14.5L13.5 12.25V8.75L10 6.5L6.5 8.75ZM6.5 8.75L3.813 6.18M17.696 18.815L11.728 13.389M18.5 10.5H13.5M7.952 13.184L3.682 17.739M16.318 4.261L12.632 8.192M4.5 5.75L2.5 7L0.5 5.75V3.75L2.5 2.5L4.5 3.75V5.75ZM19.5 3.75L17.5 5L15.5 3.75V1.75L17.5 0.5L19.5 1.75V3.75ZM4.5 20.25L2.5 21.5L0.5 20.25V18.25L2.5 17L4.5 18.25V20.25ZM21 21.25L19 22.5L17 21.25V19.25L19 18L21 19.25V21.25ZM22.5 11.5L20.5 12.75L18.5 11.5V9.5L20.5 8.25L22.5 9.5V11.5Z" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             {pendingRequestsCount > 0 && (
@@ -150,7 +148,7 @@ export default function Sidebar() {
             onClick={() => markSectionAsSeen("groups")}
             title="Groups"
           >
-            <FaUsers size={24} className="transition-colors" />
+            <FaUsers className="transition-colors" />
             {unreadGroupMessagesCount > 0 && (
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
             )}
@@ -167,7 +165,7 @@ export default function Sidebar() {
               className="hover:text-gray-200 block"
               title="Notifications"
             >
-              <FaBell size={24} className={`${shakeNotification ? "animate-shake" : ""} transition-colors`} />
+              <FaBell className={`${shakeNotification ? "animate-shake" : ""} transition-colors`} />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
               )}
@@ -189,7 +187,7 @@ export default function Sidebar() {
             className="hover:text-gray-200 relative group"
             title="Profile"
           >
-            <FaUserCircle size={24} />
+            <FaUserCircle />
           </Link>
 
           {/* Settings */}
@@ -199,20 +197,20 @@ export default function Sidebar() {
               className="hover:text-gray-200 relative group pt-1"
               title="Settings"
             >
-              <FaCog size={24} className={showSettings ? "rotate-90 transition-transform duration-300" : "transition-transform duration-300"} />
+              <FaCog className={showSettings ? "rotate-90 transition-transform duration-300" : "transition-transform duration-300"} />
             </button>
           </div>
         </div>
       </nav>
 
       {/* Mobile Top Bar - Only Logo and Settings */}
-      <nav className={`flex md:hidden justify-between items-center ${darkMode ? 'bg-black/10 border-white/5' : 'bg-white/20 border-black/5'} backdrop-blur-xl border-b px-5 py-3 sticky top-0 z-50`}>
-        <div className={`text-xl font-black tracking-tighter ${darkMode ? 'text-white' : 'text-blue-900'}`}>Student Portal</div>
+      <nav className="flex md:hidden justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-5 py-3 sticky top-0 z-50">
+        <div className="text-xl font-black [text-shadow:_-1px_-1px_0_#000,_1px_-1px_0_#000,_-1px_1px_0_#000,_1px_1px_0_#000,_2px_2px_0_#000] tracking-tight">Student Portal</div>
         <button
           onClick={() => setShowSettings(true)}
-          className={`text-2xl pt-1 ${darkMode ? 'text-white' : 'text-blue-900'}`}
+          className="text-2xl pt-1 drop-shadow-[0_2px_0_rgba(0,0,0,1)] [filter:drop-shadow(-1px_-1px_0_black)_drop-shadow(1px_-1px_0_black)_drop-shadow(-1px_1px_0_black)_drop-shadow(1px_1px_0_black)]"
         >
-          <FaCog size={24} className={showSettings ? "rotate-90 transition-transform duration-300" : "transition-transform duration-300"} />
+          <FaCog className={showSettings ? "rotate-90 transition-transform duration-300" : "transition-transform duration-300"} />
         </button>
       </nav>
 
@@ -220,7 +218,7 @@ export default function Sidebar() {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#FAFAFA] dark:bg-[#121213] border-t border-gray-200 dark:border-white/10 px-4 py-2 z-50 flex justify-between items-center text-2xl text-gray-500 dark:text-gray-400 safe-bottom">
         {/* Home */}
         <Link href="/dashboard" onClick={() => markSectionAsSeen("home")} className={`${pathname === "/dashboard" ? "text-blue-600 dark:text-blue-400" : ""} relative tap-target active:scale-90 transition-transform`}>
-          <FaHome size={24} className="" />
+          <FaHome className="" />
           {newPostsCount > 0 && (
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
           )}
@@ -228,8 +226,8 @@ export default function Sidebar() {
 
         {/* Network */}
         <Link href="/dashboard/network" onClick={() => markSectionAsSeen("network")} className={`${pathname === "/dashboard/network" ? "text-blue-600 dark:text-blue-400" : ""} relative tap-target active:scale-90 transition-transform`}>
-          <svg width="24" height="24" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" className="">
-            <path d="M6.5 8.75V12.25L10 14.5L13.5 12.25V8.75L10 6.5L6.5 8.75ZM6.5 8.75L3.813 6.18M17.696 18.815L11.728 13.389M18.5 10.5H13.5M7.952 13.184L3.682 17.739M16.318 4.261L12.632 8.192M4.5 5.75L2.5 7L0.5 5.75V3.75L2.5 2.5L4.5 3.75V5.75ZM19.5 3.75L17.5 5L15.5 3.75V1.75L17.5 0.5L19.5 1.75V3.75ZM4.5 20.25L2.5 21.5L0.5 20.25V18.25L2.5 17L4.5 18.25V20.25ZM21 21.25L19 22.5L17 21.25V19.25L19 18L21 19.25V21.25ZM22.5 11.5L20.5 12.75L18.5 11.5V9.5L20.5 8.25L22.5 9.5V11.5Z" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+          <svg width="24" height="24" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" className="scale-110">
+            <path d="M6.5 8.75V12.25L10 14.5L13.5 12.25V8.75L10 6.5L6.5 8.75ZM6.5 8.75L3.813 6.18M17.696 18.815L11.728 13.389M18.5 10.5H13.5M7.952 13.184L3.682 17.739M16.318 4.261L12.632 8.192M4.5 5.75L2.5 7L0.5 5.75V3.75L2.5 2.5L4.5 3.75V5.75ZM19.5 3.75L17.5 5L15.5 3.75V1.75L17.5 0.5L19.5 1.75V3.75ZM4.5 20.25L2.5 21.5L0.5 20.25V18.25L2.5 17L4.5 18.25V20.25ZM21 21.25L19 22.5L17 21.25V19.25L19 18L21 19.25V21.25ZM22.5 11.5L20.5 12.75L18.5 11.5V9.5L20.5 8.25L22.5 9.5V11.5Z" stroke="currentColor" strokeWidth="1.8" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           {pendingRequestsCount > 0 && (
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
@@ -238,7 +236,7 @@ export default function Sidebar() {
 
         {/* Groups */}
         <Link href="/dashboard/groups" onClick={() => markSectionAsSeen("groups")} className={`${pathname === "/dashboard/groups" ? "text-blue-600 dark:text-blue-400" : ""} relative`}>
-          <FaUsers size={24} className="" />
+          <FaUsers className="" />
           {unreadGroupMessagesCount > 0 && (
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
           )}
@@ -246,7 +244,7 @@ export default function Sidebar() {
 
         {/* Notifications */}
         <Link href="/dashboard/notifications" className={`${pathname === "/dashboard/notifications" ? "text-blue-600 dark:text-blue-400" : ""} relative tap-target active:scale-90 transition-transform`}>
-          <FaBell size={24} className="" />
+          <FaBell className="" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
           )}
@@ -254,13 +252,13 @@ export default function Sidebar() {
 
         {/* Profile */}
         <Link href="/profile" className={`${pathname === "/profile" ? "text-blue-600 dark:text-blue-400" : ""} tap-target active:scale-90 transition-transform`}>
-          <FaUserCircle size={24} />
+          <FaUserCircle />
         </Link>
 
         {/* Admin Link if applicable */}
         {isAdmin && (
           <Link href="/dashboard/admin" onClick={() => markSectionAsSeen("admin-requests")} className={`${pathname.startsWith("/dashboard/admin") ? "text-yellow-500" : ""} relative tap-target active:scale-90 transition-transform`}>
-            <FaUserShield size={24} />
+            <FaUserShield />
             {adminSignupRequestsCount > 0 && <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full"></span>}
           </Link>
         )}
