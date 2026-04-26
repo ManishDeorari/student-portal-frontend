@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { X, User, Lock, LogIn, ArrowLeft, UserPlus } from "lucide-react";
 import { GooeyGradientBackground } from "./GooeyGradientBackground";
+import { useTheme } from "@/context/ThemeContext";
 
 const LoginPopup = () => {
     const router = useRouter();
@@ -65,7 +66,7 @@ const LoginPopup = () => {
         }
     };
 
-    const [darkMode, setDarkMode] = useState(false);
+    const { darkMode, toggleDarkMode } = useTheme();
 
     const handleSignupRedirect = () => {
         router.push("/auth/signup");
@@ -214,7 +215,7 @@ const LoginPopup = () => {
                 {/* Theme Toggle Button Fixed at bottom right of page */}
                 <div className="fixed bottom-6 right-6 z-[100]">
                     <button
-                        onClick={() => setDarkMode(!darkMode)}
+                        onClick={toggleDarkMode}
                         className={`p-4 rounded-full backdrop-blur-md shadow-2xl border-2 transition-all duration-500 ${darkMode ? "bg-[#FAFAFA]/10 border-white/20 text-yellow-400 hover:bg-[#FAFAFA]/20" : "bg-[#0f172a]/10 border-[#0f172a]/20 text-[#0f172a] hover:bg-[#0f172a]/20"} hover:scale-110 active:scale-90`}
                         title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
                     >
