@@ -8,6 +8,7 @@ import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { useTheme } from "@/context/ThemeContext";
 import { TubesBackground } from "@/app/components/TubesBackground";
+import ThemeToggle from "./components/ui/ThemeToggle";
 
 const sectionVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 50 },
@@ -37,11 +38,11 @@ const SectionWrapper = ({ title, subtitle, icon: Icon, children, id, darkMode })
             </div>
           </div>
         )}
-        <h2 className="text-5xl md:text-6xl font-black tracking-tighter mb-4 italic text-white">
+        <h2 className={`text-5xl md:text-6xl font-black tracking-tighter mb-4 italic ${darkMode ? "text-white" : "text-slate-950"}`}>
           {title}
         </h2>
         <div className="h-1.5 w-24 bg-gradient-to-r from-blue-500 via-purple-500 to-transparent mx-auto rounded-full mb-6" />
-        {subtitle && <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-blue-300">{subtitle}</p>}
+        {subtitle && <p className="text-xs md:text-sm font-black uppercase tracking-[0.3em] text-blue-300">{subtitle}</p>}
       </div>
 
       <div className="p-[2px] md:p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-blue-500/10">
@@ -88,7 +89,7 @@ export default function HomePage() {
       darkMode={darkMode}
     >
       {/* 🚀 Sticky Navigation - Expanded layout with increased font sizes */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-2.5 bg-black/70 border-white/5 shadow-2xl backdrop-blur-xl border-b" : "py-4 bg-transparent"}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-2.5 bg-transparent border-white/10 shadow-2xl backdrop-blur-md border-b" : "py-4 bg-transparent"}`}>
         <div className="max-w-[96%] mx-auto px-6 flex justify-between items-center text-white">
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg group-hover:scale-110 transition-all shadow-lg shadow-blue-500/20">
@@ -96,7 +97,7 @@ export default function HomePage() {
                 <FaRocket size={14} className="text-blue-500" />
               </div>
             </div>
-            <h1 className="text-lg md:text-xl font-black tracking-tighter uppercase italic">Student Portal</h1>
+            <h1 className="text-xl md:text-2xl font-black tracking-tighter uppercase italic">Student Portal</h1>
           </div>
 
           <div className="hidden lg:flex items-center gap-8">
@@ -104,14 +105,14 @@ export default function HomePage() {
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] transition-colors relative group text-white/50 hover:text-white"
+                className="text-xs font-black uppercase tracking-[0.25em] transition-colors relative group text-white/50 hover:text-white"
               >
                 {item}
                 <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 group-hover:w-full transition-all duration-300" />
               </a>
             ))}
             <Link href="/auth/login" className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg active:scale-95 transition-all">
-              <div className="bg-black text-white hover:bg-transparent font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em] px-6 py-2.5 rounded-full transition-all">
+              <div className="bg-black text-white hover:bg-transparent font-black text-xs uppercase tracking-[0.2em] px-8 py-3 rounded-full transition-all">
                 Portal Login
               </div>
             </Link>
@@ -127,14 +128,14 @@ export default function HomePage() {
           transition={{ duration: 0.8 }}
           className="relative z-10"
         >
-          <div className="inline-flex px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] mb-8 shadow-2xl bg-white/10 border border-white/20 text-white leading-none">
+          <div className="inline-flex px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.4em] mb-10 shadow-2xl bg-white/10 border border-white/20 text-white leading-none">
             ✨ Reconnect • Network • Grow ✨
           </div>
-          <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-6 leading-none italic uppercase text-white">
+          <h1 className={`text-7xl md:text-9xl font-black tracking-tighter mb-6 leading-none italic uppercase ${darkMode ? "text-white" : "text-slate-950"}`}>
             STUDENT<br />
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">PORTAL</span>
           </h1>
-          <p className="max-w-2xl mx-auto text-base md:text-xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-8 text-white/60">
+          <p className={`max-w-2xl mx-auto text-base md:text-xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-8 ${darkMode ? "text-white/70" : "text-slate-700"}`}>
             The next generation professional ecosystem<br />for active students worldwide.
           </p>
 
@@ -149,7 +150,7 @@ export default function HomePage() {
             <Link href="/auth/login" className="p-px bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 rounded-xl hover:from-blue-500 hover:to-pink-500 transition-all shadow-xl active:scale-95 group">
               <div className="bg-black/60 px-8 py-4.5 rounded-[calc(0.75rem-1px)] flex items-center gap-3 transition-colors backdrop-blur-lg">
                 <ShieldCheck className="text-blue-500" size={16} />
-                <span className="text-white font-black text-xs uppercase tracking-[0.3em]">Member Login</span>
+                <span className="text-white font-black text-sm uppercase tracking-[0.3em]">Member Login</span>
               </div>
             </Link>
           </div>
@@ -171,12 +172,12 @@ export default function HomePage() {
             <p>
               Empowering graduates through technology, mentorship, and global professional networking.
             </p>
-            <p className={`text-base font-medium leading-loose ${darkMode ? "text-white/40" : "text-slate-500"}`}>
+            <p className={`text-base font-medium leading-loose ${darkMode ? "text-white/70" : "text-slate-700"}`}>
               The Student Portal serves as the primary bridge between university life and professional success. We provide tools for seamless networking and career acceleration.
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
-              <div className={`px-4 py-2 rounded-xl border text-[9px] font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-blue-400" : "bg-slate-50 border-slate-200 text-blue-700"}`}>✨ Global Elite</div>
-              <div className={`px-4 py-2 rounded-xl border text-[9px] font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-purple-400" : "bg-slate-50 border-slate-200 text-purple-700"}`}>🔥 Future Proof</div>
+              <div className={`px-6 py-2.5 rounded-xl border text-xs font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-blue-400" : "bg-slate-50 border-slate-200 text-blue-700"}`}>✨ Global Elite</div>
+              <div className={`px-6 py-2.5 rounded-xl border text-xs font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-purple-400" : "bg-slate-50 border-slate-200 text-purple-700"}`}>🔥 Future Proof</div>
             </div>
           </div>
           <div className="relative group">
@@ -197,11 +198,11 @@ export default function HomePage() {
           ].map((ev, i) => (
             <div key={i} className="p-px bg-gradient-to-b from-blue-500/30 to-transparent rounded-[2rem] hover:from-blue-500 transition-all group">
               <div className={`h-full p-8 rounded-[calc(2rem-1px)] relative overflow-hidden ${darkMode ? "bg-slate-950" : "bg-white"}`}>
-                <p className="text-blue-500 text-[9px] font-black uppercase tracking-[0.3em] mb-2">{ev.type}</p>
-                <h3 className={`text-xl font-black mb-4 italic ${darkMode ? "text-white" : "text-slate-950"}`}>{ev.title}</h3>
-                <p className={`text-[9px] font-bold uppercase tracking-widest mb-6 ${darkMode ? "text-white/40" : "text-slate-400"}`}>{ev.date}</p>
-                <button onClick={handleActionClick} className={`text-[9px] font-black uppercase tracking-[0.3em] flex items-center gap-2.5 group-hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-slate-950"}`}>
-                  RSVP NOW <ArrowRight size={12} className="text-blue-500" />
+                <p className="text-blue-500 text-xs font-black uppercase tracking-[0.3em] mb-3">{ev.type}</p>
+                <h3 className={`text-2xl font-black mb-4 italic ${darkMode ? "text-white" : "text-slate-950"}`}>{ev.title}</h3>
+                <p className={`text-xs font-bold uppercase tracking-widest mb-8 ${darkMode ? "text-white/60" : "text-slate-600"}`}>{ev.date}</p>
+                <button onClick={handleActionClick} className={`text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group-hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-slate-950"}`}>
+                  RSVP NOW <ArrowRight size={14} className="text-blue-500" />
                 </button>
               </div>
             </div>
@@ -212,7 +213,7 @@ export default function HomePage() {
       <SectionWrapper id="testimonials" title="Stories" subtitle="Voices of Impact" icon={FaQuoteLeft} darkMode={darkMode}>
         <div className="max-w-2xl mx-auto text-center space-y-8 py-6">
           <FaQuoteLeft size={40} className="text-blue-500 opacity-20 mx-auto" />
-          <p className={`text-xl md:text-3xl font-black leading-tight italic ${darkMode ? "text-white/90" : "text-slate-900"}`}>
+          <p className={`text-xl md:text-3xl font-black leading-tight italic ${darkMode ? "text-white" : "text-slate-950"}`}>
             "Authentic connections are the foundation of any great career. This portal makes it effortless."
           </p>
           <div className="flex items-center justify-center gap-4 pt-4">
@@ -222,8 +223,8 @@ export default function HomePage() {
               </div>
             </div>
             <div className="text-left">
-              <p className={`font-black uppercase tracking-widest text-[10px] ${darkMode ? "text-white" : "text-slate-950"}`}>Manish Chandra Deorari</p>
-              <p className={`font-bold uppercase tracking-widest text-[8px] ${darkMode ? "text-white" : "text-slate-900"}`}>MCA - 2024-26</p>
+              <p className={`font-black uppercase tracking-widest text-xs ${darkMode ? "text-white" : "text-slate-950"}`}>Manish Chandra Deorari</p>
+              <p className={`font-bold uppercase tracking-widest text-[10px] ${darkMode ? "text-white/60" : "text-slate-600"}`}>MCA - 2024-26</p>
             </div>
           </div>
         </div>
@@ -231,7 +232,7 @@ export default function HomePage() {
 
       <SectionWrapper id="contact" title="Connect" subtitle="Reach Out" icon={Mail} darkMode={darkMode}>
         <div className="max-w-xl mx-auto text-center">
-          <p className={`mb-8 font-bold uppercase tracking-widest text-[10px] italic ${darkMode ? "text-white/40" : "text-slate-500"}`}>
+          <p className={`mb-10 font-bold uppercase tracking-widest text-xs italic ${darkMode ? "text-white/60" : "text-slate-600"}`}>
             Have questions about registration or events?
           </p>
           <form onSubmit={handleContactSubmit} className="flex flex-col sm:flex-row items-stretch gap-4">
@@ -241,13 +242,13 @@ export default function HomePage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@university.edu"
-                className={`w-full px-6 py-4 rounded-[calc(1rem-1px)] text-xs font-black outline-none border-none ${darkMode ? "bg-black text-white" : "bg-white text-slate-950"}`}
+                className={`w-full px-8 py-5 rounded-[calc(1rem-1px)] text-sm font-black outline-none border-none ${darkMode ? "bg-black text-white" : "bg-white text-slate-950"}`}
               />
             </div>
             <button
               type="submit"
               disabled={isSending}
-              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-4xl active:scale-95 disabled:opacity-50 transition-all"
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] shadow-4xl active:scale-95 disabled:opacity-50 transition-all"
             >
               {isSending ? "..." : "Send Request"}
             </button>
@@ -260,7 +261,7 @@ export default function HomePage() {
           <div className="space-y-8">
             <div>
               <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase mb-4">STUDENT PORTAL</h1>
-              <p className={`text-[11px] md:text-xs font-black uppercase tracking-[0.2em] max-w-sm ${darkMode ? "text-white/40" : "text-slate-500"}`}>
+              <p className={`text-sm font-black uppercase tracking-[0.2em] max-w-sm ${darkMode ? "text-white/60" : "text-slate-600"}`}>
                 Empowering university students through a premium digital ecosystem.
               </p>
             </div>
@@ -276,23 +277,14 @@ export default function HomePage() {
                 Graphic ERA Hill University
               </div>
             </div>
-            <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.6em] text-white/40">
+            <p className="text-xs font-black uppercase tracking-[0.6em] text-white/40">
               © 2025 ALL RIGHTS RESERVED
             </p>
           </div>
         </div>
       </footer>
 
-      <div className="fixed bottom-8 right-8 z-[100] flex flex-col gap-4">
-        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] shadow-xl">
-          <button
-            onClick={toggleDarkMode}
-            className={`p-5 rounded-[calc(2rem-1.5px)] backdrop-blur-xl transition-all duration-700 hover:scale-105 active:scale-90 ${darkMode ? "bg-black/60 text-yellow-400" : "bg-white/80 text-slate-900"}`}
-          >
-            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
-        </div>
-      </div>
+      <ThemeToggle />
     </TubesBackground>
   );
 }

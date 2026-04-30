@@ -96,10 +96,10 @@ const PointsScenario = ({ darkMode = false }) => {
 
     return (
         <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all duration-500">
-            <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-3 md:p-4 rounded-[calc(2rem-2.5px)] min-h-[360px] flex flex-col justify-between relative`}>
+            <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-4 md:p-5 rounded-[calc(2rem-2.5px)] min-h-[400px] flex flex-col justify-between relative`}>
                 <div>
                     <div className="mb-2">
-                        <h3 className={`text-lg font-black ${darkMode ? "text-white" : "text-black"} tracking-tight flex items-center gap-2`}>
+                        <h3 className={`text-xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight flex items-center gap-2.5`}>
                             🎖️ Points System
                         </h3>
                         <p className={`text-[10px] ${darkMode ? "text-white" : "text-black"} font-black uppercase tracking-[0.2em] mt-1 opacity-100`}>
@@ -139,7 +139,7 @@ const PointsScenario = ({ darkMode = false }) => {
                     </div>
                 </div>
 
-                <div className={`mt-4 pt-4 ${darkMode ? "border-white/10" : "border-gray-200"} border-t text-center`}>
+                <div className={`mt-6 pt-6 ${darkMode ? "border-white/10" : "border-gray-200"} border-t text-center`}>
                     <p className={`text-[10px] ${darkMode ? "text-white" : "text-black"} font-extrabold italic leading-relaxed opacity-80`}>
                         &quot;Consistent engagement leads to higher ranking!&quot;
                     </p>

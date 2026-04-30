@@ -53,7 +53,7 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                             {/* Options List */}
                             <div className="flex-1 space-y-4 overflow-y-auto pr-2 min-h-0 drawer-scrollbar">
                                 {/* Theme Section Label */}
-                                <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                                <p className={`text-xs font-black uppercase tracking-wider mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
                                     Appearance
                                 </p>
 
@@ -75,7 +75,7 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                                     </button>
                                 </div>
 
-                                <p className={`text-xs font-bold uppercase tracking-wider mb-2 mt-6 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                                <p className={`text-xs font-black uppercase tracking-wider mb-2 mt-6 ${darkMode ? "text-white" : "text-slate-900"}`}>
                                     Account Security
                                 </p>
 
@@ -96,7 +96,7 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                                 </div>
 
                                 <div className={`pt-6 mt-6 border-t ${darkMode ? "border-white/10" : "border-gray-100"} space-y-4`}>
-                                    <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                                    <p className={`text-xs font-black uppercase tracking-wider mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
                                         Support & Feedback
                                     </p>
                                     
@@ -129,7 +129,7 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                             </div>
 
                             {/* Footer */}
-                            <div className="mt-auto pt-6 pb-10 mb-4 text-center flex-shrink-0">
+                            <div className="mt-auto pt-4 pb-6 text-center flex-shrink-0">
                                 <div className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.2em] uppercase transition-all shadow-sm ${darkMode ? "bg-white/10 text-white" : "bg-slate-200 text-slate-900"}`}>
                                     Student Portal v0.1.0
                                 </div>
@@ -141,7 +141,6 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                     <FeedbackModal 
                         isOpen={showFeedback} 
                         onClose={() => setShowFeedback(false)} 
-                        darkMode={darkMode}
                     />
                 </>
             )}

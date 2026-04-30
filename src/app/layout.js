@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import ClientRouteProtection from "./components/ClientRouteProtection";
 import { NotificationProvider } from "@/context/NotificationContext";
 import GlobalNavigationLoader from "./components/ui/GlobalNavigationLoader";
+import ZoomLock from "./components/ui/ZoomLock";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -94,6 +95,7 @@ export default function RootLayout({ children }) {
           }}
         />
         <ThemeProvider>
+          <ZoomLock />
           <Suspense fallback={null}>
             <GlobalNavigationLoader />
           </Suspense>

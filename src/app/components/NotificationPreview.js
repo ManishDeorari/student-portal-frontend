@@ -53,29 +53,28 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
         .slice(0, 5);
 
     return (
-        <div className="absolute top-full right-0 mt-4 w-[22rem] p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.2rem] shadow-2xl z-[200]">
-            <motion.div
-                initial={{ opacity: 0, y: 12, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 12, scale: 0.96 }}
-                transition={{ type: "spring", damping: 25, stiffness: 400 }}
-                className={`w-full rounded-[calc(2.2rem-2.5px)] overflow-hidden ${darkMode ? "bg-black" : "bg-white"} flex flex-col`}
-            >
-                {/* Hover Bridge */}
-                <div className="absolute -top-6 left-0 w-full h-6 bg-transparent cursor-default" />
+        <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.1 }}
+            className="absolute top-full right-0 mt-2 w-[19.25rem] p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[1.75rem] shadow-2xl z-[200]"
+        >
+            <div className={`w-full rounded-[calc(1.75rem-2px)] overflow-hidden ${darkMode ? "bg-black" : "bg-white"} flex flex-col`}>
 
-                <div className={`px-8 py-5 border-b flex items-center justify-between ${darkMode ? "border-white/10 bg-white/5" : "border-gray-100 bg-gray-50"}`}>
-                    <h3 className={`text-[11px] font-black uppercase tracking-[0.3em] ${darkMode ? "text-white" : "text-slate-900"}`}>
+
+                <div className={`px-5 py-3 border-b flex items-center justify-between ${darkMode ? "border-white/10 bg-white/5" : "border-gray-100 bg-gray-50"}`}>
+                    <h3 className={`text-[10px] font-black uppercase tracking-[0.25em] ${darkMode ? "text-white" : "text-slate-900"}`}>
                         Notification Center
                     </h3>
                     {latestNotifications.some(n => isNoteUnread(n)) && (
-                        <span className="px-3 py-1 rounded-full bg-blue-600 text-[10px] font-black text-white uppercase tracking-wider animate-pulse shadow-[0_0_15px_rgba(37,99,235,0.4)]">
-                            Live Update
+                        <span className="px-2 py-0.5 rounded-full bg-blue-600 text-[9px] font-black text-white uppercase tracking-wider animate-pulse shadow-[0_0_15px_rgba(37,99,235,0.4)]">
+                            Live
                         </span>
                     )}
                 </div>
 
-                <div className="h-[384px] overflow-y-auto custom-scrollbar p-4 space-y-3">
+                <div className="h-[300px] overflow-y-auto custom-scrollbar p-2.5 space-y-1.5">
                     <AnimatePresence initial={false}>
                         {latestNotifications.length > 0 ? (
                             latestNotifications.map((note) => {
@@ -93,7 +92,7 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                     >
                                         <Link
                                             href="/dashboard/notifications"
-                                            className={`flex gap-3 p-3 rounded-[calc(1rem-1.5px)] transition-all duration-300 ${darkMode ? "bg-slate-950/80 text-white" : "bg-white text-slate-900 shadow-sm"
+                                            className={`flex gap-2.5 p-2.5 rounded-[calc(0.85rem-1.5px)] transition-all duration-300 ${darkMode ? "bg-slate-950/80 text-white" : "bg-white text-slate-900 shadow-sm"
                                                 }`}
                                         >
                                             <div className="flex-shrink-0 relative">
@@ -102,16 +101,16 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                                     : "border-transparent opacity-80"
                                                     }`}>
                                                     {note.type === "academic_update" || note.type === "admin_notice" || note.type === "points_earned" ? (
-                                                        <div className={`w-10 h-10 rounded-[0.7rem] flex items-center justify-center ${darkMode ? "bg-white/10" : "bg-slate-100"}`}>
+                                                        <div className={`w-8 h-8 rounded-[0.5rem] flex items-center justify-center ${darkMode ? "bg-white/10" : "bg-slate-100"}`}>
                                                             {getNotificationIcon(note.type, darkMode)}
                                                         </div>
                                                     ) : (
                                                         <Image
                                                             src={note.sender?.profilePicture || "/default-profile.jpg"}
                                                             alt={note.sender?.name || "User"}
-                                                            width={40}
-                                                            height={40}
-                                                            className="w-10 h-10 rounded-[0.7rem] object-cover"
+                                                            width={32}
+                                                            height={32}
+                                                            className="w-8 h-8 rounded-[0.5rem] object-cover"
                                                         />
                                                     )}
                                                 </div>
@@ -120,7 +119,7 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                                 </div>
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className={`text-[13px] leading-[1.5] ${darkMode ? "text-white" : "text-slate-900"}`}>
+                                                <p className={`text-[11px] leading-[1.4] ${darkMode ? "text-white" : "text-slate-900"}`}>
                                                     <span className={`font-black uppercase tracking-tight ${unread && !darkMode ? (isPenalty ? "text-red-600" : "text-blue-600") : ""}`}>
                                                         {note.type === "points_earned" ? (isPenalty ? "Moderator" : "System") : (note.sender?.name || (typeof note.sender === "string" ? "User" : "System"))}
                                                     </span>{" "}
@@ -159,20 +158,20 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                                         })() : note.message}
                                                     </span>
                                                 </p>
-                                                <div className="flex items-center gap-3 mt-3">
-                                                    <div className={`flex items-center gap-2 px-2.5 py-1 rounded-lg ${darkMode ? "bg-white/5" : "bg-slate-100"}`}>
-                                                        <Clock className={`w-3 h-3 ${darkMode ? "text-white/40" : "text-slate-400"}`} />
-                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-white/40" : "text-slate-500"}`}>
+                                                <div className="flex items-center gap-2 mt-1.5">
+                                                    <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md ${darkMode ? "bg-white/5" : "bg-slate-100"}`}>
+                                                        <Clock className={`w-2.5 h-2.5 ${darkMode ? "text-white/40" : "text-slate-400"}`} />
+                                                        <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-white/40" : "text-slate-500"}`}>
                                                             {mounted && note.createdAt ? new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Recently"}
                                                         </span>
                                                     </div>
                                                     {unread && (
-                                                        <div className="w-2.5 h-2.5 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)] animate-pulse" />
+                                                        <div className="w-2 h-2 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)] animate-pulse" />
                                                     )}
                                                 </div>
                                             </div>
                                             <div className={`self-center transition-all ${unread ? "opacity-100" : "opacity-0 group-hover:opacity-100"} translate-x-1 group-hover:translate-x-0`}>
-                                                <ChevronRight className={`w-5 h-5 ${unread ? "text-blue-500" : (darkMode ? "text-white/30" : "text-slate-300")}`} />
+                                                <ChevronRight className={`w-4 h-4 ${unread ? "text-blue-500" : (darkMode ? "text-white/30" : "text-slate-300")}`} />
                                             </div>
                                         </Link>
                                     </motion.div>
@@ -195,14 +194,14 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
 
                 <Link
                     href="/dashboard/notifications"
-                    className={`block text-center py-6 text-[11px] font-black uppercase tracking-[0.4em] border-t transition-all ${darkMode
+                    className={`block text-center py-4 text-[10px] font-black uppercase tracking-[0.35em] border-t transition-all ${darkMode
                         ? "bg-white/5 border-white/10 text-blue-400 hover:bg-white/10 hover:text-blue-300"
                         : "bg-slate-50 border-gray-100 text-blue-700 hover:bg-slate-100 hover:text-blue-800"
                         }`}
                 >
                     Enter Center
                 </Link>
-            </motion.div>
-        </div>
+            </div>
+        </motion.div>
     );
 }

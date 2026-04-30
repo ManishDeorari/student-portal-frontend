@@ -7,7 +7,10 @@ import EmojiPickerToggle from "./Post/utils/EmojiPickerToggle";
 import { toast } from "react-hot-toast";
 import { sendFeedback } from "../../api/notification";
 
-const FeedbackModal = ({ isOpen, onClose, darkMode }) => {
+import { useTheme } from "@/context/ThemeContext";
+
+const FeedbackModal = ({ isOpen, onClose }) => {
+    const { darkMode } = useTheme();
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -45,7 +48,7 @@ const FeedbackModal = ({ isOpen, onClose, darkMode }) => {
                         exit={{ scale: 0.9, y: 20 }}
                         className="relative p-[2px] bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 rounded-2xl sm:rounded-[2.5rem] w-full max-w-lg shadow-2xl overflow-hidden max-h-[95dvh] sm:max-h-[90vh]"
                     >
-                        <div className={`relative ${darkMode ? "bg-black" : "bg-[#FAFAFA]"} rounded-[calc(1rem-2px)] sm:rounded-[calc(2.5rem-2px)] p-5 sm:p-8 h-full w-full overflow-y-auto`}>
+                        <div className={`relative ${darkMode ? "bg-black" : "bg-[#FAFAFA]"} rounded-[calc(1rem-2px)] sm:rounded-[calc(2.5rem-2px)] p-5 sm:p-8 h-full w-full overflow-y-auto no-scrollbar`}>
                             {/* Header */}
                             <div className="flex items-center justify-between mb-8 relative z-10">
                                 <div className="flex items-center gap-4">

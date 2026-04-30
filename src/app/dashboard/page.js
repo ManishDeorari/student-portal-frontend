@@ -206,15 +206,15 @@ export default function DashboardPage() {
     <GooeyGradientBackground className="min-h-screen transition-colors duration-500 text-white relative" darkMode={darkMode}>
       <SidebarComponent />
 
-      <main className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-24 md:pb-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          <aside className="hidden lg:block lg:w-72 order-2 lg:order-1 relative">
-            <div className="lg:fixed lg:top-20 lg:w-72 z-40">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 pb-24 md:pb-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <aside className="hidden lg:block lg:w-80 order-2 lg:order-1 relative">
+            <div className="lg:fixed lg:top-24 lg:w-80 z-40">
               <PointsScenario darkMode={darkMode} />
             </div>
           </aside>
 
-          <div className="flex-1 space-y-4 sm:space-y-6 order-1 lg:order-2">
+          <div className="flex-1 space-y-4 sm:space-y-8 order-1 lg:order-2">
             <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl md:rounded-[2.5rem] shadow-xl overflow-hidden">
               <section className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-3 sm:p-4 md:p-6 rounded-[calc(1.875rem-2.5px)] md:rounded-[calc(2.5rem-2.5px)] relative overflow-hidden group transition-colors duration-500`}>
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6">

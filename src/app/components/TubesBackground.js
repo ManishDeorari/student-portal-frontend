@@ -27,13 +27,20 @@ export function TubesBackground({
   className,
   enableClickInteraction = true,
   overlay = true,
-  tubeCount = 5,
+  tubeCount = 3,
   idleDelay = 2000,
   darkMode = true,
 }) {
   const canvasRef  = useRef(null);
   const tubesRef   = useRef(null);
   const [webglFailed, setWebglFailed] = useState(false);
+  const [baseRatio, setBaseRatio] = useState(1);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setBaseRatio(window.devicePixelRatio || 1);
+    }
+  }, []);
 
   const colorSchemes = {
     dark: {
@@ -239,15 +246,42 @@ export function TubesBackground({
       }
     };
 
-    let mobileRenderer, mobileRafId;
+    let mobileRenderer, mobileCamera, mobileRafId;
+
+    const handleResize = () => {
+      if (!mounted) return;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const currentRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      const zoomFactor = (window.devicePixelRatio || 1) / (baseRatio || 1);
+
+      if (mobileRenderer) {
+        mobileRenderer.setSize(width, height);
+        mobileRenderer.setPixelRatio(currentRatio);
+        if (mobileCamera) {
+          mobileCamera.aspect = width / height;
+          // Compensate for browser zoom
+          mobileCamera.zoom = 1 / zoomFactor;
+          mobileCamera.updateProjectionMatrix();
+        }
+      }
+      
+      // Force library resize if on desktop
+      try {
+        if (tubesRef.current?.resize) {
+          tubesRef.current.resize();
+        }
+      } catch (e) {}
+    };
+
     const initMobileThreeJS = () => {
       const canvas = canvasRef.current;
       mobileRenderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
-      mobileRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      mobileRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
       mobileRenderer.setSize(window.innerWidth, window.innerHeight);
 
       const mobileScene = new THREE.Scene();
-      const mobileCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+      mobileCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
       mobileCamera.position.z = 10;
 
       const currentTheme = darkMode ? colorSchemes.dark : colorSchemes.light;
@@ -319,10 +353,12 @@ export function TubesBackground({
       animate();
     };
 
+    window.addEventListener("resize",         handleResize);
     initTubes();
 
     return () => {
       mounted = false;
+      window.removeEventListener("resize",      handleResize);
       cancelAnimationFrame(rafId);
       if (mobileRafId) cancelAnimationFrame(mobileRafId);
       if (mobileRenderer) {
@@ -346,7 +382,7 @@ export function TubesBackground({
   };
 
   return (
-    <div className={`w-full ${className || ""}`} onClick={handleClick}>
+    <div className={`w-full ${className || ""} ${darkMode ? "bg-slate-950" : "bg-white"} transition-colors duration-500`} onClick={handleClick}>
       {webglFailed ? (
         <div
           className="fixed inset-0 z-0 w-screen h-[100dvh]"
