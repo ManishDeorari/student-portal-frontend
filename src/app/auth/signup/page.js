@@ -27,7 +27,7 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isAndroid, setIsAndroid] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(true);
 
   React.useEffect(() => {
     setIsAndroid(/android/i.test(navigator.userAgent));

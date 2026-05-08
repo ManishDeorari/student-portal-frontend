@@ -36,8 +36,10 @@ export function TubesBackground({
   const tubesRef   = useRef(null);
   const [webglFailed, setWebglFailed] = useState(false);
   const [baseRatio, setBaseRatio] = useState(1);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== "undefined") {
       setBaseRatio(window.devicePixelRatio || 1);
     }
@@ -385,8 +387,11 @@ export function TubesBackground({
     } catch { /* ignore */ }
   };
 
-  return (
-    <div className={`w-full ${className || ""} ${(alwaysDark || darkMode) ? "bg-slate-950" : "bg-white"} transition-colors duration-500`} onClick={handleClick}>
+    const isInitialDark = alwaysDark || darkMode;
+    const effectiveBgDark = !mounted ? isInitialDark : (alwaysDark || darkMode);
+
+    return (
+    <div className={`w-full ${className || ""} ${effectiveBgDark ? "bg-slate-950" : "bg-white"} transition-colors duration-500`} onClick={handleClick}>
       {webglFailed ? (
         <div
           className="fixed inset-0 z-0 w-screen h-[100dvh]"

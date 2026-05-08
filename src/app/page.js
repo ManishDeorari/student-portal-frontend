@@ -59,7 +59,7 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const [email, setEmail] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [isAndroid, setIsAndroid] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(true);
 
   useEffect(() => {
     setIsAndroid(/android/i.test(navigator.userAgent));
