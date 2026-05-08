@@ -7,7 +7,7 @@ export default function LoadingOverlay({ isVisible, message = "Processing...", t
     const { darkMode } = useTheme();
 
     const outerBg = type === "page" 
-        ? "bg-black/80 backdrop-blur-md"
+        ? "bg-[#020617]" 
         : (darkMode ? "bg-[#0f172a]/70 backdrop-blur-lg" : "bg-gray-900/40 backdrop-blur-md");
 
     return (
