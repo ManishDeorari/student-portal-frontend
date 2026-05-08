@@ -79,7 +79,7 @@ const LoginPopup = () => {
     };
 
     return (
-        <GooeyGradientBackground className={`fixed inset-0 z-[9999] flex items-start justify-center bg-black/40 backdrop-blur-xl px-4 pt-4 md:pt-8 transition-colors duration-500 no-scrollbar`} darkMode={darkMode}>
+        <GooeyGradientBackground id="login-popup-overlay" className={`fixed inset-0 z-[9999] flex items-start justify-center bg-black/40 backdrop-blur-xl px-4 pt-4 md:pt-8 transition-colors duration-500 no-scrollbar`} darkMode={darkMode}>
             <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}

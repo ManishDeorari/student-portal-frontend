@@ -38,7 +38,7 @@ const SectionWrapper = ({ title, subtitle, icon: Icon, children, id, darkMode })
             </div>
           </div>
         )}
-        <h2 className={`text-5xl md:text-6xl font-black tracking-tighter mb-4 italic ${darkMode ? "text-white" : "text-slate-950"}`}>
+        <h2 className="text-5xl md:text-6xl font-black tracking-tighter mb-4 italic text-white">
           {title}
         </h2>
         <div className="h-1.5 w-24 bg-gradient-to-r from-blue-500 via-purple-500 to-transparent mx-auto rounded-full mb-6" />
@@ -131,11 +131,11 @@ export default function HomePage() {
           <div className="inline-flex px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.4em] mb-10 shadow-2xl bg-white/10 border border-white/20 text-white leading-none">
             ✨ Reconnect • Network • Grow ✨
           </div>
-          <h1 className={`text-7xl md:text-9xl font-black tracking-tighter mb-6 leading-none italic uppercase ${darkMode ? "text-white" : "text-slate-950"}`}>
+          <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-6 leading-none italic uppercase text-white">
             STUDENT<br />
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">PORTAL</span>
           </h1>
-          <p className={`max-w-2xl mx-auto text-base md:text-xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-8 ${darkMode ? "text-white/70" : "text-slate-700"}`}>
+          <p className="max-w-2xl mx-auto text-base md:text-xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-8 text-white/70">
             The next generation professional ecosystem<br />for active students worldwide.
           </p>
 
