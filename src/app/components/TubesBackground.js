@@ -30,6 +30,7 @@ export function TubesBackground({
   tubeCount = 3,
   idleDelay = 2000,
   darkMode = true,
+  alwaysDark = false,
 }) {
   const canvasRef  = useRef(null);
   const tubesRef   = useRef(null);
@@ -57,12 +58,13 @@ export function TubesBackground({
 
   useEffect(() => {
     if (!tubesRef.current) return;
-    const theme = darkMode ? colorSchemes.dark : colorSchemes.light;
+    const effectiveDarkMode = alwaysDark || darkMode;
+    const theme = effectiveDarkMode ? colorSchemes.dark : colorSchemes.light;
     try {
       tubesRef.current.tubes?.setColors?.(theme.tubes);
       tubesRef.current.tubes?.setLightsColors?.(theme.lights);
     } catch { /* ignore */ }
-  }, [darkMode]);
+  }, [darkMode, alwaysDark]);
 
   useEffect(() => {
     let mounted = true;
@@ -220,7 +222,8 @@ export function TubesBackground({
         const TubesCursor = module.default;
         if (!mounted) return;
 
-        const currentTheme = darkMode ? colorSchemes.dark : colorSchemes.light;
+        const effectiveDarkMode = alwaysDark || darkMode;
+        const currentTheme = effectiveDarkMode ? colorSchemes.dark : colorSchemes.light;
         
         // Increase intensity for mobile visibility
         const intensity = isTouchDevice ? (currentTheme.intensity * 1.5) : currentTheme.intensity;
@@ -284,7 +287,8 @@ export function TubesBackground({
       mobileCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
       mobileCamera.position.z = 10;
 
-      const currentTheme = darkMode ? colorSchemes.dark : colorSchemes.light;
+      const effectiveDarkMode = alwaysDark || darkMode;
+      const currentTheme = effectiveDarkMode ? colorSchemes.dark : colorSchemes.light;
       
       // Create glowing particles that drift
       const geometry = new THREE.BufferGeometry();
@@ -382,7 +386,7 @@ export function TubesBackground({
   };
 
   return (
-    <div className={`w-full ${className || ""} ${darkMode ? "bg-slate-950" : "bg-white"} transition-colors duration-500`} onClick={handleClick}>
+    <div className={`w-full ${className || ""} ${(alwaysDark || darkMode) ? "bg-slate-950" : "bg-white"} transition-colors duration-500`} onClick={handleClick}>
       {webglFailed ? (
         <div
           className="fixed inset-0 z-0 w-screen h-[100dvh]"

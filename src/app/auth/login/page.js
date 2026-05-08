@@ -35,6 +35,11 @@ function LoginContent() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
+
+  React.useEffect(() => {
+    setIsAndroid(/android/i.test(navigator.userAgent));
+  }, []);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -208,19 +213,13 @@ function LoginContent() {
     }
   };
 
-  const { darkMode: globalDarkMode, toggleDarkMode } = useTheme();
-  const [isAndroid, setIsAndroid] = useState(false);
-
-  React.useEffect(() => {
-    setIsAndroid(/Android/i.test(navigator.userAgent));
-  }, []);
-
-  const darkMode = isAndroid ? true : globalDarkMode;
+  const { darkMode, toggleDarkMode } = useTheme();
 
   return (
     <TubesBackground 
       className="min-h-screen text-white" 
       darkMode={darkMode}
+      alwaysDark={isAndroid}
       tubeCount={10}
     >
       <div className="min-h-screen flex flex-col lg:flex-row items-center lg:items-start lg:pt-12 justify-center lg:justify-start px-4 sm:px-8 transition-colors duration-500">
@@ -509,7 +508,7 @@ function LoginContent() {
         </div>
       </div>
 
-      <ThemeToggle hidden={isAndroid} />
+      <ThemeToggle />
       </div>
     </TubesBackground>
   );
