@@ -7,7 +7,6 @@ import { Mail, ArrowRight, ShieldCheck, ChevronDown, Monitor, Moon, Sun, User } 
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { useTheme } from "@/context/ThemeContext";
-import { TubesBackground } from "@/app/components/TubesBackground";
 import ThemeToggle from "./components/ui/ThemeToggle";
 
 const sectionVariants = {
@@ -59,10 +58,8 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const [email, setEmail] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [isAndroid, setIsAndroid] = useState(true);
 
   useEffect(() => {
-    setIsAndroid(/android/i.test(navigator.userAgent));
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -84,89 +81,62 @@ export default function HomePage() {
   };
 
   return (
-    <TubesBackground 
-      className="text-white" 
-      tubeCount={5}
-      idleDelay={3000}
-      darkMode={darkMode}
-      alwaysDark={true}
-    >
-      {/* 🚀 Sticky Navigation - Expanded layout with increased font sizes */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-2.5 bg-transparent border-white/10 shadow-2xl backdrop-blur-md border-b" : "py-4 bg-transparent"}`}>
-        <div className="max-w-[96%] mx-auto px-6 flex justify-between items-center text-white">
-          <div className="flex items-center gap-3 group cursor-pointer">
-            <div className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg group-hover:scale-110 transition-all shadow-lg shadow-blue-500/20">
-              <div className="bg-black p-1.5 rounded-[calc(0.5rem-1px)]">
-                <FaRocket size={14} className="text-blue-500" />
-              </div>
-            </div>
-            <h1 className="text-xl md:text-2xl font-black tracking-tighter uppercase italic">Student Portal</h1>
-          </div>
+    <div className="relative min-h-screen bg-background overflow-hidden selection:bg-white/20">
+      {/* 🎬 Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
+      >
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4" />
+      </video>
 
-          <div className="hidden lg:flex items-center gap-8">
-            {["About", "Events", "Testimonials", "Contact"].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="text-xs font-black uppercase tracking-[0.25em] transition-colors relative group text-white/50 hover:text-white"
-              >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 group-hover:w-full transition-all duration-300" />
-              </a>
-            ))}
-            <Link href="/auth/login" className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg active:scale-95 transition-all">
-              <div className="bg-black text-white hover:bg-transparent font-black text-xs uppercase tracking-[0.2em] px-8 py-3 rounded-full transition-all">
-                Portal Login
-              </div>
-            </Link>
-          </div>
+      {/* 🚀 Navigation Bar */}
+      <nav className="relative z-10 flex flex-row justify-between px-8 py-6 max-w-7xl mx-auto items-center">
+        <div className="flex items-center gap-1 group cursor-pointer">
+          <h1 className="text-3xl tracking-tight text-foreground" style={{ fontFamily: "'Instrument Serif', serif" }}>
+            Velorah<sup className="text-xs">®</sup>
+          </h1>
+        </div>
+
+        <div className="hidden md:flex items-center gap-10">
+          {["Home", "Studio", "About", "Journal", "Reach Us"].map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              className={`text-sm tracking-tight transition-colors duration-300 ${item === "Home" ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              {item}
+            </a>
+          ))}
+          <button className="liquid-glass rounded-full px-6 py-2.5 text-sm text-foreground hover:scale-[1.03] transition-transform duration-300">
+            Begin Journey
+          </button>
         </div>
       </nav>
 
-      {/* 🌌 Hero Section - Optimized size and animations */}
-      <section className="relative min-h-[85vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10"
+      {/* 🌌 Hero Section */}
+      <section className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-32 pb-40 py-[90px] min-h-[90vh]">
+        <motion.h1 
+          className="text-5xl sm:text-7xl md:text-8xl leading-[0.95] tracking-[-2.46px] max-w-7xl font-normal text-foreground animate-fade-rise"
+          style={{ fontFamily: "'Instrument Serif', serif" }}
         >
-          <div className="inline-flex px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.4em] mb-10 shadow-2xl bg-white/10 border border-white/20 text-white leading-none">
-            ✨ Reconnect • Network • Grow ✨
-          </div>
-          <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-6 leading-none italic uppercase text-white">
-            STUDENT<br />
-            <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">PORTAL</span>
-          </h1>
-          <p className="max-w-2xl mx-auto text-base md:text-xl font-bold uppercase tracking-[0.1em] leading-relaxed mb-8 text-white/70">
-            The next generation professional ecosystem<br />for active students worldwide.
-          </p>
+          Where <em className="not-italic text-muted-foreground">dreams</em> rise <em className="not-italic text-muted-foreground">through the silence.</em>
+        </motion.h1>
+        
+        <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mt-8 leading-relaxed animate-fade-rise-delay">
+          We&apos;re designing tools for deep thinkers, bold creators, and quiet rebels. Amid the chaos, we build digital spaces for sharp focus and inspired work.
+        </p>
 
-          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <Link href="/auth/signup" className="group relative p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-3xl transform hover:-translate-y-1 transition-all duration-500">
-              <div className="bg-black/40 hover:bg-transparent backdrop-blur-md px-12 py-5 rounded-[calc(0.75rem-1px)] flex items-center gap-4 transition-all">
-                <span className="text-white font-black text-sm uppercase tracking-[0.3em]">Create Account</span>
-                <ArrowRight className="text-blue-500 group-hover:text-white transition-colors" size={16} />
-              </div>
-            </Link>
-
-            <Link href="/auth/login" className="p-px bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 rounded-xl hover:from-blue-500 hover:to-pink-500 transition-all shadow-xl active:scale-95 group">
-              <div className="bg-black/60 px-8 py-4.5 rounded-[calc(0.75rem-1px)] flex items-center gap-3 transition-colors backdrop-blur-lg">
-                <ShieldCheck className="text-blue-500" size={16} />
-                <span className="text-white font-black text-sm uppercase tracking-[0.3em]">Member Login</span>
-              </div>
-            </Link>
-          </div>
-        </motion.div>
-
-        <motion.div
-          animate={{ y: [0, 5, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-        >
-          <ChevronDown className={`${darkMode ? "text-white/20" : "text-slate-300"}`} size={24} />
-        </motion.div>
+        <button className="liquid-glass rounded-full px-14 py-5 text-base text-foreground mt-12 hover:scale-[1.03] cursor-pointer transition-transform duration-300 animate-fade-rise-delay-2">
+          Begin Journey
+        </button>
       </section>
+
+      {/* Existing Content Sections Wrapper */}
+      <div className="relative z-10 bg-background/50 backdrop-blur-sm">
 
       {/* 🔷 Sections - Sizing and containers optimized for performance */}
       <SectionWrapper id="about" title="Our Mission" subtitle="Community First" icon={FaGlobe} darkMode={darkMode}>
@@ -287,7 +257,10 @@ export default function HomePage() {
         </div>
       </footer>
 
+      </div>
+
       <ThemeToggle />
-    </TubesBackground>
+    </div>
   );
 }
+

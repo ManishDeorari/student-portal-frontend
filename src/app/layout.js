@@ -1,11 +1,12 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import { Suspense } from "react";
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/context/ThemeContext";
-import ClientRouteProtection from "./components/ClientRouteProtection";
 import { NotificationProvider } from "@/context/NotificationContext";
+import { Toaster } from "react-hot-toast";
+import ClientRouteProtection from "./components/ClientRouteProtection";
 import GlobalNavigationLoader from "./components/ui/GlobalNavigationLoader";
+import { Suspense } from "react";
+import PageTransition from "./components/ui/PageTransition";
 import ZoomLock from "./components/ui/ZoomLock";
 
 const geistSans = Geist({
@@ -20,25 +21,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Student Portal",
-  description: "Connect with your student network",
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Student Portal",
-  },
+  description: "Reconnect • Network • Grow",
 };
-
-export const viewport = {
-  themeColor: "#2563eb",
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: 0,
-  viewportFit: "cover",
-};
-
-import PageTransition from "./components/ui/PageTransition";
 
 export default function RootLayout({ children }) {
   return (

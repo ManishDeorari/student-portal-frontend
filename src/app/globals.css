@@ -3,288 +3,83 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&display=swap');
+
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  --background: 201 100% 13%;
+  --foreground: 0 0% 100%;
+  --muted-foreground: 240 4% 66%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 0 0% 10%;
+  --muted: 0 0% 10%;
+  --accent: 0 0% 10%;
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --font-display: 'Instrument Serif', serif;
+  --font-body: 'Inter', sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-muted: hsl(var(--muted));
+  --color-accent: hsl(var(--accent));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
 }
 
-/* Tailwind dark mode class support overrides */
-:root.dark {
-  --background: #0f172a; /* Slate 900 for premium dark feeling instead of pure black/white flash */
-  --foreground: #ededed;
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #ededed;
-  }
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
-html, body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+    rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+    rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
-/* Global CSS or module */
-@keyframes like-bounce {
-  0% {
-    transform: scale(1);
-  }
-
-  30% {
-    transform: scale(1.4);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes unlike-shake {
-  0% {
-    transform: rotate(0);
-  }
+.animate-fade-rise { animation: fade-rise 0.8s ease-out both; }
+.animate-fade-rise-delay { animation: fade-rise 0.8s ease-out 0.2s both; }
+.animate-fade-rise-delay-2 { animation: fade-rise 0.8s ease-out 0.4s both; }
 
-  25% {
-    transform: rotate(-10deg);
-  }
-
-  75% {
-    transform: rotate(10deg);
-  }
-
-  100% {
-    transform: rotate(0);
-  }
-}
-
+/* Preserve existing animations if any */
 @keyframes shake {
-
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    transform: translateX(-5px);
-  }
-
-  20%,
-  40%,
-  60%,
-  80% {
-    transform: translateX(5px);
-  }
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
-.animate-shake {
-  animation: shake 0.5s ease-in-out;
-}
-
-.animate-like {
-  animation: like-bounce 0.5s ease-out;
-}
-
-.animate-unlike {
-  animation: unlike-shake 0.5s ease-in-out;
-}
-
-
-
-.gradient-border-input {
-  border: 1.5px solid transparent;
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  transition: all 0.3s ease;
-}
-
-.gradient-border-input-light {
-  background-image: linear-gradient(white, white),
-    linear-gradient(to right, #3b82f6, #a855f7);
-}
-
-.gradient-border-input-dark {
-  background-image: linear-gradient(#111827, #111827),
-    linear-gradient(to right, #3b82f6, #a855f7);
-}
-
-.gradient-border-input:focus {
-  border: 1.5px solid transparent;
-  box-shadow: 0 0 20px -5px rgba(59, 130, 246, 0.5), 0 0 20px -5px rgba(147, 51, 234, 0.5);
-}
-
-/* ===== RESPONSIVE FOUNDATION ===== */
-
-/* iOS Safe Area Support */
-@supports (padding: env(safe-area-inset-bottom)) {
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
-  }
-}
-
-/* Mobile Optimizations */
-@media (max-width: 768px) {
-  html,
-  body {
-    overflow-x: hidden;
-    width: 100%;
-    position: relative;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-
-  /* Prevent iOS zoom on input focus — enforce 16px minimum */
-  input,
-  textarea,
-  select {
-    font-size: 16px !important;
-  }
-
-  /* Touch optimization — eliminate 300ms tap delay */
-  * {
-    touch-action: manipulation;
-  }
-
-  /* Full-screen modals on mobile */
-  .modal-mobile-full {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-  }
-}
-
-/* Use dynamic viewport height for mobile browsers (accounts for address bar) */
-.h-screen-safe {
-  height: 100vh;
-  height: 100dvh;
-}
-
-.min-h-screen-safe {
-  min-height: 100vh;
-  min-height: 100dvh;
-}
-
-/* Smooth scrolling for PWA feel */
-html {
-  scroll-behavior: smooth;
-  /* Fluid typography: 1rem dynamically scales from 13px on mobile to 16px on desktop. 
-     This automatically makes all text sizes and div dimensions (paddings, margins, widths) 
-     that use Tailwind's default rem scaling device-independent! 
-     Tuned so 100% browser zoom matches the preferred "90% zoom" density. */
-  font-size: clamp(13px, 0.8vw + 10px, 16px);
-}
-
-/* Hide scrollbar but keep functionality for a cleaner mobile look */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Chat scrollbar — thin, themed */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(147, 51, 234, 0.3);
-  border-radius: 999px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(147, 51, 234, 0.5);
-}
-
-/* Prevent layout shift on scrollbar appearance */
-.stable-scrollbar {
-  scrollbar-gutter: stable;
-}
-
-/* Prevent overscroll on modals / drawers */
-.overscroll-none {
-  overscroll-behavior: none;
-}
-
-/* Touch-friendly minimum tap target */
-.tap-target {
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Responsive container that respects safe areas */
-.content-safe {
-  padding-left: max(1rem, env(safe-area-inset-left));
-  padding-right: max(1rem, env(safe-area-inset-right));
-}
-
-/* Horizontal scroll tabs without scrollbar */
-.scroll-tabs {
-  display: flex;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  gap: 0.5rem;
-}
-.scroll-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-/* Settings drawer scrollbar — ultra-thin, themed */
-.drawer-scrollbar::-webkit-scrollbar {
-  width: 3px;
-}
-.drawer-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.drawer-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(147, 51, 234, 0.25);
-  border-radius: 999px;
-}
-.drawer-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(147, 51, 234, 0.45);
-}
-
-/* Cross-browser full-height panels (drawers, sidebars) */
-/* Uses dvh (dynamic viewport height) with vh fallback for older browsers */
-.panel-full-height {
-  height: 100vh;
-  height: 100dvh;
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
+.animate-shake { animation: shake 0.5s ease-in-out; }
