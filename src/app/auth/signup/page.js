@@ -121,7 +121,14 @@ export default function SignupPage() {
 
 
 
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { darkMode: globalDarkMode, toggleDarkMode } = useTheme();
+  const [isAndroid, setIsAndroid] = useState(false);
+
+  React.useEffect(() => {
+    setIsAndroid(/Android/i.test(navigator.userAgent));
+  }, []);
+
+  const darkMode = isAndroid ? true : globalDarkMode;
 
   return (
     <TubesBackground 
@@ -409,7 +416,7 @@ export default function SignupPage() {
         </div>
       </div>
 
-      <ThemeToggle />
+      <ThemeToggle hidden={isAndroid} />
 
       {/* Success Modal */}
       <AnimatePresence>

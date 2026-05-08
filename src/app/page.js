@@ -59,6 +59,13 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const [email, setEmail] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
+
+  useEffect(() => {
+    setIsAndroid(/Android/i.test(navigator.userAgent));
+  }, []);
+
+  const effectiveDarkMode = isAndroid ? true : darkMode;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -86,7 +93,7 @@ export default function HomePage() {
       className="text-white" 
       tubeCount={5}
       idleDelay={3000}
-      darkMode={darkMode}
+      darkMode={effectiveDarkMode}
     >
       {/* 🚀 Sticky Navigation - Expanded layout with increased font sizes */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-2.5 bg-transparent border-white/10 shadow-2xl backdrop-blur-md border-b" : "py-4 bg-transparent"}`}>
@@ -161,35 +168,35 @@ export default function HomePage() {
           transition={{ duration: 2, repeat: Infinity }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
         >
-          <ChevronDown className={`${darkMode ? "text-white/20" : "text-slate-300"}`} size={24} />
+          <ChevronDown className={`${effectiveDarkMode ? "text-white/20" : "text-slate-300"}`} size={24} />
         </motion.div>
       </section>
 
       {/* 🔷 Sections - Sizing and containers optimized for performance */}
-      <SectionWrapper id="about" title="Our Mission" subtitle="Community First" icon={FaGlobe} darkMode={darkMode}>
+      <SectionWrapper id="about" title="Our Mission" subtitle="Community First" icon={FaGlobe} darkMode={effectiveDarkMode}>
         <div className="grid md:grid-cols-2 gap-10 items-center text-left">
-          <div className={`space-y-6 text-lg md:text-xl font-bold leading-relaxed ${darkMode ? "text-white" : "text-slate-800"}`}>
+          <div className={`space-y-6 text-lg md:text-xl font-bold leading-relaxed ${effectiveDarkMode ? "text-white" : "text-slate-800"}`}>
             <p>
               Empowering graduates through technology, mentorship, and global professional networking.
             </p>
-            <p className={`text-base font-medium leading-loose ${darkMode ? "text-white/70" : "text-slate-700"}`}>
+            <p className={`text-base font-medium leading-loose ${effectiveDarkMode ? "text-white/70" : "text-slate-700"}`}>
               The Student Portal serves as the primary bridge between university life and professional success. We provide tools for seamless networking and career acceleration.
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
-              <div className={`px-6 py-2.5 rounded-xl border text-xs font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-blue-400" : "bg-slate-50 border-slate-200 text-blue-700"}`}>✨ Global Elite</div>
-              <div className={`px-6 py-2.5 rounded-xl border text-xs font-black uppercase tracking-widest ${darkMode ? "bg-white/5 border-white/10 text-purple-400" : "bg-slate-50 border-slate-200 text-purple-700"}`}>🔥 Future Proof</div>
+               <div className={`px-6 py-2.5 rounded-xl border text-xs font-black uppercase tracking-widest ${effectiveDarkMode ? "bg-white/5 border-white/10 text-blue-400" : "bg-slate-50 border-slate-200 text-blue-700"}`}>✨ Global Elite</div>
+              <div className={`px-6 py-2.5 rounded-xl border text-xs font-black uppercase tracking-widest ${effectiveDarkMode ? "bg-white/5 border-white/10 text-purple-400" : "bg-slate-50 border-slate-200 text-purple-700"}`}>🔥 Future Proof</div>
             </div>
           </div>
           <div className="relative group">
-            <div className={`absolute inset-0 blur-[60px] rounded-full opacity-30 group-hover:opacity-50 transition-all duration-700 ${darkMode ? "bg-blue-600" : "bg-blue-400"}`} />
-            <div className={`relative p-8 border rounded-[2rem] shadow-4xl flex items-center justify-center bg-white/5 border-white/10 ${!darkMode && "bg-white/40 border-slate-200 backdrop-blur-md"}`}>
+            <div className={`absolute inset-0 blur-[60px] rounded-full opacity-30 group-hover:opacity-50 transition-all duration-700 ${effectiveDarkMode ? "bg-blue-600" : "bg-blue-400"}`} />
+            <div className={`relative p-8 border rounded-[2rem] shadow-4xl flex items-center justify-center bg-white/5 border-white/10 ${!effectiveDarkMode && "bg-white/40 border-slate-200 backdrop-blur-md"}`}>
               <FaRocket size={80} className="text-blue-500 group-hover:scale-110 transition-transform duration-700 rotate-12 group-hover:rotate-0" />
             </div>
           </div>
         </div>
       </SectionWrapper>
 
-      <SectionWrapper id="events" title="Events" subtitle="Meet the Community" icon={FaCalendarAlt} darkMode={darkMode}>
+      <SectionWrapper id="events" title="Events" subtitle="Meet the Community" icon={FaCalendarAlt} darkMode={effectiveDarkMode}>
         <div className="grid md:grid-cols-3 gap-6 text-left">
           {[
             { title: "Student Meet 2026", date: "June 15, 2026", type: "Conference" },
@@ -197,11 +204,11 @@ export default function HomePage() {
             { title: "Student Gala", date: "Aug 10, 2026", type: "Social" }
           ].map((ev, i) => (
             <div key={i} className="p-px bg-gradient-to-b from-blue-500/30 to-transparent rounded-[2rem] hover:from-blue-500 transition-all group">
-              <div className={`h-full p-8 rounded-[calc(2rem-1px)] relative overflow-hidden ${darkMode ? "bg-slate-950" : "bg-white"}`}>
+              <div className={`h-full p-8 rounded-[calc(2rem-1px)] relative overflow-hidden ${effectiveDarkMode ? "bg-slate-950" : "bg-white"}`}>
                 <p className="text-blue-500 text-xs font-black uppercase tracking-[0.3em] mb-3">{ev.type}</p>
-                <h3 className={`text-2xl font-black mb-4 italic ${darkMode ? "text-white" : "text-slate-950"}`}>{ev.title}</h3>
-                <p className={`text-xs font-bold uppercase tracking-widest mb-8 ${darkMode ? "text-white/60" : "text-slate-600"}`}>{ev.date}</p>
-                <button onClick={handleActionClick} className={`text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group-hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-slate-950"}`}>
+                <h3 className={`text-2xl font-black mb-4 italic ${effectiveDarkMode ? "text-white" : "text-slate-950"}`}>{ev.title}</h3>
+                <p className={`text-xs font-bold uppercase tracking-widest mb-8 ${effectiveDarkMode ? "text-white/60" : "text-slate-600"}`}>{ev.date}</p>
+                <button onClick={handleActionClick} className={`text-xs font-black uppercase tracking-[0.3em] flex items-center gap-3 group-hover:text-blue-500 transition-colors ${effectiveDarkMode ? "text-white" : "text-slate-950"}`}>
                   RSVP NOW <ArrowRight size={14} className="text-blue-500" />
                 </button>
               </div>
@@ -210,10 +217,10 @@ export default function HomePage() {
         </div>
       </SectionWrapper>
 
-      <SectionWrapper id="testimonials" title="Stories" subtitle="Voices of Impact" icon={FaQuoteLeft} darkMode={darkMode}>
+      <SectionWrapper id="testimonials" title="Stories" subtitle="Voices of Impact" icon={FaQuoteLeft} darkMode={effectiveDarkMode}>
         <div className="max-w-2xl mx-auto text-center space-y-8 py-6">
           <FaQuoteLeft size={40} className="text-blue-500 opacity-20 mx-auto" />
-          <p className={`text-xl md:text-3xl font-black leading-tight italic ${darkMode ? "text-white" : "text-slate-950"}`}>
+          <p className={`text-xl md:text-3xl font-black leading-tight italic ${effectiveDarkMode ? "text-white" : "text-slate-950"}`}>
             "Authentic connections are the foundation of any great career. This portal makes it effortless."
           </p>
           <div className="flex items-center justify-center gap-4 pt-4">
@@ -223,16 +230,16 @@ export default function HomePage() {
               </div>
             </div>
             <div className="text-left">
-              <p className={`font-black uppercase tracking-widest text-xs ${darkMode ? "text-white" : "text-slate-950"}`}>Manish Chandra Deorari</p>
-              <p className={`font-bold uppercase tracking-widest text-[10px] ${darkMode ? "text-white/60" : "text-slate-600"}`}>MCA - 2024-26</p>
+                <p className={`font-black uppercase tracking-widest text-xs ${effectiveDarkMode ? "text-white" : "text-slate-950"}`}>Manish Chandra Deorari</p>
+              <p className={`font-bold uppercase tracking-widest text-[10px] ${effectiveDarkMode ? "text-white/60" : "text-slate-600"}`}>MCA - 2024-26</p>
             </div>
           </div>
         </div>
       </SectionWrapper>
 
-      <SectionWrapper id="contact" title="Connect" subtitle="Reach Out" icon={Mail} darkMode={darkMode}>
+      <SectionWrapper id="contact" title="Connect" subtitle="Reach Out" icon={Mail} darkMode={effectiveDarkMode}>
         <div className="max-w-xl mx-auto text-center">
-          <p className={`mb-10 font-bold uppercase tracking-widest text-xs italic ${darkMode ? "text-white/60" : "text-slate-600"}`}>
+          <p className={`mb-10 font-bold uppercase tracking-widest text-xs italic ${effectiveDarkMode ? "text-white/60" : "text-slate-600"}`}>
             Have questions about registration or events?
           </p>
           <form onSubmit={handleContactSubmit} className="flex flex-col sm:flex-row items-stretch gap-4">
@@ -242,7 +249,7 @@ export default function HomePage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@university.edu"
-                className={`w-full px-8 py-5 rounded-[calc(1rem-1px)] text-sm font-black outline-none border-none ${darkMode ? "bg-black text-white" : "bg-white text-slate-950"}`}
+                className={`w-full px-8 py-5 rounded-[calc(1rem-1px)] text-sm font-black outline-none border-none ${effectiveDarkMode ? "bg-black text-white" : "bg-white text-slate-950"}`}
               />
             </div>
             <button
@@ -256,12 +263,12 @@ export default function HomePage() {
         </div>
       </SectionWrapper>
 
-      <footer className={`py-20 border-t transition-colors duration-700 ${darkMode ? "bg-black text-white border-white/5" : "bg-slate-50 text-slate-900 border-slate-200"}`}>
+      <footer className={`py-20 border-t transition-colors duration-700 ${effectiveDarkMode ? "bg-black text-white border-white/5" : "bg-slate-50 text-slate-900 border-slate-200"}`}>
         <div className="max-w-[96%] mx-auto px-6 flex flex-col lg:flex-row justify-between items-center gap-12 text-center lg:text-left">
           <div className="space-y-8">
             <div>
               <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase mb-4">STUDENT PORTAL</h1>
-              <p className={`text-sm font-black uppercase tracking-[0.2em] max-w-sm ${darkMode ? "text-white/60" : "text-slate-600"}`}>
+              <p className={`text-sm font-black uppercase tracking-[0.2em] max-w-sm ${effectiveDarkMode ? "text-white/60" : "text-slate-600"}`}>
                 Empowering university students through a premium digital ecosystem.
               </p>
             </div>
@@ -273,7 +280,7 @@ export default function HomePage() {
           </div>
           <div className="flex flex-col items-center lg:items-end">
             <div className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full mb-8 shadow-3xl">
-              <div className={`px-10 py-3 rounded-full text-[12px] md:text-[13px] font-black uppercase tracking-widest italic ${darkMode ? "bg-black" : "bg-white"}`}>
+              <div className={`px-10 py-3 rounded-full text-[12px] md:text-[13px] font-black uppercase tracking-widest italic ${effectiveDarkMode ? "bg-black" : "bg-white"}`}>
                 Graphic ERA Hill University
               </div>
             </div>
@@ -284,7 +291,7 @@ export default function HomePage() {
         </div>
       </footer>
 
-      <ThemeToggle />
+      <ThemeToggle hidden={isAndroid} />
     </TubesBackground>
   );
 }

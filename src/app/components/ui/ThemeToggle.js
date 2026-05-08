@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
-export default function ThemeToggle({ bottomOffset = 32, rightOffset = 32 }) {
+export default function ThemeToggle({ bottomOffset = 32, rightOffset = 32, hidden = false }) {
+  if (hidden) return null;
   const { darkMode, toggleDarkMode } = useTheme();
   const [zoom, setZoom] = useState(1);
   const [baseRatio, setBaseRatio] = useState(1);
