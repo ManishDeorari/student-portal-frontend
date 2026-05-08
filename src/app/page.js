@@ -89,7 +89,7 @@ export default function HomePage() {
       tubeCount={5}
       idleDelay={3000}
       darkMode={darkMode}
-      alwaysDark={isAndroid}
+      alwaysDark={true}
     >
       {/* 🚀 Sticky Navigation - Expanded layout with increased font sizes */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-2.5 bg-transparent border-white/10 shadow-2xl backdrop-blur-md border-b" : "py-4 bg-transparent"}`}>

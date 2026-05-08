@@ -132,7 +132,7 @@ export default function SignupPage() {
     <TubesBackground 
       className="min-h-screen text-white" 
       darkMode={darkMode}
-      alwaysDark={isAndroid}
+      alwaysDark={true}
       tubeCount={10}
     >
       <div className="min-h-screen flex flex-col lg:flex-row items-center lg:items-start lg:pt-12 justify-center lg:justify-start px-4 sm:px-8 pb-32 sm:pb-0 transition-colors duration-500 text-white">
