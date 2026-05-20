@@ -111,6 +111,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
     handleDeleteReply,
     handleReactToReply,
     handleReactToComment,
+    handlePinComment,
   } = useCommentActions({
     post,
     comment,
@@ -148,6 +149,13 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
     const total = (post.comments || []).length;
     setVisibleComments((prev) => Math.min(prev + 5, total));
   };
+
+  const sortedComments = React.useMemo(() => {
+    const comments = post.comments || [];
+    const pinned = comments.filter(c => c.isPinned);
+    const unpinned = comments.filter(c => !c.isPinned);
+    return [...pinned.slice().reverse(), ...unpinned.slice().reverse()];
+  }, [post.comments]);
 
   const isMyPost = post.user?._id === currentUser._id;
   const isRestricted = !isMyPost && currentUser?.role !== 'admin';
@@ -466,9 +474,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
 
           {showComments && (
             <div className="pt-2 space-y-3">
-              {(post.comments || [])
-                .slice()
-                .reverse()
+              {sortedComments
                 .slice(0, visibleComments)
                 .map((c) => (
                   <CommentCard
@@ -484,6 +490,8 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                     onDeleteReply={handleDeleteReply}
                     onReactToReply={handleReactToReply}
                     onReactToComment={handleReactToComment}
+                    onPinComment={handlePinComment}
+                    isPostOwner={post.user?._id === currentUser?._id || post.user === currentUser?._id}
                     darkMode={darkMode}
                   />
                 ))}
@@ -529,6 +537,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   handleEditReply,
                   handleDeleteReply,
                   handleReactToReply,
+                  handlePinComment,
                   comment,
                   setComment,
                   editing,

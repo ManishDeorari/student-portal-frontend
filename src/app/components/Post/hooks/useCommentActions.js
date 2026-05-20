@@ -296,6 +296,43 @@ export default function useCommentActions({
     [post._id, post.type, setPosts, API_URL, token]
   );
 
+  const handlePinComment = useCallback(
+    async (commentId) => {
+      if (!checkAuth()) return;
+      try {
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent 
+          ? `/api/events/${post._id}/comment/${commentId}/pin`
+          : `/api/posts/${post._id}/comment/${commentId}/pin`;
+
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.message || data.error || "Failed to toggle pin");
+        }
+
+        const updated = await res.json();
+        const finalUpdated = isEvent ? updated : (updated.post || updated);
+        setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...finalUpdated } : p)));
+        socket.emit("updatePost", finalUpdated);
+        toast.success("📌 Comment pinned state toggled!", { autoClose: 1500 });
+      } catch (err) {
+        toast.error(err.message || "❌ Failed to pin/unpin comment");
+      }
+    },
+    [post._id, post.type, setPosts, API_URL, token, checkAuth]
+  );
+
   return {
     handleComment,
     handleReply,
@@ -305,6 +342,7 @@ export default function useCommentActions({
     handleDeleteReply,
     handleReactToReply,
     handleReactToComment,
+    handlePinComment,
   };
 
 }

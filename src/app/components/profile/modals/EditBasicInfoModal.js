@@ -111,6 +111,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
     };
 
     const handleSave = async () => {
+        if (loading) return;
         if (!validate()) {
             toast.error("Please fix errors before saving.");
             return;
@@ -153,7 +154,9 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
             console.error(error);
             toast.error("Error updating profile details");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 

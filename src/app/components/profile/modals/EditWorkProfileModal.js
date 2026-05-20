@@ -50,6 +50,7 @@ export default function EditWorkProfileModal({ isOpen, onClose, currentWorkProfi
     };
 
     const handleSave = async () => {
+        if (loading) return;
         setLoading(true);
         try {
             const skillsArray = skills.split(",").map(s => s.trim()).filter(Boolean);
@@ -76,7 +77,9 @@ export default function EditWorkProfileModal({ isOpen, onClose, currentWorkProfi
             console.error(error);
             toast.error("Error updating work profile");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 

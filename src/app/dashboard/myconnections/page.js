@@ -20,6 +20,7 @@ const MyConnectionsContent = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [ownerName, setOwnerName] = useState("My");
     const [requested, setRequested] = useState({});
+    const [actionLoading, setActionLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -60,11 +61,17 @@ const MyConnectionsContent = () => {
     }, [userIdInParam]);
 
     const handleConnect = async (toUserId) => {
+        if (actionLoading) return;
+        setActionLoading(true);
         try {
             await sendConnectionRequest(toUserId);
             setRequested(prev => ({ ...prev, [toUserId]: true }));
         } catch (err) {
             console.error("Connect error:", err);
+        } finally {
+            setTimeout(() => {
+                setActionLoading(false);
+            }, 1000);
         }
     };
 
@@ -190,7 +197,8 @@ const MyConnectionsContent = () => {
                                             ) : (
                                                 <button 
                                                     onClick={() => handleConnect(user._id)}
-                                                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:from-blue-500 hover:to-purple-500 transition-all shadow-lg active:scale-95"
+                                                    disabled={actionLoading}
+                                                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:from-blue-500 hover:to-purple-500 transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                                                 >
                                                     Connect
                                                 </button>

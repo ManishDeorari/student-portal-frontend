@@ -38,7 +38,11 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
         }
     }, [isOpen, activeTab, fetchRequests]);
 
+    const [actionLoading, setActionLoading] = useState(false);
+
     const handleAction = async (userId, action) => {
+        if (actionLoading) return;
+        setActionLoading(true);
         try {
             if (action === "accept") await acceptConnectionRequest(userId);
             else if (action === "reject") await rejectConnectionRequest(userId);
@@ -49,6 +53,10 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
             if (onActionComplete) onActionComplete();
         } catch (err) {
             alert(err.message);
+        } finally {
+            setTimeout(() => {
+                setActionLoading(false);
+            }, 1000);
         }
     };
 
@@ -136,7 +144,8 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
                                                 <>
                                                     <button
                                                         onClick={() => handleAction(user._id, "accept")}
-                                                        className="relative group/abtn p-[1px] bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg overflow-hidden transition-all active:scale-90"
+                                                        disabled={actionLoading}
+                                                        className="relative group/abtn p-[1px] bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg overflow-hidden transition-all active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed"
                                                     >
                                                         <div className="px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded-[calc(0.5rem-1px)]">
                                                             Accept
@@ -144,7 +153,8 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
                                                     </button>
                                                     <button
                                                         onClick={() => handleAction(user._id, "reject")}
-                                                        className="px-3 sm:px-5 py-2 sm:py-2.5 bg-red-500/10 border-2 border-red-500/30 text-red-500 text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-red-500 hover:text-white transition-all active:scale-90"
+                                                        disabled={actionLoading}
+                                                        className="px-3 sm:px-5 py-2 sm:py-2.5 bg-red-500/10 border-2 border-red-500/30 text-red-500 text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-red-500 hover:text-white transition-all active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed"
                                                     >
                                                         Reject
                                                     </button>
@@ -152,7 +162,8 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
                                             ) : (
                                                 <button
                                                     onClick={() => handleAction(user._id, "cancel")}
-                                                    className="relative group/cbtn p-[1.5px] bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg overflow-hidden transition-all active:scale-90 shadow-lg shadow-orange-500/20"
+                                                    disabled={actionLoading}
+                                                    className="relative group/cbtn p-[1.5px] bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg overflow-hidden transition-all active:scale-90 shadow-lg shadow-orange-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                                 >
                                                     <div className="px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded-[calc(0.5rem-1.5px)]">
                                                         Cancel

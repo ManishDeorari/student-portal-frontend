@@ -141,6 +141,7 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
     };
 
     const handleSave = async () => {
+        if (loading) return;
         if (!validate()) {
             toast.error("Please fill in all required fields.");
             return;
@@ -194,7 +195,9 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
             console.error(error);
             toast.error("Error updating experience");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 

@@ -105,6 +105,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
     }, [isPublicView, profile._id, fetchConnectionStatus]);
 
     const handleConnect = async () => {
+        if (loading) return;
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
@@ -129,7 +130,9 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
             console.error("Error sending connection request:", err);
             toast.error("Something went wrong");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 

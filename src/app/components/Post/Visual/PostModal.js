@@ -61,6 +61,7 @@ export default function PostModal({
   darkMode = false,
   setPosts, // Add setPosts to update state after registration
   handleReactToComment, // Add handleReactToComment
+  handlePinComment, // Add handlePinComment
   hideInteractions = false // New prop to hide interactive elements
 }) {
   const [showCommentsState, setShowCommentsState] = useState(true);
@@ -71,6 +72,13 @@ export default function PostModal({
   const isSelf = post.user?._id === currentUser?._id;
   const isRestricted = !isSelf && currentUser?.role !== 'admin';
   const editKey = `draft-${post._id}`;
+
+  const sortedComments = React.useMemo(() => {
+    const comments = post.comments || [];
+    const pinned = comments.filter(c => c.isPinned);
+    const unpinned = comments.filter(c => !c.isPinned);
+    return [...pinned.slice().reverse(), ...unpinned.slice().reverse()];
+  }, [post.comments]);
 
   if (!showModal) return null;
 
@@ -409,7 +417,7 @@ export default function PostModal({
                     </h3>
 
                     <div className="space-y-4">
-                      {(post.comments || []).slice().reverse().map((c) => (
+                      {sortedComments.map((c) => (
                         <CommentCard
                           key={c._id}
                           comment={c}
@@ -423,6 +431,8 @@ export default function PostModal({
                           onDeleteReply={handleDeleteReply}
                           onReactToReply={handleReactToReply}
                           onReactToComment={handleReactToComment}
+                          onPinComment={handlePinComment}
+                          isPostOwner={post.user?._id === currentUser?._id || post.user === currentUser?._id}
                           darkMode={darkMode}
                         />
                       ))}

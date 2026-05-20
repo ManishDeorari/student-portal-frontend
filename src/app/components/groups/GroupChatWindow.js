@@ -30,6 +30,7 @@ export default function GroupChatWindow({
     const [newMessage, setNewMessage] = useState("");
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [mediaPreview, setMediaPreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -52,6 +53,7 @@ export default function GroupChatWindow({
     }, []);
 
     const handleFileChange = (e) => {
+        if (isSubmitting) return;
         const file = e.target.files[0];
         if (!file) return;
         if (!file.type.startsWith("image/")) {
@@ -64,8 +66,10 @@ export default function GroupChatWindow({
 
     const handleSend = async (e) => {
         if (e) e.preventDefault();
+        if (isSubmitting) return;
         if (!newMessage.trim() && !selectedFile) return;
 
+        setIsSubmitting(true);
         let mediaData = { mediaUrl: null, mediaPublicId: null, type: "text" };
 
         if (selectedFile) {
@@ -91,15 +95,24 @@ export default function GroupChatWindow({
                 console.error("Upload error:", err);
                 toast.error("Failed to upload image.");
                 setUploading(false);
+                setIsSubmitting(false);
                 return;
             }
         }
 
-        onSendMessage(newMessage, mediaData);
-        setNewMessage("");
-        setMediaPreview(null);
-        setSelectedFile(null);
-        setUploading(false);
+        try {
+            onSendMessage(newMessage, mediaData);
+            setNewMessage("");
+            setMediaPreview(null);
+            setSelectedFile(null);
+        } catch (err) {
+            console.error("Failed to send message:", err);
+        } finally {
+            setTimeout(() => {
+                setIsSubmitting(false);
+                setUploading(false);
+            }, 1000);
+        }
     };
 
     const onEmojiClick = (emojiData) => {
@@ -327,15 +340,16 @@ export default function GroupChatWindow({
                             <div className="flex-1 relative p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl focus-within:scale-[1.01] transition-all">
                                 <input
                                     type="text"
-                                    placeholder={selectedFile ? "Add a caption..." : "Write something awesome..."}
+                                    placeholder={isSubmitting ? "Sending..." : (selectedFile ? "Add a caption..." : "Write something awesome...")}
                                     value={newMessage}
+                                    disabled={isSubmitting || uploading}
                                     onChange={(e) => setNewMessage(e.target.value)}
-                                    className={`w-full rounded-[14px] px-6 py-3.5 font-bold text-sm focus:outline-none transition-colors ${darkMode ? "bg-gray-900 text-white placeholder-gray-600" : "bg-[#FAFAFA] text-gray-900 placeholder-gray-500"}`}
+                                    className={`w-full rounded-[14px] px-6 py-3.5 font-bold text-sm focus:outline-none transition-colors ${darkMode ? "bg-gray-900 text-white placeholder-gray-600" : "bg-[#FAFAFA] text-gray-900 placeholder-gray-500"} ${(isSubmitting || uploading) ? "opacity-60 cursor-not-allowed" : ""}`}
                                 />
                             </div>
                             <button
                                 type="submit"
-                                disabled={(!newMessage.trim() && !selectedFile) || uploading}
+                                disabled={(!newMessage.trim() && !selectedFile) || uploading || isSubmitting}
                                 className="p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-2xl shadow-blue-500/40 hover:shadow-blue-500/60 hover:scale-110 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale disabled:scale-100"
                             >
                                 <FaPaperPlane size={20} />

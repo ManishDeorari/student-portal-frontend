@@ -35,6 +35,7 @@ export default function EditJobInfoModal({ isOpen, onClose, currentProfile, onSa
     };
 
     const handleSave = async () => {
+        if (loading) return;
         setLoading(true);
         try {
             const skillsArray = skills.split(",").map((s) => s.trim()).filter(Boolean);
@@ -65,7 +66,9 @@ export default function EditJobInfoModal({ isOpen, onClose, currentProfile, onSa
             console.error(error);
             toast.error("Error updating job info");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 

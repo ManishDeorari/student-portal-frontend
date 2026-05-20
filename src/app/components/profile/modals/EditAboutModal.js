@@ -12,6 +12,7 @@ export default function EditAboutModal({ isOpen, onClose, currentBio, onSave }) 
     if (!isOpen) return null;
 
     const handleSave = async () => {
+        if (loading) return;
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
@@ -34,7 +35,9 @@ export default function EditAboutModal({ isOpen, onClose, currentBio, onSave }) 
             console.error(error);
             toast.error("Error updating bio");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 

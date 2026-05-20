@@ -1,14 +1,31 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import ImageViewerModal from "../../profile/ImageViewerModal";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function PostHeader({ post, currentUser, editing, toggleEdit, handleDelete, darkMode = false, hideActions = false }) {
   const [showViewer, setShowViewer] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
   const profileImg = post.user?.profilePicture || "/default-profile.jpg";
   const isSelf = post.user?._id === currentUser?._id;
   const isRestricted = !isSelf && currentUser?.role !== 'admin';
+
+  const canEdit = (post.user?._id || post.user) === (currentUser?._id || currentUser);
+  const canDelete = canEdit || currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin;
+
+  useEffect(() => {
+    const clickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", clickOutside);
+    return () => document.removeEventListener("mousedown", clickOutside);
+  }, []);
 
   return (
     <div className="flex items-center gap-3">
@@ -67,19 +84,50 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
         </div>
         <p className={`text-[10px] ${darkMode ? "text-gray-500" : "text-gray-500"} truncate`}>{new Date(post.createdAt).toLocaleString()}</p>
       </div>
-
-      {!hideActions && (
-        <div className="ml-auto flex gap-2">
-          {((post.user?._id || post.user) === (currentUser?._id || currentUser)) && (
-            <button onClick={toggleEdit} className={`${darkMode ? "text-blue-400" : "text-blue-600"} text-sm hover:underline font-bold`}>
-              {editing ? "Cancel" : "Edit"}
-            </button>
-          )}
-          {(((post.user?._id || post.user) === (currentUser?._id || currentUser)) || currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin) && (
-            <button onClick={handleDelete} className={`${darkMode ? "text-red-400" : "text-red-600"} text-sm hover:underline font-bold`}>
-              Delete
-            </button>
-          )}
+      
+      {!hideActions && (canEdit || canDelete) && (
+        <div className="relative ml-auto" ref={dropdownRef}>
+          <button
+            onClick={() => setShowDropdown(prev => !prev)}
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${darkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-600 hover:text-black hover:bg-black/5"}`}
+          >
+            <span className="text-xl font-bold leading-none select-none">⋮</span>
+          </button>
+          
+          <AnimatePresence>
+            {showDropdown && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: -5 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -5 }}
+                transition={{ duration: 0.15 }}
+                className={`absolute right-0 mt-2 w-40 rounded-xl border backdrop-blur-md shadow-2xl z-50 p-1 flex flex-col ${darkMode ? "bg-slate-900/95 border-white/10 text-white" : "bg-white/95 border-gray-200 text-gray-800"}`}
+              >
+                {canEdit && (
+                  <button
+                    onClick={() => {
+                      toggleEdit();
+                      setShowDropdown(false);
+                    }}
+                    className={`flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-lg text-left transition-colors ${darkMode ? "hover:bg-white/10 text-white" : "hover:bg-black/5 text-gray-800"}`}
+                  >
+                    <span>✏️</span> {editing ? "Cancel Edit" : "Edit Post"}
+                  </button>
+                )}
+                {canDelete && (
+                  <button
+                    onClick={() => {
+                      handleDelete();
+                      setShowDropdown(false);
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-lg text-left text-red-500 hover:bg-red-500/10 transition-colors"
+                  >
+                    <span>🗑️</span> Delete Post
+                  </button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 

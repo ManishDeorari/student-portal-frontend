@@ -31,6 +31,7 @@ export const NotificationProvider = ({ children }) => {
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const userRef = useRef(null);
+  const recentToastsRef = useRef(new Map());
 
   const fetchNotifications = useCallback(async (token) => {
     try {
@@ -218,6 +219,19 @@ export const NotificationProvider = ({ children }) => {
       
       const processIncomingNotification = (notification) => {
         if (!notification) return;
+
+        // Deduplication: 2 seconds window
+        const dedupKey = notification._id || `${notification.type}_${notification.message}`;
+        const now = Date.now();
+        if (recentToastsRef.current.has(dedupKey)) {
+          const lastTime = recentToastsRef.current.get(dedupKey);
+          if (now - lastTime < 2000) {
+            console.log("Ignored duplicate notification within 2s:", dedupKey);
+            return;
+          }
+        }
+        recentToastsRef.current.set(dedupKey, now);
+
         let isNew = false;
         setNotifications(prev => {
           if (prev.some(n => n?._id === notification?._id)) return prev;
@@ -229,6 +243,18 @@ export const NotificationProvider = ({ children }) => {
           setUnreadCount(prev => prev + 1);
           setShakeNotification(true);
           setTimeout(() => setShakeNotification(false), 1000);
+
+          const allowedToastTypes = [
+            "points_earned",
+            "points_requested",
+            "feedback",
+            "admin_notice",
+            "announcement"
+          ];
+
+          if (!allowedToastTypes.includes(notification.type)) {
+            return;
+          }
 
           // 🚀 UNIVERSAL PREMIUM TOAST
           toast.custom((t) => {
@@ -395,37 +421,6 @@ export const NotificationProvider = ({ children }) => {
       const handleNewGroupMessage = () => setUnreadGroupMessagesCount(prev => prev + 1);
       const handleNewSignupRequest = (notification) => {
         setAdminSignupRequestsCount(prev => prev + 1);
-        
-        // 🚀 SHOW TOAST FOR NEW SIGNUP (For Admins)
-        toast.custom((t) => (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className={`p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 shadow-2xl pointer-events-auto`}
-            >
-              <div className={`px-5 py-3 rounded-[calc(1rem-2px)] flex items-center gap-4 ${darkMode ? 'bg-black' : 'bg-white'}`}>
-                <div className={`p-2 rounded-xl bg-blue-500/10 text-blue-500`}>
-                  <UserPlus className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className={`text-[10px] font-black uppercase tracking-widest text-blue-500 mb-0.5`}>New Signup Request</p>
-                  <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-slate-900'}`}>
-                    {notification.name || "A new user"} (<span className="capitalize">{notification.role}</span>)
-                  </p>
-                </div>
-                <button 
-                  onClick={() => {
-                    toast.dismiss(t.id);
-                    window.location.href = "/dashboard/admin";
-                  }}
-                  className="p-2 ml-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold text-xs"
-                >
-                  Review
-                </button>
-              </div>
-            </motion.div>
-        ));
       };
 
       const handlePointsUpdated = (data) => {

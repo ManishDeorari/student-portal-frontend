@@ -69,6 +69,7 @@ export default function EditJobPreferenceModal({ isOpen, onClose, currentPrefere
     };
 
     const handleSave = async () => {
+        if (loading) return;
         if (!isValidUrl(preferences.resumeLink)) {
             return toast.error("Please enter a valid Resume URL (with http:// or https://)");
         }
@@ -98,7 +99,9 @@ export default function EditJobPreferenceModal({ isOpen, onClose, currentPrefere
             console.error(error);
             toast.error("Error updating job preferences");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 

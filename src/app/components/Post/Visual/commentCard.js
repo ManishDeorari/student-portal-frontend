@@ -23,6 +23,8 @@ export default function CommentCard({
   onDeleteReply,
   onReactToReply,
   onReactToComment,
+  onPinComment,
+  isPostOwner = false,
   darkMode = false
 }) {
   const [showReplyBox, setShowReplyBox] = useState(false);
@@ -36,22 +38,25 @@ export default function CommentCard({
   const [showAbove, setShowAbove] = useState(true);
   const [pickerStyle, setPickerStyle] = useState({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const commentRef = useRef(null);
   const reactButtonRef = useRef(null);
   const pickerRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
-    if (showEmoji) {
-      const handleClickOutside = (e) => {
-        if (pickerRef.current && !pickerRef.current.contains(e.target) &&
-          reactButtonRef.current && !reactButtonRef.current.contains(e.target)) {
-          setShowEmoji(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }
+    const handleClickOutside = (e) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target) &&
+        reactButtonRef.current && !reactButtonRef.current.contains(e.target)) {
+        setShowEmoji(false);
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showEmoji]);
 
   const toggleEmojiPicker = () => {
@@ -168,6 +173,11 @@ export default function CommentCard({
                     You
                   </span>
                 )}
+                {!isReply && comment.isPinned && (
+                  <span className={`text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest ${darkMode ? "text-yellow-300 bg-yellow-600/30 border border-yellow-500/30" : "text-yellow-700 bg-yellow-100 border border-yellow-200"} flex items-center gap-1`}>
+                    📌 Pinned
+                  </span>
+                )}
               </div>
 
               {editing ? (
@@ -198,60 +208,101 @@ export default function CommentCard({
               </div>
             </div>
 
-            {(isOwn || currentUser?.role === 'admin' || currentUser?.isMainAdmin) && (
-              <div className="flex items-center gap-2 ml-2">
-                {editing ? (
-                  isOwn && (
-                    <>
-                      <button
-                        className="text-[9px] font-black uppercase tracking-widest text-blue-500 hover:text-blue-400 transition-colors"
-                        onClick={() => {
-                          if (isReply) {
-                            onEditReply(comment.parentId, comment._id, editText);
-                          } else {
-                            onEdit(comment._id, editText);
-                          }
-                          setEditing(false);
-                          setShowEmoji(false);
-                        }}
+            {editing ? (
+              isOwn && (
+                <div className="flex items-center gap-2 ml-2">
+                  <button
+                    className="text-[9px] font-black uppercase tracking-widest text-blue-500 hover:text-blue-400 transition-colors font-bold"
+                    onClick={() => {
+                      if (isReply) {
+                        onEditReply(comment.parentId, comment._id, editText);
+                      } else {
+                        onEdit(comment._id, editText);
+                      }
+                      setEditing(false);
+                      setShowEmoji(false);
+                    }}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-gray-400 transition-colors font-bold"
+                    onClick={() => {
+                      setEditing(false);
+                      setEditText(comment.text);
+                      setShowEmoji(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )
+            ) : (
+              (isOwn || currentUser?.role === 'admin' || currentUser?.isMainAdmin || (isPostOwner && !isReply)) && (
+                <div className="relative ml-2" ref={dropdownRef}>
+                  <button
+                    onClick={() => setShowDropdown(prev => !prev)}
+                    className={`p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                    </svg>
+                  </button>
+
+                  <AnimatePresence>
+                    {showDropdown && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                        transition={{ duration: 0.15 }}
+                        className={`absolute right-0 mt-1 w-36 rounded-xl border z-[999] shadow-2xl backdrop-blur-md overflow-hidden ${darkMode ? "bg-slate-900/95 border-white/10" : "bg-white/95 border-gray-100"}`}
                       >
-                        Save
-                      </button>
-                      <button
-                        className="text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-gray-400 transition-colors"
-                        onClick={() => {
-                          setEditing(false);
-                          setEditText(comment.text);
-                          setShowEmoji(false);
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  )
-                ) : (
-                  <>
-                    {isOwn && (
-                      <button
-                        className="text-[9px] font-black uppercase tracking-widest text-green-500 hover:text-green-400 transition-colors"
-                        onClick={() => {
-                          setEditText(comment.text);
-                          setEditing(true);
-                        }}
-                      >
-                        Edit
-                      </button>
+                        <div className="py-1">
+                          {isOwn && (
+                            <button
+                              onClick={() => {
+                                setEditText(comment.text);
+                                setEditing(true);
+                                setShowDropdown(false);
+                              }}
+                              className={`w-full px-4 py-2 text-left text-xs font-black uppercase tracking-widest transition-colors flex items-center gap-2 ${darkMode ? "text-gray-200 hover:bg-white/5" : "text-gray-700 hover:bg-gray-100"}`}
+                            >
+                              <span>✏️</span> Edit
+                            </button>
+                          )}
+                          {(isOwn || currentUser?.role === 'admin' || currentUser?.isMainAdmin) && (
+                            <button
+                              onClick={() => {
+                                setShowDeleteConfirm(true);
+                                setShowDropdown(false);
+                              }}
+                              className={`w-full px-4 py-2 text-left text-xs font-black uppercase tracking-widest text-red-500 hover:bg-red-500/10 transition-colors flex items-center gap-2`}
+                            >
+                              <span>🗑️</span> Delete
+                            </button>
+                          )}
+                          {isPostOwner && !isReply && onPinComment && (
+                            <button
+                              onClick={() => {
+                                onPinComment(comment._id);
+                                setShowDropdown(false);
+                              }}
+                              className={`w-full px-4 py-2 text-left text-xs font-black uppercase tracking-widest transition-colors flex items-center gap-2 ${darkMode ? "text-yellow-400 hover:bg-yellow-500/10" : "text-yellow-600 hover:bg-yellow-50"}`}
+                            >
+                              {comment.isPinned ? (
+                                <><span>📍</span> Unpin</>
+                              ) : (
+                                <><span>📌</span> Pin</>
+                              )}
+                            </button>
+                          )}
+                        </div>
+                      </motion.div>
                     )}
-                    <button
-                      onClick={() => setShowDeleteConfirm(true)}
-                      disabled={deleting}
-                      className="text-[9px] font-black uppercase tracking-widest text-red-500 hover:text-red-400 transition-colors disabled:opacity-50"
-                    >
-                      {deleting ? "Wait" : "Delete"}
-                    </button>
-                  </>
-                )}
-              </div>
+                  </AnimatePresence>
+                </div>
+              )
             )}
           </div>
         </div>

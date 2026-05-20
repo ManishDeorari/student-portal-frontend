@@ -15,6 +15,7 @@ const UserConnectionsPage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [requested, setRequested] = useState({});
+    const [actionLoading, setActionLoading] = useState(false);
 
     // ⚡ OPTIMISTIC HYDRATION
     useEffect(() => {
@@ -52,11 +53,17 @@ const UserConnectionsPage = () => {
 
     const handleConnect = async (toUserId) => {
         if (currentUser && toUserId === currentUser._id) return;
+        if (actionLoading) return;
+        setActionLoading(true);
         try {
             await sendConnectionRequest(toUserId);
             setRequested((prev) => ({ ...prev, [toUserId]: true }));
         } catch (err) {
             console.error("Connect error:", err);
+        } finally {
+            setTimeout(() => {
+                setActionLoading(false);
+            }, 1000);
         }
     };
 
@@ -131,9 +138,9 @@ const UserConnectionsPage = () => {
                                         ) : (
                                             <button
                                                 onClick={() => handleConnect(user._id)}
-                                                disabled={requested[user._id]}
-                                                className={`px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl active:scale-95 ${requested[user._id]
-                                                    ? "bg-[#FAFAFA]/5 text-white/30 cursor-not-allowed border border-white/5"
+                                                disabled={requested[user._id] || actionLoading}
+                                                className={`px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all shadow-xl active:scale-95 ${(requested[user._id] || actionLoading)
+                                                    ? "bg-[#FAFAFA]/5 text-white/30 cursor-not-allowed border border-white/5 opacity-50"
                                                     : "bg-blue-600 text-white hover:bg-blue-500 shadow-blue-500/20 shadow-lg"
                                                     }`}
                                             >

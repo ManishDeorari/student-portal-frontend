@@ -181,6 +181,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
     };
 
     const handleSave = async () => {
+        if (loading) return;
         if (!validate()) {
             toast.error("Please fill in all required fields for the provided educations.");
             return;
@@ -233,7 +234,9 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
             console.error(error);
             toast.error("Error updating education");
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
         }
     };
 

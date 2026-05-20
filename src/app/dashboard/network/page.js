@@ -33,6 +33,8 @@ const NetworkPage = () => {
     industry: ""
   });
 
+  const [actionLoading, setActionLoading] = useState(false);
+
   // ⚡ OPTIMISTIC HYDRATION
   useEffect(() => {
     const cachedUser = localStorage.getItem("user");
@@ -81,11 +83,17 @@ const NetworkPage = () => {
   }, [fetchData]);
 
   const handleConnect = async (toUserId) => {
+    if (actionLoading) return;
+    setActionLoading(true);
     try {
       await sendConnectionRequest(toUserId);
       setRequested((prev) => ({ ...prev, [toUserId]: true }));
     } catch (err) {
       console.error("Connect error:", err);
+    } finally {
+      setTimeout(() => {
+        setActionLoading(false);
+      }, 1000);
     }
   };
 
@@ -269,7 +277,8 @@ const NetworkPage = () => {
                         ) : (
                           <button 
                             onClick={() => handleConnect(user._id)} 
-                            className="relative group/btn p-[1.5px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl overflow-hidden transition-all active:scale-95 shadow-lg shadow-blue-500/20"
+                            disabled={actionLoading}
+                            className="relative group/btn p-[1.5px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl overflow-hidden transition-all active:scale-95 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <div className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover/btn:from-blue-500 group-hover/btn:to-purple-500 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center transition-all">
                               <span className="text-white text-[10px] font-black uppercase tracking-widest">Connect</span>
@@ -305,11 +314,11 @@ const NetworkPage = () => {
                         <div className={`rounded-2xl flex flex-col items-center text-center p-3 sm:p-6 space-y-2 sm:space-y-4 transition-all relative overflow-hidden h-full ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-900 border'}`}>
                           <div className="relative p-[2px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shrink-0 shadow-lg group-hover:scale-105 transition-transform">
                             <Image
-                              src={user.profilePicture || "/default-profile.jpg"}
-                              alt={user.name || "User"}
-                              width={72}
-                              height={72}
-                              className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 ${darkMode ? 'border-slate-800' : 'border-white'}`}
+                               src={user.profilePicture || "/default-profile.jpg"}
+                               alt={user.name || "User"}
+                               width={72}
+                               height={72}
+                               className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 ${darkMode ? 'border-slate-800' : 'border-white'}`}
                             />
                           </div>
                           <div className="w-full min-w-0">
@@ -327,10 +336,10 @@ const NetworkPage = () => {
                           <div className="w-full pt-2">
                              <button
                                onClick={() => handleConnect(user._id)}
-                               disabled={requested[user._id]}
-                               className={`w-full relative group/btn p-[1.5px] rounded-xl overflow-hidden transition-all active:scale-95 shadow-md ${requested[user._id] ? 'bg-gray-200 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-blue-600 to-purple-600'}`}
+                               disabled={requested[user._id] || actionLoading}
+                               className={`w-full relative group/btn p-[1.5px] rounded-xl overflow-hidden transition-all active:scale-95 shadow-md ${(requested[user._id] || actionLoading) ? 'bg-gray-200 cursor-not-allowed opacity-50' : 'bg-gradient-to-r from-blue-600 to-purple-600'}`}
                              >
-                               <div className={`${requested[user._id] ? 'bg-gray-100 text-gray-400' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white'} py-2.5 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center transition-all`}>
+                               <div className={`${(requested[user._id] || actionLoading) ? 'bg-gray-100 text-gray-400' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white'} py-2.5 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center transition-all`}>
                                  <span className="text-[10px] font-black uppercase tracking-widest">
                                    {requested[user._id] ? "Pending" : "Connect"}
                                  </span>
