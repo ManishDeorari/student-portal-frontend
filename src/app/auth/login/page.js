@@ -10,6 +10,7 @@ import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
 import { TubesBackground } from "@/app/components/TubesBackground";
 import { useTheme } from "@/context/ThemeContext";
 import ThemeToggle from "../../components/ui/ThemeToggle";
+import { signInUser } from "@/services/database/gateway";
 
 export default function LoginPage() {
   return (
@@ -79,88 +80,44 @@ function LoginContent() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-    // ✅ Pre-flight: Ping the health endpoint to wake the server (fire-and-forget)
-    const wakeServer = async () => {
-      try {
-        await fetch(`${apiUrl}/api/health`, { method: "GET", mode: "cors", credentials: "include" });
-      } catch {
-        // Expected to fail on cold start — that's fine, the ping itself wakes Render
-      }
-    };
+    try {
+      const { data, error: loginError } = await signInUser(form.identifier, form.password);
+      if (loginError) throw loginError;
 
-    const RETRY_DELAYS = [4000, 8000, 15000, 20000, 25000]; // Escalating delays for cold start (total ~72s)
+      if (data && data.session) {
+        localStorage.setItem("token", data.session.access_token);
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("userId", data.user.id);
+        localStorage.setItem("user", JSON.stringify({
+          id: data.user.id,
+          email: data.user.email,
+          role: data.role,
+          approved: data.approved,
+          isAdmin: data.isAdmin
+        }));
 
-    const attemptLogin = async (retryCount = 0) => {
-      try {
-        const res = await fetch(
-          `${apiUrl}/api/auth/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              identifier: form.identifier,
-              password: form.password
-            }),
-          });
+        // ✅ Notify other components that auth has changed
+        window.dispatchEvent(new Event("local-auth-change"));
 
-        const data = await res.json();
+        toast.success("✅ Login Successful!");
 
-        if (!res.ok) {
-          throw new Error(data.message || "Invalid credentials");
-        }
-
-        // ✅ Save token and role
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("role", data.role);
-          localStorage.setItem("userId", data.userId);
-          if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
-
-          // ✅ Notify other components (like NotificationContext) that auth has changed
-          window.dispatchEvent(new Event("local-auth-change"));
-
-          toast.success("✅ Login Successful!");
-
-          // ✅ Redirect based on role
-          if (data.role === "admin") {
-            router.push("/admin/dashboard");
-          } else {
-            router.push("/dashboard");
-          }
+        // ✅ Redirect based on role
+        if (data.role === "admin") {
+          router.push("/admin/dashboard");
         } else {
-          throw new Error("Token not received");
+          router.push("/dashboard");
         }
-      } catch (err) {
-        // ✅ If network/server error (cold start / server sleeping), retry with escalating delays
-        const isNetworkError = err.name === "TypeError" || err.message?.includes("fetch") || err.message?.includes("Failed");
-        if (isNetworkError && retryCount < RETRY_DELAYS.length) {
-          const delay = RETRY_DELAYS[retryCount];
-          const seconds = Math.round(delay / 1000);
-          console.warn(`⚠️ Server may be waking up. Retry ${retryCount + 1}/${RETRY_DELAYS.length} in ${seconds}s...`);
-          setError(`Server is starting up... retrying in ${seconds}s (attempt ${retryCount + 1}/${RETRY_DELAYS.length})`);
-
-          // Fire another wake ping during the wait
-          wakeServer();
-          await new Promise(resolve => setTimeout(resolve, delay));
-          return attemptLogin(retryCount + 1);
-        }
-
-        console.error("Login Error:", err);
-        const userMessage = isNetworkError
-          ? "Server is currently unavailable. Please try again in a minute."
-          : (err.message || "Something went wrong");
-        setError(userMessage);
-        toast.error(userMessage);
-        setLoading(false);
+      } else {
+        throw new Error("Session not received");
       }
-    };
-
-    // Fire initial wake ping, then attempt login
-    wakeServer();
-    await attemptLogin();
+    } catch (err) {
+      console.error("Login Error:", err);
+      const userMessage = err.message || "Something went wrong during login";
+      setError(userMessage);
+      toast.error(userMessage);
+      setLoading(false);
+    }
   };
 
 

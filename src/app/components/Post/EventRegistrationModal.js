@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { registerForEvent } from "../../../api/dashboard";
+import { registerForEvent } from "../../../services/database/gateway";
 
 const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode = false, onRegisterSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -135,29 +135,29 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
 
     setLoading(true);
     try {
-      const payload = {
-        eventId: event._id,
+      const registrationId = await registerForEvent(
+        event._id,
         isGroup,
-        groupMembers: isGroup ? groupMembers : [],
+        isGroup ? groupMembers : [],
         answers
-      };
-
-      const result = await registerForEvent(payload);
-      if (result.registration) {
+      );
+      if (registrationId) {
         toast.success("🎉 Registration successful!");
+        const registrationObj = {
+          registration_id: registrationId,
+          user_id: currentUser.profile_id || currentUser._id,
+          event_id: event._id,
+          isGroup,
+          groupMembers: isGroup ? groupMembers : [],
+          answers,
+          registered_at: new Date().toISOString()
+        };
         if (onRegisterSuccess) {
-           onRegisterSuccess(result.registration);
+           onRegisterSuccess(registrationObj);
         }
         onClose();
       } else {
-        if (result.message && result.message.toLowerCase().includes("not found")) {
-            toast.error("❌ Event not found! It may have been deleted.");
-            setTimeout(() => {
-                window.location.href = "/dashboard";
-            }, 1000);
-        } else {
-            toast.error(result.message || "❌ Registration failed.");
-        }
+        toast.error("❌ Registration failed.");
       }
     } catch (err) {
       toast.error("❌ An error occurred during registration.");

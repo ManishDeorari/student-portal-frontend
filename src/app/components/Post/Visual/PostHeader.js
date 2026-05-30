@@ -89,9 +89,13 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
         <div className="relative ml-auto" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(prev => !prev)}
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${darkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-600 hover:text-black hover:bg-black/5"}`}
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md ${darkMode ? "text-white bg-white/15 hover:bg-white/25 border border-white/20" : "text-black bg-black/10 hover:bg-black/15 border border-black/15"}`}
           >
-            <span className="text-xl font-bold leading-none select-none">⋮</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+              <circle cx="12" cy="5" r="2.25" />
+              <circle cx="12" cy="12" r="2.25" />
+              <circle cx="12" cy="19" r="2.25" />
+            </svg>
           </button>
           
           <AnimatePresence>

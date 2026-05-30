@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import EmojiPickerToggle from "../utils/EmojiPickerToggle";
-import socket from "../../../../utils/socket";
 
 export default function CommentInput({
   comment,
@@ -21,11 +20,6 @@ export default function CommentInput({
   const handleTyping = (value) => {
     if (isSubmitting) return;
     setComment(value);
-    if (!currentUser || !currentUser._id) return;
-    socket.emit("typing", {
-      postId,
-      user: currentUser._id,
-    });
   };
 
   const handleSubmit = async () => {

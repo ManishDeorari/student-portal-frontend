@@ -8,7 +8,6 @@ import ResetPasswordModal from "./ResetPasswordModal";
 import SettingsDrawer from "./SettingsDrawer";
 import NotificationPreview from "./NotificationPreview";
 import { useNotifications } from "@/context/NotificationContext";
-import socket from "@/utils/socket";
 import { AnimatePresence } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -32,54 +31,33 @@ export default function Sidebar() {
   
   const router = useRouter();
   const pathname = usePathname();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-  const fetchUser = useCallback(async (token) => {
+  const fetchUser = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/user/me`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (!res.ok) return null;
-
-      const userData = await res.json();
-      if (userData) {
-        localStorage.setItem("user", JSON.stringify(userData));
-        setIsAdmin(userData.role === "admin" || userData.isAdmin);
-        return userData;
+      const { fetchCurrentUserProfile } = await import("@/services/database/gateway");
+      const profile = await fetchCurrentUserProfile();
+      if (profile) {
+        const user = { ...profile, _id: profile.profile_id };
+        localStorage.setItem("user", JSON.stringify(user));
+        setIsAdmin(profile.role === "admin" || profile.is_admin);
+        return user;
       }
     } catch (err) {
       console.error("Failed to fetch user role:", err);
     }
     return null;
-  }, [API_URL]);
+  }, []);
 
   useEffect(() => {
     const initialize = async () => {
       let user = JSON.parse(localStorage.getItem("user"));
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
       if (!user) {
-        user = await fetchUser(token);
+        user = await fetchUser();
       } else {
-        setIsAdmin(user.role === "admin" || user.isAdmin);
+        setIsAdmin(user.role === "admin" || user.isAdmin || user.is_admin);
       }
     };
 
     initialize();
-
-    // ✅ Listen for live points updates to sync UI
-    const handlePointsUpdate = () => {
-      const token = localStorage.getItem("token");
-      if (token) fetchUser(token);
-    };
-
-    socket.on("pointsUpdated", handlePointsUpdate);
-
-    return () => {
-      socket.off("pointsUpdated", handlePointsUpdate);
-    };
   }, [fetchUser]);
 
   const handleSignout = () => {
@@ -91,8 +69,12 @@ export default function Sidebar() {
 
   return (
     <>
+      {/* Spacer to prevent layout shifting under fixed navbar */}
+      <div className="hidden md:block h-[73px]"></div>
+      <div className="flex md:hidden h-[53px]"></div>
+
       {/* Top Navbar - Hidden on Mobile, Visible on Desktop */}
-      <nav className="hidden md:flex justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-6 py-4 sticky top-0 z-50">
+      <nav className="hidden md:flex justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-6 py-4 fixed top-0 left-0 right-0 z-50 w-full">
         {/* Logo or App Name */}
         <div className="text-2xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">
           Student Portal
@@ -206,7 +188,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Mobile Top Bar - Only Logo and Settings */}
-      <nav className="flex md:hidden justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-5 py-3 sticky top-0 z-50">
+      <nav className="flex md:hidden justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-5 py-3 fixed top-0 left-0 right-0 z-50 w-full">
         <div className="text-xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">Student Portal</div>
         <button
           onClick={() => setShowSettings(true)}

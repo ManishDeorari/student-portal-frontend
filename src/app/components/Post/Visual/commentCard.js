@@ -2,7 +2,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReplyBox from "../utils/ReplyBox";
 import EmojiPickerToggle from "../utils/EmojiPickerToggle";
-import socket from "../../../../utils/socket";
 import { triggerReactionEffect } from "../hooks/useEmojiAnimation";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -132,7 +131,6 @@ export default function CommentCard({
       const result = await res.json();
       setReactions(result.reactions || result.comment.reactions);
 
-      socket.emit("updatePostRequest", { postId });
       triggerReactionEffect(emoji);
     } catch (err) {
       console.error("🔴 Reaction failed:", err);
@@ -242,10 +240,12 @@ export default function CommentCard({
                 <div className="relative ml-2" ref={dropdownRef}>
                   <button
                     onClick={() => setShowDropdown(prev => !prev)}
-                    className={`p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400`}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md ${darkMode ? "text-white bg-white/15 hover:bg-white/25 border border-white/20" : "text-black bg-black/10 hover:bg-black/15 border border-black/15"}`}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
+                      <circle cx="12" cy="5" r="2.25" />
+                      <circle cx="12" cy="12" r="2.25" />
+                      <circle cx="12" cy="19" r="2.25" />
                     </svg>
                   </button>
 

@@ -5,7 +5,6 @@ import AdminSidebar from "../../components/AdminSidebar";
 import GroupSidebar from "../../components/groups/GroupSidebar";
 import GroupChatWindow from "../../components/groups/GroupChatWindow";
 import GroupDetailsPanel from "../../components/groups/GroupDetailsPanel";
-import socket from "@/utils/socket";
 import { useTheme } from "@/context/ThemeContext";
 import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 import CreateGroupModal from "../../components/groups/modals/CreateGroupModal";
@@ -38,154 +37,167 @@ export default function GroupsPage() {
     const [showInviteModal, setShowInviteModal] = useState(false);
 
     const selectedGroupRef = useRef(selectedGroup);
+    const realtimeChannelRef = useRef(null);
 
     useEffect(() => {
         selectedGroupRef.current = selectedGroup;
     }, [selectedGroup]);
 
-    // 1. Fetch current user and groups on load
+    // 1. Fetch current user and groups on load via Supabase
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem("token");
+                const { fetchCurrentUserProfile, fetchUserGroups } = await import("@/services/database/gateway");
+
+                // Load from cache first for instant UI
+                let user = JSON.parse(localStorage.getItem("user") || "null");
                 const role = localStorage.getItem("role");
 
-                let user = JSON.parse(localStorage.getItem("user"));
-
-                if (!user && token) {
-                    const userRes = await fetch(`${API_URL}/api/user/me`, {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
-                    if (userRes.ok) {
-                        user = await userRes.json();
+                if (!user) {
+                    const profile = await fetchCurrentUserProfile();
+                    if (profile) {
+                        user = { ...profile, _id: profile.profile_id, enrollmentNumber: profile.enrollment_number };
                         localStorage.setItem("user", JSON.stringify(user));
                     }
                 }
 
                 setCurrentUser(user);
-                setIsAdmin(user?.isAdmin || user?.role === "admin" || role === "admin");
+                setIsAdmin(user?.is_admin || user?.isAdmin || user?.role === "admin" || role === "admin");
 
-                const res = await fetch(`${API_URL}/api/groups`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    setGroups(data);
-                    setFilteredGroups(data);
-                }
+                const userId = user?.profile_id || user?._id || localStorage.getItem("userId") || "";
+                const data = await fetchUserGroups(userId);
+                setGroups(data);
+                setFilteredGroups(data);
             } catch (err) {
                 console.error("Error fetching initial data:", err);
             }
         };
 
         fetchData();
-    }, [API_URL]);
+    }, []);
 
-    // 2. Fetch full group details and messages when a group is selected
+    // 2. Fetch full group details when a group is selected
     const fetchGroupDetails = useCallback(async (groupId) => {
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${API_URL}/api/groups/${groupId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (res.ok) {
-                const data = await res.json();
+            const { fetchGroupDetailsById } = await import("@/services/database/gateway");
+            const data = await fetchGroupDetailsById(groupId);
+            if (data) {
                 setSelectedGroup(data);
-                
-                // Update local isAdmin based on selected group
-                const user = JSON.parse(localStorage.getItem("user"));
-                const isGroupAdmin = data.admin?._id === user?._id || user?.role === 'admin' || user?.isAdmin;
+                const user = JSON.parse(localStorage.getItem("user") || "null");
+                const isGroupAdmin = data.admin?._id === (user?._id || user?.profile_id) || user?.role === "admin" || user?.isAdmin || user?.is_admin;
                 setIsAdmin(isGroupAdmin);
             }
         } catch (err) {
             console.error("Error fetching group details:", err);
         }
-    }, [API_URL]);
+    }, []);
 
+    // 3. Load messages + subscribe to Supabase Realtime when group changes
     useEffect(() => {
         if (!selectedGroup?._id) return;
 
-        const fetchMessages = async () => {
+        const loadMessages = async () => {
             try {
-                const token = localStorage.getItem("token");
-                const res = await fetch(`${API_URL}/api/groups/${selectedGroup._id}/messages`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    setMessages(data);
-                }
+                const { fetchGroupMessages } = await import("@/services/database/gateway");
+                const data = await fetchGroupMessages(selectedGroup._id);
+                setMessages(data);
             } catch (err) {
                 console.error("Error fetching messages:", err);
             }
         };
 
-        fetchMessages();
+        loadMessages();
 
-        socket.emit("joinGroup", selectedGroup._id);
+        const setupRealtime = async () => {
+            const { supabase } = await import("@/services/database/client");
 
-        return () => {
-            socket.emit("leaveGroup", selectedGroup._id);
-        };
-    }, [selectedGroup?._id, API_URL]);
-
-    // 3. Socket.io listeners
-    useEffect(() => {
-        const handleReceiveMessage = (msg) => {
-            const currentSelected = selectedGroupRef.current;
-            if (currentSelected && String(msg.groupId) === String(currentSelected._id)) {
-                setMessages((prev) => {
-                    if (prev.find(m => m._id === msg._id)) return prev;
-                    return [...prev, msg];
-                });
+            if (realtimeChannelRef.current) {
+                await supabase.removeChannel(realtimeChannelRef.current);
             }
+
+            const channel = supabase
+                .channel(`group-messages-${selectedGroup._id}`)
+                .on(
+                    "postgres_changes",
+                    { event: "INSERT", schema: "public", table: "group_message", filter: `group_id=eq.${selectedGroup._id}` },
+                    async (payload) => {
+                        const { data: msgData, error } = await supabase
+                            .from("group_message")
+                            .select(`*, sender:profile(profile_id, name, public_id, role, profile_picture)`)
+                            .eq("group_message_id", payload.new.group_message_id)
+                            .single();
+
+                        if (error || !msgData) return;
+                        const formatted = {
+                            ...msgData,
+                            _id: msgData.group_message_id,
+                            groupId: msgData.group_id,
+                            sender: msgData.sender
+                                ? { _id: msgData.sender.profile_id, name: msgData.sender.name, role: msgData.sender.role, profilePicture: msgData.sender.profile_picture }
+                                : { name: "Unknown" },
+                            createdAt: msgData.created_at,
+                        };
+                        setMessages((prev) => {
+                            if (prev.find((m) => m._id === formatted._id)) return prev;
+                            return [...prev, formatted];
+                        });
+                    }
+                )
+                .on(
+                    "postgres_changes",
+                    { event: "UPDATE", schema: "public", table: "group_message", filter: `group_id=eq.${selectedGroup._id}` },
+                    (payload) => {
+                        setMessages((prev) =>
+                            prev.map((m) =>
+                                m._id === payload.new.group_message_id
+                                    ? { ...m, reactions: payload.new.reactions }
+                                    : m
+                            )
+                        );
+                    }
+                )
+                .on(
+                    "postgres_changes",
+                    { event: "DELETE", schema: "public", table: "group_message", filter: `group_id=eq.${selectedGroup._id}` },
+                    (payload) => {
+                        setMessages((prev) => prev.filter((m) => m._id !== payload.old.group_message_id));
+                    }
+                )
+                .subscribe();
+
+            realtimeChannelRef.current = channel;
         };
 
-        const handleReactionUpdate = ({ messageId, reactions }) => {
-            setMessages((prev) => prev.map(m =>
-                m._id === messageId ? { ...m, reactions } : m
-            ));
-        };
-
-        const handleMessageDeleted = (messageId) => {
-            setMessages(prev => prev.filter(m => m._id !== messageId));
-        };
-
-        socket.on("receiveGroupMessage", handleReceiveMessage);
-        socket.on("messageReactionUpdate", handleReactionUpdate);
-        socket.on("messageDeleted", handleMessageDeleted);
+        setupRealtime();
 
         return () => {
-            socket.off("receiveGroupMessage", handleReceiveMessage);
-            socket.off("messageReactionUpdate", handleReactionUpdate);
-            socket.off("messageDeleted", handleMessageDeleted);
+            const cleanup = async () => {
+                if (realtimeChannelRef.current) {
+                    const { supabase } = await import("@/services/database/client");
+                    await supabase.removeChannel(realtimeChannelRef.current);
+                    realtimeChannelRef.current = null;
+                }
+            };
+            cleanup();
         };
-    }, []);
+    }, [selectedGroup?._id]);
 
-    // 4. Group Handlers
+    // 4. Action Handlers — all routed through Supabase gateway
     const handleSendMessage = async (text, mediaData = {}) => {
         if (!selectedGroup) return;
-
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${API_URL}/api/groups/send`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    groupId: selectedGroup._id,
-                    content: text,
-                    ...mediaData
-                }),
-            });
-
-            if (!res.ok) {
-                const data = await res.json();
-                toast.error(data.message || "Failed to send message");
-            }
+            const { sendGroupMessage } = await import("@/services/database/gateway");
+            const user = JSON.parse(localStorage.getItem("user") || "null");
+            const senderId = user?.profile_id || user?._id || "";
+            await sendGroupMessage(
+                selectedGroup._id,
+                senderId,
+                text,
+                mediaData.mediaUrl,
+                mediaData.mediaPublicId,
+                mediaData.type || "text"
+            );
+            // Realtime INSERT event will update state automatically
         } catch (err) {
             console.error("Error sending message:", err);
             toast.error("Error sending message");
@@ -195,15 +207,11 @@ export default function GroupsPage() {
     const handleRemoveMember = async (memberId) => {
         if (!window.confirm("Are you sure you want to remove this member?")) return;
         try {
-            const token = localStorage.getItem("token");
-            // Assuming endpoint for removal is DELETE /api/groups/:groupId/members/:memberId
-            const res = await fetch(`${API_URL}/api/groups/${selectedGroup._id}/members/${memberId}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (res.ok) {
+            const { removeGroupMember } = await import("@/services/database/gateway");
+            const ok = await removeGroupMember(selectedGroup._id, memberId);
+            if (ok) {
                 toast.success("Member removed");
-                fetchGroupDetails(selectedGroup._id); // Refresh details
+                fetchGroupDetails(selectedGroup._id);
             } else {
                 toast.error("Failed to remove member");
             }
@@ -214,21 +222,12 @@ export default function GroupsPage() {
 
     const handleConnect = async (userId) => {
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${API_URL}/api/connect/request`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ recipientId: userId })
-            });
-            if (res.ok) {
+            const { updateConnectionCycle } = await import("@/services/database/gateway");
+            const ok = await updateConnectionCycle(userId, "SEND");
+            if (ok) {
                 toast.success("Connection request sent!");
-                fetchGroupDetails(selectedGroup._id);
             } else {
-                const data = await res.json();
-                toast.error(data.message || "Failed to send request");
+                toast.error("Failed to send connection request");
             }
         } catch (err) {
             console.error("Error connecting:", err);
@@ -237,20 +236,15 @@ export default function GroupsPage() {
     };
 
     const handleDeleteMedia = async (messageId) => {
-        if (!window.confirm("Are you sure you want to delete this media? It will be removed from Cloudinary as well.")) return;
+        if (!window.confirm("Are you sure you want to delete this media?")) return;
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${API_URL}/api/groups/${selectedGroup._id}/messages/${messageId}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (res.ok) {
+            const { deleteGroupMessage } = await import("@/services/database/gateway");
+            const ok = await deleteGroupMessage(messageId);
+            if (ok) {
                 toast.success("Media deleted");
-                setMessages(prev => prev.filter(m => m._id !== messageId));
-                socket.emit("deleteMessage", { groupId: selectedGroup._id, messageId });
+                // Realtime DELETE event will update state automatically
             } else {
-                const data = await res.json();
-                toast.error(data.message || "Failed to delete media");
+                toast.error("Failed to delete media");
             }
         } catch (err) {
             console.error("Error deleting media:", err);
@@ -260,20 +254,16 @@ export default function GroupsPage() {
     const handleDeleteGroup = async (groupId) => {
         if (!window.confirm("CRITICAL: This will permanently delete the group and all its messages. Are you absolutely sure?")) return;
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${API_URL}/api/groups/${groupId}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (res.ok) {
+            const { deleteGroup } = await import("@/services/database/gateway");
+            const ok = await deleteGroup(groupId);
+            if (ok) {
                 toast.success("Group deleted successfully");
                 setGroups(prev => prev.filter(g => g._id !== groupId));
                 setFilteredGroups(prev => prev.filter(g => g._id !== groupId));
                 setSelectedGroup(null);
                 setShowEditModal(false);
             } else {
-                const data = await res.json();
-                toast.error(data.message || "Failed to delete group");
+                toast.error("Failed to delete group");
             }
         } catch (err) {
             console.error("Error deleting group:", err);
@@ -283,25 +273,15 @@ export default function GroupsPage() {
 
     const handleCreateGroup = async (groupData) => {
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${API_URL}/api/groups`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(groupData),
-            });
-
-            if (res.ok) {
-                const newGroup = await res.json();
+            const { createGroup } = await import("@/services/database/gateway");
+            const newGroup = await createGroup(groupData);
+            if (newGroup) {
                 setGroups(prev => [newGroup, ...prev]);
                 setFilteredGroups(prev => [newGroup, ...prev]);
                 setShowCreateModal(false);
                 toast.success("Group created successfully!");
             } else {
-                const errorData = await res.json();
-                toast.error(errorData.message || "Failed to create group");
+                toast.error("Failed to create group");
             }
         } catch (err) {
             console.error("Error creating group:", err);
@@ -311,26 +291,16 @@ export default function GroupsPage() {
 
     const handleUpdateGroup = async (groupId, updateData) => {
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(`${API_URL}/api/groups/${groupId}/settings`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(updateData),
-            });
-
-            if (res.ok) {
-                const updatedGroup = await res.json();
+            const { updateGroup } = await import("@/services/database/gateway");
+            const updatedGroup = await updateGroup(groupId, updateData);
+            if (updatedGroup) {
                 setGroups(prev => prev.map(g => g._id === groupId ? updatedGroup : g));
                 setFilteredGroups(prev => prev.map(g => g._id === groupId ? updatedGroup : g));
                 setSelectedGroup(updatedGroup);
                 setShowEditModal(false);
                 toast.success("Group updated!");
             } else {
-                const errorData = await res.json();
-                toast.error(errorData.message || "Failed to update group");
+                toast.error("Failed to update group");
             }
         } catch (err) {
             console.error("Error updating group:", err);
@@ -401,13 +371,16 @@ export default function GroupsPage() {
                                 onToggleDetails={() => setShowDetailsModal(true)}
                                 onViewImage={(url) => { setViewerImageUrl(url); setShowImageViewer(true); }}
                                 onDeleteMessage={handleDeleteMedia}
-                                onReact={(msgId, emoji) => {
-                                    const token = localStorage.getItem("token");
-                                    fetch(`${API_URL}/api/groups/${selectedGroup._id}/react`, {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                                        body: JSON.stringify({ messageId: msgId, emoji }),
-                                    });
+                                onReact={async (msgId, emoji) => {
+                                    try {
+                                        const { reactToGroupMessage } = await import("@/services/database/gateway");
+                                        const user = JSON.parse(localStorage.getItem("user") || "null");
+                                        const userId = user?.profile_id || user?._id || "";
+                                        await reactToGroupMessage(msgId, userId, emoji);
+                                        // Realtime UPDATE event will sync reactions
+                                    } catch (err) {
+                                        console.error("Error reacting:", err);
+                                    }
                                 }}
                                 onBack={handleMobileBack}
                                 showBackButton={mobileShowChat}
@@ -452,16 +425,19 @@ export default function GroupsPage() {
                     isOpen={showInviteModal}
                     onClose={() => setShowInviteModal(false)}
                     onInvite={async (groupId, data) => {
-                        const token = localStorage.getItem("token");
-                        const res = await fetch(`${API_URL}/api/groups/${groupId}/invite`, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                            body: JSON.stringify(data),
-                        });
-                        if (res.ok) {
-                            toast.success("Members added");
-                            setShowInviteModal(false);
-                            fetchGroupDetails(groupId);
+                        try {
+                            const { addGroupMembers } = await import("@/services/database/gateway");
+                            const memberIds = Array.isArray(data.memberIds) ? data.memberIds : (data.members || []);
+                            const ok = await addGroupMembers(groupId, memberIds);
+                            if (ok) {
+                                toast.success("Members added");
+                                setShowInviteModal(false);
+                                fetchGroupDetails(groupId);
+                            } else {
+                                toast.error("Failed to add members");
+                            }
+                        } catch (err) {
+                            console.error("Error inviting members:", err);
                         }
                     }}
                     groupId={selectedGroup?._id}

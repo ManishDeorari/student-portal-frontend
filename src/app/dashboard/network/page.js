@@ -1,18 +1,14 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Sidebar from "../../components/Sidebar";
 import AdminSidebar from "../../components/AdminSidebar";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  sendConnectionRequest,
-  acceptConnectionRequest,
-} from "@/api/connect";
 import RequestsModal from "../../components/network/RequestsModal";
 import { useTheme } from "@/context/ThemeContext";
 import HybridInput from "../../components/ui/HybridInput";
-import socket from "@/utils/socket";
 import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
+import { toast } from "react-hot-toast";
 
 const COURSE_OPTIONS = ["B.Tech", "M.Tech", "MBA", "BCA", "MCA"];
 const currentYearForDropdown = new Date().getFullYear();
@@ -27,15 +23,11 @@ const NetworkPage = () => {
   const [searched, setSearched] = useState(false);
   const [suggestions, setSuggestions] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    course: "",
-    year: "",
-    industry: ""
-  });
-
+  const [filters, setFilters] = useState({ course: "", year: "", industry: "" });
   const [actionLoading, setActionLoading] = useState(false);
+  const realtimeChannelRef = useRef(null);
 
-  // ⚡ OPTIMISTIC HYDRATION
+  // ⚡ OPTIMISTIC HYDRATION from cache
   useEffect(() => {
     const cachedUser = localStorage.getItem("user");
     if (cachedUser) {
@@ -44,82 +36,154 @@ const NetworkPage = () => {
   }, []);
 
   const fetchData = useCallback(async () => {
-    const token = localStorage.getItem("token");
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
     try {
-      // ⚡ PARALLEL FETCH: Load user and suggestions simultaneously
-      const [meRes, suggRes] = await Promise.all([
-        fetch(`${BASE_URL}/api/user/me`, { headers: { Authorization: `Bearer ${token}` } }),
-        fetch(`${BASE_URL}/api/connect/suggestions`, { headers: { Authorization: `Bearer ${token}` } })
-      ]);
+      const { fetchCurrentUserProfile } = await import("@/services/database/gateway");
+      const { supabase } = await import("@/services/database/client");
 
-      const [meData, suggData] = await Promise.all([
-        meRes.json(),
-        suggRes.json().catch(() => ({}))
-      ]);
-
-      if (meRes.ok) {
-        setCurrentUser(meData);
-        localStorage.setItem("user", JSON.stringify(meData)); // Keep cache fresh
+      // Load profile
+      const profile = await fetchCurrentUserProfile();
+      if (profile) {
+        const user = { ...profile, _id: profile.profile_id, enrollmentNumber: profile.enrollment_number };
+        setCurrentUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
       }
-      setSuggestions(suggData || {});
+
+      // Load connection suggestions: random approved profiles not yet connected
+      const userId = profile?.profile_id || JSON.parse(localStorage.getItem("user") || "{}")._id;
+
+      // Fetch accepted connections to exclude them
+      const { data: connectedRows } = await supabase
+        .from("connection")
+        .select("sender_id, receiver_id")
+        .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
+        .eq("status", "accepted");
+
+      const connectedIds = new Set(
+        (connectedRows || []).flatMap(r => [r.sender_id, r.receiver_id]).filter(id => id !== userId)
+      );
+
+      const { data: allProfiles } = await supabase
+        .from("profile")
+        .select("profile_id, name, public_id, role, profile_picture, enrollment_number, employee_id, course, year, approved")
+        .eq("approved", true)
+        .neq("profile_id", userId);
+
+      const available = (allProfiles || []).filter(p => !connectedIds.has(p.profile_id));
+
+      const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+      const students = available.filter(p => p.role === "student");
+      const faculty = available.filter(p => p.role === "faculty" || p.role === "admin");
+      const sameYear = students.filter(p => p.year === profile?.year);
+
+      setSuggestions({
+        randomRecommendations: shuffle(students).slice(0, 8).map(p => ({ ...p, _id: p.profile_id, publicId: p.public_id, profilePicture: p.profile_picture, enrollmentNumber: p.enrollment_number })),
+        facultyAndAdmin: shuffle(faculty).slice(0, 4).map(p => ({ ...p, _id: p.profile_id, publicId: p.public_id, profilePicture: p.profile_picture, employeeId: p.employee_id })),
+        relatedPeople: shuffle(sameYear).slice(0, 8).map(p => ({ ...p, _id: p.profile_id, publicId: p.public_id, profilePicture: p.profile_picture, enrollmentNumber: p.enrollment_number })),
+      });
     } catch (err) {
       console.error("Fetch initial data error:", err);
     }
   }, []);
 
+  // Subscribe to Supabase Realtime for connection changes
   useEffect(() => {
     fetchData();
 
-    const handleSocketUpdate = (notif) => {
-      if (notif && ["connect_request", "connect_accept", "connect_reject"].includes(notif.type)) {
-        fetchData();
-      }
+    const setupRealtime = async () => {
+      const { supabase } = await import("@/services/database/client");
+      const userId = JSON.parse(localStorage.getItem("user") || "{}")?.profile_id ||
+                     JSON.parse(localStorage.getItem("user") || "{}")?._id;
+      if (!userId) return;
+
+      if (realtimeChannelRef.current) await supabase.removeChannel(realtimeChannelRef.current);
+
+      const channel = supabase
+        .channel(`network-connections-${userId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "connection", filter: `receiver_id=eq.${userId}` },
+          () => fetchData()
+        )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "connection", filter: `sender_id=eq.${userId}` },
+          () => fetchData()
+        )
+        .subscribe();
+
+      realtimeChannelRef.current = channel;
     };
 
-    socket.on("liveNotification", handleSocketUpdate);
-    return () => socket.off("liveNotification", handleSocketUpdate);
+    setupRealtime();
+
+    return () => {
+      if (realtimeChannelRef.current) {
+        import("@/services/database/client").then(({ supabase }) => {
+          supabase.removeChannel(realtimeChannelRef.current);
+          realtimeChannelRef.current = null;
+        });
+      }
+    };
   }, [fetchData]);
 
   const handleConnect = async (toUserId) => {
     if (actionLoading) return;
     setActionLoading(true);
     try {
-      await sendConnectionRequest(toUserId);
-      setRequested((prev) => ({ ...prev, [toUserId]: true }));
+      const { updateConnectionCycle } = await import("@/services/database/gateway");
+      const ok = await updateConnectionCycle(toUserId, "SEND");
+      if (ok) {
+        setRequested((prev) => ({ ...prev, [toUserId]: true }));
+        toast.success("Connection request sent!");
+      } else {
+        toast.error("Failed to send request");
+      }
     } catch (err) {
       console.error("Connect error:", err);
+      toast.error("Connection failed");
     } finally {
-      setTimeout(() => {
-        setActionLoading(false);
-      }, 1000);
+      setTimeout(() => setActionLoading(false), 1000);
     }
   };
 
   const handleSearch = async () => {
-    // Check if at least one search parameter is provided
-    if (!searchQuery.trim() && !filters.course && !filters.year && !filters.industry) {
+    if (!searchQuery.trim() && !filters.course && !filters.year) {
       alert("Please enter a name or select a filter to search");
       return;
     }
-    setStudent([]); // Clear previous results immediately
-    setSearched(true); // Track that a search was performed
-
-    const token = localStorage.getItem("token");
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-    let url = `${BASE_URL}/api/connect/search?query=${searchQuery}`;
-    if (filters.course) url += `&course=${filters.course}`;
-    if (filters.year) url += `&year=${filters.year}`;
-    if (filters.industry) url += `&industry=${filters.industry}`;
+    setStudent([]);
+    setSearched(true);
 
     try {
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      setStudent(data || []);
+      const { supabase } = await import("@/services/database/client");
+      const userId = JSON.parse(localStorage.getItem("user") || "{}")?.profile_id ||
+                     JSON.parse(localStorage.getItem("user") || "{}")?._id;
+
+      let query = supabase
+        .from("profile")
+        .select("profile_id, name, public_id, role, profile_picture, enrollment_number, employee_id, course, year, approved")
+        .eq("approved", true)
+        .neq("profile_id", userId);
+
+      if (searchQuery.trim()) {
+        query = query.ilike("name", `%${searchQuery.trim()}%`);
+      }
+      if (filters.course) query = query.ilike("course", `%${filters.course}%`);
+      if (filters.year) query = query.eq("year", filters.year);
+
+      const { data, error } = await query.limit(20);
+      if (error) throw error;
+
+      setStudent(
+        (data || []).map(p => ({
+          ...p,
+          _id: p.profile_id,
+          publicId: p.public_id,
+          profilePicture: p.profile_picture,
+          enrollmentNumber: p.enrollment_number,
+          employeeId: p.employee_id,
+        }))
+      );
     } catch (err) {
       console.error("Search error:", err);
     }
