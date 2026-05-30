@@ -104,7 +104,7 @@ function LoginContent() {
 
         // ✅ Redirect based on role
         if (data.role === "admin") {
-          router.push("/admin/dashboard");
+          router.push("/dashboard/admin");
         } else {
           router.push("/dashboard");
         }
