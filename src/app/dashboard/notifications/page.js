@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import PostCard from "../../components/Post/PostCard";
 import Image from "next/image";
+import socket from "@/utils/socket";
 import { motion, AnimatePresence } from "framer-motion";
 import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 import {
@@ -78,13 +79,19 @@ export default function NotificationsPage() {
   useEffect(() => {
     const fetchUserAndNotes = async () => {
       try {
-        const { fetchCurrentUserProfile } = await import("@/services/database/gateway");
-        const profile = await fetchCurrentUserProfile();
-        if (profile) {
-          const user = { ...profile, _id: profile.profile_id, enrollmentNumber: profile.enrollment_number };
-          setUser(user);
-          localStorage.setItem("user", JSON.stringify(user));
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        // Fetch user profile to ensure permissions/role are up to date
+        const userRes = await fetch(`${API_URL}/api/user/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setUser(userData);
+          localStorage.setItem("user", JSON.stringify(userData)); // Sync cache
         }
+        
         // Notification context manages fetching notifications; we just trigger a refresh
         refreshNotifications();
       } catch (err) {
@@ -95,7 +102,7 @@ export default function NotificationsPage() {
     };
 
     fetchUserAndNotes();
-  }, [refreshNotifications]);
+  }, [API_URL, refreshNotifications]);
 
   // ✅ Scroll listener for Back to Top
   useEffect(() => {
@@ -115,27 +122,27 @@ export default function NotificationsPage() {
 
     if (note.type === "connect_request" || note.type === "connect_accept" || note.type === "feedback" || note.type === "profile_visit") {
       try {
-        const { fetchProfile } = await import("@/services/database/gateway");
-        const senderId = note.sender?._id || note.sender;
-        const profile = await fetchProfile(senderId);
-        if (profile) {
-          router.push(`/profile/${note.sender?._id || note.sender}`);
+        const token = localStorage.getItem("token");
+        const res = await fetch(`${API_URL}/api/user/${note.sender?._id || note.sender}`, {
+           headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.ok) {
+           router.push(`/profile/${note.sender?._id || note.sender}`);
         } else {
-          setNotFoundError("User");
+           setNotFoundError("User");
         }
       } catch (err) {
-        setNotFoundError("User");
+         setNotFoundError("User");
       }
     } else if (note.type === "group_joined" || note.type === "group_added") {
       router.push("/dashboard/groups");
     } else if (note.type === "points_earned") {
       if (note.postId) {
         try {
-          const { supabase } = await import("@/services/database/client");
-          const postId = note.postId._id || note.postId;
-          const { data, error } = await supabase.from("post").select("*").eq("post_id", postId).single();
-          if (!error && data) {
-            setSelectedPost({ ...data, _id: data.post_id });
+          const res = await fetch(`${API_URL}/api/posts/${note.postId._id || note.postId}`);
+          if (res.ok) {
+            const postData = await res.json();
+            setSelectedPost(postData);
             setShowPostModal(true);
           } else {
             setNotFoundError("Post");
@@ -146,11 +153,10 @@ export default function NotificationsPage() {
       }
     } else if (note.postId) {
       try {
-        const { supabase } = await import("@/services/database/client");
-        const postId = note.postId._id || note.postId;
-        const { data, error } = await supabase.from("post").select("*").eq("post_id", postId).single();
-        if (!error && data) {
-          setSelectedPost({ ...data, _id: data.post_id });
+        const res = await fetch(`${API_URL}/api/posts/${note.postId._id || note.postId}`);
+        if (res.ok) {
+          const postData = await res.json();
+          setSelectedPost(postData);
           setShowPostModal(true);
         } else {
           setNotFoundError("Post");

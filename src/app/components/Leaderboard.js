@@ -8,8 +8,6 @@ import { useTheme } from "@/context/ThemeContext";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-import { fetchCurrentLeaderboard, fetchHistoricalLeaderboard } from "@/services/database/gateway";
-
 export default function Leaderboard() {
   const { darkMode } = useTheme();
   const [currentYear, setCurrentYear] = useState([]);
@@ -19,32 +17,32 @@ export default function Leaderboard() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const token = localStorage.getItem("token");
+
   // Fetch current & last year leaderboard
   const fetchLeaderboards = useCallback(async () => {
     setLoading(true);
     try {
-      const [current, last] = await Promise.all([
-        fetchCurrentLeaderboard(),
-        fetchHistoricalLeaderboard(),
+      const [resCurrent, resLast] = await Promise.all([
+        fetch(`${API}/api/admin/leaderboard`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API}/api/admin/leaderboard/last-year`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
 
-      const formatUser = (p) => ({
-        ...p,
-        _id: p.profile_id,
-        enrollmentNumber: p.enrollment_number,
-        profilePicture: p.profile_picture,
-        publicId: p.public_id
-      });
+      if (!resCurrent.ok) throw new Error("Failed to fetch current year leaderboard");
+      if (!resLast.ok) throw new Error("Failed to fetch last year leaderboard");
 
-      setCurrentYear(current.map(formatUser));
-      setLastYear(last.map(formatUser));
+      const currentData = await resCurrent.json();
+      const lastData = await resLast.json();
+
+      setCurrentYear(currentData);
+      setLastYear(lastData);
     } catch (err) {
       console.error(err);
-      toast.error("Could not load leaderboard");
+      toast.error(err.message || "Could not load leaderboard");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     fetchLeaderboards();

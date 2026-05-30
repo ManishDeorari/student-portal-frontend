@@ -8,6 +8,7 @@ import ResetPasswordModal from "./ResetPasswordModal";
 import SettingsDrawer from "./SettingsDrawer";
 import NotificationPreview from "./NotificationPreview";
 import { useNotifications } from "@/context/NotificationContext";
+import socket from "@/utils/socket";
 import { AnimatePresence } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -31,33 +32,54 @@ export default function Sidebar() {
   
   const router = useRouter();
   const pathname = usePathname();
-  const fetchUser = useCallback(async () => {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  const fetchUser = useCallback(async (token) => {
     try {
-      const { fetchCurrentUserProfile } = await import("@/services/database/gateway");
-      const profile = await fetchCurrentUserProfile();
-      if (profile) {
-        const user = { ...profile, _id: profile.profile_id };
-        localStorage.setItem("user", JSON.stringify(user));
-        setIsAdmin(profile.role === "admin" || profile.is_admin);
-        return user;
+      const res = await fetch(`${API_URL}/api/user/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (!res.ok) return null;
+
+      const userData = await res.json();
+      if (userData) {
+        localStorage.setItem("user", JSON.stringify(userData));
+        setIsAdmin(userData.role === "admin" || userData.isAdmin);
+        return userData;
       }
     } catch (err) {
       console.error("Failed to fetch user role:", err);
     }
     return null;
-  }, []);
+  }, [API_URL]);
 
   useEffect(() => {
     const initialize = async () => {
       let user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       if (!user) {
-        user = await fetchUser();
+        user = await fetchUser(token);
       } else {
-        setIsAdmin(user.role === "admin" || user.isAdmin || user.is_admin);
+        setIsAdmin(user.role === "admin" || user.isAdmin);
       }
     };
 
     initialize();
+
+    // ✅ Listen for live points updates to sync UI
+    const handlePointsUpdate = () => {
+      const token = localStorage.getItem("token");
+      if (token) fetchUser(token);
+    };
+
+    socket.on("pointsUpdated", handlePointsUpdate);
+
+    return () => {
+      socket.off("pointsUpdated", handlePointsUpdate);
+    };
   }, [fetchUser]);
 
   const handleSignout = () => {

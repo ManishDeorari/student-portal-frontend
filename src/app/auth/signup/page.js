@@ -8,7 +8,6 @@ import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
 import { TubesBackground } from "@/app/components/TubesBackground";
 import { useTheme } from "@/context/ThemeContext";
 import ThemeToggle from "../../components/ui/ThemeToggle";
-import { signUpUser } from "@/services/database/gateway";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -47,34 +46,82 @@ export default function SignupPage() {
     setError("");
     setLoading(true);
 
-    const nameSlug = form.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    const idSuffix = form.enrollmentNumber;
-    const publicId = `${nameSlug}-${idSuffix}`;
+    // Prepare body according to role
+    const body =
+      form.role === "faculty"
+        ? {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          role: "faculty",
+          employeeId: form.enrollmentNumber, // mapping faculty field to employeeId
+          position: form.position,
+          department: form.department,
+        }
+        : {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          role: "student",
+          enrollmentNumber: form.enrollmentNumber,
+          course: form.course,
+          semester: Number(form.semester),
+          section: form.section,
+        };
 
-    const metadata = {
-      name: form.name,
-      role: form.role,
-      public_id: publicId,
-      enrollment_number: form.role === "student" ? form.enrollmentNumber : null,
-      employee_id: form.role === "faculty" ? form.enrollmentNumber : null,
-      course: form.role === "student" ? form.course : null,
-      semester: form.role === "student" ? Number(form.semester) : null,
-      section: form.role === "student" ? form.section : null,
-      position: form.role === "faculty" ? form.position : null,
-      department: form.role === "faculty" ? form.department : null,
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+    // ✅ Pre-flight: Ping the health endpoint to wake the server (fire-and-forget)
+    const wakeServer = async () => {
+      try {
+        await fetch(`${apiUrl}/api/health`, { method: "GET", mode: "cors" });
+      } catch {
+        // Expected to fail on cold start — the ping itself wakes Render
+      }
     };
 
-    try {
-      const { data, error: signupError } = await signUpUser(form.email, form.password, metadata);
-      if (signupError) throw signupError;
+    const RETRY_DELAYS = [4000, 8000, 15000, 20000, 25000]; // Escalating delays for cold start (total ~72s)
 
-      setLoading(false);
-      setShowSuccess(true);
-    } catch (err) {
-      console.error("Signup Error:", err);
-      setError(err.message || "Something went wrong during signup");
-      setLoading(false);
-    }
+    const attemptSignup = async (retryCount = 0) => {
+      try {
+        const res = await fetch(
+          `${apiUrl}/api/auth/signup`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Signup failed");
+
+        setLoading(false);
+        setShowSuccess(true);
+      } catch (err) {
+        // ✅ If network/server error (cold start / server sleeping), retry with escalating delays
+        const isNetworkError = err.name === "TypeError" || err.message?.includes("fetch") || err.message?.includes("Failed");
+        if (isNetworkError && retryCount < RETRY_DELAYS.length) {
+          const delay = RETRY_DELAYS[retryCount];
+          const seconds = Math.round(delay / 1000);
+          console.warn(`⚠️ Server may be waking up. Retry ${retryCount + 1}/${RETRY_DELAYS.length} in ${seconds}s...`);
+          setError(`Server is starting up... retrying in ${seconds}s (attempt ${retryCount + 1}/${RETRY_DELAYS.length})`);
+
+          wakeServer();
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return attemptSignup(retryCount + 1);
+        }
+
+        const userMessage = isNetworkError
+          ? "Server is currently unavailable. Please try again in a minute."
+          : (err.message || "Something went wrong");
+        setError(userMessage);
+        setLoading(false);
+      }
+    };
+
+    // Fire initial wake ping, then attempt signup
+    wakeServer();
+    await attemptSignup();
   };
 
 

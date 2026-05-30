@@ -1,63 +1,20 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Award, Target, Zap, Heart, MessageSquare, CheckCircle2 } from "lucide-react";
+import socket from "@/utils/socket";
 
 const PointsScenario = ({ darkMode = false }) => {
     const [config, setConfig] = useState(null);
     const [loading, setLoading] = useState(true);
-    const channelRef = useRef(null);
 
     const fetchConfig = React.useCallback(async () => {
         try {
-            const { supabase } = await import("@/services/database/client");
-            const user = JSON.parse(localStorage.getItem("user") || "null");
-            const userId = user?.profile_id || user?._id;
-
-            // Fetch points config
-            const { data: cfg } = await supabase
-                .from("points_config")
-                .select("*")
-                .order("created_at", { ascending: false })
-                .limit(1)
-                .maybeSingle();
-
-            if (!cfg) { setLoading(false); return; }
-
-            // Fetch user status (point log limits)
-            const { data: logs } = await supabase
-                .from("point_log")
-                .select("reason, created_at")
-                .eq("profile_id", userId);
-
-            const now = new Date();
-            const dayAgo = new Date(now - 86400000);
-            const weekAgo = new Date(now - 7 * 86400000);
-
-            const recentPosts = (logs || []).filter(l => l.reason === "post" && new Date(l.created_at) > weekAgo).length;
-            const recentLikes = (logs || []).filter(l => l.reason === "like" && new Date(l.created_at) > dayAgo).length;
-            const recentComments = (logs || []).filter(l => l.reason === "comment" && new Date(l.created_at) > dayAgo).length;
-
-            setConfig({
-                ...cfg,
-                userStatus: {
-                    isPostLimitReached: recentPosts >= (cfg.post_limit_count || 3),
-                    isLikeLimitReached: recentLikes >= (cfg.like_limit_count || 10),
-                    isCommentLimitReached: recentComments >= (cfg.comment_limit_count || 5),
-                    isProfileComplete: !!(user?.bio && user?.course),
-                },
-                // Normalize field names
-                profileCompletionPoints: cfg.profile_completion_points,
-                connectionPoints: cfg.connection_points,
-                postPoints: cfg.post_points,
-                postLimitCount: cfg.post_limit_count,
-                postLimitDays: cfg.post_limit_days,
-                likePoints: cfg.like_points,
-                likeLimitCount: cfg.like_limit_count,
-                likeLimitDays: cfg.like_limit_days,
-                commentPoints: cfg.comment_points,
-                commentLimitCount: cfg.comment_limit_count,
-                commentLimitDays: cfg.comment_limit_days,
+            const token = localStorage.getItem("token");
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin-points-mgmt/config`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
+            const data = await res.json();
+            setConfig(data);
         } catch (err) {
             console.error("Points Config Fetch Error:", err);
         } finally {
@@ -67,34 +24,26 @@ const PointsScenario = ({ darkMode = false }) => {
 
     useEffect(() => {
         fetchConfig();
-
-        // Subscribe to point_log inserts for this user (live status update)
-        const setupRealtime = async () => {
-            const { supabase } = await import("@/services/database/client");
-            const user = JSON.parse(localStorage.getItem("user") || "null");
-            const userId = user?.profile_id || user?._id;
-            if (!userId) return;
-
-            if (channelRef.current) await supabase.removeChannel(channelRef.current);
-
-            const channel = supabase
-                .channel(`points-scenario-${userId}`)
-                .on("postgres_changes", { event: "INSERT", schema: "public", table: "point_log", filter: `profile_id=eq.${userId}` }, () => fetchConfig())
-                .on("postgres_changes", { event: "*", schema: "public", table: "points_config" }, () => fetchConfig())
-                .subscribe();
-
-            channelRef.current = channel;
+        
+        const handlePointsConfig = () => {
+            fetchConfig();
         };
 
-        setupRealtime();
+        const handleNewNotification = (notif) => {
+            if (notif.type === "points_earned") {
+                fetchConfig();
+            }
+        };
+
+        // Live updates for admin config changes
+        socket.on("pointsConfigUpdated", handlePointsConfig);
+
+        // Live updates for personal point achievements
+        socket.on("newNotification", handleNewNotification);
 
         return () => {
-            if (channelRef.current) {
-                import("@/services/database/client").then(({ supabase }) => {
-                    supabase.removeChannel(channelRef.current);
-                    channelRef.current = null;
-                });
-            }
+            socket.off("pointsConfigUpdated", handlePointsConfig);
+            socket.off("newNotification", handleNewNotification);
         };
     }, [fetchConfig]);
 

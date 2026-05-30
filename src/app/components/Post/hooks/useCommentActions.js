@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
+import socket from "../../../../utils/socket";
 import { triggerReactionEffect } from "./useEmojiAnimation";
 
 export default function useCommentActions({
@@ -10,108 +11,64 @@ export default function useCommentActions({
   setShowCommentEmoji
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const token = localStorage.getItem("token");
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   const checkAuth = useCallback(() => {
-    const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || "null") : null;
-    if (!user) {
+    if (!token) {
       alert("Please log in to interact with posts.");
       return false;
     }
     return true;
-  }, []);
-
-  // Helper: get current user's profile_id
-  const getUserId = () => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-    return user?.profile_id || user?._id || "";
-  };
-
-  // Helper: re-fetch post with comments from Supabase and update local state
-  const syncPostFromDb = async (postId) => {
-    try {
-      const { supabase } = await import("@/services/database/client");
-      const { data: comments } = await supabase
-        .from("comment")
-        .select(`
-          *,
-          author:profile(profile_id, name, public_id, role, profile_picture)
-        `)
-        .eq("post_id", postId)
-        .order("created_at", { ascending: true });
-
-      const formattedComments = (comments || []).map((c) => ({
-        ...c,
-        _id: c.comment_id,
-        user: c.author ? {
-          _id: c.author.profile_id,
-          name: c.author.name,
-          publicId: c.author.public_id,
-          role: c.author.role,
-          profilePicture: c.author.profile_picture,
-        } : { name: "Unknown" },
-      }));
-
-      setPosts((prev) =>
-        prev.map((p) =>
-          p._id === postId || p.post_id === postId
-            ? { ...p, comments: formattedComments }
-            : p
-        )
-      );
-    } catch (err) {
-      console.error("Failed to sync post comments:", err);
-    }
-  };
+  }, [token]);
 
   const handleComment = useCallback(
     async (comment) => {
       if (!checkAuth() || !comment.trim() || isSubmitting) return;
       setIsSubmitting(true);
-
       try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment`, {
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent ? `/api/events/${post._id}/comment` : `/api/posts/${post._id}/comment`;
+        
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
             method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({ text: comment }),
-          });
-          if (!res.ok) throw new Error("Comment failed");
-          const updated = await res.json();
-          if (setComment) setComment("");
-          if (setShowCommentEmoji) setShowCommentEmoji(false);
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          toast.success("💬 Comment posted!");
-          return;
+          }
+        );
+
+        if (!res.ok) {
+          if (res.status === 404) {
+            toast.error(isEvent ? "❌ Event not found!" : "❌ Post not found! It may have been deleted.");
+            setTimeout(() => { window.location.href = "/dashboard"; }, 1000);
+            return;
+          }
+          throw new Error("Comment failed");
         }
 
-        const { supabase } = await import("@/services/database/client");
-        const authorId = getUserId();
-        const postId = post._id || post.post_id;
-
-        const { error } = await supabase.from("comment").insert({
-          post_id: postId,
-          author_id: authorId,
-          text: comment,
-          reactions: [],
-          replies: [],
-        });
-
-        if (error) throw error;
-
+        const updated = await res.json();
         if (setComment) setComment("");
         if (setShowCommentEmoji) setShowCommentEmoji(false);
-        await syncPostFromDb(postId);
-        toast.success("💬 Comment posted!");
+
+        // Merge logic to preserve registration state
+        setPosts((prev) =>
+          prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p))
+        );
+
+        socket.emit("updatePost", updated);
+        toast.success("💬 Comment posted!", { autoClose: 1500 });
       } catch (err) {
-        console.error("Comment error:", err);
         toast.error("❌ Failed to add comment");
       } finally {
         setIsSubmitting(false);
       }
     },
-    [post._id, post.type, setPosts, setComment, setShowCommentEmoji, API_URL, checkAuth, isSubmitting]
+    [post._id, post.type, setPosts, setComment, setShowCommentEmoji, API_URL, token, checkAuth]
   );
 
   const handleReply = useCallback(
@@ -122,118 +79,98 @@ export default function useCommentActions({
       }
 
       try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment/${parentCommentId}/reply`, {
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent ? `/api/events/${post._id}/comment/${parentCommentId}/reply` : `/api/posts/${post._id}/comment/${parentCommentId}/reply`;
+
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
             method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({ text: replyText }),
-          });
-          const updated = await res.json();
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          toast.success("💬 Reply posted!");
-          return;
-        }
+          }
+        );
 
-        const { supabase } = await import("@/services/database/client");
-        const authorId = getUserId();
-        const postId = post._id || post.post_id;
+        const updated = await res.json();
 
-        // Fetch the parent comment's replies array and append
-        const { data: parentComment, error: fetchErr } = await supabase
-          .from("comment")
-          .select("replies")
-          .eq("comment_id", parentCommentId)
-          .single();
+        setPosts((prev) =>
+          prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p))
+        );
 
-        if (fetchErr) throw fetchErr;
-
-        const newReply = {
-          reply_id: crypto.randomUUID(),
-          author_id: authorId,
-          text: replyText,
-          reactions: [],
-          created_at: new Date().toISOString(),
-        };
-
-        const updatedReplies = [...(parentComment.replies || []), newReply];
-
-        const { error: updateErr } = await supabase
-          .from("comment")
-          .update({ replies: updatedReplies })
-          .eq("comment_id", parentCommentId);
-
-        if (updateErr) throw updateErr;
-
-        await syncPostFromDb(postId);
-        toast.success("💬 Reply posted!");
+        socket.emit("updatePost", updated);
+        toast.success("💬 Reply posted!", { autoClose: 1500 });
       } catch (err) {
         console.error("❌ handleReply error:", err);
         toast.error("❌ Failed to reply");
       }
     },
-    [post._id, post.type, setPosts, API_URL, checkAuth]
+    [post._id, post.type, setPosts, API_URL, token, checkAuth]
   );
 
   const handleEditComment = useCallback(
     async (commentId, newText) => {
-      if (!checkAuth() || !newText.trim()) return alert("Comment cannot be empty");
+      if (!checkAuth() || !newText.trim()) {
+        return alert("Comment cannot be empty");
+      }
 
       try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment/${commentId}`, {
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent ? `/api/events/${post._id}/comment/${commentId}` : `/api/posts/${post._id}/comment/${commentId}`;
+        
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
             method: "PUT",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({ text: newText }),
-          });
-          const updated = await res.json();
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          toast.success("✏️ Comment updated");
-          return;
-        }
+          }
+        );
 
-        const { supabase } = await import("@/services/database/client");
-        const { error } = await supabase
-          .from("comment")
-          .update({ text: newText, updated_at: new Date().toISOString() })
-          .eq("comment_id", commentId);
+        const updated = await res.json();
 
-        if (error) throw error;
-        await syncPostFromDb(post._id || post.post_id);
-        toast.success("✏️ Comment updated");
+        setPosts((prev) =>
+          prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p))
+        );
+
+        socket.emit("updatePost", updated);
+        toast.success("✏️ Comment updated", { autoClose: 1500 });
       } catch (err) {
         toast.error("❌ Failed to update comment");
       }
     },
-    [post._id, post.type, setPosts, API_URL, checkAuth]
+    [post._id, post.type, setPosts, API_URL, token, checkAuth]
   );
 
   const handleDeleteComment = useCallback(
     async (commentId) => {
       try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment/${commentId}`, {
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent ? `/api/events/${post._id}/comment/${commentId}` : `/api/posts/${post._id}/comment/${commentId}`;
+        
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
-          });
-          const updated = await res.json();
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          toast.success("🗑️ Comment deleted!");
-          return;
-        }
-
-        const { supabase } = await import("@/services/database/client");
-        const { error } = await supabase.from("comment").delete().eq("comment_id", commentId);
-        if (error) throw error;
-        await syncPostFromDb(post._id || post.post_id);
-        toast.success("🗑️ Comment deleted!");
+          }
+        );
+        const updated = await res.json();
+        setPosts((prev) =>
+          prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p))
+        );
+        socket.emit("updatePost", updated);
+        toast.success("🗑️ Comment deleted!", { autoClose: 1500 });
       } catch (err) {
         toast.error("❌ Failed to delete comment");
       }
     },
-    [post._id, post.type, setPosts, API_URL]
+    [post._id, post.type, setPosts, API_URL, token]
   );
 
   const handleEditReply = useCallback(
@@ -241,186 +178,159 @@ export default function useCommentActions({
       if (!checkAuth() || !newText.trim()) return alert("Reply cannot be empty");
 
       try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment/${commentId}/reply/${replyId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ text: newText }),
-          });
-          const updated = await res.json();
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          toast.success("✏️ Reply updated");
-          return;
-        }
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent 
+          ? `/api/events/${post._id}/comment/${commentId}/reply/${replyId}`
+          : `/api/posts/${post._id}/comment/${commentId}/reply/${replyId}`;
 
-        const { supabase } = await import("@/services/database/client");
-        const { data: parentComment } = await supabase.from("comment").select("replies").eq("comment_id", commentId).single();
-        const updatedReplies = (parentComment.replies || []).map((r) =>
-          r.reply_id === replyId ? { ...r, text: newText } : r
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ text: newText }),
+          }
         );
-        await supabase.from("comment").update({ replies: updatedReplies }).eq("comment_id", commentId);
-        await syncPostFromDb(post._id || post.post_id);
-        toast.success("✏️ Reply updated");
+
+        const updated = await res.json();
+        setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
+        socket.emit("updatePost", updated);
+        toast.success("✏️ Reply updated", { autoClose: 1500 });
       } catch (err) {
         toast.error("❌ Failed to edit reply");
       }
     },
-    [post._id, post.type, setPosts, API_URL, checkAuth]
+    [post._id, post.type, setPosts, API_URL, token, checkAuth]
   );
 
-  const handleDeleteReply = useCallback(
-    async (commentId, replyId) => {
-      try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment/${commentId}/reply/${replyId}`, {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const updated = await res.json();
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          toast.success("🗑️ Reply deleted!");
-          return;
+  const handleDeleteReply = useCallback(async (commentId, replyId) => {
+    try {
+      const isEvent = post.type === "Event";
+      const endpoint = isEvent 
+        ? `/api/events/${post._id}/comment/${commentId}/reply/${replyId}`
+        : `/api/posts/${post._id}/comment/${commentId}/reply/${replyId}`;
+
+      const res = await fetch(
+        `${API_URL}${endpoint}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
         }
+      );
 
-        const { supabase } = await import("@/services/database/client");
-        const { data: parentComment } = await supabase.from("comment").select("replies").eq("comment_id", commentId).single();
-        const updatedReplies = (parentComment.replies || []).filter((r) => r.reply_id !== replyId);
-        await supabase.from("comment").update({ replies: updatedReplies }).eq("comment_id", commentId);
-        await syncPostFromDb(post._id || post.post_id);
-        toast.success("🗑️ Reply deleted!");
-      } catch (err) {
-        console.error("❌ Failed to delete reply:", err);
-        toast.error("❌ Failed to delete reply");
-      }
-    },
-    [post._id, post.type, setPosts, API_URL]
-  );
+      const updated = await res.json();
+      setPosts((prev) =>
+        prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p))
+      );
+      socket.emit("updatePost", updated);
+      toast.success("🗑️ Reply deleted!", { autoClose: 1500 });
+    } catch (err) {
+      console.error("❌ Failed to delete reply:", err);
+      toast.error("❌ Failed to delete reply");
+    }
+  }, [post._id, post.type, setPosts, API_URL, token]);
 
   const handleReactToReply = useCallback(
     async (commentId, replyId, emoji) => {
       try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment/${commentId}/reply/${replyId}/react`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ emoji }),
-          });
-          const updated = await res.json();
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          triggerReactionEffect(emoji);
-          return;
-        }
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent 
+          ? `/api/events/${post._id}/comment/${commentId}/reply/${replyId}/react`
+          : `/api/posts/${post._id}/comment/${commentId}/reply/${replyId}/react`;
 
-        const { supabase } = await import("@/services/database/client");
-        const userId = getUserId();
-        const { data: parentComment } = await supabase.from("comment").select("replies").eq("comment_id", commentId).single();
-        const updatedReplies = (parentComment.replies || []).map((r) => {
-          if (r.reply_id !== replyId) return r;
-          let reactions = r.reactions || [];
-          const idx = reactions.findIndex((rx) => rx.emoji === emoji);
-          if (idx > -1) {
-            const uIdx = reactions[idx].users.indexOf(userId);
-            if (uIdx > -1) {
-              reactions[idx].users.splice(uIdx, 1);
-              if (reactions[idx].users.length === 0) reactions = reactions.filter((rx) => rx.emoji !== emoji);
-            } else {
-              reactions[idx].users.push(userId);
-            }
-          } else {
-            reactions.push({ emoji, users: [userId] });
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ emoji }),
           }
-          return { ...r, reactions };
-        });
-        await supabase.from("comment").update({ replies: updatedReplies }).eq("comment_id", commentId);
-        await syncPostFromDb(post._id || post.post_id);
+        );
+
+        const updated = await res.json();
+        setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
+        socket.emit("updatePost", updated);
         triggerReactionEffect(emoji);
       } catch (err) {
         toast.error("❌ Failed to react to reply");
       }
     },
-    [post._id, post.type, setPosts, API_URL]
+    [post._id, post.type, setPosts, API_URL, token]
   );
 
   const handleReactToComment = useCallback(
     async (commentId, emoji) => {
       try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment/${commentId}/react`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ emoji }),
-          });
-          const updated = await res.json();
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          triggerReactionEffect(emoji);
-          return;
-        }
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent 
+          ? `/api/events/${post._id}/comment/${commentId}/react`
+          : `/api/posts/${post._id}/comments/${commentId}/react`;
 
-        const { supabase } = await import("@/services/database/client");
-        const userId = getUserId();
-        const { data: commentRow } = await supabase.from("comment").select("reactions").eq("comment_id", commentId).single();
-        let reactions = commentRow.reactions || [];
-        const idx = reactions.findIndex((r) => r.emoji === emoji);
-        if (idx > -1) {
-          const uIdx = reactions[idx].users.indexOf(userId);
-          if (uIdx > -1) {
-            reactions[idx].users.splice(uIdx, 1);
-            if (reactions[idx].users.length === 0) reactions = reactions.filter((r) => r.emoji !== emoji);
-          } else {
-            reactions[idx].users.push(userId);
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ emoji }),
           }
-        } else {
-          reactions.push({ emoji, users: [userId] });
-        }
-        await supabase.from("comment").update({ reactions }).eq("comment_id", commentId);
-        await syncPostFromDb(post._id || post.post_id);
+        );
+
+        const updated = await res.json();
+        const finalUpdated = isEvent ? updated : (updated.post || updated);
+        setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...finalUpdated } : p)));
+        socket.emit("updatePost", finalUpdated);
         triggerReactionEffect(emoji);
       } catch (err) {
         toast.error("❌ Failed to react to comment");
       }
     },
-    [post._id, post.type, setPosts, API_URL]
+    [post._id, post.type, setPosts, API_URL, token]
   );
 
   const handlePinComment = useCallback(
     async (commentId) => {
       if (!checkAuth()) return;
-
       try {
-        if (post.type === "Event") {
-          const token = localStorage.getItem("token");
-          const res = await fetch(`${API_URL}/api/events/${post._id}/comment/${commentId}/pin`, {
+        const isEvent = post.type === "Event";
+        const endpoint = isEvent 
+          ? `/api/events/${post._id}/comment/${commentId}/pin`
+          : `/api/posts/${post._id}/comment/${commentId}/pin`;
+
+        const res = await fetch(
+          `${API_URL}${endpoint}`,
+          {
             method: "PUT",
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (!res.ok) {
-            const data = await res.json();
-            throw new Error(data.message || "Failed to toggle pin");
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           }
-          const updated = await res.json();
-          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
-          toast.success("📌 Comment pinned state toggled!");
-          return;
+        );
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.message || data.error || "Failed to toggle pin");
         }
 
-        const { supabase } = await import("@/services/database/client");
-        const { data: commentRow } = await supabase.from("comment").select("is_pinned").eq("comment_id", commentId).single();
-        const { error } = await supabase
-          .from("comment")
-          .update({ is_pinned: !commentRow.is_pinned })
-          .eq("comment_id", commentId);
-        if (error) throw error;
-        await syncPostFromDb(post._id || post.post_id);
-        toast.success("📌 Comment pinned state toggled!");
+        const updated = await res.json();
+        const finalUpdated = isEvent ? updated : (updated.post || updated);
+        setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...finalUpdated } : p)));
+        socket.emit("updatePost", finalUpdated);
+        toast.success("📌 Comment pinned state toggled!", { autoClose: 1500 });
       } catch (err) {
         toast.error(err.message || "❌ Failed to pin/unpin comment");
       }
     },
-    [post._id, post.type, setPosts, API_URL, checkAuth]
+    [post._id, post.type, setPosts, API_URL, token, checkAuth]
   );
 
   return {
@@ -434,4 +344,5 @@ export default function useCommentActions({
     handleReactToComment,
     handlePinComment,
   };
+
 }

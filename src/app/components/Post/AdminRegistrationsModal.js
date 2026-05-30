@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { fetchEventRegistrations } from "../../../services/database/gateway";
+import { fetchEventRegistrations, downloadEventCSV } from "../../../api/dashboard";
 import toast from "react-hot-toast";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,44 +33,7 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
   const handleDownloadCSV = async () => {
     setIsDownloading(true);
     try {
-      if (!data.registrations || data.registrations.length === 0) {
-        toast.error("No registrations to download.");
-        return;
-      }
-
-      // Generate CSV content
-      const headers = ["Registration ID", "Registrant Name", "Registrant Email", "Enrollment Number", "Is Group", "Group Members", "Answers", "Registered At"];
-      const rows = data.registrations.map(reg => {
-        const groupMembersStr = reg.isGroup && Array.isArray(reg.groupMembers)
-          ? reg.groupMembers.map(m => `${m.name || ''} (${m.email || ''})`).join("; ")
-          : "";
-        const answersStr = reg.answers ? JSON.stringify(reg.answers) : "";
-        return [
-          reg._id,
-          reg.userId?.name || "",
-          reg.userId?.email || "",
-          reg.userId?.enrollmentNumber || "",
-          reg.isGroup ? "Yes" : "No",
-          groupMembersStr,
-          answersStr,
-          reg.registeredAt
-        ];
-      });
-
-      const csvContent = [
-        headers.join(","),
-        ...rows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(","))
-      ].join("\n");
-
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `registrations_${event.title.replace(/\s+/g, "_")}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      
+      await downloadEventCSV(event._id, event.title);
       toast.success("CSV download started!");
     } catch (err) {
       toast.error("Failed to download CSV.");

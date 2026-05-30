@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { fetchAwardEligibleUsers, assignPointsToUser } from "../../services/database/gateway";
 
 export default function AdminPointsPanel() {
   const [users, setUsers] = useState([]);
@@ -8,30 +7,23 @@ export default function AdminPointsPanel() {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    fetchAwardEligibleUsers().then(data => {
-      const formatted = data.map(u => ({
-        ...u,
-        _id: u.profile_id
-      }));
-      setUsers(formatted);
-    });
+    fetch("/api/user/award-eligible", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+      .then((res) => res.json())
+      .then(setUsers);
   }, []);
 
   const assignPoints = async (userId) => {
-    const ok = await assignPointsToUser(userId, category, parseInt(value) || 0);
-    if (ok) {
-      alert("✅ Points updated!");
-      // Refresh list
-      fetchAwardEligibleUsers().then(data => {
-        const formatted = data.map(u => ({
-          ...u,
-          _id: u.profile_id
-        }));
-        setUsers(formatted);
-      });
-    } else {
-      alert("❌ Failed to update points");
-    }
+    await fetch("/api/admin/assign", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({ userId, category, value: parseInt(value) })
+    });
+    alert("✅ Points updated!");
   };
 
   return (

@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReplyBox from "../utils/ReplyBox";
 import EmojiPickerToggle from "../utils/EmojiPickerToggle";
+import socket from "../../../../utils/socket";
 import { triggerReactionEffect } from "../hooks/useEmojiAnimation";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -131,6 +132,7 @@ export default function CommentCard({
       const result = await res.json();
       setReactions(result.reactions || result.comment.reactions);
 
+      socket.emit("updatePostRequest", { postId });
       triggerReactionEffect(emoji);
     } catch (err) {
       console.error("🔴 Reaction failed:", err);

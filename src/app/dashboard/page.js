@@ -7,13 +7,12 @@ import AdminSidebar from "../components/AdminSidebar"; // <-- Admin sidebar
 import CreatePost from "../components/Post/CreatePost";
 import PostCard from "../components/Post/PostCard";
 import { motion, AnimatePresence } from "framer-motion";
-
+import socket from "@/utils/socket";
 
 import PointsScenario from "../components/dashboard/PointsScenario";
 import { useTheme } from "@/context/ThemeContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { GooeyGradientBackground } from "../components/GooeyGradientBackground";
-import { fetchCurrentUserProfile, fetchPostsPaged } from "@/services/database/gateway";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -62,22 +61,20 @@ export default function DashboardPage() {
           setLoading(false); 
         }
 
-        const profile = await fetchCurrentUserProfile();
-        if (!profile) throw new Error("User fetch failed");
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/user/me`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (!res.ok) throw new Error("User fetch failed");
         
-        const data = {
-          ...profile,
-          _id: profile.profile_id,
-          enrollmentNumber: profile.enrollment_number,
-          employeeId: profile.employee_id,
-          points: {
-            ...profile.points,
-            total: profile.points.total || 0,
-          }
-        };
-
+        const data = await res.json();
         setUser(data);
         localStorage.setItem("user", JSON.stringify(data)); // Refresh cache silently
+
+        // ✅ Check for daily login reward flag from API
+        if (data.loginPointsAwarded) {
+          handleDailyLoginPoints(data.loginPointsAwarded);
+        }
       } catch (err) {
         console.error("User fetch error:", err.message);
       } finally {
@@ -92,22 +89,34 @@ export default function DashboardPage() {
   const fetchPosts = useCallback(async (pageNum = 1, append = false) => {
     setIsFetchingFeed(true);
     try {
-      const userId = localStorage.getItem("userId") || "";
-      const { posts: fetchedPosts, hasMore: moreAvailable } = await fetchPostsPaged(
-        userId,
-        activeTab,
-        pageNum,
-        limit,
-        announcementSubtype,
-        announcementSearch
-      );
+      const token = localStorage.getItem("token");
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      let url = `${API_URL}/api/posts?page=${pageNum}&limit=${limit}`;
+      let headers = { Authorization: `Bearer ${token}` };
+
+      if (activeTab === "my") {
+        url = `${API_URL}/api/posts/me?page=${pageNum}&limit=${limit}`;
+      } else if (activeTab === "Event") {
+        url = `${API_URL}/api/events?page=${pageNum}&limit=${limit}`;
+      } else {
+        const queryType = activeTab === "all" ? "all" : activeTab;
+        url += `&type=${queryType}`;
+        if (activeTab === "Announcement") {
+          if (announcementSubtype === "winner") url += `&subtype=winner`;
+          if (announcementSearch) url += `&search=${encodeURIComponent(announcementSearch)}`;
+        }
+      }
+
+      const res = await fetch(url, { headers });
+      const data = await res.json();
+      if (!res.ok || !Array.isArray(data.posts)) return;
 
       setPosts((prev) => {
-        if (!append) return fetchedPosts;
-        const newPosts = fetchedPosts.filter(newP => !prev.some(p => p._id === newP._id));
+        if (!append) return data.posts;
+        const newPosts = data.posts.filter(newP => !prev.some(p => p._id === newP._id));
         return [...prev, ...newPosts];
       });
-      setHasMore(moreAvailable);
+      setHasMore(data.posts.length === limit);
     } catch (err) {
       console.error("Failed to fetch posts:", err.message);
     } finally {
