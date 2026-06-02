@@ -72,13 +72,13 @@ export default function HomePage() {
 
   return (
     <TubesBackground
-      className="text-white"
+      className="min-h-screen text-white"
       tubeCount={10}
       darkMode={darkMode}
       alwaysDark={true}
     >
-      {/* Fixed full-screen wrapper — no scroll */}
-      <div className="fixed inset-0 flex flex-col overflow-hidden">
+      {/* Container to preserve canvas stacking context */}
+      <div className="h-screen w-full flex flex-col overflow-hidden relative z-10">
 
         {/* ─── Navbar ─── */}
         <nav className="shrink-0 z-50 py-3 px-6 flex justify-between items-center border-b border-white/10 backdrop-blur-md bg-black/20">
