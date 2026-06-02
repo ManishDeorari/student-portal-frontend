@@ -143,7 +143,7 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <Link href="/auth/signup" className="group relative p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-3xl transform hover:-translate-y-1 transition-all duration-500">
+            <Link href="/auth/login?view=SIGNUP" className="group relative p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-3xl transform hover:-translate-y-1 transition-all duration-500">
               <div className="bg-black/40 hover:bg-transparent backdrop-blur-md px-12 py-5 rounded-[calc(0.75rem-1px)] flex items-center gap-4 transition-all">
                 <span className="text-white font-black text-sm uppercase tracking-[0.3em]">Create Account</span>
                 <ArrowRight className="text-blue-500 group-hover:text-white transition-colors" size={16} />

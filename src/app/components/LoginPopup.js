@@ -71,7 +71,7 @@ const LoginPopup = () => {
     const { darkMode, toggleDarkMode } = useTheme();
 
     const handleSignupRedirect = () => {
-        router.push("/auth/signup");
+        router.push("/auth/login?view=SIGNUP");
     };
 
     const handleClose = () => {

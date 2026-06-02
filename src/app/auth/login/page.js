@@ -21,7 +21,9 @@ export default function LoginPage() {
 
 function LoginContent() {
   const router = useRouter();
-  const [view, setView] = useState("LOGIN"); // LOGIN | FORGOT_EMAIL | FORGOT_OTP
+  const searchParams = useSearchParams();
+  const initialView = searchParams.get("view") === "SIGNUP" ? "SIGNUP" : "LOGIN";
+  const [view, setView] = useState(initialView); // LOGIN | FORGOT_EMAIL | FORGOT_OTP | SIGNUP
   const [form, setForm] = useState({ identifier: "", password: "" });
 
   // Forgot Password States
@@ -35,6 +37,28 @@ function LoginContent() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+
+  const [signupForm, setSignupForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    enrollmentNumber: "",
+    role: "student", // default
+    position: "",
+    department: "",
+    course: "",
+    semester: "",
+    section: "",
+  });
+  const [showSignupSuccess, setShowSignupSuccess] = useState(false);
+  const handleSignupChange = (e) => {
+    let { name, value } = e.target;
+    if (name === "course" || name === "section") {
+      value = value?.toUpperCase() || "";
+    }
+    setSignupForm({ ...signupForm, [name]: value });
+  };
+
   const [isAndroid, setIsAndroid] = useState(true);
 
   React.useEffect(() => {
@@ -44,7 +68,7 @@ function LoginContent() {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   // Countdown timer for OTP
-  const searchParams = useSearchParams();
+  // searchParams already defined
   const logoutReason = searchParams.get("reason");
 
   React.useEffect(() => {
@@ -163,6 +187,90 @@ function LoginContent() {
     await attemptLogin();
   };
 
+
+
+  const handleSignupSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    // Prepare body according to role
+    const body =
+      signupForm.role === "faculty"
+        ? {
+          name: signupForm.name,
+          email: signupForm.email,
+          password: signupForm.password,
+          role: "faculty",
+          employeeId: signupForm.enrollmentNumber, // mapping faculty field to employeeId
+          position: signupForm.position,
+          department: signupForm.department,
+        }
+        : {
+          name: signupForm.name,
+          email: signupForm.email,
+          password: signupForm.password,
+          role: "student",
+          enrollmentNumber: signupForm.enrollmentNumber,
+          course: signupForm.course,
+          semester: Number(signupForm.semester),
+          section: signupForm.section,
+        };
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+    // ✅ Pre-flight: Ping the health endpoint to wake the server (fire-and-forget)
+    const wakeServer = async () => {
+      try {
+        await fetch(`${apiUrl}/api/health`, { method: "GET", mode: "cors" });
+      } catch {
+        // Expected to fail on cold start — the ping itself wakes Render
+      }
+    };
+
+    const RETRY_DELAYS = [4000, 8000, 15000, 20000, 25000]; // Escalating delays for cold start (total ~72s)
+
+    const attemptSignupReq = async (retryCount = 0) => {
+      try {
+        const res = await fetch(
+          `${apiUrl}/api/auth/signup`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Signup failed");
+
+        setLoading(false);
+        setShowSignupSuccess(true);
+      } catch (err) {
+        // ✅ If network/server error (cold start / server sleeping), retry with escalating delays
+        const isNetworkError = err.name === "TypeError" || err.message?.includes("fetch") || err.message?.includes("Failed");
+        if (isNetworkError && retryCount < RETRY_DELAYS.length) {
+          const delay = RETRY_DELAYS[retryCount];
+          const seconds = Math.round(delay / 1000);
+          console.warn(`⚠️ Server may be waking up. Retry ${retryCount + 1}/${RETRY_DELAYS.length} in ${seconds}s...`);
+          setError(`Server is starting up... retrying in ${seconds}s (attempt ${retryCount + 1}/${RETRY_DELAYS.length})`);
+
+          wakeServer();
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return attemptSignupReq(retryCount + 1);
+        }
+
+        const userMessage = isNetworkError
+          ? "Server is currently unavailable. Please try again in a minute."
+          : (err.message || "Something went wrong");
+        setError(userMessage);
+        setLoading(false);
+      }
+    };
+
+    // Fire initial wake ping, then attempt signup
+    wakeServer();
+    await attemptSignupReq();
+  };
 
 
   const handleForgotPassword = async (e) => {
@@ -314,13 +422,223 @@ function LoginContent() {
                   <div className="pt-2 text-center">
                     <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-bold`}>
                       New here?{" "}
-                      <Link href="/auth/signup" className="text-blue-500 font-black hover:underline underline-offset-4">
-                        Create an Account
-                      </Link>
+                      <button type="button" onClick={() => setView("SIGNUP")} className="text-blue-500 font-black hover:underline underline-offset-4">Create an Account</button>
                     </p>
                   </div>
                 </form>
               )}
+
+              
+              {view === "SIGNUP" && (
+                <>
+                <div className="space-y-0.5 text-center mb-4">
+                  <h2 className={`text-2xl sm:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Join Global Network</h2>
+                  <p className={`text-xs sm:text-sm ${darkMode ? "text-white font-bold" : "text-black font-bold"} opacity-70`}>Create account to connect</p>
+                </div>
+                <form onSubmit={handleSignupSubmit} className="space-y-4">
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className={`${darkMode ? "bg-red-500/10 border-red-500/20 text-red-500" : "bg-red-50 border-red-100 text-red-600"} border text-[10px] py-2 px-4 rounded-xl text-center font-black`}
+                  >
+                    {error}
+                  </motion.div>
+                )}
+
+                {/* Role Selector */}
+                <div className="flex justify-center gap-8 py-0.5">
+                  {["student", "faculty"].map((r) => (
+                    <label key={r} className="flex items-center gap-3 cursor-pointer group">
+                      <div className="relative">
+                        <input
+                          type="radio"
+                          name="role"
+                          value={r}
+                          checked={signupForm.role === r}
+                          onChange={handleSignupChange}
+                          className="peer hidden"
+                        />
+                        <div className={`w-5 h-5 rounded-full border-2 transition-all ${darkMode ? "border-white/20 peer-checked:border-blue-500" : "border-gray-300 peer-checked:border-blue-600"}`}></div>
+                        <div className={`absolute inset-1 rounded-full scale-0 peer-checked:scale-100 transition-transform ${darkMode ? "bg-blue-500" : "bg-blue-600"}`}></div>
+                      </div>
+                      <span className={`text-[10px] uppercase tracking-widest font-black transition-colors ${signupForm.role === r ? (darkMode ? "text-blue-400" : "text-blue-600") : (darkMode ? "text-white" : "text-black")}`}>
+                        {r === "student" ? "Student" : r}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="space-y-0.5">
+                    <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name</label>
+                    <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="John Doe"
+                        value={signupForm.name}
+                        onChange={handleSignupChange}
+                        className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>
+                      {signupForm.role === "faculty" ? "Employee ID" : "Enrollment No."}
+                    </label>
+                    <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                      <input
+                        type="text"
+                        name="enrollmentNumber"
+                        placeholder={signupForm.role === "faculty" ? "Ex: Emp-123" : "Ex: 2021001"}
+                        value={signupForm.enrollmentNumber}
+                        onChange={handleSignupChange}
+                        className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {signupForm.role === "faculty" ? (
+                    <>
+                      <div className="space-y-0.5">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Position</label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <input
+                            type="text"
+                            name="position"
+                            placeholder="Ex: Assistant Professor"
+                            value={signupForm.position}
+                            onChange={handleSignupChange}
+                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Department</label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <input
+                            type="text"
+                            name="department"
+                            placeholder="Ex: CS"
+                            value={signupForm.department}
+                            onChange={handleSignupChange}
+                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-0.5">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course</label>
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <input
+                              type="text"
+                              name="course"
+                              placeholder="Ex: BTECH"
+                              value={signupForm.course}
+                              onChange={handleSignupChange}
+                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-0.5">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Semester</label>
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <input
+                              type="number"
+                              name="semester"
+                              placeholder="1-8"
+                              value={signupForm.semester}
+                              onChange={handleSignupChange}
+                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section (Optional)</label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <input
+                            type="text"
+                            name="section"
+                            placeholder="Ex: A"
+                            value={signupForm.section}
+                            onChange={handleSignupChange}
+                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="space-y-0.5">
+                    <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
+                    <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="john@univ.edu"
+                        value={signupForm.email}
+                        onChange={handleSignupChange}
+                        className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password</label>
+                    <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        placeholder="••••••••"
+                        value={signupForm.password}
+                        onChange={handleSignupChange}
+                        className={`w-full px-4 sm:px-6 pr-12 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors ${darkMode ? "text-white/40 hover:text-white" : "text-slate-400 hover:text-slate-600"}`}
+                      >
+                        {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95 disabled:opacity-50"
+                >
+                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-3 sm:py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
+                    <span className="text-white font-black text-xs uppercase tracking-widest">
+                      {loading ? "Creating Account..." : "Join Portal"}
+                    </span>
+                  </div>
+                </button>
+
+                <p className={`text-sm text-center ${darkMode ? "text-white font-bold" : "text-black font-bold"}`}>
+                  Already a member?{" "}
+                  <button type="button" onClick={() => setView("LOGIN")} className="text-blue-500 font-extrabold hover:underline underline-offset-4">Login</button>
+                </p>
+              </form>
+                </>
+              )}
+
 
               {view === "FORGOT_EMAIL" && (
                 <form onSubmit={handleForgotPassword} className="space-y-6">
@@ -510,6 +828,45 @@ function LoginContent() {
 
       <ThemeToggle />
       </div>
+    
+      <AnimatePresence>
+        {showSignupSuccess && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/70 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="p-[2.5px] rounded-[2.5rem] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-500 shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-full max-w-md relative overflow-hidden"
+            >
+              <div className={`p-8 rounded-[calc(2.5rem-2.5px)] flex flex-col items-center gap-6 text-center ${darkMode ? "bg-[#121212]" : "bg-[#FAFAFA]"}`}>
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl shadow-xl shadow-blue-500/20">
+                  🎉
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className={`text-3xl font-black tracking-tight ${darkMode ? "text-white" : "text-black"}`}>
+                    Sign up Successful!
+                  </h3>
+                  <p className={`text-base font-bold leading-relaxed ${darkMode ? "text-white" : "text-black"} opacity-80`}>
+                    Your account has been created. Please wait for <span className="text-blue-500 underline decoration-blue-500/30 underline-offset-4 font-black">admin approval</span> before logging in.
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => { setView("LOGIN"); setShowSignupSuccess(false); }}
+                  className="w-full relative group p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95"
+                >
+                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
+                    <span className="text-white text-xs font-black uppercase tracking-[0.3em]">
+                      Proceed to Login
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </TubesBackground>
   );
 }
