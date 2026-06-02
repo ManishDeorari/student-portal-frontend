@@ -73,8 +73,7 @@ export default function HomePage() {
   return (
     <TubesBackground
       className="text-white"
-      tubeCount={5}
-      idleDelay={3000}
+      tubeCount={10}
       darkMode={darkMode}
       alwaysDark={true}
     >
@@ -245,10 +244,15 @@ export default function HomePage() {
           </button>
         </div>
 
+        {/* ─── Theme Toggle Row ─── */}
+        <div className="shrink-0 z-50 flex justify-end px-6 py-1.5 bg-black/10 backdrop-blur-sm border-t border-white/5">
+          <ThemeToggle />
+        </div>
+
         {/* ─── Footer ─── */}
-        <footer className={`shrink-0 z-50 py-3 px-6 border-t border-white/10 backdrop-blur-md bg-black/20 flex flex-col sm:flex-row justify-between items-center gap-2`}>
+        <footer className="shrink-0 z-50 py-2.5 px-6 border-t border-white/10 backdrop-blur-md bg-black/20 flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="flex items-center gap-5">
-            <span className={`text-xs font-black italic uppercase tracking-tight ${darkMode ? "text-white/70" : "text-white/70"}`}>Student Portal</span>
+            <span className="text-xs font-black italic uppercase tracking-tight text-white/70">Student Portal</span>
             <div className="flex gap-4">
               {[FaFacebook, FaTwitter, FaInstagram, FaLinkedin].map((Icon, i) => (
                 <Icon key={i} className="text-base text-white/40 hover:text-blue-400 transition-all cursor-pointer hover:scale-110" />
@@ -265,8 +269,6 @@ export default function HomePage() {
           </div>
         </footer>
       </div>
-
-      <ThemeToggle />
     </TubesBackground>
   );
 }
