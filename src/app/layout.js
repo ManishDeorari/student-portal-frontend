@@ -8,6 +8,7 @@ import { NotificationProvider } from "@/context/NotificationContext";
 import GlobalNavigationLoader from "./components/ui/GlobalNavigationLoader";
 import ZoomLock from "./components/ui/ZoomLock";
 import PageTransition from "./components/ui/PageTransition";
+import SessionManager from "./components/SessionManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -100,6 +101,7 @@ export default function RootLayout({ children }) {
           </Suspense>
           <NotificationProvider>
             <ClientRouteProtection>
+              <SessionManager />
               <PageTransition>
                 {children}
               </PageTransition>

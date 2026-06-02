@@ -404,6 +404,7 @@ function LoginContent() {
                           {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
                         </button>
                       </div>
+                      <p className={`text-[9px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1.5 ml-4 font-semibold`}>Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol.</p>
                     </div>
                   </div>
 
@@ -727,6 +728,7 @@ function LoginContent() {
                           {showNewPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
                         </button>
                       </div>
+                      <p className={`text-[9px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1.5 ml-4 font-semibold`}>Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol.</p>
                     </div>
                   </div>
 
