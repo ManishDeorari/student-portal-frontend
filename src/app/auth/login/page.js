@@ -217,6 +217,12 @@ function LoginContent() {
           section: signupForm.section,
         };
 
+    if (!signupForm.email.endsWith("@gehu.ac.in")) {
+      setError("Only @gehu.ac.in email addresses are allowed for sign up.");
+      setLoading(false);
+      return;
+    }
+
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
     // ✅ Pre-flight: Ping the health endpoint to wake the server (fire-and-forget)
