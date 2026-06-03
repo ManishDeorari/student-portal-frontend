@@ -42,7 +42,7 @@ function LoginContent() {
     name: "",
     email: "",
     password: "",
-    enrollmentNumber: "",
+    enrollmentNumber: "PV-H", // default prefix
     role: "student", // default
     position: "",
     department: "",
@@ -55,6 +55,19 @@ function LoginContent() {
     let { name, value } = e.target;
     if (name === "course" || name === "section") {
       value = value?.toUpperCase() || "";
+    }
+    // When switching roles, reset the enrollment/ID field appropriately
+    if (name === "role") {
+      const newEnrollment = value === "student" ? "PV-H" : "";
+      setSignupForm({ ...signupForm, [name]: value, enrollmentNumber: newEnrollment });
+      return;
+    }
+    // Ensure enrollment number always keeps the PV-H prefix and is uppercase (student only)
+    if (name === "enrollmentNumber" && signupForm.role === "student") {
+      value = value.toUpperCase();
+      if (!value.startsWith("PV-H")) {
+        value = "PV-H" + value.replace(/^PV-?H?/i, "");
+      }
     }
     setSignupForm({ ...signupForm, [name]: value });
   };
@@ -194,6 +207,27 @@ function LoginContent() {
     setError("");
     setLoading(true);
 
+    // Client-side enrollment number format check (student only)
+    if (signupForm.role === "student") {
+      const enRegex = /^PV-H\d+$/;
+      if (!enRegex.test(signupForm.enrollmentNumber)) {
+        setError("Invalid enrollment number format. It must start with 'PV-H' followed by digits only (e.g. PV-H209001).");
+        setLoading(false);
+        return;
+      }
+      if (signupForm.enrollmentNumber.length > 15) {
+        setError("Enrollment number is too long. Use format PV-H followed by up to 10 digits (e.g. PV-H209001).");
+        setLoading(false);
+        return;
+      }
+    }
+
+    if (!signupForm.email.endsWith("@gehu.ac.in")) {
+      setError("Only @gehu.ac.in email addresses are allowed for sign up.");
+      setLoading(false);
+      return;
+    }
+
     // Prepare body according to role
     const body =
       signupForm.role === "faculty"
@@ -216,12 +250,6 @@ function LoginContent() {
           semester: Number(signupForm.semester),
           section: signupForm.section,
         };
-
-    if (!signupForm.email.endsWith("@gehu.ac.in")) {
-      setError("Only @gehu.ac.in email addresses are allowed for sign up.");
-      setLoading(false);
-      return;
-    }
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -367,12 +395,12 @@ function LoginContent() {
 
                   <div className="space-y-4 sm:space-y-5">
                     <div className="space-y-1.5">
-                      <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email or ID</label>
+                      <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email or Enrollment No.</label>
                       <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                         <input
                           type="text"
                           name="identifier"
-                          placeholder="example@univ.edu"
+                          placeholder="example@gehu.ac.in or PV-H209001"
                           value={form.identifier}
                           onChange={handleChange}
                           className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
@@ -507,6 +535,11 @@ function LoginContent() {
                         required
                       />
                     </div>
+                    {signupForm.role === "student" && (
+                      <p className={`text-[9px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1 ml-4 font-semibold`}>
+                        Format: PV-H followed by digits only (e.g. PV-H209001)
+                      </p>
+                    )}
                   </div>
 
                   {signupForm.role === "faculty" ? (
