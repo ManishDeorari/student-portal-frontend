@@ -85,8 +85,9 @@ export default function Sidebar() {
   const handleSignout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    // Dispatch auth change so ClientRouteProtection shows the LoginPopup in-place
     window.dispatchEvent(new Event("local-auth-change"));
-    router.push("/auth/login");
+    // Do NOT router.push("/auth/login") — that overrides the LoginPopup
   };
 
   return (

@@ -29,6 +29,7 @@ export default function SessionManager() {
     localStorage.removeItem("role");
     localStorage.removeItem("userId");
     localStorage.removeItem("user");
+    // Fire auth-change event — ClientRouteProtection will show the LoginPopup in-place
     window.dispatchEvent(new Event("local-auth-change"));
 
     if (reason === "idle") {
@@ -47,9 +48,8 @@ export default function SessionManager() {
         style: { background: "#1e293b", color: "#f87171", border: "1px solid #f8717133" },
       });
     }
-
-    router.push("/auth/login");
-  }, [router]);
+    // Do NOT router.push("/auth/login") — that overrides the LoginPopup shown by ClientRouteProtection
+  }, []);
 
   // Reset activity timer on user interaction
   const resetActivity = useCallback(() => {
