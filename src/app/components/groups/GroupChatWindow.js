@@ -371,6 +371,7 @@ export default function GroupChatWindow({
                             )}
                         </div>
                     </div>
+                )}
                 {documentPreviewName && (
                     <div className="p-4 bg-black/10 backdrop-blur-md border-t dark:border-white/5 animate-in slide-in-from-bottom-4 duration-300">
                         <div className="relative inline-flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-2xl border-2 border-blue-500/30 shadow-2xl">
