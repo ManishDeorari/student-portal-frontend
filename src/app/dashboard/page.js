@@ -253,10 +253,11 @@ export default function DashboardPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   disabled={isFetchingFeed}
-                  className={`px-4 sm:px-6 py-2.5 rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest transition-all whitespace-nowrap flex-shrink-0 ${activeTab === tab.id
-                    ? "bg-[#FAFAFA] text-blue-700 shadow-xl scale-105"
-                    : "bg-[#FAFAFA]/10 text-white hover:bg-[#FAFAFA]/20 border border-white/10"
-                    } ${isFetchingFeed ? "opacity-50 cursor-wait" : ""}`}
+                  className={`px-4 sm:px-6 py-2.5 rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest transition-all whitespace-nowrap flex-shrink-0 ${
+                    activeTab === tab.id
+                      ? (darkMode ? "bg-[#FAFAFA] text-blue-700 shadow-xl scale-105" : "bg-blue-600 text-white shadow-lg scale-105")
+                      : (darkMode ? "bg-[#FAFAFA]/10 text-white hover:bg-[#FAFAFA]/20 border border-white/10" : "bg-white text-gray-500 hover:text-blue-600 hover:bg-gray-50 border border-gray-200 shadow-sm")
+                  } ${isFetchingFeed ? "opacity-50 cursor-wait" : ""}`}
                 >
                   {tab.label}
                 </button>

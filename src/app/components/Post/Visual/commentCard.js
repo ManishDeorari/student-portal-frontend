@@ -258,9 +258,9 @@ export default function CommentCard({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -10 }}
                         transition={{ duration: 0.15 }}
-                        className={`absolute right-0 mt-1 w-36 rounded-xl border z-[999] shadow-2xl backdrop-blur-md overflow-hidden ${darkMode ? "bg-slate-900/95 border-white/10" : "bg-white/95 border-gray-100"}`}
+                        className="absolute right-0 mt-1 z-[999] p-[2px] rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-2xl"
                       >
-                        <div className="py-1">
+                        <div className={`w-36 rounded-[10px] backdrop-blur-md py-1 flex flex-col overflow-hidden h-full ${darkMode ? "bg-slate-900/95 text-white" : "bg-white/95 text-gray-800"}`}>
                           {isOwn && (
                             <button
                               onClick={() => {
