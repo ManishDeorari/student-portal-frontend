@@ -4,6 +4,7 @@ import Image from "next/image";
 import ImageViewerModal from "../../profile/ImageViewerModal";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
 
 export default function PostHeader({ post, currentUser, editing, toggleEdit, handleDelete, darkMode = false, hideActions = false }) {
   const [showViewer, setShowViewer] = useState(false);
@@ -31,7 +32,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
     <div className="flex items-center gap-3">
       <div className="relative w-9 h-9 sm:w-12 sm:h-12">
         <Image
-          src={profileImg}
+          src={getOptimizedImageUrl(profileImg)}
           alt="User profile"
           width={48}
           height={48}

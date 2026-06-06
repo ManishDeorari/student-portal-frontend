@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 import ConfirmationModal from "./ConfirmationModal";
+import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
 
 export default function CommentCard({
   comment,
@@ -97,6 +98,7 @@ export default function CommentCard({
   if (!comment || !currentUser || !comment.user) return null;
 
   const isOwn = comment.user._id === currentUser._id;
+  const isRestricted = !isOwn && currentUser?.role !== 'admin';
 
   const toggleReaction = async (emoji) => {
     if (isReply && onReactToReply) {
@@ -147,14 +149,22 @@ export default function CommentCard({
       >
         <div className="flex justify-between items-start">
           <div className="flex gap-3 w-full">
-            <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex-shrink-0 w-8 h-8 shadow-sm">
+            <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex-shrink-0 w-8 h-8 shadow-sm relative">
               <Image
-                src={comment.user?.profilePicture || "/default-profile.jpg"}
+                src={getOptimizedImageUrl(comment.user?.profilePicture || "/default-profile.jpg")}
                 alt="User"
                 width={32}
                 height={32}
-                className="w-full h-full rounded-full border border-white/5 object-cover"
+                onContextMenu={(e) => isRestricted && e.preventDefault()}
+                onDragStart={(e) => isRestricted && e.preventDefault()}
+                className={`w-full h-full rounded-full border border-white/5 object-cover ${isRestricted ? "select-none" : ""}`}
               />
+              {isRestricted && (
+                <div 
+                  className="absolute inset-0 z-10 cursor-pointer rounded-full"
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+              )}
             </div>
             <div className="w-full">
               <div className={`text-sm font-black flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}>

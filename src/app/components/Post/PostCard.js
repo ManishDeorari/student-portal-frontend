@@ -7,6 +7,7 @@ import Link from "next/link";
 import PostHeader from "./Visual/PostHeader";
 import PostContent from "./Visual/PostContent";
 import PostMedia from "./Visual/PostMedia";
+import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
 import PostReactions from "./Visual/PostReactions";
 import dynamic from "next/dynamic";
 const PostModal = dynamic(() => import("./Visual/PostModal"), { ssr: false });
@@ -350,13 +351,21 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                           {(entry.type === 'group' ? entry.members : [entry]).map((member, midx) => (
                             <div key={midx} className={`p-4 flex items-center justify-between gap-4 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-blue-50/50"}`}>
                               <div className="flex items-center gap-4 flex-1 min-w-0">
-                                <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 shadow-lg flex-shrink-0">
+                                <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 shadow-lg flex-shrink-0 relative">
                                   <img
-                                    src={member.profilePicture || member.userId?.profilePicture || "/default-profile.jpg"}
+                                    src={getOptimizedImageUrl(member.profilePicture || member.userId?.profilePicture || "/default-profile.jpg")}
                                     alt={member.name}
-                                    className="w-10 h-10 rounded-full object-cover border-2 border-white/10"
+                                    className={`w-10 h-10 rounded-full object-cover border-2 border-white/10 ${currentUser?.role !== 'admin' ? "select-none" : ""}`}
                                     onError={(e) => { e.target.src = "/default-profile.jpg"; }}
+                                    onContextMenu={(e) => { if (currentUser?.role !== 'admin') e.preventDefault(); }}
+                                    onDragStart={(e) => { if (currentUser?.role !== 'admin') e.preventDefault(); }}
                                   />
+                                  {currentUser?.role !== 'admin' && (
+                                    <div 
+                                      className="absolute inset-0 z-10 cursor-pointer rounded-full"
+                                      onContextMenu={(e) => e.preventDefault()}
+                                    />
+                                  )}
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                   <div className="flex items-center gap-2">

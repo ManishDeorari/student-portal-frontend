@@ -3,6 +3,7 @@ import { useState } from "react";
 import ProfileEditorModal from "./Avatar/ProfileEditorModal";
 import ImageViewerModal from "./ImageViewerModal"; // import here
 import Image from "next/image";
+import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
 
 export default function ProfileAvatar({ image, onUpload, userId, isPublicView }) {
   const [showEditor, setShowEditor] = useState(false);
@@ -17,7 +18,7 @@ export default function ProfileAvatar({ image, onUpload, userId, isPublicView })
     <div className="relative group">
       <div className="p-[3px] bg-gradient-to-tr from-blue-600 via-purple-500 to-pink-500 rounded-full shadow-2xl transition-transform duration-300 group-hover:scale-105">
         <Image
-          src={profileImg}
+          src={getOptimizedImageUrl(profileImg)}
           alt="Profile"
           width={160}
           height={160}
@@ -27,6 +28,13 @@ export default function ProfileAvatar({ image, onUpload, userId, isPublicView })
           onDragStart={(e) => isRestricted && e.preventDefault()}
           className={`rounded-full object-cover w-40 h-40 cursor-pointer ${isRestricted ? 'select-none' : ''}`}
         />
+        {isRestricted && (
+          <div 
+            className="absolute inset-0 z-10 cursor-pointer rounded-full"
+            onContextMenu={(e) => e.preventDefault()}
+            onClick={() => setShowViewer(true)}
+          />
+        )}
       </div>
 
       {!isPublicView && (

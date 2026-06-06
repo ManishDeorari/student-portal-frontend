@@ -4,6 +4,7 @@ import BannerEditorModal from "./Banner/BannerEditorModal";
 import ImageViewerModal from "./ImageViewerModal";
 import Image from "next/image";
 import { useTheme } from "@/context/ThemeContext";
+import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
 
 export default function ProfileBanner({ image, onUpload, userId, isPublicView }) {
   const { darkMode } = useTheme();
@@ -19,7 +20,7 @@ export default function ProfileBanner({ image, onUpload, userId, isPublicView })
     <div className="relative w-full h-48 overflow-hidden rounded-lg">
       <div className={`w-full h-full relative ${darkMode ? 'bg-slate-800' : 'bg-gray-200'}`}>
         <Image
-          src={bannerImg}
+          src={getOptimizedImageUrl(bannerImg)}
           alt="Banner"
           fill
           unoptimized={bannerImg === "/default_banner.jpg"}

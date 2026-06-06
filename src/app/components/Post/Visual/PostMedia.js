@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import ImageGallery from "../utils/ImageGallery";
 import FullImageViewer from "../utils/FullImageViewer";
+import { getCloudinaryDownloadUrl, getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
 
 export default function PostMedia({ post, setSelectedImage, currentUser, darkMode = false }) {
   if (!(post.images?.length > 0 || post.video || post.image || post.documents?.length > 0)) return null;
@@ -65,7 +66,7 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
           {post.documents.map((doc, index) => (
             <a
               key={index}
-              href={doc.url}
+              href={getCloudinaryDownloadUrl(doc.url, doc.original_filename)}
               target="_blank"
               rel="noopener noreferrer"
               className={`flex items-center justify-between p-3 rounded-xl border ${darkMode ? "bg-[#1a1a1c] border-white/10 hover:bg-white/5" : "bg-white border-gray-200 hover:bg-gray-50"} shadow-sm transition-colors`}
