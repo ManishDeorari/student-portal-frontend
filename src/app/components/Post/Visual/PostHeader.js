@@ -12,11 +12,12 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
   const dropdownRef = useRef(null);
 
   const profileImg = post.user?.profilePicture || "/default-profile.jpg";
-  const isSelf = post.user?._id === currentUser?._id;
-  const isRestricted = !isSelf && currentUser?.role !== 'admin';
+  const isOwn = currentUser && (currentUser._id === post.userId?._id || currentUser.id === post.userId?._id);
+  const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
+  const isRestricted = !isOwn && !isAdmin;
 
   const canEdit = (post.user?._id || post.user) === (currentUser?._id || currentUser);
-  const canDelete = canEdit || currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin;
+  const canDelete = canEdit || currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
 
   useEffect(() => {
     const clickOutside = (e) => {
@@ -148,3 +149,4 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
     </div>
   );
 }
+

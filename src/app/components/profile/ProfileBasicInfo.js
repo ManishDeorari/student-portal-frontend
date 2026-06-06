@@ -180,7 +180,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                             <span className={`font-bold uppercase tracking-widest text-[10px] px-2 py-0.5 rounded border italic ${darkMode ? 'text-blue-400 bg-blue-900/30 border-blue-900/50' : 'text-blue-600 bg-blue-50 border-blue-100'}`}>
                                 {profile.role || "Member"}
                             </span>
-                            {!(profile.isMainAdmin || profile.email === "admin@studentportal.com" || profile.email === "manishdeorari377@gmail.com") && (
+                            {!(profile.isMainAdmin || profile.email === "manishdeorari377@gmail.com") && (
                                 <>
                                     <span className={`${darkMode ? 'text-gray-600' : 'text-gray-300'}`}>•</span>
                                     <span className={`font-bold uppercase tracking-widest text-[10px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -355,3 +355,4 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
         </div>
     );
 }
+

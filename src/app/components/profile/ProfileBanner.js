@@ -11,8 +11,17 @@ export default function ProfileBanner({ image, onUpload, userId, isPublicView })
   const [showEditor, setShowEditor] = useState(false);
   const [showViewer, setShowViewer] = useState(false);
 
-  const currentUserRole = typeof window !== 'undefined' ? localStorage.getItem("role") : null;
-  const isRestricted = isPublicView && currentUserRole !== 'admin';
+  let isAdmin = false;
+  if (typeof window !== 'undefined') {
+    try {
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const u = JSON.parse(userStr);
+        isAdmin = u.role === 'admin' || u.isAdmin === true || u.isMainAdmin === true || u.email === "manishdeorari377@gmail.com";
+      }
+    } catch(e) {}
+  }
+  const isRestricted = isPublicView && !isAdmin;
 
   const bannerImg = image || "/default_banner.jpg";
 
@@ -71,3 +80,4 @@ export default function ProfileBanner({ image, onUpload, userId, isPublicView })
     </div>
   );
 }
+

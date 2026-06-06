@@ -11,8 +11,17 @@ export default function ProfileAvatar({ image, onUpload, userId, isPublicView })
 
   const profileImg = image || "/default-profile.jpg";
 
-  const currentUserRole = typeof window !== 'undefined' ? localStorage.getItem("role") : null;
-  const isRestricted = isPublicView && currentUserRole !== 'admin';
+  let isAdmin = false;
+  if (typeof window !== 'undefined') {
+    try {
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const u = JSON.parse(userStr);
+        isAdmin = u.role === 'admin' || u.isAdmin === true || u.isMainAdmin === true || u.email === "manishdeorari377@gmail.com";
+      }
+    } catch(e) {}
+  }
+  const isRestricted = isPublicView && !isAdmin;
 
   return (
     <div className="relative group">
@@ -69,3 +78,4 @@ export default function ProfileAvatar({ image, onUpload, userId, isPublicView })
     </div>
   );
 }
+

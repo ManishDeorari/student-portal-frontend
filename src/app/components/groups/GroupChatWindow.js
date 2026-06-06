@@ -252,7 +252,8 @@ export default function GroupChatWindow({
                 <div className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar bg-chat-pattern">
                     {messages.map((msg, index) => {
                         const isMe = String(msg.sender?._id || msg.sender?.id || msg.sender) === String(currentUser?._id || currentUser?.id);
-                        const isRestricted = !isMe && currentUser?.role !== 'admin';
+                        const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
+                        const isRestricted = !isMe && !isAdmin;
 
                         return (
                             <div key={msg._id || index} className={`flex items-start gap-3 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
@@ -460,3 +461,4 @@ export default function GroupChatWindow({
         </div>
     );
 }
+
