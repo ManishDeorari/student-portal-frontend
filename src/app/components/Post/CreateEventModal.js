@@ -6,7 +6,7 @@ import { createEvent } from "../../../api/dashboard";
 import EmojiPickerToggle from "./utils/EmojiPickerToggle";
 import PostLoadingScreen from "./utils/PostLoadingScreen";
 
-const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setPosts }) => {
+const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setPosts, isInline = false }) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
   const [formData, setFormData] = useState({
@@ -42,7 +42,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
   const [customQuestions, setCustomQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState("");
 
-  if (!isOpen) return null;
+  if (!isOpen && !isInline) return null;
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -149,11 +149,11 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
       : "p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 focus-within:ring-2 focus-within:ring-purple-400 shadow-sm transition-all";
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-      <div className={`p-[2px] rounded-2xl sm:rounded-[2.6rem] bg-gradient-to-tr from-blue-500 to-purple-600 w-full max-w-2xl my-auto shadow-2xl transition-all max-h-[95dvh] sm:max-h-[90vh]`}>
+  const modalContent = (
+      <div className={`p-[2px] rounded-2xl sm:rounded-[2.6rem] bg-gradient-to-tr from-blue-500 to-purple-600 w-full max-w-2xl my-auto shadow-2xl transition-all ${isInline ? "" : "max-h-[95dvh] sm:max-h-[90vh]"}`}>
         <div className={`relative w-full h-full ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} rounded-xl sm:rounded-[2.5rem] overflow-hidden`}>
         {/* Header */}
+        {!isInline && (
         <div className={`px-4 sm:px-8 py-4 sm:py-6 border-b ${darkMode ? "border-white/10" : "border-gray-100"} flex items-center justify-between`}>
           <h2 className={`text-lg sm:text-2xl font-black ${darkMode ? "text-white" : "text-gray-900"} tracking-tight flex items-center gap-2`}>
             <span>📅</span> Create Event
@@ -162,6 +162,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
             &times;
           </button>
         </div>
+        )}
 
         <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-5 sm:space-y-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
           {/* Media Section */}
@@ -369,6 +370,11 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
       </div>
       <PostLoadingScreen type="Event" loading={loading} darkMode={darkMode} />
      </div>
+  );
+
+  return isInline ? modalContent : (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+      {modalContent}
     </div>
   );
 };

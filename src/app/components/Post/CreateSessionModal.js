@@ -6,7 +6,7 @@ import { createPost } from "../../../api/dashboard";
 import EmojiPickerToggle from "./utils/EmojiPickerToggle";
 import PostLoadingScreen from "./utils/PostLoadingScreen";
 
-const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, setPosts }) => {
+const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, setPosts, isInline = false }) => {
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const [sessionDetails, setSessionDetails] = useState({
@@ -20,7 +20,7 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
   const [video, setVideo] = useState(null);
   const [previewVideo, setPreviewVideo] = useState(null);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isInline) return null;
 
   const handleInputChange = (e) => {
     const { name, value } = e;
@@ -111,9 +111,11 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-      <div className={`p-[2px] rounded-2xl sm:rounded-[2.6rem] bg-gradient-to-tr from-blue-500 to-purple-600 w-full max-w-2xl my-auto shadow-2xl transition-all max-h-[95dvh] sm:max-h-[90vh]`}>
+  const modalContent = (
+      <div className={`p-[2px] rounded-2xl sm:rounded-[2.6rem] bg-gradient-to-tr from-blue-500 to-purple-600 w-full max-w-2xl my-auto shadow-2xl transition-all ${isInline ? "" : "max-h-[95dvh] sm:max-h-[90vh]"}`}>
         <div className={`relative w-full h-full ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} rounded-xl sm:rounded-[2.5rem] overflow-hidden`}>
           {/* Header */}
+          {!isInline && (
           <div className={`px-4 sm:px-8 py-4 sm:py-6 border-b ${darkMode ? "border-white/10" : "border-gray-100"} flex items-center justify-between`}>
             <div className="flex items-center gap-3">
                <span className="text-3xl">🤝</span>
@@ -130,6 +132,7 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
               &times;
             </button>
           </div>
+          )}
 
           <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-5 sm:space-y-8">
             <div className="space-y-6">
@@ -293,6 +296,12 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
         </div>
       </div>
       <PostLoadingScreen type="Session" loading={loading} darkMode={darkMode} />
+    </div>
+  );
+
+  return isInline ? modalContent : (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+      {modalContent}
     </div>
   );
 };
