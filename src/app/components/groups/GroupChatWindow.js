@@ -418,7 +418,7 @@ export default function GroupChatWindow({
                                 <button type="button" onClick={() => documentInputRef.current.click()} className={`p-2.5 rounded-2xl transition-all ${darkMode ? "text-gray-400 hover:bg-[#FAFAFA]/10" : "text-gray-500 hover:bg-gray-100"}`}>
                                     <FaFileAlt size={20} />
                                 </button>
-                                <input type="file" ref={documentInputRef} className="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" onChange={handleDocumentChange} />
+                                <input type="file" ref={documentInputRef} className="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.txt" onChange={handleDocumentChange} />
                             </div>
 
                             <div className="flex-1 relative p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl focus-within:scale-[1.01] transition-all">

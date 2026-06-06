@@ -191,7 +191,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
                         <span>📄</span> Document
                         <input
                           type="file"
-                          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+                          accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.txt"
                           multiple
                           onChange={handleDocumentChange}
                           className="hidden"
