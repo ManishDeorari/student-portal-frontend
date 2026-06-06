@@ -69,8 +69,9 @@ export default function PostModal({
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
-  const isSelf = post.user?._id === currentUser?._id;
-  const isRestricted = !isSelf && currentUser?.role !== 'admin';
+  const isOwn = currentUser && (currentUser._id === post.userId?._id || currentUser.id === post.userId?._id);
+  const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
+  const isRestricted = !isOwn && !isAdmin;
   const editKey = `draft-${post._id}`;
 
   const sortedComments = React.useMemo(() => {

@@ -60,7 +60,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
       </div>
       <div className="flex-1 min-w-0">
         <div className={`font-semibold flex items-center gap-1 flex-wrap ${darkMode ? "text-white" : "text-gray-900"}`}>
-          {isSelf ? (
+          {isOwn ? (
             <span className="truncate max-w-[150px]">{post.user?.name || "Unknown"}</span>
           ) : (
             <Link
@@ -70,7 +70,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
               {post.user?.name || "Unknown"}
             </Link>
           )}
-          {isSelf && (
+          {isOwn && (
             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold flex-shrink-0 ${darkMode ? "bg-blue-600/30 text-blue-300 border border-blue-500/30" : "bg-blue-100 text-blue-600"}`}>
               You
             </span>
