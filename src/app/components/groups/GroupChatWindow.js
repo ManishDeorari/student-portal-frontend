@@ -122,7 +122,8 @@ export default function GroupChatWindow({
                 formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
                 formData.append("folder", "student/groups/documents");
 
-                const res = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_RAW_UPLOAD_URL, {
+                const RAW_UPLOAD_URL = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL?.replace('/image/upload', '/raw/upload') || "https://api.cloudinary.com/v1_1/djw8l0wxn/raw/upload";
+                const res = await fetch(RAW_UPLOAD_URL, {
                     method: "POST",
                     body: formData
                 });

@@ -12,6 +12,8 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
   let videoObject = null;
   let documentObjects = [];
 
+  const RAW_UPLOAD_URL = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL?.replace('/image/upload', '/raw/upload') || "https://api.cloudinary.com/v1_1/djw8l0wxn/raw/upload";
+
   const isStructured = typeof contentOrData === "object" && contentOrData !== null;
   const content = isStructured ? contentOrData.content : contentOrData;
   const finalType = isStructured ? (contentOrData.type || type) : type;
@@ -83,7 +85,7 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
       docData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
       docData.append("folder", "student/documents");
 
-      const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_RAW_UPLOAD_URL, {
+      const uploadRes = await fetch(RAW_UPLOAD_URL, {
         method: "POST",
         body: docData,
       });

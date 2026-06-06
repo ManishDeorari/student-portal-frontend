@@ -105,13 +105,14 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
           return [newPost, ...prev];
         });
         toast.success("🎉 Post uploaded successfully!", { autoClose: 1500 });
+        if (typeof setIsMainModalOpen === 'function') setIsMainModalOpen(false);
       } else {
         console.warn("❌ Unexpected post format:", result);
         toast.error("❌ Post failed to upload correctly.");
       }
     } catch (err) {
       console.error("Post error:", err);
-      toast.error("❌ Post failed. Try again.");
+      toast.error(`❌ Post failed: ${err.response?.data?.message || err.message || "Unknown error"}. Try again.`);
     } finally {
       setLoading(false);
     }
