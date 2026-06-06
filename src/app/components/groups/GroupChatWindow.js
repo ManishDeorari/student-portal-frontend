@@ -262,7 +262,7 @@ export default function GroupChatWindow({
                                             src={getOptimizedImageUrl(msg.sender?.profilePicture || "/default-profile.jpg")} 
                                             width={32} 
                                             height={32} 
-                                            className={`object-cover aspect-square ${isRestricted ? "select-none" : ""}`} 
+                                            className={`object-cover aspect-square ${isRestricted ? "select-none pointer-events-none" : ""}`} 
                                             alt={msg.sender?.name || "User"} 
                                             onError={(e) => { e.target.src = "/default-profile.jpg"; }}
                                             onContextMenu={(e) => isRestricted && e.preventDefault()}

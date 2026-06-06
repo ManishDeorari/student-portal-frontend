@@ -75,7 +75,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
       formData.append("folder", "student/profiles/avatars");
 
       // Force unique filename to avoid caching issues
-      const newPublicId = `user_${userId}_profile_${Date.now()}`;
+      const newPublicId = `profile_${crypto.randomUUID()}_${Date.now()}`;
       formData.append("public_id", newPublicId);
 
       const uploadRes = await fetch(

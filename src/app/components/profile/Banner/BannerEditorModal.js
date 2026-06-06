@@ -67,7 +67,7 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
       formData.append("file", selectedFile);
       formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
       formData.append("folder", "student/profiles/banners");
-      const newPublicId = `user_${userId}_banner_${Date.now()}`;
+      const newPublicId = `banner_${crypto.randomUUID()}_${Date.now()}`;
       formData.append("public_id", newPublicId);
 
       const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, { method: "POST", body: formData });

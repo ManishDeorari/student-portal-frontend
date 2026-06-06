@@ -26,11 +26,11 @@ export default function ProfileAvatar({ image, onUpload, userId, isPublicView })
           onClick={() => setShowViewer(true)} // open full view
           onContextMenu={(e) => isRestricted && e.preventDefault()}
           onDragStart={(e) => isRestricted && e.preventDefault()}
-          className={`rounded-full object-cover w-40 h-40 cursor-pointer ${isRestricted ? 'select-none' : ''}`}
+          className={`rounded-full object-cover w-40 h-40 cursor-pointer ${isRestricted ? 'select-none pointer-events-none [-webkit-touch-callout:none]' : ''}`}
         />
         {isRestricted && (
           <div 
-            className="absolute inset-0 z-10 cursor-pointer rounded-full"
+            className="absolute inset-0 z-10 cursor-pointer rounded-full [-webkit-touch-callout:none]"
             onContextMenu={(e) => e.preventDefault()}
             onClick={() => setShowViewer(true)}
           />

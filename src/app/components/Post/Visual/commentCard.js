@@ -157,7 +157,7 @@ export default function CommentCard({
                 height={32}
                 onContextMenu={(e) => isRestricted && e.preventDefault()}
                 onDragStart={(e) => isRestricted && e.preventDefault()}
-                className={`w-full h-full rounded-full border border-white/5 object-cover ${isRestricted ? "select-none" : ""}`}
+                className={`w-full h-full rounded-full border border-white/5 object-cover ${isRestricted ? "select-none pointer-events-none" : ""}`}
               />
               {isRestricted && (
                 <div 

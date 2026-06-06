@@ -39,7 +39,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
           unoptimized={profileImg === "/default-profile.jpg"}
           onContextMenu={(e) => isRestricted && e.preventDefault()}
           onDragStart={(e) => isRestricted && e.preventDefault()}
-          className={`rounded-full border-2 ${darkMode ? "border-blue-500" : "border-black"} object-cover w-full h-full cursor-pointer hover:scale-110 transition-transform ${isRestricted ? 'select-none' : ''}`}
+          className={`rounded-full border-2 ${darkMode ? "border-blue-500" : "border-black"} object-cover w-full h-full cursor-pointer hover:scale-110 transition-transform ${isRestricted ? 'select-none pointer-events-none' : ''}`}
           onClick={(e) => {
             e.stopPropagation();
             setShowViewer(true);

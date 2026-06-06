@@ -91,15 +91,17 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
           <ZoomOut size={20} />
         </button>
         <div className="w-[1px] h-8 bg-[#FAFAFA]/20 mx-1" />
-        <a
-          href={imageUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 text-white rounded-full p-3 transition-all"
-          title="Download"
-        >
-          <Download size={20} />
-        </a>
+        {!isRestricted && (
+          <a
+            href={imageUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 text-white rounded-full p-3 transition-all"
+            title="Download"
+          >
+            <Download size={20} />
+          </a>
+        )}
         <button
           onClick={onClose}
           className="bg-red-500/20 hover:bg-red-500/40 text-red-500 rounded-full p-3 transition-all"
@@ -123,7 +125,7 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
           <img
             src={imageUrl}
             alt="Full view"
-            className={`max-w-[90vw] max-h-[90vh] object-contain rounded-[calc(1rem-2.5px)] shadow-2xl ${isRestricted ? 'select-none pointer-events-none' : ''}`}
+            className={`max-w-[90vw] max-h-[90vh] object-contain rounded-[calc(1rem-2.5px)] shadow-2xl ${isRestricted ? 'select-none pointer-events-none [-webkit-touch-callout:none]' : ''}`}
             onContextMenu={(e) => isRestricted && e.preventDefault()}
             draggable={false}
           />
@@ -132,7 +134,7 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
         {/* Protective Overlay */}
         {isRestricted && (
           <div
-            className="absolute inset-0 z-10"
+            className="absolute inset-0 z-10 [-webkit-touch-callout:none]"
             onContextMenu={(e) => e.preventDefault()}
           />
         )}

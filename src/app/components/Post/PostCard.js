@@ -355,7 +355,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                   <img
                                     src={getOptimizedImageUrl(member.profilePicture || member.userId?.profilePicture || "/default-profile.jpg")}
                                     alt={member.name}
-                                    className={`w-10 h-10 rounded-full object-cover border-2 border-white/10 ${currentUser?.role !== 'admin' ? "select-none" : ""}`}
+                                    className={`w-10 h-10 rounded-full object-cover border-2 border-white/10 ${currentUser?.role !== 'admin' ? "select-none pointer-events-none" : ""}`}
                                     onError={(e) => { e.target.src = "/default-profile.jpg"; }}
                                     onContextMenu={(e) => { if (currentUser?.role !== 'admin') e.preventDefault(); }}
                                     onDragStart={(e) => { if (currentUser?.role !== 'admin') e.preventDefault(); }}
