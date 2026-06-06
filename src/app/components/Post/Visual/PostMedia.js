@@ -5,7 +5,7 @@ import ImageGallery from "../utils/ImageGallery";
 import FullImageViewer from "../utils/FullImageViewer";
 
 export default function PostMedia({ post, setSelectedImage, currentUser, darkMode = false }) {
-  if (!(post.images?.length > 0 || post.video || post.image)) return null;
+  if (!(post.images?.length > 0 || post.video || post.image || post.documents?.length > 0)) return null;
 
   const isRestricted = post.user?._id !== currentUser?._id && currentUser?.role !== 'admin';
 
@@ -57,6 +57,32 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
           <source src={post.video.url} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+      )}
+
+      {/* Documents */}
+      {post.documents?.length > 0 && (
+        <div className="mt-3 flex flex-col gap-2">
+          {post.documents.map((doc, index) => (
+            <a
+              key={index}
+              href={doc.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center justify-between p-3 rounded-xl border ${darkMode ? "bg-[#1a1a1c] border-white/10 hover:bg-white/5" : "bg-white border-gray-200 hover:bg-gray-50"} shadow-sm transition-colors`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-3 overflow-hidden">
+                <span className="text-2xl">📄</span>
+                <span className={`text-sm font-bold truncate ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                  {doc.original_filename || `Document ${index + 1}`}
+                </span>
+              </div>
+              <span className={`text-xs font-black uppercase px-3 py-1 rounded-full ${darkMode ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-600"}`}>
+                Download
+              </span>
+            </a>
+          ))}
+        </div>
       )}
     </div>
   );

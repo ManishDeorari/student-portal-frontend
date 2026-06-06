@@ -7,9 +7,10 @@ export const fetchPosts = async (page = 1, limit = 10, type = "Regular") => {
   return res.json();
 };
 
-export const createPost = async (contentOrData, image, video, type = "Regular") => {
+export const createPost = async (contentOrData, image, video, type = "Regular", documents = []) => {
   let imageObjects = [];
   let videoObject = null;
+  let documentObjects = [];
 
   const isStructured = typeof contentOrData === "object" && contentOrData !== null;
   const content = isStructured ? contentOrData.content : contentOrData;
@@ -73,6 +74,36 @@ export const createPost = async (contentOrData, image, video, type = "Regular") 
     console.groupEnd();
   }
 
+  // ✅ Upload documents
+  if (documents && documents.length > 0) {
+    console.group("📄 Uploading Documents to Cloudinary");
+    for (let doc of documents) {
+      const docData = new FormData();
+      docData.append("file", doc);
+      docData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+      docData.append("folder", "student/documents");
+
+      const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_RAW_UPLOAD_URL, {
+        method: "POST",
+        body: docData,
+      });
+
+      const uploadJson = await uploadRes.json();
+      if (uploadRes.ok && uploadJson.secure_url && uploadJson.public_id) {
+        documentObjects.push({
+          url: uploadJson.secure_url,
+          public_id: uploadJson.public_id,
+          original_filename: doc.name,
+          format: doc.name.split('.').pop(),
+        });
+        console.log("✅ Document uploaded:", uploadJson.secure_url);
+      } else {
+        console.error("❌ Document upload failed:", uploadJson);
+      }
+    }
+    console.groupEnd();
+  }
+
   // ✅ Send to backend
   const res = await fetch(`${BASE}/posts`, {
     method: "POST",
@@ -84,6 +115,7 @@ export const createPost = async (contentOrData, image, video, type = "Regular") 
       ...(isStructured ? contentOrData : { content, type: finalType }),
       images: imageObjects,
       video: videoObject,
+      documents: documentObjects,
     }),
   });
 

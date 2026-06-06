@@ -15,6 +15,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
   const [previewVideo, setPreviewVideo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
+  const [documents, setDocuments] = useState([]);
   const [error, setError] = useState("");
   const [selectedType, setSelectedType] = useState("Regular");
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
@@ -59,6 +60,17 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
     e.target.value = "";
   };
 
+  const handleDocumentChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + documents.length > 5) {
+      toast.error("You can upload up to 5 documents.");
+      return;
+    }
+    setDocuments([...documents, ...files]);
+    setError("");
+    e.target.value = "";
+  };
+
   const handleEmojiSelect = (emoji) => {
     setContent((prev) => prev + emoji.native);
   };
@@ -75,7 +87,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
     setError("");
 
     try {
-      const result = await createPost(content, images, video, selectedType);
+      const result = await createPost(content, images, video, selectedType, documents);
 
       const newPost = result?.data || result?.post || (Array.isArray(result.posts) ? result.posts[0] : null);
 
@@ -83,6 +95,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
       setVideo(null);
       setPreviewVideo(null);
       setImages([]);
+      setDocuments([]);
       setSelectedType("Regular");
 
       if (newPost && setPosts) {
@@ -172,6 +185,17 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
                           className="hidden"
                         />
                       </label>
+
+                      <label className={`cursor-pointer ${darkMode ? "text-green-400" : "text-green-600"} font-bold hover:underline text-sm flex items-center gap-1.5`}>
+                        <span>📄</span> Document
+                        <input
+                          type="file"
+                          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+                          multiple
+                          onChange={handleDocumentChange}
+                          className="hidden"
+                        />
+                      </label>
                     </div>
 
                     <button
@@ -228,6 +252,29 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
                       >
                         ❌
                       </button>
+                    </div>
+                  )}
+
+                  {documents.length > 0 && (
+                    <div className="mt-3 flex flex-col gap-2">
+                      {documents.map((doc, index) => (
+                        <div key={index} className={`relative flex items-center justify-between p-3 rounded-xl border ${darkMode ? "bg-[#1a1a1c] border-white/10" : "bg-white border-gray-200"} shadow-sm`}>
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <span className="text-2xl">📄</span>
+                            <span className={`text-sm font-bold truncate ${darkMode ? "text-gray-300" : "text-gray-700"}`}>{doc.name}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = documents.filter((_, i) => i !== index);
+                              setDocuments(updated);
+                            }}
+                            className="text-red-500 hover:text-red-700 p-1 bg-red-500/10 rounded-lg ml-2"
+                          >
+                            ❌
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>

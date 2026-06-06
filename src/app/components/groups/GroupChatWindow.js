@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
-import { FaPaperPlane, FaSmile, FaInfoCircle, FaUserPlus, FaUsers, FaImage, FaTimes, FaExpand, FaEdit } from "react-icons/fa";
+import { FaPaperPlane, FaSmile, FaInfoCircle, FaUserPlus, FaUsers, FaImage, FaTimes, FaExpand, FaEdit, FaFileAlt } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
 import EmojiPicker from 'emoji-picker-react';
 import { toast } from "react-hot-toast";
@@ -25,6 +25,7 @@ export default function GroupChatWindow({
     const { darkMode } = useTheme();
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
+    const documentInputRef = useRef(null);
     const emojiPickerRef = useRef(null);
 
     const [newMessage, setNewMessage] = useState("");
@@ -33,6 +34,8 @@ export default function GroupChatWindow({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [mediaPreview, setMediaPreview] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedDocument, setSelectedDocument] = useState(null);
+    const [documentPreviewName, setDocumentPreviewName] = useState("");
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -62,6 +65,18 @@ export default function GroupChatWindow({
         }
         setSelectedFile(file);
         setMediaPreview(URL.createObjectURL(file));
+        setSelectedDocument(null);
+        setDocumentPreviewName("");
+    };
+
+    const handleDocumentChange = (e) => {
+        if (isSubmitting) return;
+        const file = e.target.files[0];
+        if (!file) return;
+        setSelectedDocument(file);
+        setDocumentPreviewName(file.name);
+        setSelectedFile(null);
+        setMediaPreview(null);
     };
 
     const handleSend = async (e) => {
@@ -99,6 +114,34 @@ export default function GroupChatWindow({
                 setIsSubmitting(false);
                 return;
             }
+        } else if (selectedDocument) {
+            setUploading(true);
+            try {
+                const formData = new FormData();
+                formData.append("file", selectedDocument);
+                formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+                formData.append("folder", "student/groups/documents");
+
+                const res = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_RAW_UPLOAD_URL, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.secure_url) {
+                    mediaData = {
+                        mediaUrl: data.secure_url,
+                        mediaPublicId: data.public_id,
+                        type: "document",
+                        fileName: selectedDocument.name
+                    };
+                }
+            } catch (err) {
+                console.error("Upload error:", err);
+                toast.error("Failed to upload document.");
+                setUploading(false);
+                setIsSubmitting(false);
+                return;
+            }
         }
 
         try {
@@ -106,6 +149,8 @@ export default function GroupChatWindow({
             setNewMessage("");
             setMediaPreview(null);
             setSelectedFile(null);
+            setSelectedDocument(null);
+            setDocumentPreviewName("");
         } catch (err) {
             console.error("Failed to send message:", err);
         } finally {
@@ -244,7 +289,20 @@ export default function GroupChatWindow({
                                                     </div>
                                                 )}
 
-                                                {msg.type === "image" && msg.content && (
+                                                {msg.type === "document" && msg.mediaUrl && (
+                                                    <a
+                                                        href={msg.mediaUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-3 p-3 m-2 rounded-xl bg-black/10 hover:bg-black/20 transition-colors"
+                                                    >
+                                                        <span className="text-3xl">📄</span>
+                                                        <span className="font-bold text-sm truncate max-w-[150px]">{msg.fileName || "Document"}</span>
+                                                        <span className="text-[10px] uppercase bg-[#FAFAFA] text-black px-2 py-1 rounded-md font-bold shadow-sm">Download</span>
+                                                    </a>
+                                                )}
+
+                                                {(msg.type === "image" || msg.type === "document") && msg.content && (
                                                     <div className={`h-[1px] w-full ${darkMode ? "bg-[#FAFAFA]/20" : "bg-black/20"}`} />
                                                 )}
 
@@ -313,6 +371,24 @@ export default function GroupChatWindow({
                             )}
                         </div>
                     </div>
+                {documentPreviewName && (
+                    <div className="p-4 bg-black/10 backdrop-blur-md border-t dark:border-white/5 animate-in slide-in-from-bottom-4 duration-300">
+                        <div className="relative inline-flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-2xl border-2 border-blue-500/30 shadow-2xl">
+                            <span className="text-3xl">📄</span>
+                            <span className="font-bold truncate max-w-[200px] text-gray-900 dark:text-white">{documentPreviewName}</span>
+                            <button
+                                onClick={() => { setSelectedDocument(null); setDocumentPreviewName(""); }}
+                                className="absolute -top-2 -right-2 p-1.5 bg-red-600 text-white rounded-full shadow-lg hover:scale-110 transition-transform"
+                            >
+                                <FaTimes size={12} />
+                            </button>
+                            {uploading && (
+                                <div className="absolute inset-0 bg-black/40 rounded-2xl flex items-center justify-center">
+                                    <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 )}
 
                 <div className="h-[1.5px] w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-sm opacity-60" />
@@ -336,12 +412,17 @@ export default function GroupChatWindow({
                                     <FaImage size={22} />
                                 </button>
                                 <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+                                
+                                <button type="button" onClick={() => documentInputRef.current.click()} className={`p-2.5 rounded-2xl transition-all ${darkMode ? "text-gray-400 hover:bg-[#FAFAFA]/10" : "text-gray-500 hover:bg-gray-100"}`}>
+                                    <FaFileAlt size={20} />
+                                </button>
+                                <input type="file" ref={documentInputRef} className="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" onChange={handleDocumentChange} />
                             </div>
 
                             <div className="flex-1 relative p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl focus-within:scale-[1.01] transition-all">
                                 <input
                                     type="text"
-                                    placeholder={isSubmitting ? "Sending..." : (selectedFile ? "Add a caption..." : "Write something awesome...")}
+                                    placeholder={isSubmitting ? "Sending..." : ((selectedFile || selectedDocument) ? "Add a caption..." : "Write something awesome...")}
                                     value={newMessage}
                                     disabled={isSubmitting || uploading}
                                     onChange={(e) => setNewMessage(e.target.value)}
