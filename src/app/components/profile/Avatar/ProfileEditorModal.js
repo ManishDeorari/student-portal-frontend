@@ -72,6 +72,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
         "upload_preset",
         process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
       );
+      formData.append("folder", "student/profiles/avatars");
 
       // Force unique filename to avoid caching issues
       const newPublicId = `user_${userId}_profile_${Date.now()}`;

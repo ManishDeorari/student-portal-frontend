@@ -126,12 +126,12 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
               <div className="flex flex-col space-y-3">
                 <div className="flex-1 space-y-2">
                   <div className="relative">
-                    <div className={`p-[1px] bg-gradient-to-tr from-blue-600 to-purple-700 rounded-2xl shadow-lg transition-all duration-500`}>
+                    <div className={`p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-700 rounded-2xl shadow-lg transition-all duration-500`}>
                       <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="What's on your mind?"
-                        className={`w-full border-2 ${darkMode ? "border-white/20 bg-[#0f172a] text-white" : "border-black bg-[#FAFAFA] text-black"} rounded-[15px] p-3 resize-none placeholder-gray-500 focus:ring-0 transition-all duration-500`}
+                        className={`w-full border-none outline-none ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} rounded-[calc(1rem-2.5px)] p-3 resize-none placeholder-gray-500 focus:ring-0 transition-all duration-500`}
                         rows="4"
                       />
                     </div>
@@ -247,15 +247,18 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
   };
 
   return (
-    <div className={`w-full ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-4 sm:p-6 rounded-[2.5rem] shadow-sm transition-colors duration-500`}>
-      <div className="flex items-center gap-4">
-        <div 
-          onClick={() => setIsMainModalOpen(true)}
-          className={`flex-1 p-3 sm:p-4 rounded-2xl cursor-pointer transition-all duration-300 flex items-center border border-transparent hover:border-blue-500/30 ${darkMode ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-500"}`}
-        >
-          <span className="text-xl mr-3">✍️</span>
-          <span className="font-medium text-sm sm:text-base">Start a post...</span>
-        </div>
+    <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-lg mb-6">
+      <div className={`w-full ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-4 sm:p-6 rounded-[calc(2.5rem-2.5px)] transition-colors duration-500`}>
+        <div className="flex items-center gap-4">
+          <div className="flex-1 p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-sm transition-transform hover:-translate-y-0.5 active:scale-95">
+            <div 
+              onClick={() => setIsMainModalOpen(true)}
+              className={`w-full h-full p-3 sm:p-4 rounded-[calc(1rem-2.5px)] cursor-pointer transition-all duration-300 flex items-center ${darkMode ? "bg-[#121213] text-gray-300 hover:bg-[#1a1a1c]" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+            >
+              <span className="text-xl mr-3">✍️</span>
+              <span className="font-medium text-sm sm:text-base">Start a post...</span>
+            </div>
+          </div>
         <button 
           onClick={() => setIsMainModalOpen(true)}
           className="hidden sm:block px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-2xl font-bold uppercase tracking-widest text-xs transition-all shadow-lg hover:shadow-blue-500/25 active:scale-95 whitespace-nowrap"
@@ -308,6 +311,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
       )}
 
       <PostLoadingScreen type={selectedType} loading={loading} darkMode={darkMode} />
+      </div>
     </div>
   );
 };

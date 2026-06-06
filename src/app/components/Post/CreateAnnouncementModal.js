@@ -209,9 +209,8 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
       : "p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 focus-within:ring-2 focus-within:ring-purple-400 shadow-sm transition-all";
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
   const modalContent = (
+    <>
       <div className={`p-[2px] rounded-2xl sm:rounded-[2.6rem] bg-gradient-to-tr from-blue-500 to-purple-600 w-full max-w-4xl my-auto shadow-2xl transition-all ${isInline ? "" : "max-h-[95dvh] sm:max-h-[90vh]"}`}>
         <div className={`relative w-full h-full ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} rounded-xl sm:rounded-[2.5rem] overflow-hidden`}>
           {/* Header */}
@@ -234,7 +233,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
           </div>
           )}
 
-          <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-5 sm:space-y-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
+          <form onSubmit={handleSubmit} className={`p-4 ${isInline ? "sm:p-4 space-y-4 sm:space-y-5 max-h-[60vh]" : "sm:p-8 space-y-5 sm:space-y-8 max-h-[70vh]"} overflow-y-auto custom-scrollbar`}>
             {/* Event Content & Media Section - Vertical Stack */}
             <div className="space-y-6">
               {/* Media Section */}
@@ -385,7 +384,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                     </div>
                   
                   <div className={`p-[2px] rounded-[3rem] bg-gradient-to-br from-blue-500 to-purple-600 shadow-2xl shadow-blue-500/10`}>
-                    <div className={`p-4 sm:p-6 rounded-[calc(3rem-2px)] ${darkMode ? "bg-[#0f172a]" : "bg-white"} min-h-[300px] sm:min-h-[400px] overflow-x-auto`}>
+                    <div className={`p-4 sm:p-6 rounded-[calc(3rem-2px)] ${darkMode ? "bg-[#0f172a]" : "bg-white"} min-h-[150px] sm:min-h-[200px] overflow-x-auto`}>
                       <table className="w-full text-left border-separate border-spacing-y-4 table-auto min-w-[600px]">
                         <thead>
                           <tr className={`text-[11px] font-black uppercase tracking-[0.2em] ${darkMode ? "text-gray-400" : "text-black/80"}`}>
@@ -563,7 +562,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
         </div>
       </div>
       <PostLoadingScreen type="Announcement" loading={loading} darkMode={darkMode} />
-    </div>
+    </>
   );
 
   return isInline ? modalContent : (

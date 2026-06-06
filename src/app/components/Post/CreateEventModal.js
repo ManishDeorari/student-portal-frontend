@@ -164,7 +164,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
         </div>
         )}
 
-        <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-5 sm:space-y-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
+        <form onSubmit={handleSubmit} className={`p-4 ${isInline ? "sm:p-4 space-y-4 sm:space-y-5 max-h-[60vh]" : "sm:p-8 space-y-5 sm:space-y-8 max-h-[70vh]"} overflow-y-auto custom-scrollbar`}>
           {/* Media Section */}
           <div className="space-y-4">
             <div className="p-[2px] rounded-3xl bg-gradient-to-r from-blue-500 to-purple-500">
