@@ -105,8 +105,9 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -5 }}
                 transition={{ duration: 0.15 }}
-                className={`absolute right-0 mt-2 w-40 rounded-xl border backdrop-blur-md shadow-2xl z-50 p-1 flex flex-col ${darkMode ? "bg-slate-900/95 border-white/10 text-white" : "bg-white/95 border-gray-200 text-gray-800"}`}
+                className="absolute right-0 mt-2 z-50 p-[2px] rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-2xl"
               >
+                <div className={`w-40 rounded-[10px] backdrop-blur-md p-1 flex flex-col h-full ${darkMode ? "bg-slate-900/95 text-white" : "bg-white/95 text-gray-800"}`}>
                 {canEdit && (
                   <button
                     onClick={() => {
@@ -129,6 +130,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
                     <span>🗑️</span> Delete Post
                   </button>
                 )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
