@@ -7,6 +7,7 @@ import ProfileAbout from "../components/profile/ProfileAbout";
 import ProfileExperience from "../components/profile/ProfileExperience";
 import ProfileEducation from "../components/profile/ProfileEducation";
 import ProfileActivity from "../components/profile/ProfileActivity";
+import ProfileEventParticipation from "../components/profile/ProfileEventParticipation";
 import ProfileWorkProfile from "../components/profile/ProfileWorkProfile";
 import ProfileJobPreference from "../components/profile/ProfileJobPreference";
 import ProfileBasicInfo from "../components/profile/ProfileBasicInfo";
@@ -83,22 +84,25 @@ function ProfileContent() {
         : `${API_URL}/api/user/myposts`;
 
       const activityEndpoint = `${API_URL}/api/user/activity`;
+      const eventsEndpoint = `${API_URL}/api/user/${targetId}/events`;
 
       // ⚡ PARALLEL FETCH: Load everything at once instead of one-by-one
-      const [resProfile, resPosts, resActivity] = await Promise.all([
+      const [resProfile, resPosts, resActivity, resEvents] = await Promise.all([
         fetch(profileEndpoint, { headers: { Authorization: `Bearer ${token}` } }),
         fetch(postsEndpoint, { headers: { Authorization: `Bearer ${token}` } }),
         !viewingOther 
           ? fetch(activityEndpoint, { headers: { Authorization: `Bearer ${token}` } })
-          : Promise.resolve({ ok: true, json: () => Promise.resolve([]) })
+          : Promise.resolve({ ok: true, json: () => Promise.resolve([]) }),
+        fetch(eventsEndpoint, { headers: { Authorization: `Bearer ${token}` } })
       ]);
 
       if (!resProfile.ok) throw new Error(`Profile fetch failed: ${resProfile.status}`);
       
-      const [profileData, postsRaw, activityData] = await Promise.all([
+      const [profileData, postsRaw, activityData, eventsData] = await Promise.all([
         resProfile.json(),
         resPosts.ok ? resPosts.json() : Promise.resolve([]),
-        resActivity.ok ? resActivity.json() : Promise.resolve([])
+        resActivity.ok ? resActivity.json() : Promise.resolve([]),
+        resEvents.ok ? resEvents.json() : Promise.resolve({ participatedEvents: [], wonEvents: [] })
       ]);
       
       // ✅ Check for daily login reward flag from API
@@ -112,6 +116,7 @@ function ProfileContent() {
         ...profileData,
         posts: Array.isArray(postsData) ? postsData : [],
         activity: Array.isArray(activityData) ? activityData : [],
+        events: eventsData || { participatedEvents: [], wonEvents: [] }
       });
 
       setLoading(false);
@@ -172,6 +177,7 @@ function ProfileContent() {
         <ProfileEducation profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileExperience profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         {!isPublicView && <ProfileActivity profile={profile} setProfile={setProfile} isPublicView={isPublicView} />}
+        <ProfileEventParticipation profile={profile} isPublicView={isPublicView} />
         <ProfileWorkProfile profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileJobPreference profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
       </div>
