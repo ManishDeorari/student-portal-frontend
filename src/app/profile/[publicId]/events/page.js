@@ -135,19 +135,19 @@ function EventsContent() {
                         ) : (
                             <div className="grid gap-4">
                                 {participatedEvents.map((ev, idx) => (
-                                    <div key={idx} className={`p-6 rounded-2xl border transition-all hover:shadow-lg ${darkMode ? "bg-[#1A1A1B] border-white/10" : "bg-white border-gray-200"}`}>
-                                        <div className="flex justify-between items-start gap-4">
+                                    <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl transition-transform hover:scale-[1.01]">
+                                        <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
                                             <div>
-                                                <h3 className={`text-xl font-black mb-2 ${darkMode ? "text-white" : "text-gray-900"}`}>{ev.title || "Event"}</h3>
-                                                <div className={`flex flex-wrap items-center gap-4 text-sm font-medium ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+                                                <h3 className={`text-xl font-black leading-tight mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>{ev.title || "Event"}</h3>
+                                                <div className={`flex flex-wrap items-center gap-3 text-sm font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                                                     <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}</span>
                                                     {ev.startTime && <span>• {ev.startTime}</span>}
-                                                    {ev.eventType && <span className="uppercase tracking-wider text-xs bg-blue-500/10 text-blue-500 px-2 py-1 rounded-md">{ev.eventType.replace("_", " ")}</span>}
+                                                    {ev.eventType && <span className="uppercase tracking-wider text-xs bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-md">{ev.eventType.replace("_", " ")}</span>}
                                                 </div>
                                             </div>
                                             <button
                                                 onClick={() => handleViewEvent(ev)}
-                                                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition font-bold ${darkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-800"}`}
+                                                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition font-bold shrink-0 ${darkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-800"}`}
                                             >
                                                 <Eye className="w-4 h-4" /> View
                                             </button>
@@ -180,18 +180,18 @@ function EventsContent() {
                                     // Actually, let's just show the event details and "View Announcement" to keep it clean.
                                     
                                     return (
-                                        <div key={idx} className={`p-6 rounded-2xl border transition-all hover:shadow-lg ${darkMode ? "bg-[#1A1A1B] border-white/10" : "bg-white border-gray-200"}`}>
-                                            <div className="flex justify-between items-start gap-4">
+                                        <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-2xl transition-transform hover:scale-[1.01]">
+                                            <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
                                                 <div>
-                                                    <h3 className={`text-xl font-black mb-2 ${darkMode ? "text-white" : "text-gray-900"}`}>{eventName}</h3>
-                                                    <div className={`flex flex-wrap items-center gap-4 text-sm font-medium ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+                                                    <h3 className={`text-xl font-black leading-tight mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>{eventName}</h3>
+                                                    <div className={`flex flex-wrap items-center gap-3 text-sm font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                                                         <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> {new Date(post.createdAt).toLocaleDateString()}</span>
                                                         <span className="flex items-center gap-1.5 text-yellow-500"><Trophy className="w-4 h-4" /> Winner</span>
                                                     </div>
                                                 </div>
                                                 <button
                                                     onClick={() => handleViewAnnouncement(post)}
-                                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition font-bold ${darkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-800"}`}
+                                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition font-bold shrink-0 ${darkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-800"}`}
                                                 >
                                                     <Eye className="w-4 h-4" /> View Post
                                                 </button>
@@ -207,8 +207,9 @@ function EventsContent() {
 
             {showPostModal && selectedPost && (
                 <PostModal 
+                    showModal={showPostModal}
+                    setShowModal={setShowPostModal}
                     post={selectedPost} 
-                    onClose={() => setShowPostModal(false)} 
                     darkMode={darkMode}
                     currentUser={currentUser}
                 />

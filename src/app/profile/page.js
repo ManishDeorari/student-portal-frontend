@@ -177,7 +177,9 @@ function ProfileContent() {
         <ProfileEducation profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileExperience profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         {!isPublicView && <ProfileActivity profile={profile} setProfile={setProfile} isPublicView={isPublicView} />}
-        <ProfileEventParticipation profile={profile} isPublicView={isPublicView} />
+        {(profile.role === "student" || profile.role === "alumni") && (
+          <ProfileEventParticipation profile={profile} isPublicView={isPublicView} />
+        )}
         <ProfileWorkProfile profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileJobPreference profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
       </div>

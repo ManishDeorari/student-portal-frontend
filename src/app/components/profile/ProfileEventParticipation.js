@@ -67,21 +67,22 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
                         ) : (
                             <div className="space-y-3">
                                 {participatedEvents.slice(0, 5).map((ev, idx) => (
-                                    <div key={idx} className={`flex items-center justify-between p-3 rounded-xl border ${darkMode ? "bg-[#1A1A1B] border-white/5" : "bg-white border-gray-100 shadow-sm"}`}>
-                                        <div>
-                                            <h4 className={`font-bold text-sm ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{ev.title || "Event"}</h4>
-                                            <p className={`text-xs mt-1 flex items-center gap-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                                                <Calendar className="w-3 h-3" />
-                                                {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown"} {ev.startTime ? `at ${ev.startTime}` : ""}
-                                            </p>
+                                    <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl transition-transform hover:scale-[1.02]">
+                                        <div className={`flex items-center justify-between p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
+                                            <div>
+                                                <h4 className={`font-bold text-sm leading-tight mb-0.5 ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{ev.title || "Event"}</h4>
+                                                <p className={`text-[11px] font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                                    {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown"} {ev.startTime ? `at ${ev.startTime}` : ""}
+                                                </p>
+                                            </div>
+                                            <button
+                                                onClick={() => handleViewEvent(ev)}
+                                                className={`p-1.5 rounded-full transition ${darkMode ? "bg-white/5 hover:bg-white/10 text-gray-300" : "bg-gray-100 hover:bg-gray-200 text-gray-600"}`}
+                                                title="View Event"
+                                            >
+                                                <Eye className="w-3.5 h-3.5" />
+                                            </button>
                                         </div>
-                                        <button
-                                            onClick={() => handleViewEvent(ev)}
-                                            className={`p-2 rounded-full transition ${darkMode ? "bg-white/5 hover:bg-white/10 text-gray-300" : "bg-gray-100 hover:bg-gray-200 text-gray-600"}`}
-                                            title="View Event"
-                                        >
-                                            <Eye className="w-4 h-4" />
-                                        </button>
                                     </div>
                                 ))}
                             </div>
@@ -103,23 +104,25 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
                                     );
                                     
                                     return (
-                                        <div key={idx} className={`flex items-center justify-between p-3 rounded-xl border ${darkMode ? "bg-[#1A1A1B] border-white/5" : "bg-white border-gray-100 shadow-sm"}`}>
-                                            <div>
-                                                <h4 className={`font-bold text-sm ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
-                                                    {eventName}
-                                                </h4>
-                                                <div className={`text-xs mt-1 flex items-center gap-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                                                    <span className="flex items-center gap-1"><Trophy className="w-3 h-3 text-yellow-500" /> Rank {winnerInfo?.rank || "N/A"}</span>
-                                                    {winnerInfo?.points > 0 && <span className="font-bold text-green-500">+{winnerInfo.points} PTS</span>}
+                                        <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-xl transition-transform hover:scale-[1.02]">
+                                            <div className={`flex items-center justify-between p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
+                                                <div>
+                                                    <h4 className={`font-bold text-sm leading-tight mb-0.5 ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
+                                                        {eventName}
+                                                    </h4>
+                                                    <div className={`text-[11px] font-medium flex items-center gap-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                                        <span>Rank {winnerInfo?.rank || "N/A"}</span>
+                                                        {winnerInfo?.points > 0 && <span className="font-bold text-green-500">+{winnerInfo.points} PTS</span>}
+                                                    </div>
                                                 </div>
+                                                <button
+                                                    onClick={() => handleViewAnnouncement(post)}
+                                                    className={`p-1.5 rounded-full transition ${darkMode ? "bg-white/5 hover:bg-white/10 text-gray-300" : "bg-gray-100 hover:bg-gray-200 text-gray-600"}`}
+                                                    title="View Announcement"
+                                                >
+                                                    <Eye className="w-3.5 h-3.5" />
+                                                </button>
                                             </div>
-                                            <button
-                                                onClick={() => handleViewAnnouncement(post)}
-                                                className={`p-2 rounded-full transition ${darkMode ? "bg-white/5 hover:bg-white/10 text-gray-300" : "bg-gray-100 hover:bg-gray-200 text-gray-600"}`}
-                                                title="View Announcement"
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                            </button>
                                         </div>
                                     );
                                 })}
@@ -140,10 +143,11 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
 
             {showPostModal && selectedPost && (
                 <PostModal 
+                    showModal={showPostModal}
+                    setShowModal={setShowPostModal}
                     post={selectedPost} 
-                    onClose={() => setShowPostModal(false)} 
                     darkMode={darkMode}
-                    currentUser={profile} // Used for rendering buttons like edit if applicable
+                    currentUser={profile}
                 />
             )}
         </>
