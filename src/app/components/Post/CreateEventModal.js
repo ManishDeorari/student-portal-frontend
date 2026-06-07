@@ -265,6 +265,59 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
               </div>
             </div>
 
+
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("description") ? "text-red-500" : ""}`}>Description</label>
+              <EmojiPickerToggle onEmojiSelect={handleEmojiSelect} icon="😀" darkMode={darkMode} />
+            </div>
+            <div className={getErrorClass("description")}>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={(e) => { handleInputChange(e); setErrors(prev => prev.filter(err => err !== "description")); }}
+                rows="4"
+                placeholder="Describe your event..."
+                className={`w-full p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none resize-none`}
+              />
+            </div>
+          </div>
+
+          {/* Event Settings */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Event Type</label>
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="eventType" value="online_registration" checked={formData.eventType === "online_registration"} onChange={handleInputChange} />
+                  <span className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>Online Registration</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="eventType" value="no_registration" checked={formData.eventType === "no_registration"} onChange={handleInputChange} />
+                  <span className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>No Registration Form (Repost to Claim)</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Points Assigned</label>
+              <div className={getErrorClass("pointsAssigned")}>
+                <input
+                  type="number"
+                  name="pointsAssigned"
+                  value={formData.pointsAssigned}
+                  onChange={handleInputChange}
+                  min="0"
+                  className={`w-full p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none`}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div className="space-y-2">
               <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("startDate") ? "text-red-500" : ""}`}>Start Date</label>
               <div className={getErrorClass("startDate")}>
@@ -314,55 +367,6 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
                   name="endDate"
                   value={formData.endDate}
                   onChange={(e) => { handleInputChange(e); setErrors(prev => prev.filter(err => err !== "endDate")); }}
-                  className={`w-full p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none`}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Description */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("description") ? "text-red-500" : ""}`}>Description</label>
-              <EmojiPickerToggle onEmojiSelect={handleEmojiSelect} icon="😀" darkMode={darkMode} />
-            </div>
-            <div className={getErrorClass("description")}>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={(e) => { handleInputChange(e); setErrors(prev => prev.filter(err => err !== "description")); }}
-                rows="4"
-                placeholder="Describe your event..."
-                className={`w-full p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none resize-none`}
-              />
-            </div>
-          </div>
-
-          {/* Event Settings */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Event Type</label>
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="eventType" value="online_registration" checked={formData.eventType === "online_registration"} onChange={handleInputChange} />
-                  <span className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>Online Registration</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="eventType" value="no_registration" checked={formData.eventType === "no_registration"} onChange={handleInputChange} />
-                  <span className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>No Registration Form (Repost to Claim)</span>
-                </label>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Points Assigned</label>
-              <div className={getErrorClass("pointsAssigned")}>
-                <input
-                  type="number"
-                  name="pointsAssigned"
-                  value={formData.pointsAssigned}
-                  onChange={handleInputChange}
-                  min="0"
                   className={`w-full p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none`}
                 />
               </div>
