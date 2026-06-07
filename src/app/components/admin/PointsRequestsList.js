@@ -60,8 +60,9 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
     </div>
   );
 
-  const eventRequests = requests.filter(r => r.type !== "Session");
+  const eventRequests = requests.filter(r => r.type === "Announcement");
   const sessionRequests = requests.filter(r => r.type === "Session");
+  const repostRequests = requests.filter(r => r.type === "EventRepost");
 
   const RequestCard = ({ post }) => (
     <div key={post._id} className={`group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] ${
@@ -103,8 +104,22 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                   </div>
                 </div>
               </div>
+            ) : post.type === "EventRepost" ? (
+              <div className={`flex items-center gap-2 p-[1px] rounded-xl bg-gradient-to-tr from-green-400 to-emerald-500 shadow-sm`}>
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1px)] ${darkMode ? "bg-black" : "bg-white"}`}>
+                  <span className="text-xs">✅</span>
+                  <div className="flex flex-col">
+                    <span className={`text-[10px] font-black uppercase tracking-tight ${darkMode ? "text-green-400" : "text-green-600"}`}>
+                      {post.eventRepostDetails?.eventName || "Event Attended"}
+                    </span>
+                    <span className={`text-[8px] font-black uppercase ${darkMode ? "text-green-300" : "text-green-500"}`}>
+                      {post.eventRepostDetails?.campus} • {new Date(post.eventRepostDetails?.date).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
             ) : (
-              post.announcementDetails?.winners.map((w, i) => (
+              post.announcementDetails?.winners?.map((w, i) => (
                 <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
                   <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                     <span className="text-xs">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? "✅" : "❓"}</span>
@@ -242,6 +257,37 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
             ) : (
               <div className="grid grid-cols-1 gap-6">
                 {sessionRequests.map((post) => <RequestCard key={post._id} post={post} />)}
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+
+      {/* 3. EVENT REPOSTS SECTION */}
+      <div className="relative p-[2px] bg-gradient-to-tr from-green-400 to-emerald-400 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500">
+        <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-10 rounded-[calc(2.5rem-2px)] relative overflow-hidden group`}>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between border-b pb-4 border-dashed border-gray-200 dark:border-white/10">
+              <h3 className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-slate-900"} flex items-center gap-2 sm:gap-3`}>
+                <span className="p-2 bg-green-600/20 rounded-xl text-green-400">📸</span>
+                Event Repost Points
+              </h3>
+              <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                repostRequests.length > 0 
+                  ? "bg-green-500/10 text-green-500 border border-green-500/20" 
+                  : "bg-gray-500/10 text-gray-500 border border-gray-500/20"
+              }`}>
+                {repostRequests.length} Pending
+              </span>
+            </div>
+
+            {repostRequests.length === 0 ? (
+              <div className={`p-10 text-center rounded-[2.5rem] border-2 border-dashed ${darkMode ? "border-white/5 bg-white/5" : "border-gray-100 bg-gray-50/50"}`}>
+                <p className={`text-sm font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>No pending repost requests! ✨</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-6">
+                {repostRequests.map((post) => <RequestCard key={post._id} post={post} />)}
               </div>
             )}
           </div>

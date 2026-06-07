@@ -15,6 +15,7 @@ import CommentInput from "./Visual/CommentInput";
 const CommentCard = dynamic(() => import("./Visual/commentCard"), { ssr: false });
 import EventRegistrationModal from "./EventRegistrationModal";
 import AdminRegistrationsModal from "./AdminRegistrationsModal";
+import CreateEventRepostModal from "./CreateEventRepostModal";
 import ReactionModal from "./Visual/ReactionModal";
 import FullImageViewer from "./utils/FullImageViewer";
 import ConfirmationModal from "./Visual/ConfirmationModal";
@@ -52,6 +53,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
   // Event specific states
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showRepostModal, setShowRepostModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const textareaRef = useRef(null);
@@ -230,6 +232,39 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             </div>
           )}
 
+          {post.type === "EventRepost" && post.eventRepostDetails && (
+            <div className={`mt-3 sm:mt-6 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-green-500/80 to-emerald-600/80" : "from-green-400 to-emerald-500"} shadow-xl overflow-hidden`}>
+              <div className={`p-3 sm:p-6 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} space-y-3 sm:space-y-6`}>
+                <div className={`grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 sm:gap-y-6`}>
+                  <div className="flex flex-col sm:col-span-2">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-green-400/60" : "text-green-600/60"}`}>Event Attended</span>
+                    <span className={`text-lg font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.eventName}</span>
+                  </div>
+                  {post.eventRepostDetails.campus && (
+                    <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>Campus</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.campus}</span>
+                    </div>
+                  )}
+                  {post.eventRepostDetails.place && (
+                    <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-orange-400/60" : "text-orange-600/60"}`}>Place</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.place}</span>
+                    </div>
+                  )}
+                  <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Date Attended</span>
+                    <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.eventRepostDetails.date).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-purple-400/60" : "text-purple-600/60"}`}>Time Attended</span>
+                    <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.time}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {post.type === "Event" && (
             <div className="mt-3 sm:mt-6 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr from-blue-500 to-purple-600 shadow-xl overflow-hidden">
               <div className={`p-3 sm:p-6 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90" : "bg-white"} space-y-3 sm:space-y-6`}>
@@ -246,10 +281,52 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                     <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>Registration Deadline</span>
                     <div className="flex items-center gap-2">
                       <span className="text-sm">⏰</span>
-                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.registrationCloseDate).toLocaleString()}</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.registrationCloseDate ? new Date(post.registrationCloseDate).toLocaleString() : "N/A (No Registration Form)"}</span>
                     </div>
                   </div>
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="sm:col-span-2 flex flex-wrap gap-2 pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
+                      {post.tags.map((tag, i) => (
+                        <span key={i} className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${darkMode ? "bg-white/10 text-gray-300" : "bg-black/5 text-gray-700"}`}>
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {post.pointsAssigned > 0 && (
+                    <div className="sm:col-span-2 flex flex-col pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-green-400/60" : "text-green-600/60"}`}>Points Assigned</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-green-400" : "text-green-600"}`}>+{post.pointsAssigned} PTS</span>
+                    </div>
+                  )}
                 </div>
+
+                {post.documents && post.documents.length > 0 && (
+                  <div className="pt-4 border-t border-white/5 space-y-2">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Attached Documents</span>
+                    <div className="flex flex-col gap-2">
+                      {post.documents.map((doc, idx) => (
+                        <a 
+                          key={idx} 
+                          href={doc.url} 
+                          target="_blank" 
+                          rel="noreferrer"
+                          className={`flex items-center justify-between p-3 rounded-xl border transition-all hover:scale-[1.01] ${darkMode ? "bg-[#1A1A1B] border-white/10 hover:border-blue-500/50" : "bg-white border-gray-200 hover:border-blue-300"}`}
+                        >
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <span className="text-xl shrink-0">📄</span>
+                            <span className={`text-xs font-bold truncate ${darkMode ? "text-white" : "text-gray-800"}`}>
+                              {doc.original_filename || `Document ${idx + 1}`}
+                            </span>
+                          </div>
+                          <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shrink-0 ${darkMode ? "bg-white/10 text-gray-400" : "bg-gray-100 text-gray-600"}`}>
+                            {doc.format || "FILE"}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-2 items-start sm:items-center justify-between border-t border-white/5 pt-6">
                   <div className="flex items-center gap-4">
@@ -277,17 +354,50 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                       </>
                     ) : (
                       currentUser?.role === 'student' && (
-                        Date.now() < new Date(post.registrationCloseDate) ? (
-                          <button
-                            onClick={() => setShowRegistrationModal(true)}
-                            className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 ${post.isRegistered ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:scale-105"}`}
-                          >
-                            {post.isRegistered ? "Edit Registration" : "Register Now"}
-                          </button>
+                        post.eventType === "no_registration" ? (
+                          (() => {
+                            const eventEndTime = new Date(post.endDate).getTime();
+                            const nowTime = Date.now();
+                            const deadlinePassed = nowTime > eventEndTime + (48 * 60 * 60 * 1000); // 48 hours after end
+                            // Assuming backend populates currentUser with eventPointsAwarded or similar, or we just trust the UI
+                            const alreadyClaimed = currentUser?.eventPointsAwarded?.includes(post._id);
+
+                            if (alreadyClaimed) {
+                              return (
+                                <span className="text-[10px] font-black uppercase tracking-widest text-green-500 italic bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
+                                  Points Claimed
+                                </span>
+                              );
+                            } else if (deadlinePassed) {
+                              return (
+                                <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/20">
+                                  Deadline Passed (48h)
+                                </span>
+                              );
+                            } else {
+                              return (
+                                <button
+                                  onClick={() => setShowRepostModal(true)}
+                                  className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105`}
+                                >
+                                  Repost & Claim Points
+                                </button>
+                              );
+                            }
+                          })()
                         ) : (
-                          <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/20">
-                            Registration Closed
-                          </span>
+                          Date.now() < new Date(post.registrationCloseDate) ? (
+                            <button
+                              onClick={() => setShowRegistrationModal(true)}
+                              className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 ${post.isRegistered ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:scale-105"}`}
+                            >
+                              {post.isRegistered ? "Edit Registration" : "Register Now"}
+                            </button>
+                          ) : (
+                            <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/20">
+                              Registration Closed
+                            </span>
+                          )
                         )
                       )
                     )}
@@ -598,11 +708,11 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             />
           )}
 
-          {showRegistrationModal && (
-            <EventRegistrationModal
-              event={post}
+          {post.eventType !== "no_registration" && (
+            <EventRegistrationModal 
               isOpen={showRegistrationModal}
               onClose={() => setShowRegistrationModal(false)}
+              event={post}
               currentUser={currentUser}
               darkMode={darkMode}
               onRegisterSuccess={(newRegistration) => {
@@ -614,6 +724,17 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   ));
                 }
               }}
+            />
+          )}
+
+          {post.eventType === "no_registration" && (
+            <CreateEventRepostModal 
+              isOpen={showRepostModal}
+              onClose={() => setShowRepostModal(false)}
+              event={post}
+              currentUser={currentUser}
+              darkMode={darkMode}
+              setPosts={setPosts}
             />
           )}
 

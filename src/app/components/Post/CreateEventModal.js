@@ -19,10 +19,14 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
     registrationCloseDate: "",
     allowGroupRegistration: true,
     showRegistrationInsights: true,
+    eventType: "online_registration",
+    pointsAssigned: 0,
+    tags: "",
   });
 
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
+  const [documents, setDocuments] = useState([]);
   const [previewVideo, setPreviewVideo] = useState(null);
 
   // Registration Form Builder State
@@ -94,6 +98,19 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
     }
   };
 
+  const handleDocumentChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + documents.length > 3) {
+      toast.error("You can upload up to 3 documents.");
+      return;
+    }
+    setDocuments([...documents, ...files]);
+  };
+
+  const removeDocument = (index) => {
+    setDocuments(documents.filter((_, i) => i !== index));
+  };
+
   const handleEmojiSelect = (emoji) => {
     setFormData((prev) => ({ ...prev, description: prev.description + emoji.native }));
   };
@@ -110,7 +127,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
     if (!formData.startDate) newErrors.push("startDate");
     if (!formData.startTime) newErrors.push("startTime");
     if (!formData.endDate) newErrors.push("endDate");
-    if (!formData.registrationCloseDate) newErrors.push("registrationCloseDate");
+    if (formData.eventType === "online_registration" && !formData.registrationCloseDate) newErrors.push("registrationCloseDate");
 
     if (newErrors.length > 0) {
       setErrors(newErrors);
@@ -125,9 +142,10 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
         ...formData,
         registrationFields,
         customQuestions,
+        tags: formData.tags.split(",").map(t => t.trim()).filter(Boolean),
       };
 
-      const result = await createEvent(eventData, images, video);
+      const result = await createEvent(eventData, images, video, documents);
 
       if (result.event) {
         toast.success("🎉 Event created successfully!");
@@ -180,6 +198,11 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
                     <span className={`text-xs font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Add Video</span>
                     <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
                   </label>
+                  <label className="cursor-pointer group">
+                    <span className="text-3xl block filter grayscale group-hover:grayscale-0 transition-all">📄</span>
+                    <span className={`text-xs font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Add Docs</span>
+                    <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx" multiple onChange={handleDocumentChange} className="hidden" />
+                  </label>
                 </div>
 
                 {/* Media Preview */}
@@ -195,6 +218,16 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
                 {previewVideo && (
                   <div className="mt-4 rounded-xl overflow-hidden max-h-48">
                     <video src={previewVideo} controls className="w-full" />
+                  </div>
+                )}
+                {documents.length > 0 && (
+                  <div className="flex flex-col gap-2 mt-4 text-left">
+                    {documents.map((doc, idx) => (
+                      <div key={idx} className={`flex items-center justify-between p-3 rounded-xl ${darkMode ? "bg-white/10" : "bg-gray-100"} text-sm`}>
+                        <span className="truncate max-w-[200px]">{doc.name}</span>
+                        <button type="button" onClick={() => removeDocument(idx)} className="text-red-500 hover:text-red-700 font-bold">&times;</button>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -214,6 +247,19 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
                   value={formData.title}
                   onChange={(e) => { handleInputChange(e); setErrors(prev => prev.filter(err => err !== "title")); }}
                   placeholder="Enter event title..."
+                  className={`w-full p-3 sm:p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none`}
+                />
+              </div>
+            </div>
+
+            <div className="md:col-span-2 space-y-2">
+              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Tags (comma separated)</label>
+              <div className={getErrorClass("tags")}>
+                <input
+                  name="tags"
+                  value={formData.tags}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Workshop, Hackathon, Networking"
                   className={`w-full p-3 sm:p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none`}
                 />
               </div>
@@ -245,6 +291,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
               </div>
             </div>
 
+            {formData.eventType === "online_registration" && (
             <div className="space-y-2">
               <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("registrationCloseDate") ? "text-red-500" : ""}`}>Reg. Close Date</label>
               <div className={getErrorClass("registrationCloseDate")}>
@@ -257,6 +304,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
                 />
               </div>
             </div>
+            )}
 
             <div className="space-y-2">
               <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("endDate") ? "text-red-500" : ""}`}>End Date</label>
@@ -290,7 +338,39 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
             </div>
           </div>
 
+          {/* Event Settings */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Event Type</label>
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="eventType" value="online_registration" checked={formData.eventType === "online_registration"} onChange={handleInputChange} />
+                  <span className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>Online Registration</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="eventType" value="no_registration" checked={formData.eventType === "no_registration"} onChange={handleInputChange} />
+                  <span className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>No Registration Form (Repost to Claim)</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Points Assigned</label>
+              <div className={getErrorClass("pointsAssigned")}>
+                <input
+                  type="number"
+                  name="pointsAssigned"
+                  value={formData.pointsAssigned}
+                  onChange={handleInputChange}
+                  min="0"
+                  className={`w-full p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none`}
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Registration Form Builder */}
+          {formData.eventType === "online_registration" && (
           <div className="p-[2px] rounded-[2rem] bg-gradient-to-r from-blue-500 to-purple-500 shadow-sm transition-all text-left">
             <div className={`p-6 rounded-[1.8rem] ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} space-y-6`}>
               <h3 className={`text-base sm:text-lg font-black ${darkMode ? "text-white" : "text-gray-900"}`}>Registration Form <span className="text-xs font-normal opacity-60 ml-2">[Questions to be asked]</span></h3>
@@ -336,8 +416,9 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
                 ))}
               </div>
             </div>
+            </div>
            </div>
-          </div>
+          )}
 
           {/* Settings */}
           <div className="space-y-4">

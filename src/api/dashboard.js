@@ -7,7 +7,7 @@ export const fetchPosts = async (page = 1, limit = 10, type = "Regular") => {
   return res.json();
 };
 
-export const createPost = async (contentOrData, image, video, type = "Regular", documents = []) => {
+export const createPost = async (contentOrData, image, video, type = "Regular", documents = [], customFolders = {}) => {
   let imageObjects = [];
   let videoObject = null;
   let documentObjects = [];
@@ -29,7 +29,7 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
       const imageData = new FormData();
       imageData.append("file", img);
       imageData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      imageData.append("folder", "student/images"); // Optional folder for better management
+      imageData.append("folder", customFolders.images || "student/images"); // Optional folder for better management
 
       const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, {
         method: "POST",
@@ -56,7 +56,7 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
     const videoData = new FormData();
     videoData.append("file", video);
     videoData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-    videoData.append("folder", "student/videos");
+    videoData.append("folder", customFolders.videos || "student/videos");
 
     const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, {
       method: "POST",
@@ -206,6 +206,8 @@ export const approvePointsRequest = async (postId, action, awardedPoints = undef
   return res.json();
 };
 
+
+
 export const searchUsers = async (query, role = null) => {
   try {
     let url = `${BASE}/user/search?q=${encodeURIComponent(query)}`;
@@ -333,9 +335,10 @@ export const editComment = async (postId, commentId, newText) => {
 };
 // ================== EVENTS & REGISTRATIONS ==================
 
-export const createEvent = async (eventData, images = [], video = null) => {
+export const createEvent = async (eventData, images = [], video = null, documents = []) => {
   let imageObjects = [];
   let videoObject = null;
+  let documentObjects = [];
 
   // 1. Upload Images
   if (images && images.length > 0) {
@@ -372,13 +375,40 @@ export const createEvent = async (eventData, images = [], video = null) => {
     }
   }
 
+  // 3. Upload Documents
+  if (documents && documents.length > 0) {
+    for (let doc of documents) {
+      const docData = new FormData();
+      docData.append("file", doc);
+      docData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+      docData.append("folder", "student/events/documents");
+
+      // For documents/raw files, we often use auto or raw. Let's use the standard image upload URL which usually works for raw if set up, or standard cloudinary endpoints.
+      // Usually NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL is just the base upload endpoint like .../image/upload
+      // To be safe we should upload as "raw" or "auto" resource type if it's a generic upload url.
+      const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL.replace("/image/", "/auto/"), {
+        method: "POST",
+        body: docData,
+      });
+      const uploadJson = await uploadRes.json();
+      if (uploadRes.ok) {
+        documentObjects.push({ 
+          url: uploadJson.secure_url, 
+          public_id: uploadJson.public_id,
+          original_filename: uploadJson.original_filename || doc.name,
+          format: uploadJson.format || doc.name.split('.').pop()
+        });
+      }
+    }
+  }
+
   const res = await fetch(`${BASE}/events`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-    body: JSON.stringify({ ...eventData, images: imageObjects, video: videoObject }),
+    body: JSON.stringify({ ...eventData, images: imageObjects, video: videoObject, documents: documentObjects }),
   });
   return res.json();
 };

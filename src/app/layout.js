@@ -9,6 +9,7 @@ import GlobalNavigationLoader from "./components/ui/GlobalNavigationLoader";
 import ZoomLock from "./components/ui/ZoomLock";
 import PageTransition from "./components/ui/PageTransition";
 import SessionManager from "./components/SessionManager";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -95,18 +96,20 @@ export default function RootLayout({ children }) {
           }}
         />
         <ThemeProvider>
-          <ZoomLock />
-          <Suspense fallback={null}>
-            <GlobalNavigationLoader />
-          </Suspense>
-          <NotificationProvider>
-            <ClientRouteProtection>
-              <SessionManager />
-              <PageTransition>
-                {children}
-              </PageTransition>
-            </ClientRouteProtection>
-          </NotificationProvider>
+          <ErrorBoundary>
+            <ZoomLock />
+            <Suspense fallback={null}>
+              <GlobalNavigationLoader />
+            </Suspense>
+            <NotificationProvider>
+              <ClientRouteProtection>
+                <SessionManager />
+                <PageTransition>
+                  {children}
+                </PageTransition>
+              </ClientRouteProtection>
+            </NotificationProvider>
+          </ErrorBoundary>
         </ThemeProvider>
       </body>
     </html>
