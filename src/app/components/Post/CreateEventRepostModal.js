@@ -63,10 +63,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
     
     const newErrors = [];
     if (!content.trim()) newErrors.push("content");
-    if (!repostDetails.campus) newErrors.push("campus");
-    if (!repostDetails.place.trim()) newErrors.push("place");
-    if (!repostDetails.date) newErrors.push("date");
-    if (!repostDetails.time) newErrors.push("time");
+    if (images.length === 0 && !video) newErrors.push("media");
     if (images.length === 0 && !video) newErrors.push("media");
 
     if (newErrors.length > 0) {
@@ -221,7 +218,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
               {/* Event Logistics (Campus, Place, Date, Time) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("campus") ? "text-red-500" : ""}`}>Campus</label>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("campus") ? "text-red-500" : ""}`}>Campus <span className="opacity-50 lowercase tracking-normal font-normal ml-1">(Optional)</span></label>
                   <div className={errors.includes("campus") ? "p-[2px] rounded-2xl bg-red-500 shadow-lg animate-pulse" : "p-[2px] rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 shadow-sm"}>
                     <div className="relative">
                       <select
@@ -230,6 +227,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
                         onChange={(e) => handleInputChange(e.target)}
                         className={`w-full p-4 rounded-[14px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none cursor-pointer appearance-none font-bold`}
                       >
+                        <option value="None">None</option>
                         <option value="Dehradun">Dehradun</option>
                         <option value="Haldwani">Haldwani</option>
                         <option value="Bhimtal">Bhimtal</option>
@@ -244,7 +242,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
                 </div>
 
                 <div className="space-y-2">
-                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("place") ? "text-red-500" : ""}`}>Exact Place/Venue</label>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("place") ? "text-red-500" : ""}`}>Exact Place/Venue <span className="opacity-50 lowercase tracking-normal font-normal ml-1">(Optional)</span></label>
                   <div className={errors.includes("place") ? "p-[2px] rounded-2xl bg-red-500 shadow-lg animate-pulse" : "p-[2px] rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 shadow-sm"}>
                     <input
                       type="text"
@@ -258,7 +256,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
                 </div>
                 
                 <div className="space-y-2">
-                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("date") ? "text-red-500" : ""}`}>Date attended</label>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("date") ? "text-red-500" : ""}`}>Date attended <span className="opacity-50 lowercase tracking-normal font-normal ml-1">(Optional)</span></label>
                   <div className={errors.includes("date") ? "p-[2px] rounded-2xl bg-red-500 shadow-lg animate-pulse" : "p-[2px] rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 shadow-sm"}>
                     <input
                       type="date"
@@ -271,7 +269,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
                 </div>
 
                 <div className="space-y-2">
-                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("time") ? "text-red-500" : ""}`}>Time attended</label>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("time") ? "text-red-500" : ""}`}>Time attended <span className="opacity-50 lowercase tracking-normal font-normal ml-1">(Optional)</span></label>
                   <div className={errors.includes("time") ? "p-[2px] rounded-2xl bg-red-500 shadow-lg animate-pulse" : "p-[2px] rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 shadow-sm"}>
                     <input
                       type="time"
