@@ -164,15 +164,17 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
               </div>
             ) : post.type === "Announcement" ? (
               <div className={`flex flex-col gap-3 w-full mt-2`}>
-                {post.announcementDetails?.originalEventId && (
-                  <div className={`flex items-center gap-2 p-[1px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm self-start`}>
-                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1px)] ${darkMode ? "bg-black" : "bg-white"}`}>
-                      <span className="text-sm">🏆</span>
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                          <span className={`text-sm font-black tracking-tight ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                            {post.announcementDetails?.eventName || post.announcementDetails?.originalEventId?.title || "Announcement Event"}
-                          </span>
+                {(post.announcementDetails?.originalEventId || post.announcementDetails?.eventName) && (
+                  <div className="flex flex-col gap-2 mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-xl flex items-center justify-center ${darkMode ? "bg-blue-500/10 text-blue-400" : "bg-blue-50 text-blue-600"}`}>
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {post.announcementDetails?.originalEventId && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
