@@ -77,7 +77,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
-                <img src={post.user?.profilePicture || "/default-avatar.png"} alt="profile" className="w-full h-full object-cover" />
+                <img src={post.user?.profilePicture || "/default-profile.jpg"} alt="profile" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col">
                 <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{post.user?.name || "Member"}</span>
@@ -137,6 +137,11 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                 <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
                   <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                     <span className="text-xs">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? "✅" : "❓"}</span>
+                    {w.userId?.profilePicture ? (
+                      <img src={w.userId.profilePicture} alt="profile" className="w-5 h-5 rounded-full object-cover" />
+                    ) : w.profilePicture ? (
+                      <img src={w.profilePicture} alt="profile" className="w-5 h-5 rounded-full object-cover" />
+                    ) : null}
                     <div className="flex flex-col">
                       <span className={`text-[10px] font-black uppercase tracking-tight ${darkMode ? "text-gray-300" : "text-slate-700"}`}>
                         {w.name}

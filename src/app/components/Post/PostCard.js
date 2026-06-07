@@ -240,7 +240,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                     <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-green-400/60" : "text-green-600/60"}`}>Event Attended</span>
                     <span className={`text-lg font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.eventName}</span>
                   </div>
-                  {post.eventRepostDetails.campus && (
+                  {post.eventRepostDetails.campus && post.eventRepostDetails.campus !== "None" && (
                     <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
                       <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>Campus</span>
                       <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.campus}</span>
@@ -252,14 +252,18 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                       <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.place}</span>
                     </div>
                   )}
-                  <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
-                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Date Attended</span>
-                    <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.eventRepostDetails.date).toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
-                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-purple-400/60" : "text-purple-600/60"}`}>Time Attended</span>
-                    <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.time}</span>
-                  </div>
+                  {post.eventRepostDetails.date && (
+                    <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Date Attended</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.eventRepostDetails.date).toLocaleDateString()}</span>
+                    </div>
+                  )}
+                  {post.eventRepostDetails.time && (
+                    <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-purple-400/60" : "text-purple-600/60"}`}>Time Attended</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.time}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
