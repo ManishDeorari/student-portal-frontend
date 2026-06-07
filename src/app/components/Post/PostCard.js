@@ -49,6 +49,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
   const [showReactionModal, setShowReactionModal] = useState(false);
   const [reactionModalEmoji, setReactionModalEmoji] = useState(null);
   const [reactionModalUsers, setReactionModalUsers] = useState([]);
+  const [showOriginalEventModal, setShowOriginalEventModal] = useState(false);
 
   // Event specific states
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
@@ -184,6 +185,25 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             <h2 className={`text-lg sm:text-2xl font-black mb-1 sm:mb-2 ${darkMode ? "text-white" : "text-gray-900"} tracking-tight leading-tight`}>
               {post.title}
             </h2>
+          )}
+
+          {post.type === "EventRepost" && post.eventRepostDetails?.originalEventId && (
+            <div className={`flex items-center justify-between px-4 py-2 rounded-xl mb-3 border border-dashed ${darkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
+              <div className="flex items-center gap-2">
+                 <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-green-400" : "text-green-600"}`}>Original Event:</span>
+                 <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.eventName}</span>
+              </div>
+              <button
+                onClick={() => setShowOriginalEventModal(true)}
+                className={`p-1.5 rounded-lg transition-transform hover:scale-110 shadow-sm ${darkMode ? "bg-green-500/20 text-green-300 hover:bg-green-500/40" : "bg-green-100 text-green-700 hover:bg-green-200"}`}
+                title="View Original Event"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </div>
           )}
 
           <PostContent
@@ -746,6 +766,201 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
 
           {showAdminModal && (
             <AdminRegistrationsModal
+              setStartIndex(index);
+              setShowViewer(true);
+            }}
+            darkMode={darkMode}
+          />
+          {/* Gradient Separator before Reactions */}
+          <div className={`h-[2px] w-full bg-gradient-to-r from-transparent ${darkMode ? "via-blue-500/30" : "via-blue-600/50"} to-transparent my-2`} />
+
+          <PostReactions
+            {...{
+              post,
+              hasLiked,
+              handleReact,
+              userReacted,
+              getReactionCount,
+              setShowModal,
+              likeIconRef,
+              isLiking,
+              setVisibleComments,
+              setReactionEffect,
+              reactionEffect,
+              showComments,
+              setShowComments,
+              setShowReactionModal,
+              setReactionModalEmoji,
+              setReactionModalUsers,
+              darkMode
+            }}
+          />
+
+
+          <CommentInput
+            comment={comment}
+            setComment={setComment}
+            onEmojiClick={(emoji) => setComment((prev) => prev + emoji)}
+            onSubmit={() => handleComment(comment)} // ✅ Correct
+            showCommentEmoji={showCommentEmoji}
+            setShowCommentEmoji={setShowCommentEmoji}
+            typing={someoneTyping}
+            isTyping={(val) => setSomeoneTyping(val)}
+            darkMode={darkMode}
+          />
+
+          {someoneTyping && (
+            <p className={`text-xs ${darkMode ? "text-gray-500" : "text-gray-400"} mt-1 ml-2 italic`}>
+              Someone is typing...
+            </p>
+          )}
+
+          {/* Gradient Separator after Comment Input */}
+          {showComments && (
+            <div className={`h-[2px] w-full bg-gradient-to-r from-transparent ${darkMode ? "via-purple-500/30" : "via-purple-600/50"} to-transparent my-4`} />
+          )}
+
+          {showComments && (
+            <div className="pt-2 space-y-3">
+              {sortedComments
+                .slice(0, visibleComments)
+                .map((c) => (
+                  <CommentCard
+                    key={c._id}
+                    comment={c}
+                    currentUser={currentUser}
+                    onReply={handleReply}
+                    onDelete={handleDeleteComment}
+                    onEdit={handleEditComment}
+                    replies={c.replies || []}
+                    postId={post._id}
+                    onEditReply={handleEditReply}
+                    onDeleteReply={handleDeleteReply}
+                    onReactToReply={handleReactToReply}
+                    onReactToComment={handleReactToComment}
+                    onPinComment={handlePinComment}
+                    isPostOwner={post.user?._id === currentUser?._id || post.user === currentUser?._id}
+                    darkMode={darkMode}
+                  />
+                ))}
+
+              {(post.comments || []).length > visibleComments && (
+                <button
+                  onClick={handleLoadMore}
+                  className="mt-2 text-sm text-blue-600 hover:underline"
+                >
+                  Load more comments
+                </button>
+              )}
+
+              {visibleComments > 2 && (
+                <button
+                  onClick={() => setVisibleComments(2)}
+                  className="mt-1 text-sm text-red-500 hover:underline"
+                >
+                  Show less comments
+                </button>
+              )}
+            </div>
+          )}
+
+          <AnimatePresence>
+            {showModal && (
+              <PostModal
+                {...{
+                  post,
+                  currentUser,
+                  showModal,
+                  setShowModal,
+                  toggleEdit,
+                  handleReact,
+                  userReacted,
+                  getReactionCount,
+                  showThread,
+                  setShowThread,
+                  handleReply,
+                  handleDeleteComment,
+                  handleComment,
+                  handleEditComment,
+                  handleEditReply,
+                  handleDeleteReply,
+                  handleReactToReply,
+                  handlePinComment,
+                  comment,
+                  setComment,
+                  editing,
+                  setEditing,
+                  editContent,
+                  setEditContent,
+                  editTitle,
+                  setEditTitle,
+                  handleEditSave: () => handleEditSave({ content: editContent, title: editTitle }),
+                  handleBlurSave,
+                  toggleEdit,
+                  handleDelete,
+                  showEditEmoji,
+                  setShowEditEmoji,
+                  textareaRef,
+                  // ✅ ADD THESE for FullImageViewer support
+                  setShowViewer,
+                  setStartIndex,
+                  darkMode,
+                  setPosts,
+                  handleReactToComment
+                }}
+              />
+            )}
+          </AnimatePresence>
+
+          {showViewer && (
+            <FullImageViewer
+              images={post.images?.length > 0 ? post.images.map((img) => img.url) : (post.image ? [post.image] : [])}
+              startIndex={startIndex}
+              onClose={() => setShowViewer(false)}
+              isRestricted={isRestricted}
+            />
+          )}
+
+          {showReactionModal && (
+            <ReactionModal
+              emoji={reactionModalEmoji}
+              users={reactionModalUsers}
+              onClose={() => setShowReactionModal(false)}
+            />
+          )}
+
+          {post.eventType !== "no_registration" && (
+            <EventRegistrationModal 
+              isOpen={showRegistrationModal}
+              onClose={() => setShowRegistrationModal(false)}
+              event={post}
+              currentUser={currentUser}
+              darkMode={darkMode}
+              onRegisterSuccess={(newRegistration) => {
+                if (setPosts) {
+                  setPosts(prev => prev.map(p =>
+                    p._id === post._id
+                      ? { ...p, isRegistered: true, myRegistration: newRegistration, registrationCount: (p.registrationCount || 0) + (newRegistration.isGroup ? newRegistration.groupMembers.length + 1 : 1) }
+                      : p
+                  ));
+                }
+              }}
+            />
+          )}
+
+          {post.eventType === "no_registration" && (
+            <CreateEventRepostModal 
+              isOpen={showRepostModal}
+              onClose={() => setShowRepostModal(false)}
+              event={post}
+              currentUser={currentUser}
+              darkMode={darkMode}
+              setPosts={setPosts}
+            />
+          )}
+
+          {showAdminModal && (
+            <AdminRegistrationsModal
               event={post}
               isOpen={showAdminModal}
               onClose={() => setShowAdminModal(false)}
@@ -764,7 +979,21 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           />
         </div>
       </div>
+
+      {showOriginalEventModal && post.eventRepostDetails?.originalEventId && (
+        <PostModal
+          showModal={showOriginalEventModal}
+          setShowModal={setShowOriginalEventModal}
+          post={{
+            ...post.eventRepostDetails.originalEventId,
+            type: "Event",
+            user: post.eventRepostDetails.originalEventId.createdBy || post.user
+          }}
+          currentUser={currentUser}
+          darkMode={darkMode}
+          hideInteractions={true}
+        />
+      )}
     </div>
   );
 }
-
