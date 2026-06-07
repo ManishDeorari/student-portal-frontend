@@ -309,10 +309,12 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                     <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.endDate).toLocaleDateString()}</span>
                   </div>
                   <div className="sm:col-span-2 flex flex-col pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
-                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>Registration Deadline</span>
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>
+                      {post.eventType === "no_registration" ? "Reposting Deadline" : "Registration Deadline"}
+                    </span>
                     <div className="flex items-center gap-2">
                       <span className="text-sm">⏰</span>
-                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.registrationCloseDate ? new Date(post.registrationCloseDate).toLocaleString() : "N/A (No Registration Form)"}</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.registrationCloseDate ? new Date(post.registrationCloseDate).toLocaleString() : "N/A"}</span>
                     </div>
                   </div>
                   {post.tags && post.tags.length > 0 && (
@@ -440,7 +442,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             </div>
           )}
 
-          {post.type === "Announcement" && post.announcementDetails?.originalEventId && (
+          {post.type === "Announcement" && (post.announcementDetails?.originalEventId || post.announcementDetails?.eventName) && (
             <div className={`mt-3 sm:mt-6 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-blue-500/80 to-purple-600/80" : "from-blue-400 to-purple-500"} shadow-xl overflow-hidden relative`}>
               <div className={`p-4 sm:p-6 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} flex flex-col space-y-4`}>
                 <div className="flex justify-between items-center">
@@ -449,14 +451,15 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                       </svg>
-                      Linked Original Event
+                      {post.announcementDetails?.originalEventId ? "Linked Original Event" : "Event"}
                     </span>
                     <span className={`text-lg sm:text-xl font-black ${darkMode ? "text-white" : "text-gray-900"} line-clamp-1`}>
-                      {post.announcementDetails.eventName || post.announcementDetails.originalEventId.title || "Announcement Event"}
+                      {post.announcementDetails.eventName || post.announcementDetails.originalEventId?.title || "Announcement Event"}
                     </span>
                   </div>
-                  <button
-                    onClick={() => setShowOriginalEventModal(true)}
+                  {post.announcementDetails?.originalEventId && (
+                    <button
+                      onClick={() => setShowOriginalEventModal(true)}
                     className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${
                       darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
                     }`}
@@ -467,6 +470,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                   </button>
+                  )}
                 </div>
               </div>
             </div>

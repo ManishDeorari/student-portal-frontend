@@ -348,9 +348,10 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
               </div>
             </div>
 
-            {formData.eventType === "online_registration" && (
             <div className="space-y-2">
-              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("registrationCloseDate") ? "text-red-500" : ""}`}>Reg. Close Date</label>
+              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("registrationCloseDate") ? "text-red-500" : ""}`}>
+                {formData.eventType === "no_registration" ? "Reposting Deadline" : "Reg. Close Date"}
+              </label>
               <div className={getErrorClass("registrationCloseDate")}>
                 <input
                   type="date"
@@ -362,7 +363,6 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
                 />
               </div>
             </div>
-            )}
 
             <div className="space-y-2">
               <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"} ${errors.includes("endDate") ? "text-red-500" : ""}`}>End Date</label>
