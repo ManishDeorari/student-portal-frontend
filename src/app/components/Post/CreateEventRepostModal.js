@@ -10,10 +10,10 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const [repostDetails, setRepostDetails] = useState({
-    campus: "Dehradun",
+    campus: "None",
     place: "",
-    date: new Date().toISOString().split("T")[0],
-    time: new Date().toTimeString().split(" ")[0].slice(0, 5)
+    date: "",
+    time: ""
   });
   const [errors, setErrors] = useState([]);
   const [images, setImages] = useState([]);
