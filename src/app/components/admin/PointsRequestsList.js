@@ -73,17 +73,31 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
       <div className={`p-3 sm:p-6 flex flex-col lg:flex-row gap-4 sm:gap-6 items-start lg:items-center rounded-[calc(2rem-2px)] ${
           darkMode ? "bg-black" : "bg-white"
       }`}>
-        <div className="flex-1 space-y-3 w-full">
+        <div className="flex-1 space-y-4 w-full">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
+                <img src={post.user?.profilePicture || "/default-avatar.png"} alt="profile" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex flex-col">
+                <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{post.user?.name || "Member"}</span>
+                <span className={`text-[9px] font-bold uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{post.user?.enrollmentNumber || "N/A"}</span>
+              </div>
+            </div>
+            <span className={`text-[9px] font-bold opacity-40 uppercase`}>
+              {new Date(post.createdAt).toLocaleDateString()}
+            </span>
+          </div>
+          
           <div className="flex items-center gap-3">
             <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
               post.type === "Session"
                 ? (darkMode ? "bg-orange-500/10 text-orange-400" : "bg-orange-50 text-orange-600")
+                : post.type === "EventRepost"
+                ? (darkMode ? "bg-green-500/10 text-green-400" : "bg-green-50 text-green-600")
                 : (darkMode ? "bg-blue-500/10 text-blue-400" : "bg-blue-50 text-blue-600")
             }`}>
-              {post.type === "Session" ? "🤝 Session" : "📢 Announcement"} by {post.user?.name || "Member"}
-            </span>
-            <span className={`text-[9px] font-bold opacity-40 uppercase`}>
-              {new Date(post.createdAt).toLocaleDateString()}
+              {post.type === "Session" ? "🤝 Session" : post.type === "EventRepost" ? "🏆 Event Repost" : "📢 Announcement"}
             </span>
           </div>
           

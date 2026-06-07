@@ -11,6 +11,7 @@ import PendingUsers from "../../components/admin/PendingUsers";
 import AdminsManager from "../../components/admin/AdminsManager";
 import Leaderboard from "../../components/Leaderboard";
 import PointsSystemManagement from "../../components/admin/PointsSystemManagement";
+import PointsRequestsList from "../../components/admin/PointsRequestsList";
 import StudentExport from "../../components/admin/StudentExport";
 import UserManagement from "../../components/admin/UserManagement";
 import { useTheme } from "@/context/ThemeContext";
@@ -159,7 +160,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     // 🛡️ RBAC: If a normal admin somehow lands on a restricted tab, reset to pending
-    const restrictedTabs = ["users", "admins", "points"];
+    const restrictedTabs = ["users", "admins", "points-config"];
     if (user && !user.isMainAdmin && restrictedTabs.includes(activeTab)) {
       setActiveTab("pending");
       return;
@@ -352,7 +353,8 @@ export default function AdminDashboardPage() {
                   {user?.isMainAdmin && <TabButton id="admins" label="Admins" />}
                   <TabButton id="leaderboard" label="Rankings" />
                   <TabButton id="export" label="Export" />
-                  {user?.isMainAdmin && <TabButton id="points" label="Points" />}
+                  <TabButton id="points-requests" label="Points Approvals" />
+                  {user?.isMainAdmin && <TabButton id="points-config" label="Points Config" />}
                 </nav>
               </div>
             </div>
@@ -404,8 +406,13 @@ export default function AdminDashboardPage() {
             />
           )}
 
+          {/* POINTS REQUESTS */}
+          {activeTab === "points-requests" && (
+            <PointsRequestsList user={user} darkMode={darkMode} />
+          )}
+
           {/* POINTS SYSTEM */}
-          {activeTab === "points" && user?.isMainAdmin && (
+          {activeTab === "points-config" && user?.isMainAdmin && (
             <PointsSystemManagement user={user} />
           )}
 

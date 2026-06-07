@@ -83,7 +83,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
         content,
         type: "EventRepost",
         eventRepostDetails: {
-          eventId: event._id,
+          originalEventId: event._id,
           eventName: event.name,
           campus: repostDetails.campus,
           place: repostDetails.place,
@@ -145,7 +145,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
         </div>
         )}
 
-        <div className="overflow-y-auto flex-1 custom-scrollbar">
+        <div className="overflow-y-auto flex-1 custom-scrollbar max-h-[70vh]">
           <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-5 sm:space-y-8">
             <div className="space-y-6">
               {/* Media Section */}
