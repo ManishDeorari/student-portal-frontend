@@ -842,16 +842,6 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           />
         )}
       </AnimatePresence>
-
-      {showWinnersModal && (
-        <WinnersModal
-          event={post}
-          isOpen={showWinnersModal}
-          onClose={() => setShowWinnersModal(false)}
-          darkMode={darkMode}
-          hideInteractions={true}
-        />
-      )}
     </div>
   );
 }
