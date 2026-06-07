@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, ZoomIn, ZoomOut, Maximize, Download } from "lucide-react";
-import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
+import { downloadFileSilently } from "../../utils/cloudinaryHelper";
 
 export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
   const [scale, setScale] = useState(1);
