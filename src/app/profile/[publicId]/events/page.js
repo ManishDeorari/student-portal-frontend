@@ -102,21 +102,21 @@ function EventsContent() {
                 </div>
 
                 {/* Tabs */}
-                <div className={`flex gap-4 mb-6 border-b pb-2 ${darkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+                <div className="flex flex-wrap gap-4 mb-8">
                     <button
                         onClick={() => setActiveTab("participated")}
-                        className={`text-lg font-bold transition-colors pb-2 -mb-[10px] ${activeTab === "participated"
-                            ? (darkMode ? "text-blue-400 border-b-2 border-blue-400" : "text-blue-600 border-b-2 border-blue-600")
-                            : (darkMode ? "text-gray-500 hover:text-gray-300" : "text-gray-500 hover:text-gray-700")
+                        className={`px-5 py-2.5 rounded-xl text-base font-bold transition-all border ${activeTab === "participated"
+                            ? (darkMode ? "bg-blue-900/30 text-blue-400 border-blue-500/50 shadow-md" : "bg-blue-50 text-blue-700 border-blue-200 shadow-sm")
+                            : (darkMode ? "bg-[#1A1A1B]/50 text-gray-400 border-white/10 hover:bg-white/5 hover:text-white" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:text-gray-800")
                             }`}
                     >
                         Participated ({participatedEvents.length})
                     </button>
                     <button
                         onClick={() => setActiveTab("won")}
-                        className={`text-lg font-bold transition-colors pb-2 -mb-[10px] flex items-center gap-2 ${activeTab === "won"
-                            ? (darkMode ? "text-yellow-400 border-b-2 border-yellow-400" : "text-yellow-600 border-b-2 border-yellow-600")
-                            : (darkMode ? "text-gray-500 hover:text-gray-300" : "text-gray-500 hover:text-gray-700")
+                        className={`px-5 py-2.5 rounded-xl text-base font-bold transition-all flex items-center gap-2 border ${activeTab === "won"
+                            ? (darkMode ? "bg-amber-900/30 text-amber-400 border-amber-500/50 shadow-md" : "bg-amber-50 text-amber-700 border-amber-200 shadow-sm")
+                            : (darkMode ? "bg-[#1A1A1B]/50 text-gray-400 border-white/10 hover:bg-white/5 hover:text-white" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:text-gray-800")
                             }`}
                     >
                         Won Events ({wonEvents.length})
