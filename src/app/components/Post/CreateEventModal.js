@@ -253,7 +253,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
             </div>
 
             <div className="md:col-span-2 space-y-2">
-              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Tags (comma separated)</label>
+              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Tags (comma separated) <span className="opacity-50 lowercase tracking-normal font-normal ml-1">(Optional)</span></label>
               <div className={getErrorClass("tags")}>
                 <input
                   name="tags"
@@ -428,7 +428,8 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
            </div>
           )}
 
-          {/* Settings */}
+          {/* Event Settings */}
+          {formData.eventType === "online_registration" && (
           <div className="space-y-4">
             <h3 className={`text-sm font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Event Settings</h3>
             <div className="flex flex-col gap-4">
@@ -442,6 +443,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
               </label>
             </div>
           </div>
+          )}
 
           {/* Post Button */}
           <button

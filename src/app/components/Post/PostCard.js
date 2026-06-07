@@ -331,6 +331,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                 <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-2 items-start sm:items-center justify-between border-t border-white/5 pt-6">
                   <div className="flex items-center gap-4">
                     {(currentUser?.isAdmin || currentUser?.role === 'faculty' || post.user?._id === currentUser?._id) ? (
+                      post.eventType !== "no_registration" && (
                       <>
                         <button
                           onClick={() => setShowAdminModal(true)}
@@ -352,6 +353,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                           </div>
                         )}
                       </>
+                      )
                     ) : (
                       currentUser?.role === 'student' && (
                         post.eventType === "no_registration" ? (
