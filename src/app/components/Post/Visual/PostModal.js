@@ -223,13 +223,15 @@ export default function PostModal({
                       <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-purple-400/60" : "text-purple-600/60"}`}>Ends</span>
                       <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.endDate).toLocaleDateString()}</span>
                     </div>
-                    <div className="col-span-2 flex flex-col pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
-                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>Registration Deadline</span>
-                      <div className="flex items-center gap-2">
-                         <span className="text-sm">⏰</span>
-                         <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.registrationCloseDate).toLocaleString()}</span>
+                    {post.eventType !== "no_registration" && post.registrationCloseDate && (
+                      <div className="col-span-2 flex flex-col pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
+                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>Registration Deadline</span>
+                        <div className="flex items-center gap-2">
+                           <span className="text-sm">⏰</span>
+                           <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.registrationCloseDate).toLocaleString()}</span>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   <div className="flex flex-wrap gap-4 pt-2 items-center justify-between border-t border-white/5 pt-6">
@@ -257,7 +259,7 @@ export default function PostModal({
                         )}
                         </>
                       ) : (
-                        currentUser?.role === 'student' && (
+                        currentUser?.role === 'student' && post.eventType !== "no_registration" && (
                           Date.now() < new Date(post.registrationCloseDate) ? (
                             <button
                               onClick={() => setShowRegistrationModal(true)}

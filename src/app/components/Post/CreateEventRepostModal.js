@@ -81,7 +81,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
         type: "EventRepost",
         eventRepostDetails: {
           originalEventId: event._id,
-          eventName: event.name,
+          eventName: event.title || event.name,
           campus: repostDetails.campus,
           place: repostDetails.place,
           date: repostDetails.date,

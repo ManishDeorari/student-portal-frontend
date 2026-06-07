@@ -123,11 +123,41 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                   <span className="text-xs">✅</span>
                   <div className="flex flex-col">
-                    <span className={`text-[10px] font-black uppercase tracking-tight ${darkMode ? "text-green-400" : "text-green-600"}`}>
-                      {post.eventRepostDetails?.eventName || "Event Attended"}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] font-black uppercase tracking-tight ${darkMode ? "text-green-400" : "text-green-600"}`}>
+                        {post.eventRepostDetails?.eventName || post.eventRepostDetails?.originalEventId?.title || "Event Attended"}
+                      </span>
+                      {post.eventRepostDetails?.originalEventId && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedPost({
+                              ...post.eventRepostDetails.originalEventId,
+                              type: "Event",
+                              content: post.eventRepostDetails.originalEventId.description,
+                              user: typeof post.eventRepostDetails.originalEventId.createdBy === "object" 
+                                ? post.eventRepostDetails.originalEventId.createdBy 
+                                : post.user
+                            });
+                            setShowPostModal(true);
+                          }}
+                          className={`flex items-center justify-center w-5 h-5 rounded-full border transition-all active:scale-95 group/eye2 ${
+                            darkMode 
+                              ? "border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-green-500/50 hover:bg-green-500/10" 
+                              : "border-gray-200 bg-white text-gray-400 hover:text-green-600 hover:border-green-400 font-bold"
+                          }`}
+                          title="View Original Event"
+                        >
+                          <svg className="w-3 h-3 transition-transform group-hover/eye2:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                     <span className={`text-[8px] font-black uppercase ${darkMode ? "text-green-300" : "text-green-500"}`}>
-                      {post.eventRepostDetails?.campus} • {new Date(post.eventRepostDetails?.date).toLocaleDateString()}
+                      {post.eventRepostDetails?.campus && post.eventRepostDetails?.campus !== "None" ? `${post.eventRepostDetails.campus} • ` : ""}
+                      {post.eventRepostDetails?.date ? new Date(post.eventRepostDetails.date).toLocaleDateString() : ""}
+                      {!post.eventRepostDetails?.campus && !post.eventRepostDetails?.date && "Event Repost Details"}
                     </span>
                   </div>
                 </div>

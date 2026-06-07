@@ -191,7 +191,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             <div className={`flex items-center justify-between px-4 py-2 rounded-xl mb-3 border border-dashed ${darkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
               <div className="flex items-center gap-2">
                  <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-green-400" : "text-green-600"}`}>Original Event:</span>
-                 <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.eventName}</span>
+                 <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails?.eventName || post.eventRepostDetails?.originalEventId?.title || "Event Attended"}</span>
               </div>
               <button
                 onClick={() => setShowOriginalEventModal(true)}
@@ -792,7 +792,10 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           post={{
             ...post.eventRepostDetails.originalEventId,
             type: "Event",
-            user: post.eventRepostDetails.originalEventId.createdBy || post.user
+            content: post.eventRepostDetails.originalEventId.description,
+            user: typeof post.eventRepostDetails.originalEventId.createdBy === "object" 
+              ? post.eventRepostDetails.originalEventId.createdBy 
+              : post.user
           }}
           currentUser={currentUser}
           darkMode={darkMode}
