@@ -210,6 +210,8 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
           });
         }
         onClose();
+      } else if (result.message) {
+        toast.error(`❌ ${result.message}`);
       } else {
         toast.error("❌ Failed to create announcement.");
       }

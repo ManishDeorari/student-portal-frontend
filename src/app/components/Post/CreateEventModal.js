@@ -150,6 +150,8 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
       if (result.event) {
         toast.success("🎉 Event created successfully!");
         onClose();
+      } else if (result.message) {
+        toast.error(`❌ ${result.message}`);
       } else {
         toast.error("❌ Failed to create event.");
       }
