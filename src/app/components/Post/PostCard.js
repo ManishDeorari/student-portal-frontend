@@ -187,24 +187,6 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             </h2>
           )}
 
-          {post.type === "EventRepost" && post.eventRepostDetails?.originalEventId && (
-            <div className={`flex items-center justify-between px-4 py-2 rounded-xl mb-3 border border-dashed ${darkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
-              <div className="flex items-center gap-2">
-                 <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-green-400" : "text-green-600"}`}>Original Event:</span>
-                 <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails?.eventName || post.eventRepostDetails?.originalEventId?.title || "Event Attended"}</span>
-              </div>
-              <button
-                onClick={() => setShowOriginalEventModal(true)}
-                className={`p-1.5 rounded-lg transition-transform hover:scale-110 shadow-sm ${darkMode ? "bg-green-500/20 text-green-300 hover:bg-green-500/40" : "bg-green-100 text-green-700 hover:bg-green-200"}`}
-                title="View Original Event"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </button>
-            </div>
-          )}
 
           <PostContent
             {...{
@@ -253,38 +235,63 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           )}
 
           {post.type === "EventRepost" && post.eventRepostDetails && (
-            <div className={`mt-3 sm:mt-6 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-green-500/80 to-emerald-600/80" : "from-green-400 to-emerald-500"} shadow-xl overflow-hidden`}>
-              <div className={`p-3 sm:p-6 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} space-y-3 sm:space-y-6`}>
-                <div className={`grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 sm:gap-y-6`}>
-                  <div className="flex flex-col sm:col-span-2">
-                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-green-400/60" : "text-green-600/60"}`}>Event Attended</span>
-                    <span className={`text-lg font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.eventName}</span>
+            <div className={`mt-3 sm:mt-6 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-green-500/80 to-emerald-600/80" : "from-green-400 to-emerald-500"} shadow-xl overflow-hidden relative group/repost`}>
+              <div className={`p-4 sm:p-6 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} flex flex-col space-y-4`}>
+                <div className="flex justify-between items-start border-b border-dashed border-gray-200 dark:border-white/10 pb-4">
+                  <div className="flex flex-col">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${darkMode ? "text-green-400/80" : "text-green-600/80"} flex items-center gap-2`}>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      Linked Original Event
+                    </span>
+                    <span className={`text-lg sm:text-xl font-black ${darkMode ? "text-white" : "text-gray-900"} line-clamp-1`}>
+                      {post.eventRepostDetails?.eventName || post.eventRepostDetails?.originalEventId?.title || "Event Attended"}
+                    </span>
                   </div>
-                  {post.eventRepostDetails.campus && post.eventRepostDetails.campus !== "None" && (
-                    <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
-                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>Campus</span>
-                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.campus}</span>
-                    </div>
-                  )}
-                  {post.eventRepostDetails.place && (
-                    <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
-                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-orange-400/60" : "text-orange-600/60"}`}>Place</span>
-                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.place}</span>
-                    </div>
-                  )}
-                  {post.eventRepostDetails.date && (
-                    <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
-                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Date Attended</span>
-                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.eventRepostDetails.date).toLocaleDateString()}</span>
-                    </div>
-                  )}
-                  {post.eventRepostDetails.time && (
-                    <div className="flex flex-col pt-4 border-t border-dashed border-white/10">
-                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-purple-400/60" : "text-purple-600/60"}`}>Time Attended</span>
-                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.eventRepostDetails.time}</span>
-                    </div>
+                  {post.eventRepostDetails?.originalEventId && (
+                    <button
+                      onClick={() => setShowOriginalEventModal(true)}
+                      className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${
+                        darkMode ? "bg-green-500/20 text-green-300 hover:bg-green-500/30" : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
+                      }`}
+                    >
+                      <span className="hidden sm:inline">View Original</span>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </button>
                   )}
                 </div>
+                {((post.eventRepostDetails.campus && post.eventRepostDetails.campus !== "None") || post.eventRepostDetails.place || post.eventRepostDetails.date || post.eventRepostDetails.time) && (
+                  <div className={`grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2`}>
+                    {post.eventRepostDetails.campus && post.eventRepostDetails.campus !== "None" && (
+                      <div className="flex flex-col">
+                        <span className={`text-[9px] font-black uppercase tracking-widest opacity-60 ${darkMode ? "text-white" : "text-black"} mb-1`}>Campus</span>
+                        <span className={`text-xs sm:text-sm font-black ${darkMode ? "text-green-300" : "text-green-700"} truncate`}>{post.eventRepostDetails.campus}</span>
+                      </div>
+                    )}
+                    {post.eventRepostDetails.place && (
+                      <div className="flex flex-col">
+                        <span className={`text-[9px] font-black uppercase tracking-widest opacity-60 ${darkMode ? "text-white" : "text-black"} mb-1`}>Venue</span>
+                        <span className={`text-xs sm:text-sm font-black ${darkMode ? "text-green-300" : "text-green-700"} truncate`}>{post.eventRepostDetails.place}</span>
+                      </div>
+                    )}
+                    {post.eventRepostDetails.date && (
+                      <div className="flex flex-col">
+                        <span className={`text-[9px] font-black uppercase tracking-widest opacity-60 ${darkMode ? "text-white" : "text-black"} mb-1`}>Date Attended</span>
+                        <span className={`text-xs sm:text-sm font-black ${darkMode ? "text-green-300" : "text-green-700"} truncate`}>{new Date(post.eventRepostDetails.date).toLocaleDateString()}</span>
+                      </div>
+                    )}
+                    {post.eventRepostDetails.time && (
+                      <div className="flex flex-col">
+                        <span className={`text-[9px] font-black uppercase tracking-widest opacity-60 ${darkMode ? "text-white" : "text-black"} mb-1`}>Time Attended</span>
+                        <span className={`text-xs sm:text-sm font-black ${darkMode ? "text-green-300" : "text-green-700"} truncate`}>{post.eventRepostDetails.time}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -428,6 +435,38 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                       )
                     )}
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {post.type === "Announcement" && post.announcementDetails?.originalEventId && (
+            <div className={`mt-3 sm:mt-6 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-blue-500/80 to-purple-600/80" : "from-blue-400 to-purple-500"} shadow-xl overflow-hidden relative`}>
+              <div className={`p-4 sm:p-6 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} flex flex-col space-y-4`}>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${darkMode ? "text-blue-400/80" : "text-blue-600/80"} flex items-center gap-2`}>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                      </svg>
+                      Linked Original Event
+                    </span>
+                    <span className={`text-lg sm:text-xl font-black ${darkMode ? "text-white" : "text-gray-900"} line-clamp-1`}>
+                      {post.announcementDetails.eventName || post.announcementDetails.originalEventId.title || "Announcement Event"}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowOriginalEventModal(true)}
+                    className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${
+                      darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
+                    }`}
+                  >
+                    <span className="hidden sm:inline">View Original</span>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
@@ -785,19 +824,30 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
         </div>
       </div>
 
-      {showOriginalEventModal && post.eventRepostDetails?.originalEventId && (
-        <PostModal
-          showModal={showOriginalEventModal}
-          setShowModal={setShowOriginalEventModal}
-          post={{
-            ...post.eventRepostDetails.originalEventId,
-            type: "Event",
-            content: post.eventRepostDetails.originalEventId.description,
-            user: typeof post.eventRepostDetails.originalEventId.createdBy === "object" 
-              ? post.eventRepostDetails.originalEventId.createdBy 
-              : post.user
-          }}
-          currentUser={currentUser}
+      <AnimatePresence>
+        {showOriginalEventModal && (
+          <PostModal
+            showModal={showOriginalEventModal}
+            setShowModal={setShowOriginalEventModal}
+            post={{
+              ...(post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
+              type: "Event",
+              content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description,
+              user: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy === "object"
+                ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy
+                : post.user
+            }}
+            currentUser={currentUser}
+            darkMode={darkMode}
+          />
+        )}
+      </AnimatePresence>
+
+      {showWinnersModal && (
+        <WinnersModal
+          event={post}
+          isOpen={showWinnersModal}
+          onClose={() => setShowWinnersModal(false)}
           darkMode={darkMode}
           hideInteractions={true}
         />

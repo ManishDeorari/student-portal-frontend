@@ -5,6 +5,17 @@ import ImageGallery from "../utils/ImageGallery";
 import FullImageViewer from "../utils/FullImageViewer";
 import { downloadFileSilently, getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
 
+const getDocumentIcon = (filename) => {
+  if (!filename) return "📄";
+  const lower = filename.toLowerCase();
+  if (lower.endsWith('.pdf')) return "📕";
+  if (lower.endsWith('.doc') || lower.endsWith('.docx')) return "📘";
+  if (lower.endsWith('.xls') || lower.endsWith('.xlsx') || lower.endsWith('.csv')) return "📗";
+  if (lower.endsWith('.ppt') || lower.endsWith('.pptx')) return "📙";
+  if (lower.endsWith('.txt')) return "📝";
+  return "📄";
+};
+
 export default function PostMedia({ post, setSelectedImage, currentUser, darkMode = false }) {
   if (!(post.images?.length > 0 || post.video || post.image || post.documents?.length > 0)) return null;
 
@@ -62,24 +73,32 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
 
       {/* Documents */}
       {post.documents?.length > 0 && (
-        <div className="mt-3 flex flex-col gap-2">
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {post.documents.map((doc, index) => (
-            <div key={index} className="flex gap-2 w-full sm:w-auto items-center justify-between p-3 rounded-xl border border-gray-200 shadow-sm transition-colors">
-              <div className="flex items-center gap-3 overflow-hidden">
-                <span className="text-2xl">📄</span>
-                <span className={`text-sm font-bold truncate ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                  {doc.original_filename || `Document ${index + 1}`}
-                </span>
+            <div key={index} className={`p-[1.5px] rounded-2xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm transition-transform hover:scale-[1.02] group/doc cursor-pointer`}
+                 onClick={(e) => {
+                   e.stopPropagation();
+                   downloadFileSilently(doc.url, doc.original_filename);
+                 }}
+            >
+              <div className={`flex items-center justify-between p-3 rounded-[calc(1rem-1.5px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-inner ${darkMode ? "bg-slate-800" : "bg-gray-50"}`}>
+                    {getDocumentIcon(doc.original_filename)}
+                  </div>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className={`text-sm font-black truncate tracking-tight ${darkMode ? "text-white" : "text-gray-800"}`}>
+                      {doc.original_filename || `Document ${index + 1}`}
+                    </span>
+                    <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                      {doc.format || 'FILE'} • Download
+                    </span>
+                  </div>
+                </div>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-white shadow-md transform group-hover/doc:translate-y-1 transition-transform">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </div>
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  downloadFileSilently(doc.url, doc.original_filename);
-                }}
-                className={`text-xs font-black uppercase px-3 py-1 rounded-full ${darkMode ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-600"}`}
-              >
-                Download
-              </button>
             </div>
           ))}
         </div>

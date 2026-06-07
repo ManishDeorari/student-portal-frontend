@@ -126,9 +126,12 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
 };
 
 // ================== ANNOUNCEMENTS ==================
-export const createAnnouncement = async (announcementData, images = [], video = null) => {
+export const createAnnouncement = async (announcementData, images = [], video = null, documents = []) => {
   let imageObjects = [];
   let videoObject = null;
+  let documentObjects = [];
+
+  const RAW_UPLOAD_URL = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL?.replace('/image/upload', '/raw/upload') || "https://api.cloudinary.com/v1_1/djw8l0wxn/raw/upload";
 
   // 1. Upload Images
   if (images && images.length > 0) {
@@ -165,6 +168,30 @@ export const createAnnouncement = async (announcementData, images = [], video = 
     }
   }
 
+  // 3. Upload Documents
+  if (documents && documents.length > 0) {
+    for (let doc of documents) {
+      const docData = new FormData();
+      docData.append("file", doc);
+      docData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+      docData.append("folder", "student/announcements/documents");
+
+      const uploadRes = await fetch(RAW_UPLOAD_URL, {
+        method: "POST",
+        body: docData,
+      });
+      const uploadJson = await uploadRes.json();
+      if (uploadRes.ok && uploadJson.secure_url && uploadJson.public_id) {
+        documentObjects.push({
+          url: uploadJson.secure_url,
+          public_id: uploadJson.public_id,
+          original_filename: doc.name,
+          format: doc.name.split('.').pop(),
+        });
+      }
+    }
+  }
+
   const res = await fetch(`${BASE}/posts`, {
     method: "POST",
     headers: {
@@ -175,6 +202,7 @@ export const createAnnouncement = async (announcementData, images = [], video = 
       ...announcementData, 
       images: imageObjects, 
       video: videoObject,
+      documents: documentObjects,
       type: "Announcement" 
     }),
   });

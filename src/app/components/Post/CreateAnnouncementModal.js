@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { createAnnouncement } from "../../../api/dashboard";
 import EmojiPickerToggle from "./utils/EmojiPickerToggle";
 import UserSearchInput from "./utils/UserSearchInput";
+import EventSearchInput from "./utils/EventSearchInput";
 import PostLoadingScreen from "./utils/PostLoadingScreen";
 
 const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = false, setPosts, isInline = false }) => {
@@ -23,6 +24,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
   const [previewVideo, setPreviewVideo] = useState(null);
+  const [documents, setDocuments] = useState([]);
 
   if (!isOpen && !isInline) return null;
 
@@ -120,6 +122,21 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
       setVideo(file);
       setPreviewVideo(URL.createObjectURL(file));
       setImages([]);
+      setDocuments([]);
+    }
+  };
+
+  const handleDocumentChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      const validDocs = files.filter(file => file.size <= 20 * 1024 * 1024); // 20MB limit
+      if (validDocs.length !== files.length) {
+        toast.error("❌ Some documents exceed the 20MB limit.");
+      }
+      setDocuments(validDocs);
+      setImages([]);
+      setVideo(null);
+      setPreviewVideo(null);
     }
   };
 
@@ -175,12 +192,13 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
         announcementDetails: {
           isWinnerAnnouncement: formData.isWinnerAnnouncement,
           eventName: formData.isWinnerAnnouncement ? formData.eventName : "",
+          originalEventId: formData.originalEventId || undefined,
           winners: formData.isWinnerAnnouncement ? winnersData : [],
           pointsRequested: formData.isWinnerAnnouncement, // Always true if winners table exists
         }
       };
 
-      const result = await createAnnouncement(announcementData, images, video);
+      const result = await createAnnouncement(announcementData, images, video, documents);
 
       if (result.post) {
         toast.success("🎉 Announcement created successfully!");
@@ -250,6 +268,11 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                       <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Add Video</span>
                       <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
                     </label>
+                    <label className="cursor-pointer group flex flex-col items-center">
+                      <span className="text-3xl block filter grayscale group-hover:grayscale-0 transition-all">📄</span>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Add Document</span>
+                      <input type="file" accept=".pdf,.doc,.docx,.txt" multiple onChange={handleDocumentChange} className="hidden" />
+                    </label>
                   </div>
 
                   {images.length > 0 && (
@@ -278,6 +301,23 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                       >
                         &times;
                       </button>
+                    </div>
+                  )}
+                  {documents.length > 0 && (
+                    <div className="flex flex-wrap gap-2 justify-center mt-4 border-t pt-4 border-white/5">
+                      {documents.map((doc, idx) => (
+                        <div key={idx} className={`relative flex items-center gap-3 p-3 rounded-xl border shadow-sm group/doc ${darkMode ? "bg-slate-800 border-white/10" : "bg-white border-gray-200"}`}>
+                          <span className="text-2xl">📄</span>
+                          <span className={`text-xs font-bold max-w-[150px] truncate ${darkMode ? "text-white" : "text-gray-800"}`}>{doc.name}</span>
+                          <button 
+                            type="button"
+                            onClick={() => setDocuments(documents.filter((_, i) => i !== idx))}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover/doc:opacity-100 transition-opacity z-10"
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -338,12 +378,17 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                       <div className="space-y-2">
                          <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-gray-400" : "text-black/60"}`}>Event Name</label>
                          <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 ${errors.includes("eventName") ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
-                           <input 
-                             name="eventName"
+                           <EventSearchInput 
                              value={formData.eventName}
-                             onChange={handleInputChange}
+                             onChange={(val) => setFormData(prev => ({ ...prev, eventName: val, originalEventId: null }))}
+                             onSelect={(eventPost) => setFormData(prev => ({ 
+                               ...prev, 
+                               eventName: eventPost.title, 
+                               originalEventId: eventPost._id 
+                             }))}
                              placeholder="e.g. Annual Sports Meet 2024"
-                             className={`w-full p-4 h-[52px] text-sm font-black rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-800 text-white placeholder-gray-500" : "bg-white text-black placeholder-gray-400"} outline-none transition-all shadow-inner`}
+                             darkMode={darkMode}
+                             className={`!w-full !p-4 !h-[52px] !text-sm !font-black !rounded-[calc(1rem-2px)] ${darkMode ? "!bg-slate-800 !text-white !placeholder-gray-500" : "!bg-white !text-black !placeholder-gray-400"} !outline-none !border-none !shadow-inner`}
                            />
                          </div>
                       </div>

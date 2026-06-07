@@ -124,7 +124,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                   <span className="text-xs">✅</span>
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-black uppercase tracking-tight ${darkMode ? "text-green-400" : "text-green-600"}`}>
+                      <span className={`text-sm font-black tracking-tight ${darkMode ? "text-green-400" : "text-green-600"}`}>
                         {post.eventRepostDetails?.eventName || post.eventRepostDetails?.originalEventId?.title || "Event Attended"}
                       </span>
                       {post.eventRepostDetails?.originalEventId && (
@@ -141,14 +141,14 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                             });
                             setShowPostModal(true);
                           }}
-                          className={`flex items-center justify-center w-5 h-5 rounded-full border transition-all active:scale-95 group/eye2 ${
+                          className={`flex items-center justify-center w-7 h-7 rounded-full border transition-all active:scale-95 group/eye2 ${
                             darkMode 
                               ? "border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-green-500/50 hover:bg-green-500/10" 
                               : "border-gray-200 bg-white text-gray-400 hover:text-green-600 hover:border-green-400 font-bold"
                           }`}
                           title="View Original Event"
                         >
-                          <svg className="w-3 h-3 transition-transform group-hover/eye2:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 transition-transform group-hover/eye2:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                           </svg>
                         </button>
@@ -162,32 +162,94 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                   </div>
                 </div>
               </div>
-            ) : (
-              post.announcementDetails?.winners?.map((w, i) => (
-                <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
-                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
-                    <span className="text-xs">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? "✅" : "❓"}</span>
-                    {w.userId?.profilePicture ? (
-                      <img src={w.userId.profilePicture} alt="profile" className="w-5 h-5 rounded-full object-cover" />
-                    ) : w.profilePicture ? (
-                      <img src={w.profilePicture} alt="profile" className="w-5 h-5 rounded-full object-cover" />
-                    ) : null}
-                    <div className="flex flex-col">
-                      <span className={`text-[10px] font-black uppercase tracking-tight ${darkMode ? "text-gray-300" : "text-slate-700"}`}>
-                        {w.name}
-                        {w.isGroup && <span className="ml-1 opacity-50">(Group)</span>}
-                      </span>
-                      {w.isGroup && w.groupMembers?.length > 0 && (
-                        <span className="text-[8px] font-bold opacity-40 uppercase truncate max-w-[150px]">
-                          {w.groupMembers.map(m => typeof m === 'object' ? m.name : m).join(", ")}
-                        </span>
-                      )}
+            ) : post.type === "Announcement" ? (
+              <div className={`flex flex-col gap-3 w-full mt-2`}>
+                {post.announcementDetails?.originalEventId && (
+                  <div className={`flex items-center gap-2 p-[1px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm self-start`}>
+                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1px)] ${darkMode ? "bg-black" : "bg-white"}`}>
+                      <span className="text-sm">🏆</span>
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-sm font-black tracking-tight ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                            {post.announcementDetails?.eventName || post.announcementDetails?.originalEventId?.title || "Announcement Event"}
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedPost({
+                                ...post.announcementDetails.originalEventId,
+                                type: "Event",
+                                content: post.announcementDetails.originalEventId.description,
+                                user: typeof post.announcementDetails.originalEventId.createdBy === "object" 
+                                  ? post.announcementDetails.originalEventId.createdBy 
+                                  : post.user
+                              });
+                              setShowPostModal(true);
+                            }}
+                            className={`flex items-center justify-center w-7 h-7 rounded-full border transition-all active:scale-95 group/eye2 ${
+                              darkMode 
+                                ? "border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-blue-500/50 hover:bg-blue-500/10" 
+                                : "border-gray-200 bg-white text-gray-400 hover:text-blue-600 hover:border-blue-400 font-bold"
+                            }`}
+                            title="View Original Event"
+                          >
+                            <svg className="w-4 h-4 transition-transform group-hover/eye2:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                          </button>
+                        </div>
+                        <span className={`text-[8px] font-black uppercase ${darkMode ? "text-blue-300" : "text-blue-500"}`}>Linked Original Event</span>
+                      </div>
                     </div>
-                    <span className="text-[10px] font-black text-blue-400">+{w.points}</span>
                   </div>
-                </div>
-              ))
-            )}
+                )}
+                {post.announcementDetails?.winners?.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Winners Requesting Points
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {post.announcementDetails.winners.map((w, i) => (
+                        <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
+                          <div className={`flex items-center gap-3 px-3 py-2 rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
+                            <div className="relative">
+                              {w.userId?.profilePicture ? (
+                                <img src={w.userId.profilePicture} alt="profile" className="w-8 h-8 rounded-full object-cover border border-white/10" />
+                              ) : w.profilePicture ? (
+                                <img src={w.profilePicture} alt="profile" className="w-8 h-8 rounded-full object-cover border border-white/10" />
+                              ) : (
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs border ${darkMode ? "bg-slate-800 border-white/10" : "bg-gray-100 border-gray-200"}`}>
+                                  👤
+                                </div>
+                              )}
+                              <span className="absolute -bottom-1 -right-1 text-xs">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? "✅" : "❓"}</span>
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <span className={`text-xs font-black uppercase tracking-tight truncate ${darkMode ? "text-white" : "text-slate-800"}`}>
+                                {w.name}
+                                {w.isGroup && <span className="ml-1 opacity-50 text-[9px]">(Group)</span>}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className={`text-[9px] font-bold opacity-60 font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                  {w.uniqueId || (w.isGroup && "Group IDs") || "ID Undefined"}
+                                </span>
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"}`}>
+                                  Rank {w.rank}
+                                </span>
+                              </div>
+                            </div>
+                            <div className={`flex flex-col items-end border-l pl-3 ml-1 ${darkMode ? "border-white/10" : "border-gray-200"}`}>
+                              <span className={`text-[8px] font-black uppercase tracking-widest opacity-50 ${darkMode ? "text-white" : "text-black"}`}>Points</span>
+                              <span className="text-xs font-black text-blue-400">+{w.points}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : null}
           </div>
         </div>
 
