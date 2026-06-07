@@ -217,15 +217,11 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                         <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
                           <div className={`flex items-center gap-3 px-3 py-2 rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                             <div className="relative">
-                              {w.userId?.profilePicture ? (
-                                <img src={w.userId.profilePicture} alt="profile" className="w-8 h-8 rounded-full object-cover border border-white/10" />
-                              ) : w.profilePicture ? (
-                                <img src={w.profilePicture} alt="profile" className="w-8 h-8 rounded-full object-cover border border-white/10" />
-                              ) : (
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs border ${darkMode ? "bg-slate-800 border-white/10" : "bg-gray-100 border-gray-200"}`}>
-                                  👤
-                                </div>
-                              )}
+                              <img 
+                                src={w.userId?.profilePicture || w.profilePicture || "/default-profile.jpg"} 
+                                alt="profile" 
+                                className="w-8 h-8 rounded-full object-cover border border-white/10" 
+                              />
                               <span className="absolute -bottom-1 -right-1 text-xs">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? "✅" : "❓"}</span>
                             </div>
                             <div className="flex flex-col min-w-0">
