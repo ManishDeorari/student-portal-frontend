@@ -1,12 +1,12 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
-import { FaPaperPlane, FaSmile, FaInfoCircle, FaUserPlus, FaUsers, FaImage, FaTimes, FaExpand, FaEdit, FaFileAlt } from "react-icons/fa";
+import { FaPaperPlane, FaSmile, FaInfoCircle, FaUserPlus, FaUsers, FaImage, FaTimes, FaExpand, FaEdit, FaFileAlt, FaDownload } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
 import EmojiPicker from 'emoji-picker-react';
 import { IoCloseOutline } from "react-icons/io5";
 import { toast } from "react-hot-toast";
-import { getCloudinaryDownloadUrl, getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
+import { getCloudinaryDownloadUrl, getOptimizedImageUrl, downloadFileSilently } from "../../utils/cloudinaryHelper";
 import GroupAvatar from "./GroupAvatar";
 
 export default function GroupChatWindow({
@@ -303,16 +303,16 @@ export default function GroupChatWindow({
                                                 )}
 
                                                 {msg.type === "document" && msg.mediaUrl && (
-                                                    <a
-                                                        href={getCloudinaryDownloadUrl(msg.mediaUrl, msg.fileName)}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="flex items-center gap-3 p-3 m-2 rounded-xl bg-black/10 hover:bg-black/20 transition-colors"
+                                                    <button
+                                                        onClick={() => downloadFileSilently(msg.mediaUrl, msg.fileName)}
+                                                        className="flex w-full text-left items-center justify-between gap-3 p-3 m-2 rounded-xl bg-black/10 hover:bg-black/20 transition-colors"
                                                     >
-                                                        <span className="text-3xl">📄</span>
-                                                        <span className="font-bold text-sm truncate max-w-[150px]">{msg.fileName || "Document"}</span>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-3xl">📄</span>
+                                                            <span className="font-bold text-sm truncate max-w-[150px]">{msg.fileName || "Document"}</span>
+                                                        </div>
                                                         <span className="text-[10px] uppercase bg-[#FAFAFA] text-black px-2 py-1 rounded-md font-bold shadow-sm">Download</span>
-                                                    </a>
+                                                    </button>
                                                 )}
 
                                                 {(msg.type === "image" || msg.type === "document") && msg.content && (

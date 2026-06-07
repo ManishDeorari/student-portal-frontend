@@ -26,3 +26,44 @@ export const getOptimizedImageUrl = (url) => {
   }
   return url;
 };
+
+/**
+ * Fetches the file and forces a silent download to avoid opening a new tab
+ * and hides the raw Cloudinary URL.
+ */
+export const downloadFileSilently = async (url, originalName) => {
+  try {
+    // If it's a Cloudinary URL, ensure it's HTTPS
+    const secureUrl = url.replace('http://', 'https://');
+    
+    // Fetch the file as a Blob
+    const response = await fetch(secureUrl);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const blob = await response.blob();
+    
+    // Create a local object URL
+    const blobUrl = window.URL.createObjectURL(blob);
+    
+    // Trigger download
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = originalName || "download";
+    document.body.appendChild(a);
+    a.click();
+    
+    // Clean up
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("Download failed, falling back to new tab:", error);
+    // Fallback: open in new tab if fetch fails due to CORS or other errors
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = originalName || "download";
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+};

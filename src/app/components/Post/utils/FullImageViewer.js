@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { getCloudinaryDownloadUrl, downloadFileSilently } from "../../../utils/cloudinaryHelper";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn, ZoomOut, Maximize, Download, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -116,16 +117,16 @@ export default function FullImageViewer({ images, startIndex, onClose, isRestric
             <ZoomOut size={20} />
           </button>
           <div className="w-[1px] h-8 bg-white/20 mx-1" />
-          <a
-            href={images[currentIndex]}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-all backdrop-blur-md"
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              downloadFileSilently(images[currentIndex], `media-${currentIndex}`);
+            }}
+            className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all hover:scale-110 active:scale-95"
             title="Download"
-            onClick={e => e.stopPropagation()}
           >
             <Download size={20} />
-          </a>
+          </button>
           <button
             onClick={onClose}
             className="bg-red-500/20 hover:bg-red-500/40 text-red-500 rounded-full p-3 transition-all backdrop-blur-md"

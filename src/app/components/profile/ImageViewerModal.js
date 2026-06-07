@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, ZoomIn, ZoomOut, Maximize, Download } from "lucide-react";
+import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
 
 export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
   const [scale, setScale] = useState(1);
@@ -92,15 +93,13 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
         </button>
         <div className="w-[1px] h-8 bg-[#FAFAFA]/20 mx-1" />
         {!isRestricted && (
-          <a
-            href={imageUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 text-white rounded-full p-3 transition-all"
+          <button
+            onClick={() => downloadFileSilently(imageUrl, "profile-image.jpg")}
+            className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all hover:scale-110 active:scale-95"
             title="Download"
           >
             <Download size={20} />
-          </a>
+          </button>
         )}
         <button
           onClick={onClose}
