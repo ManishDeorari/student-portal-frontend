@@ -65,27 +65,31 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
                                 <p className="text-sm font-medium">No participated events.</p>
                             </div>
                         ) : (
-                            <div className="space-y-3">
-                                {participatedEvents.slice(0, 5).map((ev, idx) => (
-                                    <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl transition-transform hover:scale-[1.02]">
-                                        <div className={`flex items-center justify-between p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
-                                            <div>
-                                                <h4 className={`font-bold text-sm leading-tight mb-1.5 ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{ev.title || "Event"}</h4>
-                                                <div className={`flex flex-wrap gap-1.5 text-[11px] font-semibold ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                                                    <span className="flex items-center gap-1 bg-gray-500/10 px-1.5 py-0.5 rounded"><Calendar className="w-3 h-3 text-blue-500" /> {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}</span>
-                                                    {ev.startTime && <span className="bg-gray-500/10 px-1.5 py-0.5 rounded">{ev.startTime}</span>}
+                            <div className="relative p-[2px] bg-gradient-to-tr from-blue-400/60 to-purple-500/60 rounded-2xl">
+                                <div className={`p-3.5 rounded-[calc(1rem-2px)] ${darkMode ? "bg-[#121212]" : "bg-gray-50"}`}>
+                                    <div className="space-y-3">
+                                        {participatedEvents.slice(0, 5).map((ev, idx) => (
+                                            <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl transition-transform hover:scale-[1.02]">
+                                                <div className={`flex flex-col gap-2 p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
+                                                    <h4 className={`font-bold text-base leading-tight ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{ev.title || "Event"}</h4>
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <div className="flex flex-wrap gap-2 text-xs font-bold">
+                                                            <span className="text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">{ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}</span>
+                                                            {ev.startTime && <span className="text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">{ev.startTime}</span>}
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => handleViewEvent(ev)}
+                                                        className={`mt-2 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border-0 transition-all shadow-md hover:shadow-lg text-xs font-bold w-full text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 active:scale-[0.98]`}
+                                                        title="View Event"
+                                                    >
+                                                        <Eye className="w-4 h-4" /> View
+                                                    </button>
                                                 </div>
                                             </div>
-                                            <button
-                                                onClick={() => handleViewEvent(ev)}
-                                                className={`p-1.5 rounded-lg border transition shadow-sm ${darkMode ? "bg-white/5 border-white/20 hover:bg-white/10 text-gray-300" : "bg-white border-gray-300 hover:bg-gray-50 text-gray-600"}`}
-                                                title="View Event"
-                                            >
-                                                <Eye className="w-3.5 h-3.5" />
-                                            </button>
-                                        </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
                             </div>
                         )
                     )}
@@ -97,36 +101,40 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
                                 <p className="text-sm font-medium">No won events yet.</p>
                             </div>
                         ) : (
-                            <div className="space-y-3">
-                                {wonEvents.slice(0, 5).map((post, idx) => {
-                                    const eventName = post.announcementDetails?.eventName || "Event";
-                                    const winnerInfo = post.announcementDetails?.winners?.find(
-                                        w => w.userId === profile._id || (w.groupMembers && w.groupMembers.includes(profile._id))
-                                    );
-                                    
-                                    return (
-                                        <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-xl transition-transform hover:scale-[1.02]">
-                                            <div className={`flex items-center justify-between p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
-                                                <div>
-                                                    <h4 className={`font-bold text-sm leading-tight mb-1.5 ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
-                                                        {eventName}
-                                                    </h4>
-                                                    <div className={`flex flex-wrap gap-1.5 text-[11px] font-semibold ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                                                        <span className="bg-gray-500/10 px-1.5 py-0.5 rounded">Rank {winnerInfo?.rank || "N/A"}</span>
-                                                        {winnerInfo?.points > 0 && <span className="bg-green-500/10 text-green-600 dark:text-green-400 px-1.5 py-0.5 rounded">+{winnerInfo.points} PTS</span>}
+                            <div className="relative p-[2px] bg-gradient-to-tr from-yellow-400/60 to-amber-500/60 rounded-2xl">
+                                <div className={`p-3.5 rounded-[calc(1rem-2px)] ${darkMode ? "bg-[#121212]" : "bg-gray-50"}`}>
+                                    <div className="space-y-3">
+                                        {wonEvents.slice(0, 5).map((post, idx) => {
+                                            const eventName = post.announcementDetails?.eventName || "Event";
+                                            const winnerInfo = post.announcementDetails?.winners?.find(
+                                                w => w.userId === profile._id || (w.groupMembers && w.groupMembers.includes(profile._id))
+                                            );
+                                            
+                                            return (
+                                                <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-xl transition-transform hover:scale-[1.02]">
+                                                    <div className={`flex flex-col gap-2 p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
+                                                        <h4 className={`font-bold text-base leading-tight ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
+                                                            {eventName}
+                                                        </h4>
+                                                        <div className="flex flex-col gap-1.5">
+                                                            <div className="flex flex-wrap gap-2 text-xs font-bold">
+                                                                <span className="text-yellow-600 dark:text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded">Rank {winnerInfo?.rank || "N/A"}</span>
+                                                                {winnerInfo?.points > 0 && <span className="text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-0.5 rounded">+{winnerInfo.points} PTS</span>}
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => handleViewAnnouncement(post)}
+                                                            className={`mt-2 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border-0 transition-all shadow-md hover:shadow-lg text-xs font-bold w-full text-white bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 active:scale-[0.98]`}
+                                                            title="View Announcement"
+                                                        >
+                                                            <Eye className="w-4 h-4" /> View Post
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <button
-                                                    onClick={() => handleViewAnnouncement(post)}
-                                                    className={`p-1.5 rounded-lg border transition shadow-sm ${darkMode ? "bg-white/5 border-white/20 hover:bg-white/10 text-gray-300" : "bg-white border-gray-300 hover:bg-gray-50 text-gray-600"}`}
-                                                    title="View Announcement"
-                                                >
-                                                    <Eye className="w-3.5 h-3.5" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         )
                     )}

@@ -133,27 +133,31 @@ function EventsContent() {
                                 <p className="text-sm opacity-80">This user hasn't participated in any events yet.</p>
                             </div>
                         ) : (
-                            <div className="grid gap-4">
-                                {participatedEvents.map((ev, idx) => (
-                                    <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl transition-transform hover:scale-[1.01]">
-                                        <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
-                                            <div>
-                                                <h3 className={`text-xl font-black leading-tight mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>{ev.title || "Event"}</h3>
-                                                <div className={`flex flex-wrap items-center gap-3 text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-                                                    <span className="flex items-center gap-1.5 bg-gray-500/10 px-2.5 py-1 rounded-md"><Calendar className="w-4 h-4 text-blue-500" /> {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}</span>
-                                                    {ev.startTime && <span className="bg-gray-500/10 px-2.5 py-1 rounded-md">• {ev.startTime}</span>}
-                                                    {ev.eventType && <span className="uppercase tracking-wider text-xs bg-blue-500/10 text-blue-500 px-2.5 py-1.5 rounded-md">{ev.eventType.replace("_", " ")}</span>}
+                            <div className="relative p-[2px] bg-gradient-to-tr from-blue-400/60 to-purple-500/60 rounded-[1.5rem]">
+                                <div className={`p-5 rounded-[calc(1.5rem-2px)] ${darkMode ? "bg-[#121212]" : "bg-gray-50"}`}>
+                                    <div className="grid gap-4 md:grid-cols-2">
+                                        {participatedEvents.map((ev, idx) => (
+                                            <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl transition-transform hover:scale-[1.01]">
+                                                <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
+                                                    <div>
+                                                        <h3 className={`text-xl font-black leading-tight mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>{ev.title || "Event"}</h3>
+                                                        <div className={`flex flex-wrap items-center gap-3 text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                                            <span className="flex items-center gap-1.5 bg-gray-500/10 px-2.5 py-1 rounded-md"><Calendar className="w-4 h-4 text-blue-500" /> {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}</span>
+                                                            {ev.startTime && <span className="bg-gray-500/10 px-2.5 py-1 rounded-md">• {ev.startTime}</span>}
+                                                            {ev.eventType && <span className="uppercase tracking-wider text-xs bg-blue-500/10 text-blue-500 px-2.5 py-1.5 rounded-md">{ev.eventType.replace("_", " ")}</span>}
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => handleViewEvent(ev)}
+                                                        className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border-0 transition-all font-bold shrink-0 shadow-md hover:shadow-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 active:scale-[0.98]`}
+                                                    >
+                                                        <Eye className="w-5 h-5" /> View
+                                                    </button>
                                                 </div>
                                             </div>
-                                            <button
-                                                onClick={() => handleViewEvent(ev)}
-                                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition font-bold shrink-0 shadow-sm ${darkMode ? "bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 text-white" : "bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-800"}`}
-                                            >
-                                                <Eye className="w-4 h-4" /> View
-                                            </button>
-                                        </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
                             </div>
                         )
                     )}
@@ -166,39 +170,43 @@ function EventsContent() {
                                 <p className="text-sm opacity-80">This user hasn't won any events yet.</p>
                             </div>
                         ) : (
-                            <div className="grid gap-4">
-                                {wonEvents.map((post, idx) => {
-                                    const eventName = post.announcementDetails?.eventName || "Event";
-                                    // Target user might be the logged in user or a different public profile
-                                    // But we don't have the targetUser's ID strictly here except publicId string.
-                                    // Let's find the winner matching any user if we don't know the exact ID, or just map the winner that has highest points?
-                                    // Wait, the API ensures this post is in the list because the user won. 
-                                    // So we just find the winner that matches the publicId or the current user if publicId is "me"
-                                    
-                                    // A safer bet is to find a winner whose uniqueId or userId matches.
-                                    // Since we don't know the precise _id of the profile owner here, we can just show all winners, or highlight the target.
-                                    // Actually, let's just show the event details and "View Announcement" to keep it clean.
-                                    
-                                    return (
-                                        <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-2xl transition-transform hover:scale-[1.01]">
-                                            <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
-                                                <div>
-                                                    <h3 className={`text-xl font-black leading-tight mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>{eventName}</h3>
-                                                    <div className={`flex flex-wrap items-center gap-3 text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-                                                        <span className="flex items-center gap-1.5 bg-gray-500/10 px-2.5 py-1 rounded-md"><Calendar className="w-4 h-4 text-blue-500" /> {new Date(post.createdAt).toLocaleDateString()}</span>
-                                                        <span className="flex items-center gap-1.5 bg-yellow-500/10 text-yellow-500 px-2.5 py-1 rounded-md"><Trophy className="w-4 h-4" /> Winner</span>
+                            <div className="relative p-[2px] bg-gradient-to-tr from-yellow-400/60 to-amber-500/60 rounded-[1.5rem]">
+                                <div className={`p-5 rounded-[calc(1.5rem-2px)] ${darkMode ? "bg-[#121212]" : "bg-gray-50"}`}>
+                                    <div className="grid gap-4 md:grid-cols-2">
+                                        {wonEvents.map((post, idx) => {
+                                            const eventName = post.announcementDetails?.eventName || "Event";
+                                            // Target user might be the logged in user or a different public profile
+                                            // But we don't have the targetUser's ID strictly here except publicId string.
+                                            // Let's find the winner matching any user if we don't know the exact ID, or just map the winner that has highest points?
+                                            // Wait, the API ensures this post is in the list because the user won. 
+                                            // So we just find the winner that matches the publicId or the current user if publicId is "me"
+                                            
+                                            // A safer bet is to find a winner whose uniqueId or userId matches.
+                                            // Since we don't know the precise _id of the profile owner here, we can just show all winners, or highlight the target.
+                                            // Actually, let's just show the event details and "View Announcement" to keep it clean.
+                                            
+                                            return (
+                                                <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-2xl transition-transform hover:scale-[1.01]">
+                                                    <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
+                                                        <div>
+                                                            <h3 className={`text-xl font-black leading-tight mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>{eventName}</h3>
+                                                            <div className={`flex flex-wrap items-center gap-3 text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                                                <span className="flex items-center gap-1.5 bg-gray-500/10 px-2.5 py-1 rounded-md"><Calendar className="w-4 h-4 text-blue-500" /> {new Date(post.createdAt).toLocaleDateString()}</span>
+                                                                <span className="flex items-center gap-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-500 px-2.5 py-1 rounded-md"><Trophy className="w-4 h-4" /> Winner</span>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => handleViewAnnouncement(post)}
+                                                            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border-0 transition-all font-bold shrink-0 shadow-md hover:shadow-lg text-white bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 active:scale-[0.98]`}
+                                                        >
+                                                            <Eye className="w-5 h-5" /> View Post
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <button
-                                                    onClick={() => handleViewAnnouncement(post)}
-                                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition font-bold shrink-0 shadow-sm ${darkMode ? "bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 text-white" : "bg-white border-gray-300 hover:bg-gray-50 hover:border-gray-400 text-gray-800"}`}
-                                                >
-                                                    <Eye className="w-4 h-4" /> View Post
-                                                </button>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         )
                     )}
