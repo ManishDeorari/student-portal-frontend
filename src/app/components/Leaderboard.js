@@ -61,7 +61,12 @@ export default function Leaderboard() {
     setIsModalOpen(true);
   };
 
-  const Card = ({ title, users, pointsKey }) => (
+  const Card = ({ title, users, pointsKey }) => {
+    const [displayLimit, setDisplayLimit] = useState(20);
+    const handleShowMore = () => setDisplayLimit(prev => prev + 20);
+    const handleShowLess = () => setDisplayLimit(20);
+
+    return (
     <div className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden mb-12 transition-all hover:shadow-blue-500/10">
       <div className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} rounded-[calc(1.5rem-2px)] overflow-hidden`}>
         <div className={`px-5 sm:px-10 py-4 sm:py-6 ${darkMode ? "bg-white/5" : "bg-gray-50/50"} flex items-center justify-between border-b ${darkMode ? "border-white/10" : "border-gray-200"}`}>
@@ -80,7 +85,7 @@ export default function Leaderboard() {
             </div>
           ) : (
             <ul className="space-y-3 sm:space-y-5">
-              {users.map((user, index) => (
+              {users.slice(0, displayLimit).map((user, index) => (
                 <div key={user._id} className="p-[1.5px] sm:p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl sm:rounded-2xl shadow-xl transition-all hover:scale-[1.01]">
                     <li
                       className={`flex items-center justify-between ${darkMode ? "bg-black" : "bg-white"} rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-2px)] p-2 sm:p-3 group transition-all duration-300`}
@@ -144,10 +149,32 @@ export default function Leaderboard() {
               ))}
             </ul>
           )}
+          
+          <div className="flex flex-col items-center justify-center gap-4 py-8">
+            {users.length > displayLimit ? (
+                <button
+                    onClick={handleShowMore}
+                    className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
+                >
+                    Show More
+                </button>
+            ) : users.length > 20 ? (
+                <>
+                    <button
+                        onClick={handleShowLess}
+                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                    >
+                        Show Less
+                    </button>
+                    <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more users to show</p>
+                </>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>
   );
+  };
 
   return (
     <motion.div

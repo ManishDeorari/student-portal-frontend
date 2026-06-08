@@ -12,6 +12,10 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
   const [pointsOverrides, setPointsOverrides] = useState({});
   const [sessionPointsDefault, setSessionPointsDefault] = useState(30);
 
+  const [eventLimit, setEventLimit] = useState(10);
+  const [sessionLimit, setSessionLimit] = useState(10);
+  const [repostLimit, setRepostLimit] = useState(10);
+
   useEffect(() => {
     loadRequests();
   }, []);
@@ -317,9 +321,30 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6">
-                {eventRequests.map((post) => <RequestCard key={post._id} post={post} />)}
+                {eventRequests.slice(0, eventLimit).map((post) => <RequestCard key={post._id} post={post} />)}
               </div>
             )}
+            
+            <div className="flex flex-col items-center justify-center gap-4 pt-4">
+                {eventRequests.length > eventLimit ? (
+                    <button
+                        onClick={() => setEventLimit(prev => prev + 10)}
+                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
+                    >
+                        Show More
+                    </button>
+                ) : eventRequests.length > 10 ? (
+                    <>
+                        <button
+                            onClick={() => setEventLimit(10)}
+                            className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                        >
+                            Show Less
+                        </button>
+                        <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more requests to show</p>
+                    </>
+                ) : null}
+            </div>
           </div>
         </section>
       </div>
@@ -367,9 +392,30 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6">
-                {sessionRequests.map((post) => <RequestCard key={post._id} post={post} />)}
+                {sessionRequests.slice(0, sessionLimit).map((post) => <RequestCard key={post._id} post={post} />)}
               </div>
             )}
+            
+            <div className="flex flex-col items-center justify-center gap-4 pt-4">
+                {sessionRequests.length > sessionLimit ? (
+                    <button
+                        onClick={() => setSessionLimit(prev => prev + 10)}
+                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
+                    >
+                        Show More
+                    </button>
+                ) : sessionRequests.length > 10 ? (
+                    <>
+                        <button
+                            onClick={() => setSessionLimit(10)}
+                            className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                        >
+                            Show Less
+                        </button>
+                        <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more requests to show</p>
+                    </>
+                ) : null}
+            </div>
           </div>
         </section>
       </div>
@@ -398,9 +444,30 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6">
-                {repostRequests.map((post) => <RequestCard key={post._id} post={post} />)}
+                {repostRequests.slice(0, repostLimit).map((post) => <RequestCard key={post._id} post={post} />)}
               </div>
             )}
+            
+            <div className="flex flex-col items-center justify-center gap-4 pt-4">
+                {repostRequests.length > repostLimit ? (
+                    <button
+                        onClick={() => setRepostLimit(prev => prev + 10)}
+                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
+                    >
+                        Show More
+                    </button>
+                ) : repostRequests.length > 10 ? (
+                    <>
+                        <button
+                            onClick={() => setRepostLimit(10)}
+                            className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                        >
+                            Show Less
+                        </button>
+                        <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more requests to show</p>
+                    </>
+                ) : null}
+            </div>
           </div>
         </section>
       </div>

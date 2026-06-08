@@ -22,6 +22,10 @@ const MyConnectionsContent = () => {
     const [requested, setRequested] = useState({});
     const [actionLoading, setActionLoading] = useState(false);
 
+    const [displayLimit, setDisplayLimit] = useState(20);
+    const handleShowMore = () => setDisplayLimit(prev => prev + 20);
+    const handleShowLess = () => setDisplayLimit(20);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -141,8 +145,9 @@ const MyConnectionsContent = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 pb-20">
-                        {filteredConnections.map((user) => {
+                    <div className="pb-20">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+                            {filteredConnections.slice(0, displayLimit).map((user) => {
                             const isUserConnected = isConnected(user._id);
                             const isSent = requested[user._id];
                             
@@ -208,6 +213,28 @@ const MyConnectionsContent = () => {
                                 </div>
                             );
                         })}
+                        </div>
+                        
+                        <div className="flex flex-col items-center justify-center gap-4 py-8">
+                            {filteredConnections.length > displayLimit ? (
+                                <button
+                                    onClick={handleShowMore}
+                                    className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
+                                >
+                                    Show More
+                                </button>
+                            ) : filteredConnections.length > 20 ? (
+                                <>
+                                    <button
+                                        onClick={handleShowLess}
+                                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                                    >
+                                        Show Less
+                                    </button>
+                                    <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more connections to show</p>
+                                </>
+                            ) : null}
+                        </div>
                     </div>
                 )}
             </main>

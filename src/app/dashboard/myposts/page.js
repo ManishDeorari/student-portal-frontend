@@ -88,6 +88,11 @@ export default function MyPostsPage() {
     await fetchMyPosts(next, true);
   };
 
+  const handleShowLess = async () => {
+    setPage(1);
+    await fetchMyPosts(1, false);
+  };
+
   if (initializing) return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-white">
       <div className="flex flex-col items-center gap-4">
@@ -138,16 +143,35 @@ export default function MyPostsPage() {
             ))}
 
             {hasMore && (
-              <div className="text-center mt-10">
+              <div className="text-center mt-10 flex flex-col items-center gap-4">
                 <button
                   onClick={handleLoadMore}
                   className="px-10 py-4 bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition shadow-lg active:scale-95"
                 >
                   Load More Posts
                 </button>
+                {page > 1 && (
+                  <button
+                    onClick={handleShowLess}
+                    className={`px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition shadow-lg active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                  >
+                    Show Less
+                  </button>
+                )}
               </div>
             )}
-            {!hasMore && posts.length > 5 && (
+            {!hasMore && posts.length > limit && (
+              <div className="flex flex-col items-center gap-4 mt-10">
+                <button
+                  onClick={handleShowLess}
+                  className={`px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition shadow-lg active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                >
+                  Show Less
+                </button>
+                <p className="text-center text-white/40 font-bold uppercase tracking-widest text-[10px] italic">No more posts to show</p>
+              </div>
+            )}
+            {!hasMore && posts.length <= limit && posts.length > 5 && (
               <p className="text-center mt-10 text-white/40 font-bold uppercase tracking-widest text-[10px] italic">No more posts to show</p>
             )}
           </div>

@@ -33,6 +33,10 @@ const NetworkPage = () => {
     industry: ""
   });
 
+  const [displayLimit, setDisplayLimit] = useState(8);
+  const handleShowMore = () => setDisplayLimit(prev => prev + 8);
+  const handleShowLess = () => setDisplayLimit(8);
+
   const [actionLoading, setActionLoading] = useState(false);
 
   // ⚡ OPTIMISTIC HYDRATION
@@ -105,6 +109,7 @@ const NetworkPage = () => {
     }
     setStudent([]); // Clear previous results immediately
     setSearched(true); // Track that a search was performed
+    setDisplayLimit(8);
 
     const token = localStorage.getItem("token");
     const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -239,7 +244,7 @@ const NetworkPage = () => {
                 <h2 className={`text-lg sm:text-2xl font-black tracking-tight ${darkMode ? 'text-white' : 'text-slate-900'}`}>Search Results</h2>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {student.map((user) => (
+                {student.slice(0, displayLimit).map((user) => (
                   <div key={user._id} className="relative p-[1.5px] bg-gradient-to-br from-blue-500/50 via-purple-500/50 to-pink-500/50 rounded-2xl group transition-all duration-500 hover:from-blue-500 hover:via-purple-500 hover:to-pink-500 shadow-sm hover:shadow-xl">
                     <div className={`rounded-2xl p-3 sm:p-5 flex items-center justify-between gap-3 sm:gap-4 relative overflow-hidden h-full ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-900'} transition-colors`}>
                       <div className="flex items-center gap-3 sm:gap-4 min-w-0 relative z-10 w-full">
@@ -289,6 +294,27 @@ const NetworkPage = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              <div className="flex flex-col items-center justify-center gap-4 py-8">
+                {student.length > displayLimit ? (
+                    <button
+                        onClick={handleShowMore}
+                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
+                    >
+                        Show More
+                    </button>
+                ) : student.length > 8 ? (
+                    <>
+                        <button
+                            onClick={handleShowLess}
+                            className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                        >
+                            Show Less
+                        </button>
+                        <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more students to show</p>
+                    </>
+                ) : null}
               </div>
             </div>
           </div>

@@ -7,6 +7,8 @@ import { useTheme } from "@/context/ThemeContext";
 
 export default function ProfileActivity({ profile, setProfile, isPublicView }) {
     const { darkMode } = useTheme();
+    const [displayLimit, setDisplayLimit] = useState(3);
+
     // Only show user's posts
     const myPosts = (profile.posts || [])
         .filter(p => p && p._id)
@@ -22,7 +24,7 @@ export default function ProfileActivity({ profile, setProfile, isPublicView }) {
                     </div>
                 ) : (
                     <>
-                        {myPosts.slice(0, 3).map((item, idx) => (
+                        {myPosts.slice(0, displayLimit).map((item, idx) => (
                             <PostCard
                                 key={`${item._id}-${idx}`}
                                 post={item}
@@ -40,20 +42,29 @@ export default function ProfileActivity({ profile, setProfile, isPublicView }) {
                             />
                         ))}
 
-                        {myPosts.length > 3 && (
-                            <div className="pt-2 text-center">
-                                <Link
-                                    href="/dashboard/myposts"
-                                    className={`inline-flex items-center gap-2 text-sm font-bold transition px-6 py-2.5 rounded-full border hover:shadow-md active:scale-95 ${darkMode ? 'bg-blue-900/20 text-blue-400 border-blue-900/40 hover:bg-blue-900/30' : 'bg-blue-50/50 text-blue-600 border-blue-100 hover:text-blue-800'}`}
+                        <div className="flex flex-col items-center justify-center gap-4 pt-6">
+                            {myPosts.length > displayLimit ? (
+                                <button
+                                    onClick={() => setDisplayLimit(prev => prev + 5)}
+                                    className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
                                 >
-                                    Show all my Posts
-                                </Link>
-                            </div>
-                        )}
+                                    Show More
+                                </button>
+                            ) : myPosts.length > 3 ? (
+                                <>
+                                    <button
+                                        onClick={() => setDisplayLimit(3)}
+                                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                                    >
+                                        Show Less
+                                    </button>
+                                    <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more posts to show</p>
+                                </>
+                            ) : null}
+                        </div>
                     </>
                 )}
             </div>
         </SectionCard>
     );
-}
 

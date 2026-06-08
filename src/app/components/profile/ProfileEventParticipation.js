@@ -37,24 +37,28 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
         <>
             <SectionCard title="Event Participation" hasData={hasData} isPublicView={isPublicView}>
                 <div className="flex flex-wrap gap-3 mb-5">
-                    <button
-                        onClick={() => setActiveTab("participated")}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border ${activeTab === "participated"
-                                ? (darkMode ? "bg-blue-900/30 text-blue-400 border-blue-500/50 shadow-md" : "bg-blue-50 text-blue-700 border-blue-200 shadow-sm")
-                                : (darkMode ? "bg-transparent text-gray-400 border-white/10 hover:bg-white/5 hover:text-white" : "bg-transparent text-gray-500 border-gray-200 hover:bg-gray-50 hover:text-gray-800")
-                            }`}
-                    >
-                        Participated ({participatedEvents.length})
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("won")}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-1.5 border ${activeTab === "won"
-                                ? (darkMode ? "bg-amber-900/30 text-amber-400 border-amber-500/50 shadow-md" : "bg-amber-50 text-amber-700 border-amber-200 shadow-sm")
-                                : (darkMode ? "bg-transparent text-gray-400 border-white/10 hover:bg-white/5 hover:text-white" : "bg-transparent text-gray-500 border-gray-200 hover:bg-gray-50 hover:text-gray-800")
-                            }`}
-                    >
-                        Won ({wonEvents.length})
-                    </button>
+                    <div className={`relative p-[1.5px] rounded-xl transition-all ${activeTab === "participated" ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/20' : 'bg-transparent border border-gray-300 dark:border-gray-700'}`}>
+                        <button
+                            onClick={() => setActiveTab("participated")}
+                            className={`px-4 py-2 rounded-[calc(0.75rem-1.5px)] text-sm font-black transition-all h-full w-full ${activeTab === "participated"
+                                    ? (darkMode ? "bg-[#1A1A1B] text-white" : "bg-white text-blue-600")
+                                    : (darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-black")
+                                }`}
+                        >
+                            Participated ({participatedEvents.length})
+                        </button>
+                    </div>
+                    <div className={`relative p-[1.5px] rounded-xl transition-all ${activeTab === "won" ? 'bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg shadow-amber-500/20' : 'bg-transparent border border-gray-300 dark:border-gray-700'}`}>
+                        <button
+                            onClick={() => setActiveTab("won")}
+                            className={`px-4 py-2 rounded-[calc(0.75rem-1.5px)] text-sm font-black transition-all h-full w-full flex items-center justify-center gap-1.5 ${activeTab === "won"
+                                    ? (darkMode ? "bg-[#1A1A1B] text-white" : "bg-white text-amber-600")
+                                    : (darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-black")
+                                }`}
+                        >
+                            Won ({wonEvents.length})
+                        </button>
+                    </div>
                 </div>
 
                 <div className="space-y-4">
@@ -70,17 +74,19 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
                                     <div className="space-y-3">
                                         {participatedEvents.slice(0, 5).map((ev, idx) => (
                                             <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl transition-transform hover:scale-[1.02]">
-                                                <div className={`flex flex-col gap-2 p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
-                                                    <h4 className={`font-bold text-base leading-tight ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{ev.title || "Event"}</h4>
-                                                    <div className="flex flex-col gap-1.5">
-                                                        <div className="flex flex-wrap gap-2 text-xs font-bold">
-                                                            <span className="text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">{ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}</span>
-                                                            {ev.startTime && <span className="text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">{ev.startTime}</span>}
+                                                <div className={`flex justify-between items-center gap-2 p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
+                                                    <div className="flex flex-col gap-1.5 min-w-0">
+                                                        <h4 className={`font-black text-lg leading-tight truncate ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{ev.title || "Event"}</h4>
+                                                        <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+                                                            <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-1 rounded-md">
+                                                                <Calendar className="w-3 h-3"/> {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}
+                                                            </span>
+                                                            {ev.startTime && <span className="text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-1 rounded-md">{ev.startTime}</span>}
                                                         </div>
                                                     </div>
                                                     <button
                                                         onClick={() => handleViewEvent(ev)}
-                                                        className={`mt-2 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border-0 transition-all shadow-md hover:shadow-lg text-xs font-bold w-full text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 active:scale-[0.98]`}
+                                                        className={`shrink-0 flex items-center justify-center gap-1.5 py-2 px-4 rounded-lg border-0 transition-all shadow-md hover:shadow-lg text-xs font-black text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 active:scale-[0.98]`}
                                                         title="View Event"
                                                     >
                                                         <Eye className="w-4 h-4" /> View
@@ -112,22 +118,23 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
                                             
                                             return (
                                                 <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-xl transition-transform hover:scale-[1.02]">
-                                                    <div className={`flex flex-col gap-2 p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
-                                                        <h4 className={`font-bold text-base leading-tight ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
-                                                            {eventName}
-                                                        </h4>
-                                                        <div className="flex flex-col gap-1.5">
-                                                            <div className="flex flex-wrap gap-2 text-xs font-bold">
-                                                                <span className="text-yellow-600 dark:text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded">Rank {winnerInfo?.rank || "N/A"}</span>
-                                                                {winnerInfo?.points > 0 && <span className="text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-0.5 rounded">+{winnerInfo.points} PTS</span>}
+                                                    <div className={`flex justify-between items-center gap-2 p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
+                                                        <div className="flex flex-col gap-1.5 min-w-0">
+                                                            <h4 className={`font-black text-lg leading-tight truncate ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
+                                                                {eventName}
+                                                            </h4>
+                                                            <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+                                                                <span className="text-yellow-600 dark:text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded-md">Rank {winnerInfo?.rank || "N/A"}</span>
+                                                                {winnerInfo?.points > 0 && <span className="text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-1 rounded-md">+{winnerInfo.points} PTS</span>}
+                                                                <span className="text-amber-600 dark:text-amber-500 px-1 uppercase tracking-widest font-black text-[10px]">Winner</span>
                                                             </div>
                                                         </div>
                                                         <button
                                                             onClick={() => handleViewAnnouncement(post)}
-                                                            className={`mt-2 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border-0 transition-all shadow-md hover:shadow-lg text-xs font-bold w-full text-white bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 active:scale-[0.98]`}
+                                                            className={`shrink-0 flex items-center justify-center gap-1.5 py-2 px-4 rounded-lg border-0 transition-all shadow-md hover:shadow-lg text-xs font-black text-white bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 active:scale-[0.98]`}
                                                             title="View Announcement"
                                                         >
-                                                            <Eye className="w-4 h-4" /> View Post
+                                                            <Eye className="w-4 h-4" /> View
                                                         </button>
                                                     </div>
                                                 </div>
@@ -157,6 +164,7 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
                     post={selectedPost} 
                     darkMode={darkMode}
                     currentUser={profile}
+                    hideInteractions={true}
                 />
             )}
         </>
