@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import SectionCard from "./SectionCard";
 import PostCard from "@/app/components/Post/PostCard";
-import { MessageSquare, Heart, CornerUpRight, Activity, Paperclip } from "lucide-react";
+import { Activity } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function ProfileActivity({ profile, setProfile, isPublicView }) {
     const { darkMode } = useTheme();
-    const [displayLimit, setDisplayLimit] = useState(3);
+    const displayLimit = 3;
 
     // Only show user's posts
     const myPosts = (profile.posts || [])
@@ -43,24 +43,14 @@ export default function ProfileActivity({ profile, setProfile, isPublicView }) {
                         ))}
 
                         <div className="flex flex-col items-center justify-center gap-4 pt-6">
-                            {myPosts.length > displayLimit ? (
-                                <button
-                                    onClick={() => setDisplayLimit(prev => prev + 5)}
+                            {myPosts.length > displayLimit && (
+                                <Link
+                                    href="/dashboard/myposts"
                                     className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
                                 >
-                                    Show More
-                                </button>
-                            ) : myPosts.length > 3 ? (
-                                <>
-                                    <button
-                                        onClick={() => setDisplayLimit(3)}
-                                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
-                                    >
-                                        Show Less
-                                    </button>
-                                    <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more posts to show</p>
-                                </>
-                            ) : null}
+                                    Show All Posts
+                                </Link>
+                            )}
                         </div>
                     </>
                 )}

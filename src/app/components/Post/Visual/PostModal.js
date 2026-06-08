@@ -68,6 +68,7 @@ export default function PostModal({
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showOriginalEventModal, setShowOriginalEventModal] = useState(false);
   
   const isOwn = currentUser && (currentUser._id === post.userId?._id || currentUser.id === post.userId?._id);
   const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
@@ -300,13 +301,7 @@ export default function PostModal({
                     {post.announcementDetails?.originalEventId && (
                       <button
                         onClick={() => {
-                          setShowModal(false); // Close current
-                          // Open original (Would need to pass it up or handle it here)
-                          // Normally PostModal doesn't open another PostModal directly. 
-                          // The easiest way is to let PostCard handle it, or emit an event.
-                          // For now, if we can't open from modal easily without double modal issues, we might just hide the button or keep it disabled.
-                          // Actually, we passed setShowModal. Let's just dispatch an event or leave it out if it's too complex.
-                          // Wait, in PostCard we have "View Original". The user asked for "view icon view in admin poinst poist question div also add event name icon name on that div there"
+                          setShowOriginalEventModal(true);
                         }}
                         className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${
                           darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
@@ -568,6 +563,26 @@ export default function PostModal({
           />
         </div>
       </motion.div>
+
+      <AnimatePresence>
+        {showOriginalEventModal && (
+          <PostModal
+            showModal={showOriginalEventModal}
+            setShowModal={setShowOriginalEventModal}
+            post={{
+              ...(post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
+              type: "Event",
+              content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description,
+              user: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy === "object"
+                ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy
+                : post.user
+            }}
+            currentUser={currentUser}
+            darkMode={darkMode}
+            hideInteractions={true}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>,
     document.body
   );

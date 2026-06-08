@@ -850,6 +850,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             }}
             currentUser={currentUser}
             darkMode={darkMode}
+            hideInteractions={true}
           />
         )}
       </AnimatePresence>
