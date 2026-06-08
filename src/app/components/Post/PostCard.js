@@ -163,6 +163,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
 
   const isMyPost = post.user?._id === currentUser._id;
   const isRestricted = !isMyPost && currentUser?.role !== 'admin';
+  const shouldHideInteractions = ["Event", "Announcement", "EventRepost", "Session"].includes(post.type);
 
   // ✅ Everything's clean and ready for the `return` section now.
   return (
@@ -619,97 +620,102 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             }}
             darkMode={darkMode}
           />
-          {/* Gradient Separator before Reactions */}
-          <div className={`h-[2px] w-full bg-gradient-to-r from-transparent ${darkMode ? "via-blue-500/30" : "via-blue-600/50"} to-transparent my-2`} />
+          
+          {!shouldHideInteractions && (
+            <>
+              {/* Gradient Separator before Reactions */}
+              <div className={`h-[2px] w-full bg-gradient-to-r from-transparent ${darkMode ? "via-blue-500/30" : "via-blue-600/50"} to-transparent my-2`} />
 
-          <PostReactions
-            {...{
-              post,
-              hasLiked,
-              handleReact,
-              userReacted,
-              getReactionCount,
-              setShowModal,
-              likeIconRef,
-              isLiking,
-              setVisibleComments,
-              setReactionEffect,
-              reactionEffect,
-              showComments,
-              setShowComments,
-              setShowReactionModal,
-              setReactionModalEmoji,
-              setReactionModalUsers,
-              darkMode
-            }}
-          />
+              <PostReactions
+                {...{
+                  post,
+                  hasLiked,
+                  handleReact,
+                  userReacted,
+                  getReactionCount,
+                  setShowModal,
+                  likeIconRef,
+                  isLiking,
+                  setVisibleComments,
+                  setReactionEffect,
+                  reactionEffect,
+                  showComments,
+                  setShowComments,
+                  setShowReactionModal,
+                  setReactionModalEmoji,
+                  setReactionModalUsers,
+                  darkMode
+                }}
+              />
 
 
-          <CommentInput
-            comment={comment}
-            setComment={setComment}
-            onEmojiClick={(emoji) => setComment((prev) => prev + emoji)}
-            onSubmit={() => handleComment(comment)} // ✅ Correct
-            showCommentEmoji={showCommentEmoji}
-            setShowCommentEmoji={setShowCommentEmoji}
-            typing={someoneTyping}
-            isTyping={(val) => setSomeoneTyping(val)}
-            darkMode={darkMode}
-          />
+              <CommentInput
+                comment={comment}
+                setComment={setComment}
+                onEmojiClick={(emoji) => setComment((prev) => prev + emoji)}
+                onSubmit={() => handleComment(comment)} // ✅ Correct
+                showCommentEmoji={showCommentEmoji}
+                setShowCommentEmoji={setShowCommentEmoji}
+                typing={someoneTyping}
+                isTyping={(val) => setSomeoneTyping(val)}
+                darkMode={darkMode}
+              />
 
-          {someoneTyping && (
-            <p className={`text-xs ${darkMode ? "text-gray-500" : "text-gray-400"} mt-1 ml-2 italic`}>
-              Someone is typing...
-            </p>
-          )}
-
-          {/* Gradient Separator after Comment Input */}
-          {showComments && (
-            <div className={`h-[2px] w-full bg-gradient-to-r from-transparent ${darkMode ? "via-purple-500/30" : "via-purple-600/50"} to-transparent my-4`} />
-          )}
-
-          {showComments && (
-            <div className="pt-2 space-y-3">
-              {sortedComments
-                .slice(0, visibleComments)
-                .map((c) => (
-                  <CommentCard
-                    key={c._id}
-                    comment={c}
-                    currentUser={currentUser}
-                    onReply={handleReply}
-                    onDelete={handleDeleteComment}
-                    onEdit={handleEditComment}
-                    replies={c.replies || []}
-                    postId={post._id}
-                    onEditReply={handleEditReply}
-                    onDeleteReply={handleDeleteReply}
-                    onReactToReply={handleReactToReply}
-                    onReactToComment={handleReactToComment}
-                    onPinComment={handlePinComment}
-                    isPostOwner={post.user?._id === currentUser?._id || post.user === currentUser?._id}
-                    darkMode={darkMode}
-                  />
-                ))}
-
-              {(post.comments || []).length > visibleComments && (
-                <button
-                  onClick={handleLoadMore}
-                  className="mt-2 text-sm text-blue-600 hover:underline"
-                >
-                  Load more comments
-                </button>
+              {someoneTyping && (
+                <p className={`text-xs ${darkMode ? "text-gray-500" : "text-gray-400"} mt-1 ml-2 italic`}>
+                  Someone is typing...
+                </p>
               )}
 
-              {visibleComments > 2 && (
-                <button
-                  onClick={() => setVisibleComments(2)}
-                  className="mt-1 text-sm text-red-500 hover:underline"
-                >
-                  Show less comments
-                </button>
+              {/* Gradient Separator after Comment Input */}
+              {showComments && (
+                <div className={`h-[2px] w-full bg-gradient-to-r from-transparent ${darkMode ? "via-purple-500/30" : "via-purple-600/50"} to-transparent my-4`} />
               )}
-            </div>
+
+              {showComments && (
+                <div className="pt-2 space-y-3">
+                  {sortedComments
+                    .slice(0, visibleComments)
+                    .map((c) => (
+                      <CommentCard
+                        key={c._id}
+                        comment={c}
+                        currentUser={currentUser}
+                        onReply={handleReply}
+                        onDelete={handleDeleteComment}
+                        onEdit={handleEditComment}
+                        replies={c.replies || []}
+                        postId={post._id}
+                        onEditReply={handleEditReply}
+                        onDeleteReply={handleDeleteReply}
+                        onReactToReply={handleReactToReply}
+                        onReactToComment={handleReactToComment}
+                        onPinComment={handlePinComment}
+                        isPostOwner={post.user?._id === currentUser?._id || post.user === currentUser?._id}
+                        darkMode={darkMode}
+                      />
+                    ))}
+
+                  {(post.comments || []).length > visibleComments && (
+                    <button
+                      onClick={handleLoadMore}
+                      className="mt-2 text-sm text-blue-600 hover:underline"
+                    >
+                      Load more comments
+                    </button>
+                  )}
+
+                  {visibleComments > 2 && (
+                    <button
+                      onClick={() => setVisibleComments(2)}
+                      className="mt-1 text-sm text-red-500 hover:underline"
+                    >
+                      Show less comments
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
           )}
 
           <AnimatePresence>
@@ -754,7 +760,8 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   setStartIndex,
                   darkMode,
                   setPosts,
-                  handleReactToComment
+                  handleReactToComment,
+                  hideInteractions: shouldHideInteractions
                 }}
               />
             )}

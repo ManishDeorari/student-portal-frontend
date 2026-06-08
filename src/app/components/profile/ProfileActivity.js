@@ -67,4 +67,4 @@ export default function ProfileActivity({ profile, setProfile, isPublicView }) {
             </div>
         </SectionCard>
     );
-
+}
