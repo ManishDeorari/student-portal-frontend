@@ -230,8 +230,6 @@ function EventsContent() {
                                                             <h3 className={`text-xl font-black leading-tight mb-1 truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{eventName}</h3>
                                                             <div className={`flex flex-wrap items-center gap-3 text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
                                                                 <span className="flex items-center gap-1.5 bg-blue-500/10 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-md"><Calendar className="w-4 h-4" /> {new Date(post.createdAt).toLocaleDateString()}</span>
-                                                                <span className="text-yellow-600 dark:text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded-md">Rank {winnerInfo?.rank || "N/A"}</span>
-                                                                {winnerInfo?.points > 0 && <span className="text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-1 rounded-md">+{winnerInfo.points} PTS</span>}
                                                                 <span className="flex items-center gap-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-500 px-2.5 py-1 rounded-md uppercase tracking-widest font-black text-[10px]"><Trophy className="w-4 h-4" /> Winner</span>
                                                             </div>
                                                         </div>
