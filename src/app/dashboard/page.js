@@ -208,7 +208,7 @@ export default function DashboardPage() {
       <SidebarComponent />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 pb-24 md:pb-8">
-        <div className="flex flex-col xl:flex-row gap-6 items-start">
+        <div className="flex flex-col xl:flex-row gap-6">
           {/* Left Column: Points Scenario */}
           <aside className="hidden xl:block xl:w-[280px] order-2 xl:order-1 relative shrink-0">
             <div className="xl:sticky xl:top-24 z-40">
@@ -266,7 +266,7 @@ export default function DashboardPage() {
                     className={`flex items-center gap-1.5 px-4 py-2 rounded-[calc(9999px-1.5px)] font-black text-xs uppercase tracking-widest transition-all h-full w-full ${
                       activeTab === tab.id
                         ? (darkMode ? "bg-[#121213] text-white" : "bg-white text-blue-700")
-                        : (darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-blue-700")
+                        : (darkMode ? "text-white/80 hover:text-white" : "text-black/80 hover:text-blue-700")
                     } ${isFetchingFeed ? "opacity-50 cursor-wait" : "active:scale-95"}`}
                   >
                     <span className="text-sm">{tab.icon}</span>

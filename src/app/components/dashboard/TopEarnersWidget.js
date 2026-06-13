@@ -31,7 +31,7 @@ export default function TopEarnersWidget({ darkMode }) {
   if (loading || topEarners.length === 0) return null;
 
   return (
-    <div className={`w-full h-[470px] p-[2.5px] rounded-[2.5rem] bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 shadow-xl overflow-hidden flex flex-col group`}>
+    <div className={`w-full h-[440px] p-[2.5px] rounded-[2.5rem] bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 shadow-xl overflow-hidden flex flex-col group`}>
       <div className={`flex-1 p-5 md:p-6 rounded-[calc(2.5rem-2.5px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'} flex flex-col overflow-hidden`}>
         <div className="flex justify-between items-center mb-6 pl-1 shrink-0">
           <div>
