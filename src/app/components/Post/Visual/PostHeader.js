@@ -5,6 +5,7 @@ import ImageViewerModal from "../../profile/ImageViewerModal";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
+import { GamificationBadge } from "../../../utils/gamification";
 
 export default function PostHeader({ post, currentUser, editing, toggleEdit, handleDelete, darkMode = false, hideActions = false }) {
   const [showViewer, setShowViewer] = useState(false);
@@ -70,6 +71,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
               {post.user?.name || "Unknown"}
             </Link>
           )}
+          <GamificationBadge points={post.user?.points?.total} />
           {isOwn && (
             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold flex-shrink-0 ${darkMode ? "bg-blue-600/30 text-blue-300 border border-blue-500/30" : "bg-blue-100 text-blue-600"}`}>
               You

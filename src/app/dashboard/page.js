@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import socket from "@/utils/socket";
 
 import PointsScenario from "../components/dashboard/PointsScenario";
+import TopEarnersWidget from "../components/dashboard/TopEarnersWidget";
 import { useTheme } from "@/context/ThemeContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { GooeyGradientBackground } from "../components/GooeyGradientBackground";
@@ -211,6 +212,7 @@ export default function DashboardPage() {
           <aside className="hidden lg:block lg:w-80 order-2 lg:order-1 relative">
             <div className="lg:fixed lg:top-24 lg:w-80 z-40">
               <PointsScenario darkMode={darkMode} />
+              <TopEarnersWidget darkMode={darkMode} />
             </div>
           </aside>
 

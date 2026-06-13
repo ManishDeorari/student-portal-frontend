@@ -9,8 +9,8 @@ import SettingsDrawer from "./SettingsDrawer";
 import NotificationPreview from "./NotificationPreview";
 import { useNotifications } from "@/context/NotificationContext";
 import socket from "@/utils/socket";
-import { AnimatePresence } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
+import { getGamificationTier } from "@/utils/gamification";
 
 export default function Sidebar() {
   const { 
@@ -26,6 +26,7 @@ export default function Sidebar() {
   const { darkMode } = useTheme();
 
   const [isAdmin, setIsAdmin] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showNotifPreview, setShowNotifPreview] = useState(false);
@@ -46,6 +47,7 @@ export default function Sidebar() {
       if (userData) {
         localStorage.setItem("user", JSON.stringify(userData));
         setIsAdmin(userData.role === "admin" || userData.isAdmin);
+        setCurrentUser(userData);
         return userData;
       }
     } catch (err) {
@@ -64,6 +66,7 @@ export default function Sidebar() {
         user = await fetchUser(token);
       } else {
         setIsAdmin(user.role === "admin" || user.isAdmin);
+        setCurrentUser(user);
       }
     };
 
@@ -189,9 +192,16 @@ export default function Sidebar() {
           {/* Profile */}
           <Link
             href="/profile"
-            className="hover:text-gray-200 relative group"
+            className="hover:text-gray-200 relative group flex items-center gap-2"
             title="Profile"
           >
+            {currentUser && currentUser.points && currentUser.role !== "admin" && (
+              <div className="flex flex-col items-end mr-1">
+                <span className={`text-[9px] font-black tracking-widest uppercase ${getGamificationTier(currentUser.points.total).colorClass}`}>
+                  {getGamificationTier(currentUser.points.total).name}
+                </span>
+              </div>
+            )}
             <FaUserCircle />
           </Link>
 

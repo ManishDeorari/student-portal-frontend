@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { createPost } from "../../../api/dashboard";
 import toast from "react-hot-toast";
@@ -30,6 +30,21 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
   }
 
   const hasContent = content.trim().length > 0;
+
+  useEffect(() => {
+    const savedDraft = localStorage.getItem("postDraft");
+    if (savedDraft) {
+      setContent(savedDraft);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (content) {
+      localStorage.setItem("postDraft", content);
+    } else {
+      localStorage.removeItem("postDraft");
+    }
+  }, [content]);
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -99,6 +114,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
       setSelectedType("Regular");
 
       if (newPost && setPosts) {
+        localStorage.removeItem("postDraft");
         setPosts(prev => {
           const exists = prev.some((p) => p._id === newPost._id);
           if (exists) return prev;

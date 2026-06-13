@@ -7,7 +7,7 @@ import { useTheme } from "@/context/ThemeContext";
 
 export default function ProfileActivity({ profile, setProfile, isPublicView }) {
     const { darkMode } = useTheme();
-    const displayLimit = 3;
+    const [displayLimit, setDisplayLimit] = useState(3);
 
     // Only show user's posts
     const myPosts = (profile.posts || [])
@@ -42,14 +42,24 @@ export default function ProfileActivity({ profile, setProfile, isPublicView }) {
                         ))}
 
                         <div className="flex flex-col items-center justify-center gap-4 pt-6">
-                            {myPosts.length > displayLimit && (
-                                <Link
-                                    href="/dashboard/myposts"
+                            {myPosts.length > displayLimit ? (
+                                <button
+                                    onClick={() => setDisplayLimit(myPosts.length)}
                                     className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
                                 >
                                     Show All Posts
-                                </Link>
-                            )}
+                                </button>
+                            ) : myPosts.length > 3 ? (
+                                <>
+                                    <button
+                                        onClick={() => setDisplayLimit(3)}
+                                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                                    >
+                                        Show Less
+                                    </button>
+                                    <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more posts to show</p>
+                                </>
+                            ) : null}
                         </div>
                     </>
                 )}

@@ -139,10 +139,16 @@ const PointsScenario = ({ darkMode = false }) => {
                     </div>
                 </div>
 
-                <div className={`mt-6 pt-6 ${darkMode ? "border-white/10" : "border-gray-200"} border-t text-center`}>
-                    <p className={`text-[10px] ${darkMode ? "text-white" : "text-black"} font-extrabold italic leading-relaxed opacity-80`}>
-                        &quot;Consistent engagement leads to higher ranking!&quot;
-                    </p>
+                <div className={`mt-4 pt-4 ${darkMode ? "border-white/10" : "border-gray-200"} border-t`}>
+                    <h4 className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${darkMode ? "text-white/70" : "text-black/70"} text-center`}>Ranking Tiers</h4>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-600 to-orange-700 text-white border border-amber-500">🥉 Bronze (0)</span>
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-gray-300 to-gray-400 text-white border border-gray-200">🥈 Silver (500)</span>
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-600 text-white border border-yellow-200 shadow-[0_0_5px_rgba(250,204,21,0.5)]">🥇 Gold (1000)</span>
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-slate-300 to-slate-500 text-white border border-slate-200 shadow-[0_0_5px_rgba(148,163,184,0.5)]">✨ Platinum (2000)</span>
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white border border-cyan-300 shadow-[0_0_5px_rgba(34,211,238,0.5)]">💎 Diamond (3500)</span>
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 text-white border border-yellow-300 shadow-[0_0_5px_rgba(234,179,8,0.8)]">👑 Hall of Fame (5000+)</span>
+                    </div>
                 </div>
             </div>
         </div>

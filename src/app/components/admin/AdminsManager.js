@@ -376,12 +376,15 @@ function Table({
                 Show More
             </button>
         ) : users.length > 20 ? (
-            <button
-                onClick={handleShowLess}
-                className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
-            >
-                Show Less
-            </button>
+            <>
+                <button
+                    onClick={handleShowLess}
+                    className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
+                >
+                    Show Less
+                </button>
+                <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50 mt-2">No more users to show</p>
+            </>
         ) : null}
       </div>
     </div>
