@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Award, Target, Zap, Heart, MessageSquare, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import socket from "@/utils/socket";
+import { getGamificationTier } from "@/utils/gamification";
 
-const PointsScenario = ({ darkMode = false }) => {
+const PointsScenario = ({ darkMode = false, user = null }) => {
     const [config, setConfig] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -184,31 +185,37 @@ const PointsScenario = ({ darkMode = false }) => {
                             </button>
                         </div>
 
-                        <div className="flex-1 flex flex-col justify-between gap-2 overflow-y-auto custom-scrollbar pr-1 pb-2">
-                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-amber-600/10 border-amber-500/20" : "bg-amber-50 border-amber-200"} border`}>
-                                <div className="text-2xl drop-shadow-md">🥉</div>
-                                <div><h4 className="font-black text-amber-600 text-sm">Bronze</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">0 - 499 Points</p></div>
-                            </div>
-                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-gray-500/10 border-gray-400/20" : "bg-gray-100 border-gray-300"} border`}>
-                                <div className="text-2xl drop-shadow-md">🥈</div>
-                                <div><h4 className="font-black text-gray-500 text-sm">Silver</h4><p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">500 - 999 Points</p></div>
-                            </div>
-                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-yellow-500/10 border-yellow-500/20" : "bg-yellow-50 border-yellow-300"} border shadow-[inset_0_0_10px_rgba(250,204,21,0.1)]`}>
-                                <div className="text-2xl drop-shadow-md">🥇</div>
-                                <div><h4 className="font-black text-yellow-500 text-sm">Gold</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">1000 - 1999 Points</p></div>
-                            </div>
-                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-slate-400/10 border-slate-400/20" : "bg-slate-100 border-slate-300"} border`}>
-                                <div className="text-2xl drop-shadow-md">✨</div>
-                                <div><h4 className="font-black text-slate-500 text-sm">Platinum</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">2000 - 3499 Points</p></div>
-                            </div>
-                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-cyan-400/10 border-cyan-400/20" : "bg-cyan-50 border-cyan-200"} border shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]`}>
-                                <div className="text-2xl drop-shadow-md">💎</div>
-                                <div><h4 className="font-black text-cyan-500 text-sm">Diamond</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">3500 - 4999 Points</p></div>
-                            </div>
-                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-gradient-to-r from-yellow-400/10 via-red-500/10 to-pink-500/10 border-yellow-400/30" : "bg-gradient-to-r from-yellow-50 via-red-50 to-pink-50 border-yellow-300"} border shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]`}>
-                                <div className="text-2xl drop-shadow-lg">👑</div>
-                                <div><h4 className="font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-pink-500 text-sm">Hall of Fame</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">5000+ Points</p></div>
-                            </div>
+                        <div className="flex-1 flex flex-col justify-between gap-1 overflow-y-auto custom-scrollbar pr-1 pb-2 mt-1">
+                            {(() => {
+                                const activeTier = user ? getGamificationTier(user.points?.total || 0).name : null;
+                                
+                                const tiers = [
+                                    { name: "Bronze", points: "0 - 499 Points", icon: "🥉", styleDark: "bg-amber-600/10 border-amber-500/30", styleLight: "bg-amber-50 border-amber-300", titleCol: "text-amber-600", descDark: "text-amber-200/80", descLight: "text-amber-800/80" },
+                                    { name: "Silver", points: "500 - 999 Points", icon: "🥈", styleDark: "bg-gray-500/10 border-gray-400/30", styleLight: "bg-gray-100 border-gray-400", titleCol: "text-gray-500 dark:text-gray-300", descDark: "text-gray-300/80", descLight: "text-gray-700/80" },
+                                    { name: "Gold", points: "1000 - 1999 Points", icon: "🥇", styleDark: "bg-yellow-500/10 border-yellow-500/30", styleLight: "bg-yellow-50 border-yellow-400 shadow-[inset_0_0_10px_rgba(250,204,21,0.1)]", titleCol: "text-yellow-600 dark:text-yellow-400", descDark: "text-yellow-200/80", descLight: "text-yellow-800/80" },
+                                    { name: "Platinum", points: "2000 - 3499 Points", icon: "✨", styleDark: "bg-slate-400/10 border-slate-400/30", styleLight: "bg-slate-100 border-slate-400", titleCol: "text-slate-600 dark:text-slate-300", descDark: "text-slate-300/80", descLight: "text-slate-700/80" },
+                                    { name: "Diamond", points: "3500 - 4999 Points", icon: "💎", styleDark: "bg-cyan-400/10 border-cyan-400/30 shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]", styleLight: "bg-cyan-50 border-cyan-300 shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]", titleCol: "text-cyan-600 dark:text-cyan-400", descDark: "text-cyan-200/80", descLight: "text-cyan-800/80" },
+                                    { name: "Hall of Fame", points: "5000+ Points", icon: "👑", styleDark: "bg-gradient-to-r from-yellow-400/10 via-red-500/10 to-pink-500/10 border-yellow-400/40 shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]", styleLight: "bg-gradient-to-r from-yellow-50 via-red-50 to-pink-50 border-yellow-400 shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]", titleCol: "text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-pink-500", descDark: "text-orange-200/80", descLight: "text-orange-800/80" }
+                                ];
+
+                                return tiers.map((t, i) => {
+                                    const isActive = activeTier === t.name;
+                                    return (
+                                        <div key={i} className={`flex items-center gap-3 py-1.5 px-3 rounded-xl border ${darkMode ? t.styleDark : t.styleLight} ${isActive ? 'scale-[1.02] shadow-md ring-1 ring-current' : ''} transition-all`}>
+                                            <div className="text-xl drop-shadow-md shrink-0">{t.icon}</div>
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className={`font-black text-sm ${t.titleCol} truncate`}>{t.name}</h4>
+                                                <p className={`text-[9px] font-bold uppercase tracking-widest ${darkMode ? t.descDark : t.descLight}`}>{t.points}</p>
+                                            </div>
+                                            {isActive && (
+                                                <div className="shrink-0 text-green-500 dark:text-green-400 animate-pulse">
+                                                    <CheckCircle2 className="w-5 h-5" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                });
+                            })()}
                         </div>
                         
                         <div className="mt-3 text-center opacity-40 text-[9px] font-black uppercase tracking-widest text-orange-500 animate-pulse">

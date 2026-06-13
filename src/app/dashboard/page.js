@@ -212,7 +212,7 @@ export default function DashboardPage() {
           {/* Left Column: Points Scenario */}
           <aside className="hidden xl:block xl:w-[280px] order-2 xl:order-1 relative shrink-0">
             <div className="xl:sticky xl:top-24 z-40">
-              <PointsScenario darkMode={darkMode} />
+              <PointsScenario darkMode={darkMode} user={user} />
             </div>
           </aside>
 
@@ -252,19 +252,27 @@ export default function DashboardPage() {
                 { id: "Session", label: "Sessions", icon: "🎥" },
                 { id: "my", label: "My Posts", icon: "👤" }
               ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  disabled={isFetchingFeed}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full font-black text-[10px] uppercase tracking-widest transition-all ${
-                    activeTab === tab.id
-                      ? (darkMode ? "bg-white text-blue-600 shadow-lg scale-105" : "bg-blue-600 text-white shadow-lg scale-105")
-                      : (darkMode ? "text-gray-400 hover:text-white hover:bg-white/5" : "text-gray-500 hover:text-blue-600 hover:bg-gray-50")
-                  } ${isFetchingFeed ? "opacity-50 cursor-wait" : "active:scale-95"}`}
+                <div 
+                  key={tab.id} 
+                  className={`p-[1.5px] rounded-full transition-all ${
+                    activeTab === tab.id 
+                      ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 scale-105 shadow-md' 
+                      : darkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'
+                  }`}
                 >
-                  <span className="text-xs">{tab.icon}</span>
-                  <span>{tab.label}</span>
-                </button>
+                  <button
+                    onClick={() => setActiveTab(tab.id)}
+                    disabled={isFetchingFeed}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-[calc(9999px-1.5px)] font-black text-xs uppercase tracking-widest transition-all h-full w-full ${
+                      activeTab === tab.id
+                        ? (darkMode ? "bg-[#121213] text-white" : "bg-white text-blue-700")
+                        : (darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-blue-700")
+                    } ${isFetchingFeed ? "opacity-50 cursor-wait" : "active:scale-95"}`}
+                  >
+                    <span className="text-sm">{tab.icon}</span>
+                    <span>{tab.label}</span>
+                  </button>
+                </div>
               ))}
             </div>
 

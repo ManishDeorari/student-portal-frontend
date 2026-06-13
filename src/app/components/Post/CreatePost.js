@@ -311,21 +311,21 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
   };
 
   return (
-    <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-lg mb-6">
-      <div className={`w-full ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-4 sm:p-6 rounded-[calc(2.5rem-2.5px)] transition-colors duration-500`}>
-        <div className="flex items-center gap-4">
-          <div className="flex-1 p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-sm transition-transform hover:-translate-y-0.5 active:scale-95">
+    <div className="p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2rem] shadow-md mb-4">
+      <div className={`w-full ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-2.5 sm:p-3 rounded-[calc(2rem-1.5px)] transition-colors duration-500`}>
+        <div className="flex items-center gap-3">
+          <div className="flex-1 p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm transition-transform hover:-translate-y-0.5 active:scale-95">
             <div 
               onClick={() => setIsMainModalOpen(true)}
-              className={`w-full h-full p-3 sm:p-4 rounded-[calc(1rem-2.5px)] cursor-pointer transition-all duration-300 flex items-center ${darkMode ? "bg-[#121213] text-gray-300 hover:bg-[#1a1a1c]" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+              className={`w-full h-full py-2.5 px-3 rounded-[calc(0.75rem-1.5px)] cursor-pointer transition-all duration-300 flex items-center ${darkMode ? "bg-[#121213] text-gray-300 hover:bg-[#1a1a1c]" : "bg-white text-gray-500 hover:bg-gray-50"}`}
             >
-              <span className="text-xl mr-3">✍️</span>
-              <span className="font-medium text-sm sm:text-base">Start a post...</span>
+              <span className="text-lg mr-2">✍️</span>
+              <span className="font-medium text-xs sm:text-sm">Start a post...</span>
             </div>
           </div>
         <button 
           onClick={() => setIsMainModalOpen(true)}
-          className="hidden sm:block px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-2xl font-bold uppercase tracking-widest text-xs transition-all shadow-lg hover:shadow-blue-500/25 active:scale-95 whitespace-nowrap"
+          className="hidden sm:block px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] sm:text-xs transition-all shadow-md hover:shadow-blue-500/25 active:scale-95 whitespace-nowrap"
         >
           Create Post
         </button>
