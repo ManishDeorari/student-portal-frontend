@@ -100,7 +100,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
     ];
 
     return (
-        <div className="relative w-full h-[440px] group" style={{ perspective: "1200px" }}>
+        <div className="relative w-full h-[470px] group" style={{ perspective: "1200px" }}>
             <motion.div 
                 className="w-full h-full relative"
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -201,7 +201,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                                 return tiers.map((t, i) => {
                                     const isActive = activeTier === t.name;
                                     return (
-                                        <div key={i} className={`flex items-center gap-2.5 py-1 px-3 rounded-xl border ${darkMode ? t.styleDark : t.styleLight} ${isActive ? 'scale-[1.02] shadow-md ring-1 ring-current' : ''} transition-all`}>
+                                        <div key={i} className={`flex items-center gap-2.5 py-[3px] px-3 rounded-xl border ${darkMode ? t.styleDark : t.styleLight} ${isActive ? 'scale-[1.02] shadow-md ring-1 ring-current' : ''} transition-all`}>
                                             <div className="text-xl drop-shadow-md shrink-0">{t.icon}</div>
                                             <div className="flex-1 min-w-0">
                                                 <h4 className={`font-black text-sm ${t.titleCol} truncate`}>{t.name}</h4>

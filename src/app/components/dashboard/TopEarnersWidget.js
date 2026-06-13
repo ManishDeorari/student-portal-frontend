@@ -31,7 +31,7 @@ export default function TopEarnersWidget({ darkMode }) {
   if (loading || topEarners.length === 0) return null;
 
   return (
-    <div className={`w-full h-[440px] p-[2.5px] rounded-[2.5rem] bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 shadow-xl overflow-hidden flex flex-col group`}>
+    <div className={`w-full h-[470px] p-[2.5px] rounded-[2.5rem] bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 shadow-xl overflow-hidden flex flex-col group`}>
       <div className={`flex-1 p-5 md:p-6 rounded-[calc(2.5rem-2.5px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'} flex flex-col overflow-hidden`}>
         <div className="flex justify-between items-center mb-6 pl-1 shrink-0">
           <div>
@@ -52,7 +52,7 @@ export default function TopEarnersWidget({ darkMode }) {
           {topEarners.map((user, index) => {
             const tier = getGamificationTier(user.points?.total || 0);
             return (
-              <div key={user._id} className={`flex items-center justify-between group p-3 rounded-2xl border transition-all ${darkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-gray-100 shadow-sm hover:shadow-md'}`}>
+              <div key={user._id} className={`flex items-center justify-between group py-2 px-3 rounded-2xl border transition-all ${darkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-gray-100 shadow-sm hover:shadow-md'}`}>
                 <div className="flex items-center gap-3">
                   <div className="relative shrink-0">
                     <Image 
