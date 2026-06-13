@@ -208,15 +208,16 @@ export default function DashboardPage() {
       <SidebarComponent />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 pb-24 md:pb-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="hidden lg:block lg:w-80 order-2 lg:order-1 relative">
-            <div className="lg:fixed lg:top-24 lg:w-80 z-40">
+        <div className="flex flex-col xl:flex-row gap-6">
+          {/* Left Column: Points Scenario */}
+          <aside className="hidden xl:block xl:w-[280px] order-2 xl:order-1 relative shrink-0">
+            <div className="xl:sticky xl:top-24 z-40">
               <PointsScenario darkMode={darkMode} />
-              <TopEarnersWidget darkMode={darkMode} />
             </div>
           </aside>
 
-          <div className="flex-1 space-y-4 sm:space-y-8 order-1 lg:order-2">
+          {/* Center Column: Feed */}
+          <div className="flex-1 space-y-4 sm:space-y-8 order-1 xl:order-2 w-full max-w-2xl mx-auto">
             <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl md:rounded-[2.5rem] shadow-xl overflow-hidden">
               <section className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-3 sm:p-4 md:p-6 rounded-[calc(1.875rem-2.5px)] md:rounded-[calc(2.5rem-2.5px)] relative overflow-hidden group transition-colors duration-500`}>
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6">
@@ -333,6 +334,13 @@ export default function DashboardPage() {
               )}
             </section>
           </div>
+
+          {/* Right Column: Top Earners */}
+          <aside className="hidden xl:block xl:w-[280px] order-3 relative shrink-0">
+            <div className="xl:sticky xl:top-24 z-40">
+              <TopEarnersWidget darkMode={darkMode} />
+            </div>
+          </aside>
         </div>
       </main>
 

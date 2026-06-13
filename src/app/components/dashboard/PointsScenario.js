@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Award, Target, Zap, Heart, MessageSquare, CheckCircle2 } from "lucide-react";
+import { motion } from "framer-motion";
 import socket from "@/utils/socket";
 
 const PointsScenario = ({ darkMode = false }) => {
     const [config, setConfig] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isFlipped, setIsFlipped] = useState(false);
 
     const fetchConfig = React.useCallback(async () => {
         try {
@@ -25,20 +27,12 @@ const PointsScenario = ({ darkMode = false }) => {
     useEffect(() => {
         fetchConfig();
         
-        const handlePointsConfig = () => {
-            fetchConfig();
-        };
-
+        const handlePointsConfig = () => fetchConfig();
         const handleNewNotification = (notif) => {
-            if (notif.type === "points_earned") {
-                fetchConfig();
-            }
+            if (notif.type === "points_earned") fetchConfig();
         };
 
-        // Live updates for admin config changes
         socket.on("pointsConfigUpdated", handlePointsConfig);
-
-        // Live updates for personal point achievements
         socket.on("newNotification", handleNewNotification);
 
         return () => {
@@ -47,10 +41,20 @@ const PointsScenario = ({ darkMode = false }) => {
         };
     }, [fetchConfig]);
 
+    // Auto-flip every 10 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsFlipped(prev => !prev);
+        }, 10000);
+        return () => clearInterval(interval);
+    }, []);
+
     if (loading) return (
-        <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-6 rounded-[2rem] animate-pulse space-y-4`}>
-            <div className={`h-4 ${darkMode ? "bg-[#FAFAFA]/5" : "bg-gray-100"} rounded w-3/4`}></div>
-            <div className={`h-20 ${darkMode ? "bg-[#FAFAFA]/5" : "bg-gray-50"} rounded-2xl`}></div>
+        <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} h-[450px] p-6 rounded-[2rem] animate-pulse flex flex-col justify-between`}>
+            <div className={`h-8 ${darkMode ? "bg-[#FAFAFA]/5" : "bg-gray-100"} rounded w-3/4 mb-4`}></div>
+            <div className="space-y-4">
+               {[1,2,3,4].map(i => <div key={i} className={`h-14 ${darkMode ? "bg-[#FAFAFA]/5" : "bg-gray-50"} rounded-2xl`}></div>)}
+            </div>
         </div>
     );
 
@@ -69,88 +73,150 @@ const PointsScenario = ({ darkMode = false }) => {
             value: config.connectionPoints || 10, 
             icon: <Zap className="w-4 h-4 text-amber-500" />, 
             desc: "Grow your network",
-            completed: false // Not tracked via frequency limit logs yet
+            completed: false
         },
         { 
-            label: `Post (Max ${config.postLimitCount || 3}/${config.postLimitDays === 7 ? "Week" : (config.postLimitDays || 7) + " Days"})`, 
+            label: `Post (Max ${config.postLimitCount || 3}/${config.postLimitDays === 7 ? "Week" : (config.postLimitDays || 7) + "D"})`, 
             value: config.postPoints || 10, 
             icon: <Award className="w-4 h-4 text-purple-600" />, 
-            desc: `Every ${config.postLimitDays || 7} days`,
+            desc: `Share content`,
             completed: config.userStatus?.isPostLimitReached
         },
         { 
-            label: `Like (Max ${config.likeLimitCount || 10}/${config.likeLimitDays === 1 ? "Day" : (config.likeLimitDays || 1) + " Days"})`, 
+            label: `Like (Max ${config.likeLimitCount || 10}/${config.likeLimitDays === 1 ? "Day" : (config.likeLimitDays || 1) + "D"})`, 
             value: config.likePoints || 2, 
             icon: <Heart className="w-4 h-4 text-pink-500" />, 
             desc: "React to others" ,
             completed: config.userStatus?.isLikeLimitReached
         },
         { 
-            label: `Comment (Max ${config.commentLimitCount || 5}/${config.commentLimitDays === 1 ? "Day" : (config.commentLimitDays || 1) + " Days"})`, 
+            label: `Comment (Max ${config.commentLimitCount || 5}/${config.commentLimitDays === 1 ? "Day" : (config.commentLimitDays || 1) + "D"})`, 
             value: config.commentPoints || 3, 
             icon: <MessageSquare className="w-4 h-4 text-green-400" />, 
-            desc: "Engage in discussion",
+            desc: "Join discussion",
             completed: config.userStatus?.isCommentLimitReached
         },
     ];
 
     return (
-        <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all duration-500">
-            <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-4 md:p-5 rounded-[calc(2rem-2.5px)] min-h-[400px] flex flex-col justify-between relative`}>
-                <div>
-                    <div className="mb-2">
-                        <h3 className={`text-xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight flex items-center gap-2.5`}>
-                            🎖️ Points System
-                        </h3>
-                        <p className={`text-[10px] ${darkMode ? "text-white" : "text-black"} font-black uppercase tracking-[0.2em] mt-1 opacity-100`}>
-                            Earn &amp; Rank Up
-                        </p>
-                    </div>
+        <div className="relative w-full h-[470px] group" style={{ perspective: "1200px" }}>
+            <motion.div 
+                className="w-full h-full relative"
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
+                style={{ transformStyle: "preserve-3d" }}
+            >
+                {/* FRONT FACE: Points Guide */}
+                <div 
+                    className="absolute inset-0 w-full h-full rounded-[2.5rem] p-[2.5px] bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 shadow-2xl cursor-pointer"
+                    style={{ backfaceVisibility: "hidden" }}
+                    onClick={() => setIsFlipped(true)}
+                >
+                    <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} w-full h-full rounded-[calc(2.5rem-2.5px)] p-4 md:p-5 flex flex-col`}>
+                        <div className="flex justify-between items-center mb-4 pl-1">
+                            <div>
+                                <h3 className={`text-lg font-black ${darkMode ? "text-white" : "text-black"} tracking-tight flex items-center gap-2`}>
+                                    🎖️ How to Earn
+                                </h3>
+                                <p className={`text-[9px] ${darkMode ? "text-gray-400" : "text-gray-500"} font-black uppercase tracking-[0.2em] mt-0.5`}>
+                                    Points System
+                                </p>
+                            </div>
+                            <button onClick={(e) => { e.stopPropagation(); setIsFlipped(true); }} className={`p-2.5 rounded-full ${darkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-gray-200 hover:bg-gray-300 text-black"} transition-colors shadow-sm`} title="Flip to Ranking Tiers">
+                                <Award className="w-4 h-4" />
+                            </button>
+                        </div>
 
-                    <div className="space-y-2">
-                        {scenarios.map((item, idx) => (
-                            <div key={idx} className="p-[1px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-500 rounded-2xl shadow-sm hover:shadow-md transition-all">
-                                <div className={`flex items-center justify-between py-2 px-3 ${darkMode ? "bg-[#1e293b]" : "bg-white"} rounded-[15px] group/item transition-all`}>
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-[1.5px] bg-gradient-to-br from-blue-400 to-purple-600 rounded-xl">
-                                            <div className={`p-1.5 ${darkMode ? "bg-black" : "bg-gray-50"} rounded-[calc(0.75rem-1.5px)] group-hover/item:scale-110 transition-transform shadow-sm`}>
-                                                {item.icon}
+                        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 space-y-2">
+                            {scenarios.map((item, idx) => (
+                                <div key={idx} className="p-[1px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-500 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                                    <div className={`flex items-center justify-between py-2.5 px-3 ${darkMode ? "bg-[#1e293b]" : "bg-white"} rounded-[15px] group/item transition-all h-full`}>
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-[1px] bg-gradient-to-br from-blue-400 to-purple-600 rounded-xl shrink-0">
+                                                <div className={`p-1.5 ${darkMode ? "bg-black" : "bg-gray-50"} rounded-[calc(0.75rem-1px)] group-hover/item:scale-110 transition-transform shadow-sm`}>
+                                                    {item.icon}
+                                                </div>
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className={`text-[11px] font-black ${darkMode ? "text-white" : "text-slate-900"} leading-tight tracking-tight truncate`}>{item.label}</p>
+                                                <p className={`text-[9px] ${darkMode ? "text-gray-300" : "text-slate-500"} font-bold mt-0.5 truncate`}>{item.desc}</p>
                                             </div>
                                         </div>
-                                        <div>
-                                            <p className={`text-[11px] font-black ${darkMode ? "text-white" : "text-slate-900"} leading-tight tracking-tight`}>{item.label}</p>
-                                            <p className={`text-[9px] ${darkMode ? "text-gray-300" : "text-slate-600"} font-bold leading-tight mt-0.5`}>{item.desc}</p>
-                                        </div>
-                                    </div>
-                                    <div className="text-right flex items-center gap-3">
-                                        {item.completed && (
-                                            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 shadow-lg shadow-green-500/20 animate-in zoom-in duration-300">
-                                                <CheckCircle2 className="w-4 h-4 text-white" />
+                                        <div className="text-right flex items-center gap-2 shrink-0">
+                                            {item.completed && (
+                                                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 shadow-lg flex items-center justify-center animate-in zoom-in">
+                                                    <CheckCircle2 className="w-3 h-3 text-white" />
+                                                </div>
+                                            )}
+                                            <div className={`transition-opacity duration-300 ${item.completed ? "opacity-40" : "opacity-100"}`}>
+                                                <span className={`text-xs font-black ${darkMode ? "text-white" : "text-black"}`}>+{item.value}</span>
+                                                <p className={`text-[8px] ${darkMode ? "text-gray-500" : "text-gray-400"} font-black uppercase`}>pts</p>
                                             </div>
-                                        )}
-                                        <div className={`transition-opacity duration-300 ${item.completed ? "opacity-40" : "opacity-100"}`}>
-                                            <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>+{item.value}</span>
-                                            <p className={`text-[9px] ${darkMode ? "text-gray-500" : "text-gray-400"} font-black uppercase tracking-tighter`}>pts</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+                        <div className="mt-3 text-center opacity-40 text-[9px] font-black uppercase tracking-widest text-blue-500 animate-pulse">
+                            Click to flip 🔄
+                        </div>
                     </div>
                 </div>
 
-                <div className={`mt-4 pt-4 ${darkMode ? "border-white/10" : "border-gray-200"} border-t`}>
-                    <h4 className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${darkMode ? "text-white/70" : "text-black/70"} text-center`}>Ranking Tiers</h4>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-600 to-orange-700 text-white border border-amber-500">🥉 Bronze (0)</span>
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-gray-300 to-gray-400 text-white border border-gray-200">🥈 Silver (500)</span>
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-600 text-white border border-yellow-200 shadow-[0_0_5px_rgba(250,204,21,0.5)]">🥇 Gold (1000)</span>
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-slate-300 to-slate-500 text-white border border-slate-200 shadow-[0_0_5px_rgba(148,163,184,0.5)]">✨ Platinum (2000)</span>
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white border border-cyan-300 shadow-[0_0_5px_rgba(34,211,238,0.5)]">💎 Diamond (3500)</span>
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 text-white border border-yellow-300 shadow-[0_0_5px_rgba(234,179,8,0.8)]">👑 Hall of Fame (5000+)</span>
+                {/* BACK FACE: Gamification Tiers */}
+                <div 
+                    className="absolute inset-0 w-full h-full rounded-[2.5rem] p-[2.5px] bg-gradient-to-br from-amber-400 via-orange-500 to-red-600 shadow-2xl cursor-pointer"
+                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                    onClick={() => setIsFlipped(false)}
+                >
+                    <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} w-full h-full rounded-[calc(2.5rem-2.5px)] p-4 md:p-5 flex flex-col`}>
+                        <div className="flex justify-between items-center mb-6 pl-1">
+                            <div>
+                                <h3 className={`text-lg font-black ${darkMode ? "text-white" : "text-black"} tracking-tight flex items-center gap-2`}>
+                                    🏆 Ranking Tiers
+                                </h3>
+                                <p className={`text-[9px] ${darkMode ? "text-gray-400" : "text-gray-500"} font-black uppercase tracking-[0.2em] mt-0.5`}>
+                                    Unlock Badges
+                                </p>
+                            </div>
+                            <button onClick={(e) => { e.stopPropagation(); setIsFlipped(false); }} className={`p-2.5 rounded-full ${darkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-gray-200 hover:bg-gray-300 text-black"} transition-colors shadow-sm`} title="Flip to Points Guide">
+                                <Zap className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 flex flex-col justify-between gap-2 overflow-y-auto custom-scrollbar pr-1 pb-2">
+                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-amber-600/10 border-amber-500/20" : "bg-amber-50 border-amber-200"} border`}>
+                                <div className="text-2xl drop-shadow-md">🥉</div>
+                                <div><h4 className="font-black text-amber-600 text-sm">Bronze</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">0 - 499 Points</p></div>
+                            </div>
+                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-gray-500/10 border-gray-400/20" : "bg-gray-100 border-gray-300"} border`}>
+                                <div className="text-2xl drop-shadow-md">🥈</div>
+                                <div><h4 className="font-black text-gray-500 text-sm">Silver</h4><p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">500 - 999 Points</p></div>
+                            </div>
+                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-yellow-500/10 border-yellow-500/20" : "bg-yellow-50 border-yellow-300"} border shadow-[inset_0_0_10px_rgba(250,204,21,0.1)]`}>
+                                <div className="text-2xl drop-shadow-md">🥇</div>
+                                <div><h4 className="font-black text-yellow-500 text-sm">Gold</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">1000 - 1999 Points</p></div>
+                            </div>
+                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-slate-400/10 border-slate-400/20" : "bg-slate-100 border-slate-300"} border`}>
+                                <div className="text-2xl drop-shadow-md">✨</div>
+                                <div><h4 className="font-black text-slate-500 text-sm">Platinum</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">2000 - 3499 Points</p></div>
+                            </div>
+                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-cyan-400/10 border-cyan-400/20" : "bg-cyan-50 border-cyan-200"} border shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]`}>
+                                <div className="text-2xl drop-shadow-md">💎</div>
+                                <div><h4 className="font-black text-cyan-500 text-sm">Diamond</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">3500 - 4999 Points</p></div>
+                            </div>
+                            <div className={`flex items-center gap-4 p-3 rounded-2xl ${darkMode ? "bg-gradient-to-r from-yellow-400/10 via-red-500/10 to-pink-500/10 border-yellow-400/30" : "bg-gradient-to-r from-yellow-50 via-red-50 to-pink-50 border-yellow-300"} border shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]`}>
+                                <div className="text-2xl drop-shadow-lg">👑</div>
+                                <div><h4 className="font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-pink-500 text-sm">Hall of Fame</h4><p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">5000+ Points</p></div>
+                            </div>
+                        </div>
+                        
+                        <div className="mt-3 text-center opacity-40 text-[9px] font-black uppercase tracking-widest text-orange-500 animate-pulse">
+                            Click to flip 🔄
+                        </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };
