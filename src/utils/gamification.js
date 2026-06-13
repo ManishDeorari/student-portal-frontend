@@ -75,3 +75,21 @@ export const GamificationBadge = ({ points }) => {
         </span>
     );
 };
+
+export const getGamificationTier = (points) => {
+    const name = getTierFromPoints(points) || "Bronze";
+    const styles = getTierBadgeStyles(name);
+    
+    let colorClass = "text-amber-600";
+    if (name === "Hall of Fame") colorClass = "text-red-500";
+    else if (name === "Diamond") colorClass = "text-cyan-500";
+    else if (name === "Platinum") colorClass = "text-slate-400";
+    else if (name === "Gold") colorClass = "text-yellow-500";
+    else if (name === "Silver") colorClass = "text-gray-400";
+
+    return {
+        name,
+        icon: styles.icon,
+        colorClass
+    };
+};
