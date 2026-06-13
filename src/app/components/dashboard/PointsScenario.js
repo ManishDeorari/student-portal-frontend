@@ -158,7 +158,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                                 </div>
                             ))}
                         </div>
-                        <div className="mt-3 text-center opacity-40 text-[9px] font-black uppercase tracking-widest text-blue-500 animate-pulse">
+                        <div className="mt-3 text-center text-[9px] font-black uppercase tracking-widest text-blue-500 animate-pulse">
                             Click to flip 🔄
                         </div>
                     </div>
@@ -185,15 +185,15 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                             </button>
                         </div>
 
-                        <div className="flex-1 flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-1 pb-2 mt-1">
+                        <div className="flex-1 flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-1 pb-2 mt-4">
                             {(() => {
                                 const activeTier = user ? getGamificationTier(user.points?.total || 0).name : null;
                                 
                                 const tiers = [
                                     { name: "Bronze", points: "0 - 499 Points", icon: "🥉", styleDark: "bg-amber-600/10 border-amber-500/30", styleLight: "bg-amber-50 border-amber-300", titleCol: "text-amber-600", descDark: "text-amber-200/80", descLight: "text-amber-800/80" },
-                                    { name: "Silver", points: "500 - 999 Points", icon: "🥈", styleDark: "bg-gray-500/10 border-gray-400/30", styleLight: "bg-gray-100 border-gray-400", titleCol: "text-gray-500 dark:text-gray-300", descDark: "text-gray-300/80", descLight: "text-gray-700/80" },
+                                    { name: "Silver", points: "500 - 999 Points", icon: "🥈", styleDark: "bg-gray-500/10 border-gray-400/30", styleLight: "bg-gray-100 border-gray-400", titleCol: "text-gray-700 dark:text-gray-100", descDark: "text-gray-200/90", descLight: "text-gray-700" },
                                     { name: "Gold", points: "1000 - 1999 Points", icon: "🥇", styleDark: "bg-yellow-500/10 border-yellow-500/30", styleLight: "bg-yellow-50 border-yellow-400 shadow-[inset_0_0_10px_rgba(250,204,21,0.1)]", titleCol: "text-yellow-600 dark:text-yellow-400", descDark: "text-yellow-200/80", descLight: "text-yellow-800/80" },
-                                    { name: "Platinum", points: "2000 - 3499 Points", icon: "✨", styleDark: "bg-slate-400/10 border-slate-400/30", styleLight: "bg-slate-100 border-slate-400", titleCol: "text-slate-600 dark:text-slate-300", descDark: "text-slate-300/80", descLight: "text-slate-700/80" },
+                                    { name: "Platinum", points: "2000 - 3499 Points", icon: "✨", styleDark: "bg-slate-400/10 border-slate-400/30", styleLight: "bg-slate-100 border-slate-400", titleCol: "text-slate-800 dark:text-white", descDark: "text-slate-200/90", descLight: "text-slate-700" },
                                     { name: "Diamond", points: "3500 - 4999 Points", icon: "💎", styleDark: "bg-cyan-400/10 border-cyan-400/30 shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]", styleLight: "bg-cyan-50 border-cyan-300 shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]", titleCol: "text-cyan-600 dark:text-cyan-400", descDark: "text-cyan-200/80", descLight: "text-cyan-800/80" },
                                     { name: "Hall of Fame", points: "5000+ Points", icon: "👑", styleDark: "bg-gradient-to-r from-yellow-400/10 via-red-500/10 to-pink-500/10 border-yellow-400/40 shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]", styleLight: "bg-gradient-to-r from-yellow-50 via-red-50 to-pink-50 border-yellow-400 shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]", titleCol: "text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-pink-500", descDark: "text-orange-200/80", descLight: "text-orange-800/80" }
                                 ];
@@ -218,7 +218,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                             })()}
                         </div>
                         
-                        <div className="mt-3 text-center opacity-40 text-[9px] font-black uppercase tracking-widest text-orange-500 animate-pulse">
+                        <div className="mt-3 text-center text-[9px] font-black uppercase tracking-widest text-orange-500 animate-pulse">
                             Click to flip 🔄
                         </div>
                     </div>
