@@ -128,7 +128,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 space-y-2">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 space-y-1">
                             {scenarios.map((item, idx) => (
                                 <div key={idx} className="p-[1px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-500 rounded-2xl shadow-sm hover:shadow-md transition-all">
                                     <div className={`flex items-center justify-between py-2.5 px-3 ${darkMode ? "bg-[#1e293b]" : "bg-white"} rounded-[15px] group/item transition-all h-full`}>
@@ -185,7 +185,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                             </button>
                         </div>
 
-                        <div className="flex-1 flex flex-col justify-between gap-1 overflow-y-auto custom-scrollbar pr-1 pb-2 mt-1">
+                        <div className="flex-1 flex flex-col justify-between gap-0.5 overflow-y-auto custom-scrollbar pr-1 pb-2 mt-1">
                             {(() => {
                                 const activeTier = user ? getGamificationTier(user.points?.total || 0).name : null;
                                 

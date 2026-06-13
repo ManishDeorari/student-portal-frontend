@@ -243,7 +243,8 @@ export default function DashboardPage() {
               <CreatePost setPosts={setPosts} currentUser={user} darkMode={darkMode} />
             )}
 
-            <div className={`p-1.5 rounded-[2rem] flex flex-wrap justify-center gap-1.5 ${darkMode ? "bg-[#121213] border border-white/10" : "bg-white shadow-md border border-gray-100"}`}>
+            <div className="p-[1.5px] rounded-[2rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md">
+              <div className={`p-1.5 rounded-[calc(2rem-1.5px)] flex flex-wrap justify-center gap-1.5 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
               {[
                 { id: "all", label: "All", icon: "🌍" },
                 { id: "Regular", label: "Posts", icon: "📝" },
@@ -274,6 +275,7 @@ export default function DashboardPage() {
                   </button>
                 </div>
               ))}
+              </div>
             </div>
 
             {activeTab === "Announcement" && (

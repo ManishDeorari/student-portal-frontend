@@ -52,8 +52,9 @@ export default function TopEarnersWidget({ darkMode }) {
           {topEarners.map((user, index) => {
             const tier = getGamificationTier(user.points?.total || 0);
             return (
-              <div key={user._id} className={`flex items-center justify-between group py-2 px-3 rounded-2xl border transition-all ${darkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white border-gray-100 shadow-sm hover:shadow-md'}`}>
-                <div className="flex items-center gap-3">
+              <div key={user._id} className="p-[1.5px] bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-2xl hover:scale-[1.02] transition-transform shadow-sm">
+                <div className={`flex items-center justify-between group py-2 px-3 rounded-[calc(1rem-1.5px)] h-full w-full ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                  <div className="flex items-center gap-3">
                   <div className="relative shrink-0">
                     <Image 
                       src={user.profilePicture || "/default-profile.jpg"} 
@@ -84,6 +85,7 @@ export default function TopEarnersWidget({ darkMode }) {
                   <div className={`text-[11px] font-black uppercase px-2.5 py-1 rounded-lg ${darkMode ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 'bg-orange-50 text-orange-600 border border-orange-200'}`}>
                     {user.points?.total || 0} <span className="text-[8px]">pts</span>
                   </div>
+                </div>
                 </div>
               </div>
             );
