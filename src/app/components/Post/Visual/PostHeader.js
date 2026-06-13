@@ -5,7 +5,7 @@ import ImageViewerModal from "../../profile/ImageViewerModal";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
-import { GamificationBadge } from "../../../utils/gamification";
+import { GamificationBadge } from "../../../../utils/gamification";
 
 export default function PostHeader({ post, currentUser, editing, toggleEdit, handleDelete, darkMode = false, hideActions = false }) {
   const [showViewer, setShowViewer] = useState(false);
