@@ -243,8 +243,8 @@ export default function DashboardPage() {
               <CreatePost setPosts={setPosts} currentUser={user} darkMode={darkMode} />
             )}
 
-            <div className="p-[1.5px] rounded-[2rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md">
-              <div className={`p-1.5 rounded-[calc(2rem-1.5px)] flex flex-wrap justify-center gap-1.5 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
+            <div className="p-[1.5px] rounded-[2.5rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl w-full mx-auto max-w-full">
+              <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-1.5 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
               {[
                 { id: "all", label: "All", icon: "🌍" },
                 { id: "Regular", label: "Posts", icon: "📝" },

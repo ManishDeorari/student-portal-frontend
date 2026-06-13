@@ -2,7 +2,8 @@
   width: 100%;
   min-height: 100%;
   position: relative;
-  overflow: clip; /* Fixes sticky positioning while preventing horizontal scroll from blobs */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* ── Dark mode palette (default) ── */
