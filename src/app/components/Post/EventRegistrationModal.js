@@ -8,6 +8,7 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
   const [errors, setErrors] = useState([]);
   const [groupMembers, setGroupMembers] = useState([]);
   const [isGroup, setIsGroup] = useState(event.allowGroupRegistration);
+  const [groupName, setGroupName] = useState("");
   const [answers, setAnswers] = useState({});
 
   // Sync state whenever event or isOpen changes
@@ -16,8 +17,10 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
       // 1. Hydrate Group Members
       if (event.myRegistration.isGroup && event.myRegistration.groupMembers) {
         setGroupMembers(event.myRegistration.groupMembers);
+        setGroupName(event.myRegistration.groupName || "");
       } else {
         setGroupMembers([]);
+        setGroupName("");
       }
 
       // 2. Hydrate Answers
@@ -54,6 +57,7 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
       }
       setAnswers(initial);
       setGroupMembers([]);
+      setGroupName("");
       setIsGroup(event.allowGroupRegistration);
     }
   }, [isOpen, event._id, event.myRegistration, currentUser]);
@@ -138,6 +142,7 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
       const payload = {
         eventId: event._id,
         isGroup,
+        groupName: isGroup ? groupName : "",
         groupMembers: isGroup ? groupMembers : [],
         answers
       };
@@ -193,10 +198,24 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
             
            {/* Group Member Logic: If it's a group event, we don't show the check box, it's mandatory if they want to add more */}
            {event.allowGroupRegistration && (
-             <div className="p-[1px] rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-600/20">
-               <div className={`flex items-center justify-between p-4 ${darkMode ? "bg-slate-800" : "bg-blue-50/20"} rounded-[15px]`}>
-                  <span className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Group Event Policy Enabled</span>
-                  <button type="button" onClick={addMember} disabled={groupMembers.length >= 3} className={`px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest ${groupMembers.length >= 3 ? "opacity-30" : "hover:bg-blue-700 active:scale-95 transition-all shadow-lg"}`}>+ Add Member</button>
+             <div className="space-y-4">
+               <div className="p-[1px] rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-600/20">
+                 <div className={`flex items-center justify-between p-4 ${darkMode ? "bg-slate-800" : "bg-blue-50/20"} rounded-[15px]`}>
+                    <span className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Group Event Policy Enabled</span>
+                    <button type="button" onClick={addMember} disabled={groupMembers.length >= 3} className={`px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest ${groupMembers.length >= 3 ? "opacity-30" : "hover:bg-blue-700 active:scale-95 transition-all shadow-lg"}`}>+ Add Member</button>
+                 </div>
+               </div>
+               
+               <div className="space-y-1">
+                 <label className={`text-[9px] font-black uppercase tracking-[0.2em] ${darkMode ? "text-white" : "text-black"}`}>Team / Group Name (Optional)</label>
+                 <div className="p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 focus-within:ring-2 focus-within:ring-red-400 transition-all">
+                   <input
+                     value={groupName}
+                     onChange={(e) => setGroupName(e.target.value)}
+                     placeholder="Enter Team/Group Name..."
+                     className={`w-full p-3 rounded-[10px] ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black"} outline-none border-none`}
+                   />
+                 </div>
                </div>
              </div>
            )}

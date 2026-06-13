@@ -96,7 +96,11 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>
-                        <span className={`text-[10px] font-bold uppercase tracking-widest mr-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>[{reg.groupName}]</span>
+                        {reg.isGroup && reg.groupName && (
+                          <span className={`text-[10px] font-bold uppercase tracking-widest mr-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                            [{reg.groupName}]
+                          </span>
+                        )}
                         {reg.userId?.name}
                       </p>
                       <p className={`text-xs flex items-center flex-wrap gap-2 ${darkMode ? "text-white/50" : "text-black/50"}`}>
