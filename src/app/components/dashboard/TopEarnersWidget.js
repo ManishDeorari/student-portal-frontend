@@ -31,16 +31,23 @@ export default function TopEarnersWidget({ darkMode }) {
   if (loading || topEarners.length === 0) return null;
 
   return (
-    <div className={`mt-6 p-[1.5px] rounded-3xl bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 shadow-xl overflow-hidden`}>
-      <div className={`p-5 rounded-[calc(1.5rem-1.5px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl">
-            <span className="text-white text-xl">🏆</span>
+    <div className={`w-full h-[470px] p-[2.5px] rounded-[2.5rem] bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 shadow-xl overflow-hidden flex flex-col group`}>
+      <div className={`flex-1 p-5 md:p-6 rounded-[calc(2.5rem-2.5px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'} flex flex-col overflow-hidden`}>
+        <div className="flex justify-between items-center mb-6 pl-1 shrink-0">
+          <div>
+            <h3 className={`text-lg font-black ${darkMode ? "text-white" : "text-slate-900"} tracking-tight flex items-center gap-2`}>
+                🏆 Top Earners
+            </h3>
+            <p className={`text-[9px] ${darkMode ? "text-gray-400" : "text-gray-500"} font-black uppercase tracking-[0.2em] mt-0.5`}>
+                Leaderboard
+            </p>
           </div>
-          <h3 className={`font-black uppercase tracking-widest text-sm ${darkMode ? 'text-white' : 'text-slate-900'}`}>Top Earners</h3>
+          <div className="p-2.5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full shadow-md">
+            <span className="text-white text-sm">👑</span>
+          </div>
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-4 overflow-y-auto custom-scrollbar pr-2 flex-1 pb-2">
           {topEarners.map((user, index) => {
             const tier = getGamificationTier(user.points?.total || 0);
             return (

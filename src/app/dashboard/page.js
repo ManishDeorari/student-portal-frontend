@@ -208,7 +208,7 @@ export default function DashboardPage() {
       <SidebarComponent />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 pb-24 md:pb-8">
-        <div className="flex flex-col xl:flex-row gap-6">
+        <div className="flex flex-col xl:flex-row gap-6 items-start">
           {/* Left Column: Points Scenario */}
           <aside className="hidden xl:block xl:w-[280px] order-2 xl:order-1 relative shrink-0">
             <div className="xl:sticky xl:top-24 z-40">
@@ -243,26 +243,27 @@ export default function DashboardPage() {
               <CreatePost setPosts={setPosts} currentUser={user} darkMode={darkMode} />
             )}
 
-            <div className="flex justify-start sm:justify-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
+            <div className={`p-1.5 rounded-[2rem] flex flex-wrap justify-center gap-1.5 ${darkMode ? "bg-[#121213] border border-white/10" : "bg-white shadow-md border border-gray-100"}`}>
               {[
-                { id: "all", label: "ALL" },
-                { id: "Regular", label: "Posts" },
-                { id: "Announcement", label: "Announcement" },
-                { id: "Event", label: "Event" },
-                { id: "Session", label: "Session" },
-                { id: "my", label: "My Posts" }
+                { id: "all", label: "All", icon: "🌍" },
+                { id: "Regular", label: "Posts", icon: "📝" },
+                { id: "Announcement", label: "Announcements", icon: "📢" },
+                { id: "Event", label: "Events", icon: "📅" },
+                { id: "Session", label: "Sessions", icon: "🎥" },
+                { id: "my", label: "My Posts", icon: "👤" }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   disabled={isFetchingFeed}
-                  className={`px-4 sm:px-6 py-2.5 rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest transition-all whitespace-nowrap flex-shrink-0 ${
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full font-black text-[10px] uppercase tracking-widest transition-all ${
                     activeTab === tab.id
-                      ? (darkMode ? "bg-[#FAFAFA] text-blue-700 shadow-xl scale-105" : "bg-blue-600 text-white shadow-lg scale-105")
-                      : (darkMode ? "bg-[#FAFAFA]/10 text-white hover:bg-[#FAFAFA]/20 border border-white/10" : "bg-white text-gray-500 hover:text-blue-600 hover:bg-gray-50 border border-gray-200 shadow-sm")
-                  } ${isFetchingFeed ? "opacity-50 cursor-wait" : ""}`}
+                      ? (darkMode ? "bg-white text-blue-600 shadow-lg scale-105" : "bg-blue-600 text-white shadow-lg scale-105")
+                      : (darkMode ? "text-gray-400 hover:text-white hover:bg-white/5" : "text-gray-500 hover:text-blue-600 hover:bg-gray-50")
+                  } ${isFetchingFeed ? "opacity-50 cursor-wait" : "active:scale-95"}`}
                 >
-                  {tab.label}
+                  <span className="text-xs">{tab.icon}</span>
+                  <span>{tab.label}</span>
                 </button>
               ))}
             </div>
