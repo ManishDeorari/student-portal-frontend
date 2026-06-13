@@ -163,7 +163,6 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
 
   const isMyPost = post.user?._id === currentUser._id;
   const isRestricted = !isMyPost && currentUser?.role !== 'admin';
-  const shouldHideInteractions = ["Event", "Announcement", "EventRepost", "Session"].includes(post.type);
 
   // ✅ Everything's clean and ready for the `return` section now.
   return (
@@ -621,7 +620,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             darkMode={darkMode}
           />
           
-          {!shouldHideInteractions && (
+          {!hideActions && (
             <>
               {/* Gradient Separator before Reactions */}
               <div className={`h-[2px] w-full bg-gradient-to-r from-transparent ${darkMode ? "via-blue-500/30" : "via-blue-600/50"} to-transparent my-2`} />
@@ -761,7 +760,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   darkMode,
                   setPosts,
                   handleReactToComment,
-                  hideInteractions: shouldHideInteractions
+                  hideInteractions: hideActions
                 }}
               />
             )}

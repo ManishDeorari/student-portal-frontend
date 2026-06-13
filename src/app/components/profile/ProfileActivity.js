@@ -36,7 +36,6 @@ export default function ProfileActivity({ profile, setProfile, isPublicView }) {
                                     }))
                                 }
                                 isProfileActivity
-                                hideActions={true}
                                 transparentBackground={true}
                                 darkMode={darkMode}
                             />
