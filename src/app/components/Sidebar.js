@@ -11,6 +11,7 @@ import { useNotifications } from "@/context/NotificationContext";
 import socket from "@/utils/socket";
 import { useTheme } from "@/context/ThemeContext";
 import { getGamificationTier } from "@/utils/gamification";
+import { AnimatePresence } from "framer-motion";
 
 export default function Sidebar() {
   const { 
