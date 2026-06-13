@@ -185,7 +185,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                             </button>
                         </div>
 
-                        <div className="flex-1 flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-1 pb-2 mt-4">
+                        <div className="flex-1 flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-1 pb-2 mt-2">
                             {(() => {
                                 const activeTier = user ? getGamificationTier(user.points?.total || 0).name : null;
                                 
@@ -201,7 +201,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                                 return tiers.map((t, i) => {
                                     const isActive = activeTier === t.name;
                                     return (
-                                        <div key={i} className={`flex items-center gap-2.5 py-[3px] px-3 rounded-xl border ${darkMode ? t.styleDark : t.styleLight} ${isActive ? 'scale-[1.02] shadow-md ring-1 ring-current' : ''} transition-all`}>
+                                        <div key={i} className={`relative z-10 flex items-center gap-2.5 py-1 px-3 rounded-xl border ${darkMode ? t.styleDark : t.styleLight} ${isActive ? 'scale-[1.02] shadow-md ring-1 ring-current z-20' : 'hover:z-20 hover:scale-[1.01]'} transition-all`} style={{ transform: "translateZ(10px)" }}>
                                             <div className="text-xl drop-shadow-md shrink-0">{t.icon}</div>
                                             <div className="flex-1 min-w-0">
                                                 <h4 className={`font-black text-sm ${t.titleCol} truncate`}>{t.name}</h4>

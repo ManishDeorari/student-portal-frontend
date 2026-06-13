@@ -54,7 +54,7 @@ export default function TopEarnersWidget({ darkMode }) {
             return (
               <div key={user._id} className="p-[1.5px] bg-gradient-to-tr from-yellow-400 via-orange-500 to-red-500 rounded-[17px] shadow-sm hover:shadow-md transition-all group shrink-0">
                 <div className={`flex items-center justify-between py-2 px-3 rounded-2xl transition-all h-full ${darkMode ? 'bg-[#1a1a1c] hover:bg-[#222225]' : 'bg-white hover:bg-orange-50/50'}`}>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-1 min-w-0 mr-2">
                     <div className="relative shrink-0">
                       <Image 
                         src={user.profilePicture || "/default-profile.jpg"} 

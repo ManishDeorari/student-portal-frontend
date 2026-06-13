@@ -208,10 +208,10 @@ export default function DashboardPage() {
       <SidebarComponent />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 pb-24 md:pb-8">
-        <div className="flex flex-col xl:flex-row gap-6">
+        <div className="flex flex-col xl:flex-row gap-6 items-start">
           {/* Left Column: Points Scenario */}
-          <aside className="hidden xl:block xl:w-[280px] order-2 xl:order-1 relative shrink-0">
-            <div className="xl:sticky xl:top-24 z-40">
+          <aside className="hidden xl:block xl:w-[280px] order-2 xl:order-1 relative shrink-0 xl:sticky xl:top-24 z-40">
+            <div>
               <PointsScenario darkMode={darkMode} user={user} />
             </div>
           </aside>
@@ -244,7 +244,7 @@ export default function DashboardPage() {
             )}
 
             <div className="p-[1.5px] rounded-[2.5rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl w-full mx-auto max-w-full">
-              <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-1.5 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
+              <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-2 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
               {[
                 { id: "all", label: "All", icon: "🌍" },
                 { id: "Regular", label: "Posts", icon: "📝" },
@@ -255,10 +255,10 @@ export default function DashboardPage() {
               ].map((tab) => (
                 <div 
                   key={tab.id} 
-                  className={`p-[1.5px] rounded-full transition-all ${
+                  className={`p-[1.5px] rounded-full transition-all bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 ${
                     activeTab === tab.id 
-                      ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 scale-105 shadow-md' 
-                      : darkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'
+                      ? 'scale-105 shadow-lg shadow-blue-500/30' 
+                      : 'hover:scale-105'
                   }`}
                 >
                   <button
@@ -266,8 +266,8 @@ export default function DashboardPage() {
                     disabled={isFetchingFeed}
                     className={`flex items-center gap-1.5 px-4 py-2 rounded-[calc(9999px-1.5px)] font-black text-xs uppercase tracking-widest transition-all h-full w-full ${
                       activeTab === tab.id
-                        ? (darkMode ? "bg-[#121213] text-white" : "bg-white text-blue-700")
-                        : (darkMode ? "text-white/80 hover:text-white" : "text-black/80 hover:text-blue-700")
+                        ? "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white"
+                        : (darkMode ? "bg-[#121213] text-white/80 hover:text-white" : "bg-white text-black/80 hover:text-blue-700")
                     } ${isFetchingFeed ? "opacity-50 cursor-wait" : "active:scale-95"}`}
                   >
                     <span className="text-sm">{tab.icon}</span>
@@ -347,8 +347,8 @@ export default function DashboardPage() {
           </div>
 
           {/* Right Column: Top Earners */}
-          <aside className="hidden xl:block xl:w-[280px] order-3 relative shrink-0">
-            <div className="xl:sticky xl:top-24 z-40">
+          <aside className="hidden xl:block xl:w-[280px] order-3 relative shrink-0 xl:sticky xl:top-24 z-40">
+            <div>
               <TopEarnersWidget darkMode={darkMode} />
             </div>
           </aside>
