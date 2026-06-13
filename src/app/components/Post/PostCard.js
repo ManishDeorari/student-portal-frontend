@@ -554,22 +554,43 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                       );
                                     })()}
                                   </div>
-                                <div className="flex flex-col min-w-0">
-                                  <div className="flex items-center gap-2">
-                                    {member.userId?.publicId ? (
-                                      <Link href={`/profile/${member.userId.publicId}`} className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}>
-                                        {member.name}
-                                      </Link>
-                                    ) : (
-                                      <span className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{member.name}</span>
-                                    )}
-                                    {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
+                                  <div className="flex flex-col min-w-0 w-full mt-1">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      {member.userId?.publicId ? (
+                                        <Link href={`/profile/${member.userId.publicId}`} className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                          {member.name}
+                                        </Link>
+                                      ) : (
+                                        <span className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{member.name}</span>
+                                      )}
+                                      {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
+                                    </div>
+                                    <div className="flex flex-wrap items-center gap-3 text-left">
+                                      <div className="flex flex-col">
+                                         <span className={`text-[8px] font-black uppercase tracking-widest opacity-40 ${darkMode ? "text-white" : "text-black"}`}>Enrollment No.</span>
+                                         <span className={`text-[10px] font-bold font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                           {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
+                                         </span>
+                                      </div>
+                                      {(member.userId?.course || member.course) && (
+                                        <div className="flex flex-col border-l border-white/10 pl-3">
+                                           <span className={`text-[8px] font-black uppercase tracking-widest opacity-40 ${darkMode ? "text-white" : "text-black"}`}>Course</span>
+                                           <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                             {member.userId?.course || member.course}
+                                           </span>
+                                        </div>
+                                      )}
+                                      {(member.userId?.semester || member.semester) && (
+                                        <div className="flex flex-col border-l border-white/10 pl-3">
+                                           <span className={`text-[8px] font-black uppercase tracking-widest opacity-40 ${darkMode ? "text-white" : "text-black"}`}>Semester</span>
+                                           <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                             {member.userId?.semester || member.semester}
+                                           </span>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
-                                  <p className={`text-[9px] font-bold opacity-60 font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
-                                    {member.uniqueId || "ID Undefined"}
-                                  </p>
                                 </div>
-                              </div>
 
                               {entry.type === 'individual' && (
                                 <div className="flex items-center gap-3">

@@ -56,12 +56,13 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className={`relative w-full max-w-3xl ${darkMode ? "bg-[#121213] border-white/10" : "bg-[#FAFAFA] border-gray-200"} border rounded-[2rem] shadow-2xl overflow-hidden my-auto`}
+          className={`relative w-full max-w-3xl p-[2px] ${darkMode ? "bg-gradient-to-tr from-blue-900 to-purple-900" : "bg-gradient-to-tr from-blue-600 to-purple-700"} rounded-[2rem] shadow-[0_20px_60px_rgba(37,99,235,0.4)] my-auto flex flex-col`}
         >
-          <div className={`px-8 py-6 border-b ${darkMode ? "border-white/10" : "border-gray-100"} flex items-center justify-between`}>
-            <div>
-              <h2 className={`text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>Event Registrations</h2>
-              <p className={`text-xs ${darkMode ? "text-white/60" : "text-black/60"}`}>{event.title} • Total: {data.totalCount}</p>
+          <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} rounded-[calc(2rem-2px)] w-full overflow-hidden flex flex-col max-h-[85vh]`}>
+            <div className={`px-8 py-6 border-b ${darkMode ? "border-white/10" : "border-gray-100"} flex items-center justify-between`}>
+              <div>
+                <h2 className={`text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>Event Registrations</h2>
+                <p className={`text-xs ${darkMode ? "text-white/60" : "text-black/60"}`}>{event.title} • Total: {data.totalCount}</p>
             </div>
             <div className="flex gap-4 items-center">
               <button 
@@ -194,6 +195,7 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
               ))}
             </div>
           )}
+          </div>
         </div>
         </motion.div>
       </div>

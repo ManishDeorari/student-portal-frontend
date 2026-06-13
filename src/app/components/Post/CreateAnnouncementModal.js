@@ -19,7 +19,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
   });
 
   const [winners, setWinners] = useState([
-    { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "" }
+    { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", semester: "" }
   ]);
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
@@ -69,11 +69,14 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
     updatedWinners[index].uniqueId = user.publicId || user.enrollmentNumber || "";
     updatedWinners[index].userId = user._id;
     updatedWinners[index].profilePicture = user.profilePicture || "";
+    updatedWinners[index].enrollmentNumber = user.enrollmentNumber || "";
+    updatedWinners[index].course = user.course || "";
+    updatedWinners[index].semester = user.semester || "";
     setWinners(updatedWinners);
   };
 
   const addWinnerRow = () => {
-    setWinners([...winners, { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "" }]);
+    setWinners([...winners, { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", semester: "" }]);
   };
 
   const addGroupWinnerRows = (count) => {
@@ -85,7 +88,10 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
       uniqueId: "",
       isGroup: true,
       groupId: groupId,
-      groupName: ""
+      groupName: "",
+      enrollmentNumber: "",
+      course: "",
+      semester: ""
     }));
     setWinners([...winners, ...newRows]);
   };
@@ -184,7 +190,10 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
           groupId: w.groupId || "",
           groupName: w.groupName || "",
           userId: w.userId,
-          profilePicture: w.profilePicture || ""
+          profilePicture: w.profilePicture || "",
+          enrollmentNumber: w.enrollmentNumber || "",
+          course: w.course || "",
+          semester: w.semester || ""
         }));
 
       const announcementData = {
@@ -432,143 +441,125 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                   
                   <div className={`p-[2px] rounded-[3rem] bg-gradient-to-br from-blue-500 to-purple-600 shadow-2xl shadow-blue-500/10`}>
                     <div className={`p-4 sm:p-6 rounded-[calc(3rem-2px)] ${darkMode ? "bg-[#0f172a]" : "bg-white"} min-h-[150px] sm:min-h-[200px] overflow-x-auto`}>
-                      <table className="w-full text-left border-separate border-spacing-y-4 table-auto min-w-[600px]">
-                        <thead>
-                          <tr className={`text-[11px] font-black uppercase tracking-[0.2em] ${darkMode ? "text-gray-400" : "text-black/80"}`}>
-                            <th className="px-3 pb-1 w-[90px]">Type</th>
-                            <th className="px-3 pb-1">Member Info</th>
-                            <th className="px-3 pb-1 w-[130px]">Student ID</th>
-                            <th className="px-3 pb-1 w-[130px]">Position</th>
-                            <th className="px-3 pb-1 w-[90px]">Points</th>
-                            <th className="pb-1 w-8 text-center"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {winners.map((winner, idx) => {
-                            const isFirstInGroup = winner.groupId && winners.findIndex(w => w.groupId === winner.groupId) === idx;
-                            const isSubsequent = winner.groupId && !isFirstInGroup;
-                            const isIndividual = !winner.groupId;
-                            
-                            return (
-                              <React.Fragment key={idx}>
-                                {isFirstInGroup && (
-                                  <tr className="group-header">
-                                    <td colSpan={6} className="pt-6 pb-2">
-                                       <div className="flex items-center gap-4">
-                                          <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
-                                          <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-orange-500 to-red-600 shadow-xl min-w-[300px] flex-1`}>
-                                            <input 
-                                              value={winner.groupName} 
-                                              onChange={(e) => handleWinnerChange(idx, "groupName", e.target.value)}
-                                              placeholder="Enter Team/Group Name..."
-                                              className={`w-full h-[52px] p-4 text-xs font-black rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"} outline-none border-none italic text-center uppercase tracking-[0.2em]`}
-                                            />
-                                          </div>
-                                          <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
-                                       </div>
-                                    </td>
-                                  </tr>
-                                )}
-                              
-                                <tr className={`group transition-all ${isSubsequent ? "border-none" : (isIndividual ? "border-t border-white/5 pt-4" : "")}`}>
-                                  <td className="align-top pr-1 text-center">
-                                    <div className={`flex items-center justify-center h-[52px] w-full text-xl transition-all ${winner.groupId ? "opacity-100 scale-110" : "opacity-100 scale-100"}`}>
+                      <div className="flex flex-col gap-4">
+                        {winners.map((winner, idx) => {
+                          const isFirstInGroup = winner.groupId && winners.findIndex(w => w.groupId === winner.groupId) === idx;
+                          const isSubsequent = winner.groupId && !isFirstInGroup;
+                          const isIndividual = !winner.groupId;
+                          
+                          return (
+                            <React.Fragment key={idx}>
+                              {isFirstInGroup && (
+                                <div className="mt-4 mb-2 flex items-center gap-4">
+                                  <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
+                                  <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-orange-500 to-red-600 shadow-xl min-w-[300px]`}>
+                                    <input 
+                                      value={winner.groupName} 
+                                      onChange={(e) => handleWinnerChange(idx, "groupName", e.target.value)}
+                                      placeholder="Enter Team/Group Name..."
+                                      className={`w-full h-[52px] p-4 text-xs font-black rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"} outline-none border-none italic text-center uppercase tracking-[0.2em]`}
+                                    />
+                                  </div>
+                                  <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
+                                </div>
+                              )}
+
+                              <div className={`relative p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm transition-all ${isSubsequent ? "opacity-90 ml-4" : ""}`}>
+                                <div className={`relative flex flex-col gap-4 p-4 rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                  {/* Delete Button */}
+                                  <button type="button" onClick={() => removeWinnerRow(idx)} className="absolute top-2 right-2 text-red-500/40 hover:text-red-500 text-xl hover:bg-red-50 dark:hover:bg-red-900/20 w-8 h-8 flex items-center justify-center rounded-xl transition-all font-light z-10">&times;</button>
+                                  
+                                  {/* Row 1: User Details */}
+                                  <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 pr-8">
+                                    <div className="flex items-center justify-center w-10 h-10 text-2xl">
                                       {winner.groupId ? "🔗" : "👤"}
                                     </div>
-                                  </td>
-                                  <td className="align-top">
-                                    <div className="flex items-center gap-2">
-                                      <div className={`p-[1.5px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 shadow-md flex-shrink-0`}>
-                                        <div className={`w-8 h-8 rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-gray-100"}`}>
-                                           <Image 
-                                             src={winner.profilePicture || "/default-profile.jpg"} 
-                                             alt="avatar"
-                                             width={32}
-                                             height={32}
-                                             className="w-full h-full object-cover"
-                                           />
-                                        </div>
+                                    <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+                                      <div className={`w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ${darkMode ? "bg-slate-700" : "bg-gray-100"}`}>
+                                         <Image 
+                                           src={winner.profilePicture || "/default-profile.jpg"} 
+                                           alt="avatar"
+                                           width={40}
+                                           height={40}
+                                           className="w-full h-full object-cover"
+                                         />
                                       </div>
-                                      <div className={`p-[2px] h-[52px] flex-1 flex items-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 ${errors.includes(`winner-name-${idx}`) ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
+                                      <div className={`flex-1 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${idx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
                                         <UserSearchInput 
                                           darkMode={darkMode}
                                           role="student"
                                           placeholder={winner.groupId ? "Search member name..." : "Search student name..."} 
                                           value={winner.name}
-                                          className={`!bg-transparent !border-none !shadow-none font-black !py-3 !text-[12px] h-[52px] ${darkMode ? "!text-white" : "!text-black"}`}
+                                          className={`!bg-transparent !border-none !shadow-none font-black !py-2 !text-[12px] h-full ${darkMode ? "!text-white" : "!text-black"}`}
                                           onChange={(val) => {
                                              handleWinnerChange(idx, "name", val);
                                              if (!val) {
                                                handleWinnerChange(idx, "uniqueId", "");
                                                handleWinnerChange(idx, "profilePicture", "");
+                                               handleWinnerChange(idx, "enrollmentNumber", "");
+                                               handleWinnerChange(idx, "course", "");
+                                               handleWinnerChange(idx, "semester", "");
                                              }
                                           }}
                                           onSelect={(u) => handleUserSelect(idx, u)}
                                         />
                                       </div>
                                     </div>
-                                  </td>
-                                  <td className="align-top px-1.5">
-                                    <div className={`p-[2px] h-[52px] flex items-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm`}>
-                                      <input 
-                                        value={winner.uniqueId} 
-                                        readOnly
-                                        placeholder="Unique ID"
-                                        className={`w-full h-full p-2 text-[11px] font-black rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-slate-800 text-blue-400" : "bg-white text-blue-600"} outline-none border-none italic cursor-not-allowed text-center uppercase`}
-                                      />
+
+                                    {/* Auto-populated Fields */}
+                                    <div className={`h-10 px-3 flex items-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/5 text-blue-400" : "bg-gray-50 border-gray-100 text-blue-600"}`}>
+                                      <span className="text-[10px] font-black uppercase opacity-60 mr-2">ENR:</span>
+                                      <span className="text-[11px] font-bold truncate max-w-[100px]">{winner.enrollmentNumber || "-"}</span>
                                     </div>
-                                  </td>
-                                  <td className="align-top px-1.5">
-                                    {isFirstInGroup || isIndividual ? (
-                                      <div className={`p-[2px] h-[52px] flex items-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 ${errors.includes(`winner-rank-${idx}`) ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
-                                        <input 
-                                          value={winner.rank} 
-                                          onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}
-                                          placeholder="Rank/Pos"
-                                          className={`w-full h-full p-2 text-[11px] font-black rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black"} outline-none border-none shadow-inner text-center uppercase`}
-                                        />
-                                      </div>
-                                    ) : (
-                                      <div className="h-[52px] flex items-center justify-center">
-                                        <span className={`text-[9px] font-black uppercase opacity-25 tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Linked</span>
-                                      </div>
-                                    )}
-                                  </td>
-                                  <td className="align-top px-1.5">
-                                    {isFirstInGroup || isIndividual ? (
-                                      <div className={`p-[2px] h-[52px] flex items-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 ${errors.includes(`winner-points-${idx}`) ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
-                                        <div className="relative w-full h-full flex items-center">
-                                           <input 
-                                             type="text"
-                                             inputMode="numeric"
-                                             value={winner.points} 
-                                             onChange={(e) => {
-                                                const val = e.target.value.replace(/[^0-9]/g, '');
-                                                handleWinnerChange(idx, "points", val);
-                                             }}
-                                             placeholder="0"
-                                             className={`w-full h-full p-2 text-[11px] font-black rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black"} outline-none border-none shadow-inner pr-8 text-center`}
-                                           />
-                                           <span className={`absolute right-1 top-1/2 -translate-y-1/2 text-[9px] font-black tracking-tighter ${darkMode ? "text-white/40" : "text-black/40"}`}>PTS</span>
+                                    <div className={`h-10 px-3 flex items-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/5 text-blue-400" : "bg-gray-50 border-gray-100 text-blue-600"}`}>
+                                      <span className="text-[10px] font-black uppercase opacity-60 mr-2">CRS:</span>
+                                      <span className="text-[11px] font-bold truncate max-w-[80px]">{winner.course || "-"}</span>
+                                    </div>
+                                    <div className={`h-10 px-3 flex items-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/5 text-blue-400" : "bg-gray-50 border-gray-100 text-blue-600"}`}>
+                                      <span className="text-[10px] font-black uppercase opacity-60 mr-2">SEM:</span>
+                                      <span className="text-[11px] font-bold truncate max-w-[50px]">{winner.semester || "-"}</span>
+                                    </div>
+                                  </div>
+
+                                  {/* Row 2: Rank and Points */}
+                                  {(isFirstInGroup || isIndividual) && (
+                                    <div className={`flex flex-wrap sm:flex-nowrap gap-4 pt-4 mt-2 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
+                                      <div className="flex-1">
+                                        <div className={`h-12 flex items-center rounded-xl border ${errors.includes(`winner-rank-${idx}`) ? "border-red-500 animate-pulse" : (darkMode ? "border-white/10 bg-slate-900" : "border-gray-200 bg-white")}`}>
+                                          <span className={`px-3 text-[10px] font-black uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Rank/Pos</span>
+                                          <input 
+                                            value={winner.rank} 
+                                            onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}
+                                            placeholder="e.g. 1st, Winner..."
+                                            className={`flex-1 h-full p-2 text-sm font-black rounded-r-xl bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                          />
                                         </div>
                                       </div>
-                                    ) : (
-                                      <div className="h-[52px] flex items-center justify-center">
-                                        <span className={`text-[9px] font-black uppercase opacity-25 tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Linked</span>
+                                      <div className="flex-1">
+                                        <div className={`h-12 flex items-center rounded-xl border ${errors.includes(`winner-points-${idx}`) ? "border-red-500 animate-pulse" : (darkMode ? "border-white/10 bg-slate-900" : "border-gray-200 bg-white")}`}>
+                                          <span className={`px-3 text-[10px] font-black uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Points</span>
+                                          <input 
+                                            type="text"
+                                            inputMode="numeric"
+                                            value={winner.points} 
+                                            onChange={(e) => {
+                                               const val = e.target.value.replace(/[^0-9]/g, '');
+                                               handleWinnerChange(idx, "points", val);
+                                            }}
+                                            placeholder="0"
+                                            className={`flex-1 h-full p-2 text-sm font-black rounded-r-xl bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                          />
+                                          <span className={`pr-3 text-[10px] font-black tracking-tighter ${darkMode ? "text-white/40" : "text-black/40"}`}>PTS</span>
+                                        </div>
                                       </div>
-                                    )}
-                                  </td>
-                                  <td className="align-top text-center">
-                                    <div className="h-[52px] flex items-center justify-center">
-                                      <button type="button" onClick={() => removeWinnerRow(idx)} className="text-red-500/40 hover:text-red-500 text-xl hover:bg-red-50 dark:hover:bg-red-900/20 w-10 h-10 flex items-center justify-center rounded-xl transition-all font-light">&times;</button>
                                     </div>
-                                  </td>
-                                </tr>
-                              </React.Fragment>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                                  )}
+                                </div>
+                              </div>
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
