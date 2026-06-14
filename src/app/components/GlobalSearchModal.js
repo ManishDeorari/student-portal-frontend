@@ -56,9 +56,10 @@ export default function GlobalSearchModal({ isOpen, onClose, darkMode = false, t
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: -20 }}
         onClick={(e) => e.stopPropagation()}
-        className={`w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border ${darkMode ? "bg-slate-900 border-white/10 text-white" : "bg-white border-gray-200 text-gray-900"}`}
+        className="w-full max-w-2xl rounded-[1.5rem] shadow-2xl p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 relative"
       >
-        <div className={`p-4 border-b flex items-center gap-3 ${darkMode ? "border-white/10" : "border-gray-100"}`}>
+        <div className={`w-full h-full rounded-[calc(1.5rem-2px)] overflow-hidden ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-gray-900"}`}>
+          <div className={`p-4 border-b flex items-center gap-3 ${darkMode ? "border-white/10" : "border-black/5"}`}>
           <span className="text-xl opacity-60">🔍</span>
           <input
             ref={inputRef}
@@ -68,7 +69,7 @@ export default function GlobalSearchModal({ isOpen, onClose, darkMode = false, t
             placeholder="Search users, posts, events..."
             className={`w-full bg-transparent border-none outline-none text-lg ${darkMode ? "placeholder-gray-500" : "placeholder-gray-400"}`}
           />
-          <button onClick={onClose} className="text-xs font-black uppercase tracking-widest px-2 py-1 rounded bg-black/5 hover:bg-black/10">ESC</button>
+          <button onClick={onClose} className={`text-xl font-black rounded-full w-8 h-8 flex items-center justify-center transition-colors ${darkMode ? "hover:bg-white/10 text-white" : "hover:bg-black/5 text-black"}`}>×</button>
         </div>
 
         <div className="max-h-[60vh] overflow-y-auto p-2">
@@ -132,6 +133,7 @@ export default function GlobalSearchModal({ isOpen, onClose, darkMode = false, t
               )}
             </div>
           )}
+        </div>
         </div>
       </motion.div>
     </div>

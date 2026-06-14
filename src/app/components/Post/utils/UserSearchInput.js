@@ -51,16 +51,18 @@ const UserSearchInput = ({ value, onChange, placeholder, onSelect, darkMode = fa
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className={`w-full flex items-center justify-between p-3 text-sm rounded-xl border transition-all ${
-          darkMode 
-            ? "bg-slate-900 text-white border-white/10 hover:bg-slate-800" 
-            : "bg-white text-black border-gray-200 shadow-sm hover:bg-gray-50"
-        } outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+        className="relative w-full p-[2px] rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-transform active:scale-95"
       >
-        <span className={`truncate font-bold ${!value ? "opacity-50" : ""}`}>
-          {value || placeholder || "Search & Select User..."}
-        </span>
-        <FaSearch className={darkMode ? "text-gray-400" : "text-gray-500"} />
+        <div className={`flex items-center justify-between p-3 text-sm rounded-[calc(0.75rem-2px)] w-full h-full transition-all ${
+          darkMode 
+            ? "bg-[#121213] text-white hover:bg-slate-900" 
+            : "bg-[#FAFAFA] text-black hover:bg-white"
+        }`}>
+          <span className={`truncate font-bold ${!value ? "opacity-50" : ""}`}>
+            {value || placeholder || "Search & Select User..."}
+          </span>
+          <FaSearch className={darkMode ? "text-gray-400" : "text-gray-500"} />
+        </div>
       </button>
 
       {/* Modal Overlay */}
@@ -159,8 +161,10 @@ const UserSearchInput = ({ value, onChange, placeholder, onSelect, darkMode = fa
                             </div>
                           </div>
                         </div>
-                        <div className={`opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-xl ${darkMode ? "bg-white/10 text-white" : "bg-blue-100 text-blue-600"}`}>
-                          Select
+                        <div className="opacity-0 group-hover:opacity-100 transition-all p-[2px] rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 transform translate-x-2 group-hover:translate-x-0">
+                          <div className={`px-4 py-1.5 rounded-[calc(0.75rem-2px)] font-black uppercase tracking-widest text-[10px] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-blue-600"}`}>
+                            Select
+                          </div>
                         </div>
                       </div>
                     ))}
