@@ -65,8 +65,9 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
   // 🔌 Socket typing updates
   usePostSocket(post._id, currentUser, setSomeoneTyping, setPosts);
 
+  const postRef = useRef(null);
   // 📦 Centralize all effects
-  const postRef = usePostEffects({
+  usePostEffects({
     post,
     currentUser,
     setEditContent,
