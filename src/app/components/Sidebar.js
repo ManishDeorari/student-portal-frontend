@@ -207,7 +207,7 @@ export default function Sidebar() {
           >
             {currentUser && currentUser.points && currentUser.role !== "admin" && (
               <div className="flex flex-col items-end mr-1">
-                <span className={`text-[9px] font-black tracking-widest uppercase ${getGamificationTier(currentUser?.points?.total || 0).colorClass}`}>
+                <span className={`text-[9px] font-black tracking-widest uppercase ${darkMode ? getGamificationTier(currentUser?.points?.total || 0).colorClassDark : getGamificationTier(currentUser?.points?.total || 0).colorClassLight}`}>
                   {getGamificationTier(currentUser?.points?.total || 0).name}
                 </span>
               </div>
