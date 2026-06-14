@@ -100,8 +100,11 @@ export default function DashboardPage() {
       } else if (activeTab === "Event") {
         url = `${API_URL}/api/events?page=${pageNum}&limit=${limit}`;
       } else {
-        const queryType = activeTab === "all" ? "all" : activeTab;
+        const queryType = (activeTab === "all" || activeTab === "trending") ? "all" : activeTab;
         url += `&type=${queryType}`;
+        if (activeTab === "trending") {
+          url += `&sort=trending`;
+        }
         if (activeTab === "Announcement") {
           if (announcementSubtype === "winner") url += `&subtype=winner`;
           if (announcementSearch) url += `&search=${encodeURIComponent(announcementSearch)}`;
@@ -247,6 +250,7 @@ export default function DashboardPage() {
               <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-2 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
               {[
                 { id: "all", label: "All", icon: "🌍" },
+                { id: "trending", label: "Trending", icon: "🔥" },
                 { id: "Regular", label: "Posts", icon: "📝" },
                 { id: "Announcement", label: "Announcements", icon: "📢" },
                 { id: "Event", label: "Events", icon: "📅" },

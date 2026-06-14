@@ -126,6 +126,45 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
     setShowCommentEmoji
   });
 
+  const handlePinPost = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/posts/${post._id}/pin`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPosts((prevPosts) => prevPosts.map((p) => p._id === post._id ? { ...p, isPinned: data.isPinned } : p));
+      }
+    } catch (err) {
+      console.error("Error pinning post:", err);
+    }
+  };
+
+  const handleTipPost = async (amount) => {
+    try {
+      if (!token) return;
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/posts/${post._id}/tip`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+        body: JSON.stringify({ amount })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(`🎉 Sent ${amount} points to ${post.user?.name || "the author"}!`);
+        // Optional: force update local point count if we had a global user context, 
+        // but typically a refresh or gamification badge socket event handles it.
+      } else {
+        toast.error(data.message || "Failed to tip points");
+      }
+    } catch (err) {
+      toast.error("Error tipping post");
+    }
+  };
+
   const openImage = (i) => {
     setStartIndex(i);
     setShowViewer(true);
@@ -147,6 +186,35 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
   const userReacted = (emoji) => {
     const users = post.reactions?.[emoji];
     return Array.isArray(users) ? users.includes(currentUser._id) : false;
+  };
+
+  useEffect(() => {
+    if (!postRef.current || !post._id || !currentUser?._id) return;
+    
+    // Check if we already viewed it
+    if (post.viewedBy && post.viewedBy.includes(currentUser._id)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          triggerView(post._id);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(postRef.current);
+    return () => observer.disconnect();
+  }, [post._id, currentUser?._id, post.viewedBy]);
+
+  const triggerView = async (postId) => {
+    try {
+      if (!token) return;
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/posts/${postId}/view`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } catch(err) {}
   };
 
   const handleLoadMore = () => {
@@ -172,13 +240,18 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
     >
       <div className={`p-[1.5px] sm:p-[2px] ${darkMode ? "bg-gradient-to-tr from-blue-900 to-purple-900" : "bg-gradient-to-tr from-blue-600 to-purple-700"} rounded-[calc(1rem)] sm:rounded-[2.4rem]`}>
         <div className={`relative rounded-[calc(1rem-2px)] sm:rounded-[2.3rem] p-3 sm:p-4 space-y-2 sm:space-y-3 transition-all duration-500 ${isMyPost ? (darkMode ? "bg-slate-800/50" : "bg-gradient-to-tr from-blue-50/50 to-white") : (darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]")} ${darkMode ? "text-white" : "text-gray-900"}`}>
+          {post.isPinned && (
+            <div className={`flex items-center gap-1.5 mb-1 text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+              <span>📌</span> Pinned by Admin
+            </div>
+          )}
           <PostHeader {...{
             post, currentUser, editing, toggleEdit: () => {
               toggleEdit(editKey, (val) => {
                 setEditContent(val);
                 setEditTitle(post.title || "");
               }, editing, post.content);
-            }, handleDelete: triggerDelete, darkMode, hideActions
+            }, handleDelete: triggerDelete, handlePinPost, handleTipPost, darkMode, hideActions
           }} />
 
           {post.type === "Event" && post.title && !editing && (

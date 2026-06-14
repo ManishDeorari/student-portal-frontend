@@ -7,13 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
 import { GamificationBadge } from "../../../../utils/gamification";
 
-export default function PostHeader({ post, currentUser, editing, toggleEdit, handleDelete, darkMode = false, hideActions = false }) {
+export default function PostHeader({ post, currentUser, editing, toggleEdit, handleDelete, handlePinPost, handleTipPost, darkMode = false, hideActions = false }) {
   const [showViewer, setShowViewer] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
   const profileImg = post.user?.profilePicture || "/default-profile.jpg";
-  const isOwn = currentUser && (currentUser._id === post.userId?._id || currentUser.id === post.userId?._id);
+  const isOwn = currentUser && (currentUser._id === (post.user?._id || post.user) || currentUser.id === (post.user?._id || post.user));
   const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
   const isRestricted = !isOwn && !isAdmin;
 
@@ -89,7 +89,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
         <p className={`text-[10px] ${darkMode ? "text-gray-500" : "text-gray-500"} truncate`}>{new Date(post.createdAt).toLocaleString()}</p>
       </div>
       
-      {!hideActions && (canEdit || canDelete) && (
+      {!hideActions && (
         <div className="relative ml-auto" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(prev => !prev)}
@@ -112,6 +112,28 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
                 className="absolute right-0 mt-2 z-50 p-[2px] rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-2xl"
               >
                 <div className={`w-40 rounded-[10px] backdrop-blur-md p-1 flex flex-col h-full ${darkMode ? "bg-slate-900/95 text-white" : "bg-white/95 text-gray-800"}`}>
+                {isAdmin && (
+                  <button
+                    onClick={() => {
+                      handlePinPost && handlePinPost();
+                      setShowDropdown(false);
+                    }}
+                    className={`flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-lg text-left transition-colors ${darkMode ? "hover:bg-white/10 text-blue-400" : "hover:bg-black/5 text-blue-600"}`}
+                  >
+                    <span>📌</span> {post.isPinned ? "Unpin Post" : "Pin Post"}
+                  </button>
+                )}
+                {!isOwn && (
+                  <button
+                    onClick={() => {
+                      handleTipPost && handleTipPost(10);
+                      setShowDropdown(false);
+                    }}
+                    className={`flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-lg text-left transition-colors ${darkMode ? "hover:bg-white/10 text-yellow-400" : "hover:bg-black/5 text-yellow-600"}`}
+                  >
+                    <span>🎁</span> Tip 10 Points
+                  </button>
+                )}
                 {canEdit && (
                   <button
                     onClick={() => {

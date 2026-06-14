@@ -17,6 +17,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
   const [images, setImages] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState("");
+  const [publishAt, setPublishAt] = useState("");
   const [selectedType, setSelectedType] = useState("Regular");
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false);
@@ -102,7 +103,15 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
     setError("");
 
     try {
-      const result = await createPost(content, images, video, selectedType, documents);
+      const postPayload = {
+        content,
+        type: selectedType,
+      };
+      if (publishAt) {
+        postPayload.publishAt = new Date(publishAt).toISOString();
+      }
+
+      const result = await createPost(postPayload, images, video, selectedType, documents);
 
       const newPost = result?.data || result?.post || (Array.isArray(result.posts) ? result.posts[0] : null);
 
@@ -111,6 +120,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
       setPreviewVideo(null);
       setImages([]);
       setDocuments([]);
+      setPublishAt("");
       setSelectedType("Regular");
 
       if (newPost && setPosts) {
@@ -213,6 +223,17 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
                           className="hidden"
                         />
                       </label>
+
+                      <div className={`relative flex items-center gap-1.5 text-sm font-bold ${darkMode ? "text-orange-400" : "text-orange-600"}`}>
+                        <span>⏱️</span>
+                        <input
+                          type="datetime-local"
+                          value={publishAt}
+                          onChange={(e) => setPublishAt(e.target.value)}
+                          className={`bg-transparent border-b border-orange-500/30 focus:border-orange-500 outline-none p-1 text-[10px] sm:text-xs cursor-pointer ${darkMode ? "text-white [color-scheme:dark]" : "text-black"} transition-colors`}
+                          title="Schedule Post"
+                        />
+                      </div>
                     </div>
 
                     <button

@@ -101,6 +101,11 @@ export default function PostReactions({
             <span className="text-lg">👍</span> React
           </button>
 
+          {/* View Counter (center) */}
+          <div className={`font-black text-sm uppercase tracking-widest ${darkMode ? "text-slate-400" : "text-slate-500"} flex items-center gap-2`}>
+            <span className="text-lg opacity-80">👁️</span> {(post.viewedBy || []).length}
+          </div>
+
           {/* Comment Button (right, slightly left-pushed) */}
           <button
             onClick={() => setShowComments((prev) => !prev)}

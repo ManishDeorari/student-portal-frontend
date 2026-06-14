@@ -10,6 +10,7 @@ import ZoomLock from "./components/ui/ZoomLock";
 import PageTransition from "./components/ui/PageTransition";
 import SessionManager from "./components/SessionManager";
 import ErrorBoundary from "./components/ErrorBoundary";
+import GlobalSearchWrapper from "./components/GlobalSearchWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -104,6 +105,7 @@ export default function RootLayout({ children }) {
             <NotificationProvider>
               <ClientRouteProtection>
                 <SessionManager />
+                <GlobalSearchWrapper />
                 <PageTransition>
                   {children}
                 </PageTransition>

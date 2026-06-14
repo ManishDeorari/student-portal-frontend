@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import EmojiPickerToggle from "../utils/EmojiPickerToggle";
 
 export default function PostContent({
@@ -23,6 +24,20 @@ export default function PostContent({
 
   const handleTitleEmojiSelect = (emoji) => {
     setEditTitle((prev) => prev + emoji.native);
+  };
+
+  const formatText = (text) => {
+    if (!text) return "";
+    const parts = text.split(/(#[\w]+|@[\w]+)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith("#")) {
+        return <Link key={i} href={`/dashboard?tag=${part.slice(1)}`} className="text-blue-500 hover:underline">{part}</Link>;
+      }
+      if (part.startsWith("@")) {
+        return <Link key={i} href={`/profile/${part.slice(1)}`} className="text-blue-500 hover:underline">{part}</Link>;
+      }
+      return <span key={i}>{part}</span>;
+    });
   };
 
   return (
@@ -72,7 +87,7 @@ export default function PostContent({
 
           <div className={`p-3 border ${darkMode ? "border-white/10 bg-[#FAFAFA]/5" : "border-gray-300 bg-gray-50"} rounded-xl`}>
             <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"} font-semibold mb-1`}>Preview:</p>
-            <p className={`whitespace-pre-wrap ${darkMode ? "text-gray-300" : "text-gray-800"}`}>{editContent}</p>
+            <p className={`whitespace-pre-wrap ${darkMode ? "text-gray-300" : "text-gray-800"}`}>{formatText(editContent)}</p>
           </div>
 
           <button
@@ -89,7 +104,7 @@ export default function PostContent({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <p className={`whitespace-pre-wrap leading-relaxed ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{post.content}</p>
+          <p className={`whitespace-pre-wrap leading-relaxed ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{formatText(post.content)}</p>
           {!hideViewFullPost && (
             <div
               onClick={() => setShowModal(true)}
