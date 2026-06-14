@@ -138,6 +138,7 @@ export default function HomePage() {
                 />
               ))}
             </div>
+            <ThemeToggle />
             <Link href="/auth/login" className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg active:scale-95 transition-all">
               <div className="bg-black text-white hover:bg-transparent font-black text-[10px] uppercase tracking-[0.2em] px-6 py-2.5 rounded-full transition-all">
                 Portal Login
@@ -233,14 +234,14 @@ export default function HomePage() {
                       { icon: ShieldCheck, title: "Role-Based Access", desc: "Dedicated environments for Admins, Alumni, and Students.", color: "text-pink-400", bg: "from-pink-500/20" },
                       { icon: Award, title: "Gamification", desc: "Earn points for participation and climb the leaderboard.", color: "text-yellow-400", bg: "from-yellow-500/20" },
                     ].map((feat, idx) => (
-                      <div key={idx} className="p-[2px] bg-gradient-to-br from-white/10 to-transparent rounded-2xl">
-                        <div className={`h-full ${darkMode ? "bg-slate-900/80" : "bg-white/10"} backdrop-blur-xl p-6 rounded-[calc(1rem-2px)] flex items-start gap-4 transition-all hover:bg-white/5`}>
-                          <div className={`p-3 rounded-xl bg-gradient-to-br ${feat.bg} to-transparent`}>
+                      <div key={idx} className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] shadow-2xl">
+                        <div className={`h-full ${darkMode ? "bg-slate-900/80" : "bg-white/80"} backdrop-blur-xl p-6 rounded-[calc(2rem-2px)] flex items-start gap-4 transition-transform duration-300 hover:-translate-y-1`}>
+                          <div className={`p-3 rounded-xl bg-gradient-to-br ${feat.bg} to-transparent shadow-lg`}>
                             <feat.icon size={24} className={feat.color} />
                           </div>
                           <div>
-                            <h3 className="text-lg font-black text-white tracking-tight">{feat.title}</h3>
-                            <p className="text-sm text-white/60 font-medium leading-relaxed mt-1">{feat.desc}</p>
+                            <h3 className={`text-lg font-black tracking-tight ${darkMode ? "text-white" : "text-slate-900"}`}>{feat.title}</h3>
+                            <p className={`text-sm font-medium leading-relaxed mt-1 ${darkMode ? "text-white/70" : "text-slate-600"}`}>{feat.desc}</p>
                           </div>
                         </div>
                       </div>
@@ -343,9 +344,6 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* ─── Theme Toggle Row ─── */}
-        <div className="shrink-0 z-50 flex justify-end px-6 py-1.5 bg-black/10 backdrop-blur-sm border-t border-white/5">
-          <ThemeToggle />
         </div>
 
         {/* ─── Footer ─── */}
