@@ -7,7 +7,7 @@ export default function ImageGallery({ images, onImageClick, isRestricted }) {
   return (
     <div className="mt-2 flex gap-2 overflow-x-auto max-w-full pb-2 custom-scrollbar">
       {images.map((image, index) => (
-        <div key={index} className="relative flex-shrink-0 h-32 w-48 rounded-lg border overflow-hidden">
+        <div key={index} className="relative flex-shrink-0 h-48 w-64 rounded-lg border overflow-hidden">
           <Image
             src={image.url}
             alt={`image-${index}`}

@@ -32,7 +32,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
 
   return (
     <div className="flex items-center gap-3">
-      <div className="relative w-9 h-9 sm:w-12 sm:h-12">
+      <div className="relative w-8 h-8 sm:w-10 sm:h-10">
         <Image
           src={getOptimizedImageUrl(profileImg)}
           alt="User profile"
@@ -73,7 +73,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
           )}
           <GamificationBadge points={post.user?.points?.total} />
           {isOwn && (
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold flex-shrink-0 ${darkMode ? "bg-blue-600/30 text-blue-300 border border-blue-500/30" : "bg-blue-100 text-blue-600"}`}>
+            <span className={`text-[10px] px-1.5 py-[1px] rounded-full font-bold flex-shrink-0 ${darkMode ? "bg-blue-600/30 text-blue-300 border border-blue-500/30" : "bg-blue-100 text-blue-600"}`}>
               You
             </span>
           )}
@@ -93,7 +93,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
         <div className="relative ml-auto" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(prev => !prev)}
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md ${darkMode ? "text-white bg-white/15 hover:bg-white/25 border border-white/20" : "text-black bg-black/10 hover:bg-black/15 border border-black/15"}`}
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md ${darkMode ? "text-white bg-white/15 hover:bg-white/25 border border-white/20" : "text-black bg-black/10 hover:bg-black/15 border border-black/15"}`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
               <circle cx="12" cy="5" r="2.25" />
