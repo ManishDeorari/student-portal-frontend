@@ -226,68 +226,21 @@ export default function DashboardPage() {
           {/* Center Column: Feed */}
           <div className="flex-1 lg:flex-none w-full lg:w-[calc(50vw-3rem)] space-y-4 sm:space-y-8 order-1 lg:order-2 mx-auto">
             <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl md:rounded-[2.5rem] shadow-xl overflow-hidden">
-              <section className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-4 sm:p-5 md:p-6 rounded-[calc(1.875rem-2.5px)] md:rounded-[calc(2.5rem-2.5px)] relative overflow-hidden transition-colors duration-500`}>
-                <div className="flex flex-col gap-4">
-                  {/* Header Row */}
-                  <div className="flex justify-between items-center border-b border-gray-200 dark:border-white/10 pb-4">
-                    <div>
-                      <h2 className={`text-lg sm:text-xl md:text-2xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>
-                        Graphic Era Hill University
-                      </h2>
-                      <p className={`text-sm md:text-base font-semibold mt-1 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                        Discover 30,186 People
-                      </p>
-                    </div>
-                    <div className={`p-2 sm:p-3 rounded-full ${darkMode ? "bg-white/5" : "bg-gray-100"} shadow-inner`}>
-                      <span className="text-xl sm:text-2xl">🎓</span>
+              <section className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-3 sm:p-4 md:p-6 rounded-[calc(1.875rem-2.5px)] md:rounded-[calc(2.5rem-2.5px)] relative overflow-hidden group transition-colors duration-500`}>
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6">
+                  <div className="p-[2px] bg-gradient-to-tr from-blue-500 to-purple-500 rounded-xl sm:rounded-2xl md:rounded-3xl shadow-lg">
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-[calc(0.75rem-2px)] sm:rounded-[calc(1rem-2px)] md:rounded-[calc(1.5rem-2px)] ${darkMode ? "bg-black" : "bg-white"} flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
+                      <span className="text-2xl sm:text-3xl md:text-4xl text-white">👋</span>
                     </div>
                   </div>
-
-                  {/* Lists Container */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* List 1 */}
-                    <div className={`p-[1.5px] bg-gradient-to-tr ${darkMode ? "from-blue-600/50 to-cyan-500/50" : "from-blue-400 to-cyan-400"} rounded-2xl group hover:scale-[1.02] transition-transform cursor-pointer`}>
-                      <div className={`p-4 rounded-[calc(1rem-1.5px)] ${darkMode ? "bg-slate-900/90" : "bg-white"} h-full flex flex-col justify-between`}>
-                        <div>
-                          <h3 className={`font-black text-sm md:text-base leading-tight mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>IT Admin and Support Professionals</h3>
-                          <p className={`text-xs font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>175 People</p>
-                        </div>
-                        <div className="mt-3 flex justify-end">
-                          <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-cyan-400" : "text-cyan-600"} flex items-center gap-1 group-hover:translate-x-1 transition-transform`}>
-                            View List <span className="text-xs">→</span>
-                          </span>
-                        </div>
-                      </div>
+                  <div className="text-center sm:text-left">
+                    <h2 className={`text-xl sm:text-2xl md:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight mb-0.5 sm:mb-1`}>
+                      Welcome back, {user?.name || "Student"}!
+                    </h2>
+                    <div className="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-4 mt-2">
+                      <span className={`text-[9px] md:text-[10px] ${darkMode ? "bg-white/10 text-white" : "bg-gray-200 text-black"} px-2 md:px-3 py-1 rounded-full font-black uppercase tracking-widest border border-white/10`}>{user?.enrollmentNumber || "N/A"}</span>
+                      <span className={`text-[9px] md:text-[10px] ${darkMode ? "bg-blue-500 text-white" : "bg-blue-600 text-white"} px-2 md:px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-md`}>{user?.role || "Member"}</span>
                     </div>
-
-                    {/* List 2 */}
-                    <div className={`p-[1.5px] bg-gradient-to-tr ${darkMode ? "from-purple-600/50 to-pink-500/50" : "from-purple-400 to-pink-400"} rounded-2xl group hover:scale-[1.02] transition-transform cursor-pointer`}>
-                      <div className={`p-4 rounded-[calc(1rem-1.5px)] ${darkMode ? "bg-slate-900/90" : "bg-white"} h-full flex flex-col justify-between`}>
-                        <div>
-                          <h3 className={`font-black text-sm md:text-base leading-tight mb-1 ${darkMode ? "text-white" : "text-gray-900"}`}>Sales / BD Professionals</h3>
-                          <p className={`text-xs font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>65 People</p>
-                        </div>
-                        <div className="mt-3 flex justify-end">
-                          <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-pink-400" : "text-pink-600"} flex items-center gap-1 group-hover:translate-x-1 transition-transform`}>
-                            View List <span className="text-xs">→</span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Footer Banner */}
-                  <div className={`mt-2 p-4 rounded-2xl ${darkMode ? "bg-blue-900/20 border border-blue-500/20" : "bg-blue-50 border border-blue-100"} flex flex-col sm:flex-row justify-between items-center gap-3`}>
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl animate-pulse">✨</span>
-                      <div>
-                        <p className={`font-black text-sm md:text-base ${darkMode ? "text-blue-300" : "text-blue-800"}`}>Introducing Lists</p>
-                        <p className={`text-xs font-semibold ${darkMode ? "text-blue-400/80" : "text-blue-600/80"}`}>A smarter way to get discovered</p>
-                      </div>
-                    </div>
-                    <button className={`px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 ${darkMode ? "bg-blue-500 text-white hover:bg-blue-400" : "bg-blue-600 text-white hover:bg-blue-500"}`}>
-                      View all 38 lists
-                    </button>
                   </div>
                 </div>
               </section>
