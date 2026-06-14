@@ -2,16 +2,24 @@
 import React, { useState, useEffect } from "react";
 import GlobalSearchModal from "./GlobalSearchModal";
 import { useTheme } from "@/context/ThemeContext";
+import dynamic from "next/dynamic";
+
+const PostModal = dynamic(() => import("./Post/Visual/PostModal"), { ssr: false });
 
 export default function GlobalSearchWrapper() {
   const [isOpen, setIsOpen] = useState(false);
   const [token, setToken] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const { darkMode } = useTheme();
 
   useEffect(() => {
     // Only available to logged in users
     const storedToken = localStorage.getItem("token");
     if (storedToken) setToken(storedToken);
+
+    const u = localStorage.getItem("user");
+    if (u) setCurrentUser(JSON.parse(u));
 
     const handleKeyDown = (e) => {
       // Ctrl+K or Cmd+K
@@ -45,9 +53,20 @@ export default function GlobalSearchWrapper() {
       <GlobalSearchModal 
         isOpen={isOpen} 
         onClose={() => setIsOpen(false)} 
+        onPostSelect={setSelectedPost}
         darkMode={darkMode} 
         token={token} 
       />
+      {/* Dynamic Post Modal Overlay - Rendered outside search so it survives search closure */}
+      {selectedPost && (
+        <PostModal
+          showModal={!!selectedPost}
+          setShowModal={() => setSelectedPost(null)}
+          post={selectedPost}
+          currentUser={currentUser}
+          darkMode={darkMode}
+        />
+      )}
     </>
   );
 }

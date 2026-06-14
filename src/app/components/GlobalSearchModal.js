@@ -3,27 +3,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 
-const PostModal = dynamic(() => import("./Post/Visual/PostModal"), { ssr: false });
-
-export default function GlobalSearchModal({ isOpen, onClose, darkMode = false, token }) {
+export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkMode = false, token }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState({ users: [], posts: [], events: [] });
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
-      const u = localStorage.getItem("user");
-      if (u) setCurrentUser(JSON.parse(u));
     } else {
       setQuery("");
       setResults({ users: [], posts: [], events: [] });
-      setSelectedPost(null);
     }
   }, [isOpen]);
 
@@ -32,7 +24,8 @@ export default function GlobalSearchModal({ isOpen, onClose, darkMode = false, t
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/posts/${postId}`);
       if (res.ok) {
         const data = await res.json();
-        setSelectedPost(data);
+        onPostSelect(data);
+        onClose(); // Automatically close search modal so post modal is fully visible
       }
     } catch (err) {
       console.error(err);
@@ -158,17 +151,6 @@ export default function GlobalSearchModal({ isOpen, onClose, darkMode = false, t
         </div>
         </div>
       </motion.div>
-      
-      {/* Dynamic Post Modal Overlay */}
-      {selectedPost && (
-        <PostModal
-          showModal={!!selectedPost}
-          setShowModal={() => setSelectedPost(null)}
-          post={selectedPost}
-          currentUser={currentUser}
-          darkMode={darkMode}
-        />
-      )}
     </div>
   );
 }

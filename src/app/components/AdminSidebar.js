@@ -80,7 +80,7 @@ export default function AdminSidebar() {
       <nav className="hidden md:flex justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-6 py-4 fixed top-0 left-0 right-0 z-50 w-full">
         <div className="flex items-center gap-4">
           <div className="text-2xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">
-            Student Portal (Admin)
+            Student Portal
           </div>
           <button
             onClick={() => window.dispatchEvent(new CustomEvent('openGlobalSearch'))}
@@ -153,7 +153,7 @@ export default function AdminSidebar() {
 
       {/* Mobile Top Bar */}
       <nav className="flex md:hidden justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-5 py-3 fixed top-0 left-0 right-0 z-50 w-full">
-        <div className="text-xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">Student Portal (Admin)</div>
+        <div className="text-xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">Student Portal</div>
         <div className="flex items-center gap-4">
           <button
             onClick={() => window.dispatchEvent(new CustomEvent('openGlobalSearch'))}
