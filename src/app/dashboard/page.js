@@ -214,7 +214,7 @@ export default function DashboardPage() {
     <GooeyGradientBackground className="min-h-screen transition-colors duration-500 text-white relative" darkMode={darkMode}>
       <SidebarComponent />
 
-      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8 pb-24 md:pb-8">
+      <main className="w-full mx-auto px-4 lg:px-8 py-4 sm:py-8 pb-24 md:pb-8">
         <div className="flex flex-col lg:flex-row gap-6 items-start justify-center">
           {/* Left Column: Points Scenario */}
           <aside className="hidden lg:block lg:w-[25%] order-2 lg:order-1 relative shrink-0 lg:sticky lg:top-24 z-40">
