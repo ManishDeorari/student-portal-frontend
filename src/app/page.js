@@ -344,8 +344,6 @@ export default function HomePage() {
           </button>
         </div>
 
-        </div>
-
         {/* ─── Footer ─── */}
         <footer className="shrink-0 z-50 py-2.5 px-6 border-t border-white/10 backdrop-blur-md bg-black/20 flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="flex items-center gap-5">
