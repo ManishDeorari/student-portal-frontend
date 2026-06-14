@@ -4,7 +4,7 @@ import GlobalSearchModal from "./GlobalSearchModal";
 import { useTheme } from "@/context/ThemeContext";
 import dynamic from "next/dynamic";
 
-const PostModal = dynamic(() => import("./Post/Visual/PostModal"), { ssr: false });
+const SearchPostViewer = dynamic(() => import("./SearchPostViewer"), { ssr: false });
 
 export default function GlobalSearchWrapper() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +43,7 @@ export default function GlobalSearchWrapper() {
 
   return (
     <>
+      {/* Mobile floating search button */}
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-2xl transition-transform hover:scale-110 md:hidden ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black"}`}
@@ -50,21 +51,25 @@ export default function GlobalSearchWrapper() {
       >
         🔍
       </button>
+
       <GlobalSearchModal 
         isOpen={isOpen} 
         onClose={() => setIsOpen(false)} 
-        onPostSelect={setSelectedPost}
+        onPostSelect={(post) => {
+          setSelectedPost(post);
+          setIsOpen(false); // close search first
+        }}
         darkMode={darkMode} 
         token={token} 
       />
-      {/* Dynamic Post Modal Overlay - Rendered outside search so it survives search closure */}
+
+      {/* SearchPostViewer — uses PostCard internally, so all hooks/state are self-contained */}
       {selectedPost && (
-        <PostModal
-          showModal={!!selectedPost}
-          setShowModal={() => setSelectedPost(null)}
+        <SearchPostViewer
           post={selectedPost}
           currentUser={currentUser}
           darkMode={darkMode}
+          onClose={() => setSelectedPost(null)}
         />
       )}
     </>
