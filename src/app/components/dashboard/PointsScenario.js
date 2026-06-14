@@ -100,7 +100,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
     ];
 
     return (
-        <div className="relative w-full h-[470px] group" style={{ perspective: "1200px" }}>
+        <div className="relative w-full h-[470px] group z-50" style={{ perspective: "1200px" }}>
             <motion.div 
                 className="w-full h-full relative z-10"
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -110,7 +110,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                 {/* FRONT FACE: Points Guide */}
                 <div 
                     className="absolute inset-0 w-full h-full rounded-[2.5rem] p-[2.5px] bg-gradient-to-br from-blue-400 via-purple-500 to-pink-600 shadow-2xl cursor-pointer"
-                    style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+                    style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", zIndex: isFlipped ? 0 : 1 }}
                     onClick={() => setIsFlipped(true)}
                 >
                     <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} w-full h-full rounded-[calc(2.5rem-2.5px)] p-4 md:p-5 flex flex-col`}>
@@ -167,7 +167,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                 {/* BACK FACE: Ranking Tiers */}
                 <div 
                     className="absolute inset-0 w-full h-full rounded-[2.5rem] p-[2.5px] bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 shadow-2xl cursor-pointer"
-                    style={{ transform: "rotateY(180deg)", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+                    style={{ transform: "rotateY(180deg)", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", zIndex: isFlipped ? 1 : 0 }}
                     onClick={() => setIsFlipped(false)}
                 >
                     <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} w-full h-full rounded-[calc(2.5rem-2.5px)] p-4 md:p-5 flex flex-col`}>

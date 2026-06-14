@@ -215,16 +215,16 @@ export default function DashboardPage() {
       <SidebarComponent />
 
       <main className="w-full mx-auto px-4 lg:px-8 py-4 sm:py-8 pb-24 md:pb-8">
-        <div className="flex flex-col lg:flex-row gap-6 items-start justify-center">
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch justify-center">
           {/* Left Column: Points Scenario */}
-          <aside className="hidden lg:block lg:w-[25%] order-2 lg:order-1 shrink-0 lg:sticky lg:top-24 h-[calc(100vh-7rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] z-40">
-            <div>
+          <div className="hidden lg:block lg:w-[calc(25%-0.75rem)] order-2 lg:order-1 shrink-0 z-40">
+            <aside className="lg:sticky lg:top-24 h-[calc(100vh-7rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
               <PointsScenario darkMode={darkMode} user={user} />
-            </div>
-          </aside>
+            </aside>
+          </div>
 
           {/* Center Column: Feed */}
-          <div className="flex-1 space-y-4 sm:space-y-8 order-1 lg:order-2 w-full lg:w-[50%] mx-auto">
+          <div className="flex-1 space-y-4 sm:space-y-8 order-1 lg:order-2 w-full lg:w-[calc(50%-1.5rem)] mx-auto">
             <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl md:rounded-[2.5rem] shadow-xl overflow-hidden">
               <section className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-3 sm:p-4 md:p-6 rounded-[calc(1.875rem-2.5px)] md:rounded-[calc(2.5rem-2.5px)] relative overflow-hidden group transition-colors duration-500`}>
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6">
@@ -355,11 +355,11 @@ export default function DashboardPage() {
           </div>
 
           {/* Right Column: Top Earners */}
-          <aside className="hidden lg:block lg:w-[25%] order-3 shrink-0 lg:sticky lg:top-24 h-[calc(100vh-7rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] z-40">
-            <div>
+          <div className="hidden lg:block lg:w-[calc(25%-0.75rem)] order-3 shrink-0 z-40">
+            <aside className="lg:sticky lg:top-24 h-[calc(100vh-7rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
               <TopEarnersWidget darkMode={darkMode} />
-            </div>
-          </aside>
+            </aside>
+          </div>
         </div>
       </main>
 
