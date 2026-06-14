@@ -60,7 +60,7 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
 
   if (!isOpen) return null;
 
-  const hasResults = results.users.length > 0 || results.posts.length > 0 || results.events.length > 0;
+  const hasResults = results.users.length > 0;
 
   return (
     <div className="fixed inset-0 z-[999999] flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
@@ -79,7 +79,7 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search users, posts, events..."
+            placeholder="Search users..."
             className={`w-full bg-transparent border-none outline-none text-lg font-bold ${darkMode ? "text-white placeholder-gray-400" : "text-black placeholder-gray-500"}`}
           />
           <button onClick={onClose} className={`text-xl font-black rounded-full w-8 h-8 flex items-center justify-center transition-colors ${darkMode ? "hover:bg-white/10 text-white" : "hover:bg-black/5 text-black"}`}>×</button>
@@ -112,36 +112,6 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
                           <p className={`text-[10px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{user.role} • {user.enrollmentNumber}</p>
                         </div>
                       </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {results.events.length > 0 && (
-                <div>
-                  <div className="h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent my-4" />
-                  <h3 className={`text-xs font-black uppercase tracking-widest mb-2 px-2 ${darkMode ? "text-white" : "text-black"}`}>Events</h3>
-                  <div className="space-y-1">
-                    {results.events.map(event => (
-                      <button onClick={() => handleOpenPost(event._id)} key={event._id} className={`w-full text-left block p-3 rounded-xl transition-colors ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`}>
-                        <p className={`text-sm font-bold truncate ${darkMode ? "text-white" : "text-black"}`}>📅 {event.title}</p>
-                        <p className={`text-xs truncate ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{event.location} • By {event.createdBy?.name}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {results.posts.length > 0 && (
-                <div>
-                  <div className="h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent my-4" />
-                  <h3 className={`text-xs font-black uppercase tracking-widest mb-2 px-2 ${darkMode ? "text-white" : "text-black"}`}>Posts</h3>
-                  <div className="space-y-1">
-                    {results.posts.map(post => (
-                      <button onClick={() => handleOpenPost(post._id)} key={post._id} className={`w-full text-left block p-3 rounded-xl transition-colors ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`}>
-                        {post.title && <p className={`text-sm font-bold truncate ${darkMode ? "text-white" : "text-black"}`}>{post.title}</p>}
-                        <p className={`text-xs line-clamp-2 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{post.content}</p>
-                      </button>
                     ))}
                   </div>
                 </div>
