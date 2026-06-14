@@ -157,15 +157,15 @@ export default function HomePage() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.45, ease: "easeInOut" }}
-              className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-8"
+              className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-8"
             >
               {/* ── HERO ── */}
               {slides[current].type === "hero" && (
-                <div className="text-center max-w-4xl mx-auto relative z-10">
+                <div className="text-center w-full max-w-5xl mx-auto relative z-10 origin-center transition-all duration-300 [@media(max-height:850px)]:scale-90 [@media(max-height:750px)]:scale-75 [@media(max-height:600px)]:scale-50">
                   <div className="inline-flex px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] mb-6 shadow-2xl bg-white/10 border border-white/20 text-white leading-none">
                     ✨ Reconnect • Network • Grow ✨
                   </div>
-                  <h1 className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tighter mb-4 leading-none italic uppercase text-white">
+                  <h1 className="text-[clamp(3rem,8vw,7rem)] font-black tracking-tighter mb-4 leading-none italic uppercase text-white">
                     STUDENT<br />
                     <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent italic">PORTAL</span>
                   </h1>
@@ -215,7 +215,7 @@ export default function HomePage() {
 
               {/* ── FEATURES ── */}
               {slides[current].type === "features" && (
-                <div className="w-full max-w-5xl mx-auto">
+                <div className="w-full max-w-5xl mx-auto origin-center transition-all duration-300 [@media(max-height:850px)]:scale-90 [@media(max-height:750px)]:scale-75 [@media(max-height:600px)]:scale-50">
                   <div className="text-center mb-6">
                     <div className="inline-flex p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl mb-3 shadow-xl">
                       <div className="bg-black/40 backdrop-blur-md p-3 rounded-[calc(1rem-1.5px)]">
@@ -251,7 +251,7 @@ export default function HomePage() {
 
               {/* ── ABOUT ── */}
               {slides[current].type === "about" && (
-                <div className="w-full max-w-4xl mx-auto">
+                <div className="w-full max-w-4xl mx-auto origin-center transition-all duration-300 [@media(max-height:850px)]:scale-90 [@media(max-height:750px)]:scale-75 [@media(max-height:600px)]:scale-50">
                   <div className="text-center mb-6">
                     <div className="inline-flex p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl mb-3 shadow-xl">
                       <div className="bg-black/40 backdrop-blur-md p-3 rounded-[calc(1rem-1.5px)]">
@@ -288,7 +288,7 @@ export default function HomePage() {
 
               {/* ── STORIES ── */}
               {slides[current].type === "stories" && (
-                <div className="w-full max-w-2xl mx-auto">
+                <div className="w-full max-w-2xl mx-auto origin-center transition-all duration-300 [@media(max-height:850px)]:scale-90 [@media(max-height:750px)]:scale-75 [@media(max-height:600px)]:scale-50">
                   <div className="text-center mb-6">
                     <div className="inline-flex p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl mb-3 shadow-xl">
                       <div className="bg-black/40 backdrop-blur-md p-3 rounded-[calc(1rem-1.5px)]">
