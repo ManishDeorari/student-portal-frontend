@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
-export default function ThemeToggle({ bottomOffset = 32, rightOffset = 32 }) {
+export default function ThemeToggle({ bottomOffset = 32, rightOffset = 32, inline = false }) {
   const { darkMode, toggleDarkMode } = useTheme();
   const [zoom, setZoom] = useState(1);
   const [baseRatio, setBaseRatio] = useState(1);
@@ -25,26 +25,26 @@ export default function ThemeToggle({ bottomOffset = 32, rightOffset = 32 }) {
   
   return (
     <div 
-      className="fixed z-[100] transition-all duration-300 ease-out"
-      style={{ 
+      className={inline ? "relative z-[100] transition-all duration-300 ease-out flex items-center justify-center" : "fixed z-[100] transition-all duration-300 ease-out"}
+      style={inline ? {} : { 
         bottom: `${bottomOffset * scale}px`, 
         right: `${rightOffset * scale}px`,
         transform: `scale(${scale})`,
         transformOrigin: "bottom right"
       }}
     >
-      <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] shadow-2xl transition-all duration-500 hover:scale-110 active:scale-95 group">
+      <div className={`p-[1.5px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 shadow-2xl transition-all duration-500 hover:scale-110 active:scale-95 group ${inline ? 'rounded-full' : 'rounded-[2rem]'}`}>
         <button
           onClick={toggleDarkMode}
-          className={`p-5 rounded-[calc(2rem-2px)] backdrop-blur-2xl transition-all duration-500 flex items-center justify-center ${
+          className={`${inline ? 'p-2 rounded-full' : 'p-5 rounded-[calc(2rem-2px)]'} backdrop-blur-2xl transition-all duration-500 flex items-center justify-center ${
             darkMode ? "bg-black/80 text-yellow-400" : "bg-white/90 text-blue-600"
           }`}
           title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
         >
           {darkMode ? (
-            <Sun size={24} className="animate-spin-slow" />
+            <Sun size={inline ? 16 : 24} className="animate-spin-slow" />
           ) : (
-            <Moon size={24} className="animate-pulse" />
+            <Moon size={inline ? 16 : 24} className="animate-pulse" />
           )}
         </button>
       </div>

@@ -138,7 +138,7 @@ export default function HomePage() {
                 />
               ))}
             </div>
-            <ThemeToggle />
+            <ThemeToggle inline={true} />
             <Link href="/auth/login" className="p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg active:scale-95 transition-all">
               <div className="bg-black text-white hover:bg-transparent font-black text-[10px] uppercase tracking-[0.2em] px-6 py-2.5 rounded-full transition-all">
                 Portal Login
