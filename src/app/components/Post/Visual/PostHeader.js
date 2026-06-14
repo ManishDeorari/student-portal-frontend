@@ -123,17 +123,6 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
                     <span>📌</span> {post.isPinned ? "Unpin Post" : "Pin Post"}
                   </button>
                 )}
-                {!isOwn && (
-                  <button
-                    onClick={() => {
-                      handleTipPost && handleTipPost(10);
-                      setShowDropdown(false);
-                    }}
-                    className={`flex items-center gap-2.5 px-3 py-2 text-xs font-semibold rounded-lg text-left transition-colors ${darkMode ? "hover:bg-white/10 text-yellow-400" : "hover:bg-black/5 text-yellow-600"}`}
-                  >
-                    <span>🎁</span> Tip 10 Points
-                  </button>
-                )}
                 {canEdit && (
                   <button
                     onClick={() => {

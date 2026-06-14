@@ -20,9 +20,15 @@ export default function GlobalSearchWrapper() {
         setIsOpen((prev) => !prev);
       }
     };
+    
+    const handleCustomOpen = () => setIsOpen(true);
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("openGlobalSearch", handleCustomOpen);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("openGlobalSearch", handleCustomOpen);
+    };
   }, []);
 
   if (!token) return null;

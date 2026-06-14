@@ -155,9 +155,6 @@ const UserSearchInput = ({ value, onChange, placeholder, onSelect, darkMode = fa
                                   {user.enrollmentNumber}
                                 </span>
                               )}
-                              <span className={`text-[10px] uppercase font-black tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                                {user.publicId ? `@${user.publicId}` : user.role}
-                              </span>
                             </div>
                           </div>
                         </div>

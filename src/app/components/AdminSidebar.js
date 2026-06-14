@@ -78,7 +78,18 @@ export default function AdminSidebar() {
 
       {/* Top Navbar - Desktop */}
       <nav className="hidden md:flex justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-6 py-4 fixed top-0 left-0 right-0 z-50 w-full">
-        <div className="text-2xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">Student Portal</div>
+        <div className="flex items-center gap-4">
+          <div className="text-2xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">
+            Student Portal (Admin)
+          </div>
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('openGlobalSearch'))}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-sm font-bold shadow-sm"
+            title="Search (Ctrl+K)"
+          >
+            🔍 <span className="opacity-80">Search</span>
+          </button>
+        </div>
         <div className="flex space-x-8 items-center text-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
           <Link href="/dashboard/admin" onClick={() => markSectionAsSeen("admin-requests")} className="hover:text-gray-200 relative group" title="Admin Panel">
             <FaUserShield className="transition-colors" />
@@ -143,9 +154,18 @@ export default function AdminSidebar() {
       {/* Mobile Top Bar */}
       <nav className="flex md:hidden justify-between items-center bg-white/5 backdrop-blur-xl border-b border-white/10 text-white px-5 py-3 fixed top-0 left-0 right-0 z-50 w-full">
         <div className="text-xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-tight">Student Portal (Admin)</div>
-        <button onClick={() => setShowSettings(true)} className="text-2xl pt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-          <FaCog className={showSettings ? "rotate-90 transition-transform duration-300" : "transition-transform duration-300"} />
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('openGlobalSearch'))}
+            className="text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+            title="Search"
+          >
+            🔍
+          </button>
+          <button onClick={() => setShowSettings(true)} className="text-2xl pt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+            <FaCog className={showSettings ? "rotate-90 transition-transform duration-300" : "transition-transform duration-300"} />
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Bottom Navigation Bar */}
