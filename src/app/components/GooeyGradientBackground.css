@@ -2,8 +2,7 @@
   width: 100%;
   min-height: 100%;
   position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: clip; /* clip prevents horizontal scroll without breaking sticky */
 }
 
 /* ── Dark mode palette (default) ── */

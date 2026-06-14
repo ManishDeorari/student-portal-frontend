@@ -32,7 +32,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
 
   return (
     <div className="flex items-center gap-3">
-      <div className="relative w-8 h-8 sm:w-10 sm:h-10">
+      <div className="relative w-10 h-10 sm:w-12 sm:h-12">
         <Image
           src={getOptimizedImageUrl(profileImg)}
           alt="User profile"
@@ -60,7 +60,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <div className={`font-semibold flex items-center gap-1 flex-wrap ${darkMode ? "text-white" : "text-gray-900"}`}>
+        <div className={`font-black text-sm sm:text-base flex items-center gap-1.5 flex-wrap ${darkMode ? "text-white" : "text-gray-900"}`}>
           {isOwn ? (
             <span className="truncate max-w-[150px]">{post.user?.name || "Unknown"}</span>
           ) : (
@@ -78,7 +78,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
             </span>
           )}
           {post.type && post.type !== "Regular" && (
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold flex-shrink-0 border ${post.type === "Session" ? (darkMode ? "bg-green-600/30 text-green-300 border-green-500/30" : "bg-green-100 text-green-600 border-transparent") :
+            <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-black flex-shrink-0 border ${post.type === "Session" ? (darkMode ? "bg-green-600/30 text-green-300 border-green-500/30" : "bg-green-100 text-green-600 border-transparent") :
               post.type === "Event" ? (darkMode ? "bg-orange-600/30 text-orange-300 border-orange-500/30" : "bg-orange-100 text-orange-600 border-transparent") :
                 (darkMode ? "bg-red-600/30 text-red-300 border-red-500/30" : "bg-red-100 text-red-600 border-transparent")
               }`}>
@@ -86,7 +86,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
             </span>
           )}
         </div>
-        <p className={`text-[10px] ${darkMode ? "text-gray-500" : "text-gray-500"} truncate`}>{new Date(post.createdAt).toLocaleString()}</p>
+        <p className={`text-xs font-semibold ${darkMode ? "text-gray-400" : "text-gray-500"} mt-0.5 truncate`}>{new Date(post.createdAt).toLocaleString()}</p>
       </div>
       
       {!hideActions && (
