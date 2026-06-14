@@ -197,9 +197,13 @@ export default function DashboardPage() {
     setPendingPosts([]);
   };
 
-  const filteredPosts = activeTab === "my"
+  const filteredPosts = [...(activeTab === "my"
     ? posts.filter(p => p.user?._id === user?._id)
-    : posts;
+    : posts)].sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      return 0;
+    });
 
   if (loading) return "Loading...";
   if (!user) return "User not found or unauthorized.";
