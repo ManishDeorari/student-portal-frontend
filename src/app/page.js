@@ -38,7 +38,26 @@ export default function HomePage() {
   const { darkMode } = useTheme();
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [featuredStory, setFeaturedStory] = useState(null);
   const autoRef = useRef(null);
+
+  // Fetch dynamic testimonial
+  useEffect(() => {
+    const fetchTestimonial = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/public/testimonials`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            setFeaturedStory(data[0]); // Pick the most recent featured story
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch featured story:", err);
+      }
+    };
+    fetchTestimonial();
+  }, []);
 
   const goTo = (idx, dir) => {
     setDirection(dir);
@@ -98,6 +117,8 @@ export default function HomePage() {
                 <button
                   key={i}
                   onClick={() => handleDot(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  aria-current={i === current ? "true" : "false"}
                   className={`transition-all duration-300 rounded-full ${i === current
                     ? "w-6 h-2 bg-gradient-to-r from-blue-500 to-purple-500"
                     : "w-2 h-2 bg-white/20 hover:bg-white/40"
@@ -209,7 +230,7 @@ export default function HomePage() {
                     <div className={`${darkMode ? "bg-slate-900/80" : "bg-white/80"} backdrop-blur-xl rounded-[calc(2rem-2px)] p-8 text-center`}>
                       <FaQuoteLeft size={32} className="text-blue-500 opacity-20 mx-auto mb-4" />
                       <p className={`text-lg sm:text-2xl font-black leading-tight italic ${darkMode ? "text-white" : "text-slate-950"}`}>
-                        &quot;Authentic connections are the foundation of any great career. This portal makes it effortless.&quot;
+                        &quot;{featuredStory?.quote || "Authentic connections are the foundation of any great career. This portal makes it effortless."}&quot;
                       </p>
                       <div className="flex items-center justify-center gap-4 pt-6">
                         <div className="w-10 h-10 p-px bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
@@ -218,8 +239,12 @@ export default function HomePage() {
                           </div>
                         </div>
                         <div className="text-left">
-                          <p className={`font-black uppercase tracking-widest text-xs ${darkMode ? "text-white" : "text-slate-950"}`}>Manish Chandra Deorari</p>
-                          <p className={`font-bold uppercase tracking-widest text-[10px] ${darkMode ? "text-white/60" : "text-slate-600"}`}>MCA - 2024-26</p>
+                          <p className={`font-black uppercase tracking-widest text-xs ${darkMode ? "text-white" : "text-slate-950"}`}>
+                            {featuredStory?.authorName || "Manish Chandra Deorari"}
+                          </p>
+                          <p className={`font-bold uppercase tracking-widest text-[10px] ${darkMode ? "text-white/60" : "text-slate-600"}`}>
+                            {featuredStory?.authorDetail || "MCA - 2024-26"}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -232,12 +257,14 @@ export default function HomePage() {
           {/* Left / Right arrows */}
           <button
             onClick={handlePrev}
+            aria-label="Previous slide"
             className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-sm transition-all active:scale-90"
           >
             <ChevronLeft size={20} className="text-white" />
           </button>
           <button
             onClick={handleNext}
+            aria-label="Next slide"
             className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-sm transition-all active:scale-90"
           >
             <ChevronRight size={20} className="text-white" />
