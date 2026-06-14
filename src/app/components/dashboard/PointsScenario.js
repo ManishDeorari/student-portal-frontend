@@ -102,15 +102,15 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
     return (
         <div className="relative w-full h-[470px] group" style={{ perspective: "1200px" }}>
             <motion.div 
-                className="w-full h-full relative"
+                className="w-full h-full relative z-10"
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
-                transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
+                transition={{ duration: 0.6, type: "tween", ease: "easeInOut" }}
                 style={{ transformStyle: "preserve-3d" }}
             >
                 {/* FRONT FACE: Points Guide */}
                 <div 
-                    className="absolute inset-0 w-full h-full rounded-[2.5rem] p-[2.5px] bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 shadow-2xl cursor-pointer"
-                    style={{ backfaceVisibility: "hidden" }}
+                    className="absolute inset-0 w-full h-full rounded-[2.5rem] p-[2.5px] bg-gradient-to-br from-blue-400 via-purple-500 to-pink-600 shadow-2xl cursor-pointer"
+                    style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
                     onClick={() => setIsFlipped(true)}
                 >
                     <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} w-full h-full rounded-[calc(2.5rem-2.5px)] p-4 md:p-5 flex flex-col`}>
@@ -128,7 +128,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 space-y-2">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar p-1.5 space-y-2">
                             {scenarios.map((item, idx) => (
                                 <div key={idx} className="p-[1px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-500 rounded-2xl shadow-sm hover:shadow-md transition-all">
                                     <div className={`flex items-center justify-between py-2.5 px-3 ${darkMode ? "bg-[#1e293b]" : "bg-white"} rounded-[15px] group/item transition-all h-full`}>
@@ -164,10 +164,10 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                     </div>
                 </div>
 
-                {/* BACK FACE: Gamification Tiers */}
+                {/* BACK FACE: Ranking Tiers */}
                 <div 
-                    className="absolute inset-0 w-full h-full rounded-[2.5rem] p-[2.5px] bg-gradient-to-br from-amber-400 via-orange-500 to-red-600 shadow-2xl cursor-pointer"
-                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                    className="absolute inset-0 w-full h-full rounded-[2.5rem] p-[2.5px] bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 shadow-2xl cursor-pointer"
+                    style={{ transform: "rotateY(180deg)", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
                     onClick={() => setIsFlipped(false)}
                 >
                     <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} w-full h-full rounded-[calc(2.5rem-2.5px)] p-4 md:p-5 flex flex-col`}>
@@ -190,21 +190,21 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                                 const activeTier = user ? getGamificationTier(user.points?.total || 0).name : null;
                                 
                                 const tiers = [
-                                    { name: "Bronze", points: "0 - 499 Points", icon: "🥉", styleDark: "bg-amber-600/10 border-amber-500/30", styleLight: "bg-amber-50 border-amber-300", titleCol: "text-amber-600", descDark: "text-amber-200/80", descLight: "text-amber-800/80" },
-                                    { name: "Silver", points: "500 - 999 Points", icon: "🥈", styleDark: "bg-gray-500/10 border-gray-400/30", styleLight: "bg-gray-100 border-gray-400", titleCol: "text-gray-700 dark:text-gray-100", descDark: "text-gray-200/90", descLight: "text-gray-700" },
-                                    { name: "Gold", points: "1000 - 1999 Points", icon: "🥇", styleDark: "bg-yellow-500/10 border-yellow-500/30", styleLight: "bg-yellow-50 border-yellow-400 shadow-[inset_0_0_10px_rgba(250,204,21,0.1)]", titleCol: "text-yellow-600 dark:text-yellow-400", descDark: "text-yellow-200/80", descLight: "text-yellow-800/80" },
-                                    { name: "Platinum", points: "2000 - 3499 Points", icon: "✨", styleDark: "bg-slate-400/10 border-slate-400/30", styleLight: "bg-slate-100 border-slate-400", titleCol: "text-slate-800 dark:text-white", descDark: "text-slate-200/90", descLight: "text-slate-700" },
-                                    { name: "Diamond", points: "3500 - 4999 Points", icon: "💎", styleDark: "bg-cyan-400/10 border-cyan-400/30 shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]", styleLight: "bg-cyan-50 border-cyan-300 shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]", titleCol: "text-cyan-600 dark:text-cyan-400", descDark: "text-cyan-200/80", descLight: "text-cyan-800/80" },
-                                    { name: "Hall of Fame", points: "5000+ Points", icon: "👑", styleDark: "bg-gradient-to-r from-yellow-400/10 via-red-500/10 to-pink-500/10 border-yellow-400/40 shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]", styleLight: "bg-gradient-to-r from-yellow-50 via-red-50 to-pink-50 border-yellow-400 shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]", titleCol: "text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-pink-500", descDark: "text-orange-200/80", descLight: "text-orange-800/80" }
+                                    { name: "Bronze", points: "0 - 499 Points", icon: "🥉", styleDark: "bg-amber-600/10 border-amber-500/30", styleLight: "bg-amber-50 border-amber-300", titleColDark: "text-amber-500", titleColLight: "text-amber-700", descDark: "text-amber-200/80", descLight: "text-amber-800/80" },
+                                    { name: "Silver", points: "500 - 999 Points", icon: "🥈", styleDark: "bg-gray-500/10 border-gray-400/30", styleLight: "bg-gray-100 border-gray-400", titleColDark: "text-gray-200", titleColLight: "text-gray-700", descDark: "text-gray-200/90", descLight: "text-gray-700" },
+                                    { name: "Gold", points: "1000 - 1999 Points", icon: "🥇", styleDark: "bg-yellow-500/10 border-yellow-500/30", styleLight: "bg-yellow-50 border-yellow-400 shadow-[inset_0_0_10px_rgba(250,204,21,0.1)]", titleColDark: "text-yellow-400", titleColLight: "text-yellow-600", descDark: "text-yellow-200/80", descLight: "text-yellow-800/80" },
+                                    { name: "Platinum", points: "2000 - 3499 Points", icon: "✨", styleDark: "bg-slate-400/10 border-slate-400/30", styleLight: "bg-slate-100 border-slate-400", titleColDark: "text-white", titleColLight: "text-slate-800", descDark: "text-slate-200/90", descLight: "text-slate-700" },
+                                    { name: "Diamond", points: "3500 - 4999 Points", icon: "💎", styleDark: "bg-cyan-400/10 border-cyan-400/30 shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]", styleLight: "bg-cyan-50 border-cyan-300 shadow-[inset_0_0_10px_rgba(34,211,238,0.1)]", titleColDark: "text-cyan-400", titleColLight: "text-cyan-600", descDark: "text-cyan-200/80", descLight: "text-cyan-800/80" },
+                                    { name: "Hall of Fame", points: "5000+ Points", icon: "👑", styleDark: "bg-gradient-to-r from-yellow-400/10 via-red-500/10 to-pink-500/10 border-yellow-400/40 shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]", styleLight: "bg-gradient-to-r from-yellow-50 via-red-50 to-pink-50 border-yellow-400 shadow-[inset_0_0_15px_rgba(234,179,8,0.15)]", titleColDark: "text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-pink-500", titleColLight: "text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-pink-500", descDark: "text-orange-200/80", descLight: "text-orange-800/80" }
                                 ];
 
                                 return tiers.map((t, i) => {
                                     const isActive = activeTier === t.name;
                                     return (
-                                        <div key={i} className={`relative z-10 flex items-center gap-2.5 py-1.5 px-3 rounded-xl border ${darkMode ? t.styleDark : t.styleLight} ${isActive ? 'scale-[1.02] shadow-md ring-1 ring-current z-20' : 'hover:z-20 hover:scale-[1.01]'} transition-all`} style={{ transform: "translateZ(10px)" }}>
+                                        <div key={i} className={`relative z-10 flex items-center gap-2.5 py-1.5 px-3 rounded-xl border ${darkMode ? t.styleDark : t.styleLight} ${isActive ? 'scale-[1.02] shadow-md ring-1 ring-current z-20' : 'hover:z-20 hover:scale-[1.01]'} transition-all`}>
                                             <div className="text-xl drop-shadow-md shrink-0">{t.icon}</div>
                                             <div className="flex-1 min-w-0">
-                                                <h4 className={`font-black text-sm ${t.titleCol} truncate`}>{t.name}</h4>
+                                                <h4 className={`font-black text-sm ${darkMode ? t.titleColDark : t.titleColLight} truncate`}>{t.name}</h4>
                                                 <p className={`text-[8px] font-bold uppercase tracking-widest ${darkMode ? t.descDark : t.descLight}`}>{t.points}</p>
                                             </div>
                                             {isActive && (

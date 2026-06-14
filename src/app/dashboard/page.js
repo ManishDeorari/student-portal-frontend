@@ -257,8 +257,8 @@ export default function DashboardPage() {
                   key={tab.id} 
                   className={`p-[1.5px] rounded-full transition-all bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 ${
                     activeTab === tab.id 
-                      ? 'scale-105 shadow-lg shadow-blue-500/30' 
-                      : 'hover:scale-105'
+                      ? 'scale-105 shadow-lg shadow-blue-500/30 relative z-10' 
+                      : 'hover:scale-105 relative z-0'
                   }`}
                 >
                   <button

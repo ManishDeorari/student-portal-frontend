@@ -81,15 +81,20 @@ export const getGamificationTier = (points) => {
     const styles = getTierBadgeStyles(name);
     
     let colorClass = "text-amber-600";
-    if (name === "Hall of Fame") colorClass = "text-red-500";
-    else if (name === "Diamond") colorClass = "text-cyan-500";
-    else if (name === "Platinum") colorClass = "text-slate-400";
-    else if (name === "Gold") colorClass = "text-yellow-500";
-    else if (name === "Silver") colorClass = "text-gray-400";
+    let colorClassLight = "text-amber-700";
+    let colorClassDark = "text-amber-400";
+
+    if (name === "Hall of Fame") { colorClass = "text-red-500"; colorClassLight = "text-red-600"; colorClassDark = "text-red-400"; }
+    else if (name === "Diamond") { colorClass = "text-cyan-500"; colorClassLight = "text-cyan-700"; colorClassDark = "text-cyan-400"; }
+    else if (name === "Platinum") { colorClass = "text-slate-400"; colorClassLight = "text-slate-700"; colorClassDark = "text-slate-300"; }
+    else if (name === "Gold") { colorClass = "text-yellow-500"; colorClassLight = "text-yellow-600"; colorClassDark = "text-yellow-400"; }
+    else if (name === "Silver") { colorClass = "text-gray-400"; colorClassLight = "text-gray-700"; colorClassDark = "text-gray-300"; }
 
     return {
         name,
         icon: styles.icon,
-        colorClass
+        colorClass,
+        colorClassLight,
+        colorClassDark
     };
 };
