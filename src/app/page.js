@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGlobe, FaQuoteLeft, FaRocket } from "react-icons/fa";
-import { ArrowRight, ShieldCheck, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ShieldCheck, User, ChevronLeft, ChevronRight, MessageSquare, CalendarDays, Award, Rocket } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "@/context/ThemeContext";
 import { TubesBackground } from "@/app/components/TubesBackground";
@@ -13,6 +13,10 @@ const slides = [
   {
     id: "hero",
     type: "hero",
+  },
+  {
+    id: "features",
+    type: "features",
   },
   {
     id: "about",
@@ -39,24 +43,32 @@ export default function HomePage() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [featuredStory, setFeaturedStory] = useState(null);
+  const [stats, setStats] = useState({ users: 10, events: 5, posts: 20 });
   const autoRef = useRef(null);
 
-  // Fetch dynamic testimonial
+  // Fetch dynamic testimonial and stats
   useEffect(() => {
-    const fetchTestimonial = async () => {
+    const fetchPublicData = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/public/testimonials`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0) {
-            setFeaturedStory(data[0]); // Pick the most recent featured story
-          }
+        const [testimRes, statsRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/public/testimonials`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/public/stats`)
+        ]);
+
+        if (testimRes.ok) {
+          const data = await testimRes.json();
+          if (data && data.length > 0) setFeaturedStory(data[0]);
+        }
+
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setStats(statsData);
         }
       } catch (err) {
-        console.error("Failed to fetch featured story:", err);
+        console.error("Failed to fetch public data:", err);
       }
     };
-    fetchTestimonial();
+    fetchPublicData();
   }, []);
 
   const goTo = (idx, dir) => {
@@ -160,6 +172,30 @@ export default function HomePage() {
                   <p className="max-w-xl mx-auto text-sm md:text-base font-bold uppercase tracking-[0.1em] leading-relaxed mb-7 text-white/70">
                     The next generation professional ecosystem<br />for active students worldwide.
                   </p>
+                  
+                  {/* LIVE STATS */}
+                  <div className="flex justify-center gap-4 sm:gap-8 mb-8">
+                    <div className="text-center">
+                      <div className="text-2xl sm:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                        {stats.users.toLocaleString()}+
+                      </div>
+                      <div className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Students</div>
+                    </div>
+                    <div className="w-px h-10 bg-white/10" />
+                    <div className="text-center">
+                      <div className="text-2xl sm:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+                        {stats.events.toLocaleString()}+
+                      </div>
+                      <div className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Events</div>
+                    </div>
+                    <div className="w-px h-10 bg-white/10 hidden sm:block" />
+                    <div className="text-center hidden sm:block">
+                      <div className="text-2xl sm:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-red-400">
+                        {stats.posts.toLocaleString()}+
+                      </div>
+                      <div className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Posts</div>
+                    </div>
+                  </div>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <Link href="/auth/login?view=SIGNUP" className="group relative p-px bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl shadow-2xl transform hover:-translate-y-1 transition-all duration-500">
                       <div className="bg-black/40 hover:bg-transparent backdrop-blur-md px-10 py-4 rounded-[calc(0.75rem-1px)] flex items-center gap-3 transition-all">
@@ -173,6 +209,42 @@ export default function HomePage() {
                         <span className="text-white font-black text-xs uppercase tracking-[0.3em]">Member Login</span>
                       </div>
                     </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* ── FEATURES ── */}
+              {slides[current].type === "features" && (
+                <div className="w-full max-w-5xl mx-auto">
+                  <div className="text-center mb-6">
+                    <div className="inline-flex p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl mb-3 shadow-xl">
+                      <div className="bg-black/40 backdrop-blur-md p-3 rounded-[calc(1rem-1.5px)]">
+                        <Rocket size={22} className="text-blue-500" />
+                      </div>
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl font-black tracking-tighter italic text-white mb-1">Capabilities</h2>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-300">Everything you need</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {[
+                      { icon: MessageSquare, title: "Real-time Chat", desc: "Seamlessly connect with peers via websockets and instant groups.", color: "text-blue-400", bg: "from-blue-500/20" },
+                      { icon: CalendarDays, title: "Event Management", desc: "Book seats, RSVP, and track attendance effortlessly.", color: "text-purple-400", bg: "from-purple-500/20" },
+                      { icon: ShieldCheck, title: "Role-Based Access", desc: "Dedicated environments for Admins, Alumni, and Students.", color: "text-pink-400", bg: "from-pink-500/20" },
+                      { icon: Award, title: "Gamification", desc: "Earn points for participation and climb the leaderboard.", color: "text-yellow-400", bg: "from-yellow-500/20" },
+                    ].map((feat, idx) => (
+                      <div key={idx} className="p-[2px] bg-gradient-to-br from-white/10 to-transparent rounded-2xl">
+                        <div className={`h-full ${darkMode ? "bg-slate-900/80" : "bg-white/10"} backdrop-blur-xl p-6 rounded-[calc(1rem-2px)] flex items-start gap-4 transition-all hover:bg-white/5`}>
+                          <div className={`p-3 rounded-xl bg-gradient-to-br ${feat.bg} to-transparent`}>
+                            <feat.icon size={24} className={feat.color} />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-black text-white tracking-tight">{feat.title}</h3>
+                            <p className="text-sm text-white/60 font-medium leading-relaxed mt-1">{feat.desc}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}

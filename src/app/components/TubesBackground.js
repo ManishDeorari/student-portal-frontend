@@ -210,6 +210,13 @@ export function TubesBackground({
     const initTubes = async () => {
       if (!canvasRef.current) return;
       
+      // Accessibility & Performance Check
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        setWebglFailed(true);
+        return;
+      }
+
       if (isTouchDevice) {
         initMobileThreeJS();
         return;
