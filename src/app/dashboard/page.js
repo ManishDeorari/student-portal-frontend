@@ -217,7 +217,7 @@ export default function DashboardPage() {
       <main className="w-full mx-auto px-4 lg:px-8 py-4 sm:py-8 pb-24 md:pb-8">
         <div className="flex flex-col lg:flex-row gap-6 items-start justify-center">
           {/* Left Column: Points Scenario */}
-          <aside className="hidden lg:block lg:w-[25%] order-2 lg:order-1 relative shrink-0 lg:sticky lg:top-24 z-40">
+          <aside className="hidden lg:block lg:w-[25%] order-2 lg:order-1 shrink-0 lg:sticky lg:top-24 h-[calc(100vh-7rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] z-40">
             <div>
               <PointsScenario darkMode={darkMode} user={user} />
             </div>
@@ -355,7 +355,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Right Column: Top Earners */}
-          <aside className="hidden lg:block lg:w-[25%] order-3 relative shrink-0 lg:sticky lg:top-24 z-40">
+          <aside className="hidden lg:block lg:w-[25%] order-3 shrink-0 lg:sticky lg:top-24 h-[calc(100vh-7rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] z-40">
             <div>
               <TopEarnersWidget darkMode={darkMode} />
             </div>
