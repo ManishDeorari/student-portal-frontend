@@ -87,7 +87,7 @@ export default function WelcomeBanner({ user, darkMode }) {
             {/* Admin Dashboard Metrics (Only visible to Admin) */}
             {isAdmin && stats?.adminStats && (
               <div className={`mt-1.5 pt-2 border-t ${darkMode ? "border-white/10" : "border-black/5"} w-full`}>
-                <span className={`text-[10px] font-black uppercase tracking-widest mb-2 block ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Live Platform Pulse</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest mb-2 block ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Today's Platform Activity</span>
                 
                 <div className="flex w-full gap-2 md:gap-3">
                   <div className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl shadow-lg border-2 ${darkMode ? "border-blue-500 bg-blue-500/20 shadow-blue-500/20" : "border-blue-500 bg-blue-50 shadow-blue-500/30"}`}>
