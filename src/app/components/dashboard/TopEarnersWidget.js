@@ -52,8 +52,8 @@ export default function TopEarnersWidget({ darkMode }) {
           {topEarners.map((user, index) => {
             const tier = getGamificationTier(user.points?.total || 0);
             return (
-              <div key={user._id} className="p-[1.5px] bg-gradient-to-tr from-yellow-400 via-orange-500 to-red-500 rounded-[17px] shadow-sm hover:shadow-md transition-all group shrink-0">
-                <div className={`flex items-center py-2 px-3 rounded-2xl transition-all h-full ${darkMode ? 'bg-[#1a1a1c] hover:bg-[#222225]' : 'bg-white hover:bg-orange-50/50'}`}>
+              <div key={user._id} className="p-[1.5px] bg-gradient-to-tr from-yellow-400 via-orange-500 to-red-500 rounded-[17px] shadow-sm hover:shadow-md transition-all group shrink-0 flex-none h-[60px]">
+                <div className={`flex items-center px-3 rounded-[15.5px] transition-all h-full ${darkMode ? 'bg-[#1a1a1c] hover:bg-[#222225]' : 'bg-white hover:bg-orange-50/50'}`}>
                   <div className="relative shrink-0 mr-3">
                     <Image 
                       src={user.profilePicture || "/default-profile.jpg"} 

@@ -59,7 +59,7 @@ export default function WelcomeBanner({ user, darkMode }) {
             </h2>
             
             {/* Badges & Community Stats */}
-            <div className="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-3 items-center mb-2">
+            <div className="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-3 items-center">
               <span className={`text-[10px] md:text-xs ${darkMode ? "bg-white/10 text-white" : "bg-gray-200 text-black"} px-3 py-1.5 rounded-full font-black uppercase tracking-widest border border-white/10 shadow-sm`}>
                 {user?.enrollmentNumber || user?.employeeId || "N/A"}
               </span>
@@ -86,7 +86,7 @@ export default function WelcomeBanner({ user, darkMode }) {
 
             {/* Admin Dashboard Metrics (Only visible to Admin) */}
             {isAdmin && stats?.adminStats && (
-              <div className={`mt-3 pt-3 border-t ${darkMode ? "border-white/10" : "border-black/5"} w-full`}>
+              <div className={`mt-1.5 pt-2 border-t ${darkMode ? "border-white/10" : "border-black/5"} w-full`}>
                 <span className={`text-[10px] font-black uppercase tracking-widest mb-2 block ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Live Platform Pulse</span>
                 
                 <div className="flex w-full gap-2 md:gap-3">
