@@ -36,13 +36,13 @@ export default function WelcomeBanner({ user, darkMode }) {
       {/* Animated gradient border */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-[bg-spin_4s_linear_infinite]" style={{ backgroundSize: "200% 200%" }}></div>
       
-      <section className={`relative flex flex-col items-start p-6 sm:p-8 rounded-[calc(1.875rem-2.5px)] md:rounded-[calc(2.5rem-2.5px)] overflow-hidden transition-colors duration-500 ${darkMode ? "bg-[#121213]/90" : "bg-[#FAFAFA]/90"} backdrop-blur-xl`}>
+      <section className={`relative flex flex-col items-start p-4 sm:p-6 rounded-[calc(1.875rem-2.5px)] md:rounded-[calc(2.5rem-2.5px)] overflow-hidden transition-colors duration-500 ${darkMode ? "bg-[#121213]/90" : "bg-[#FAFAFA]/90"} backdrop-blur-xl`}>
         
         {/* Background Mesh */}
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
         <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
 
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 md:gap-8 z-10 w-full">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-6 z-10 w-full">
           {/* Avatar Icon */}
           <div className="relative group/avatar cursor-pointer shrink-0">
             <div className="absolute -inset-0.5 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-2xl sm:rounded-3xl blur opacity-60 group-hover/avatar:opacity-100 transition duration-500"></div>
@@ -53,12 +53,13 @@ export default function WelcomeBanner({ user, darkMode }) {
           
           {/* Content Area */}
           <div className="flex-1 w-full text-center sm:text-left flex flex-col justify-center">
-            <h2 className={`text-2xl sm:text-3xl md:text-4xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight mb-3`}>
-              Welcome back, {user?.name || "Student"}!
+            <h2 className={`text-lg sm:text-xl font-bold ${darkMode ? "text-gray-300" : "text-gray-600"} tracking-tight leading-tight mb-2`}>
+              Welcome back,<br />
+              <span className={`text-xl sm:text-2xl font-black ${darkMode ? "text-white" : "text-black"}`}>{user?.name || "Student"}!</span>
             </h2>
             
             {/* Badges & Community Stats */}
-            <div className="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-3 items-center mb-4">
+            <div className="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-3 items-center mb-2">
               <span className={`text-[10px] md:text-xs ${darkMode ? "bg-white/10 text-white" : "bg-gray-200 text-black"} px-3 py-1.5 rounded-full font-black uppercase tracking-widest border border-white/10 shadow-sm`}>
                 {user?.enrollmentNumber || user?.employeeId || "N/A"}
               </span>
@@ -85,7 +86,7 @@ export default function WelcomeBanner({ user, darkMode }) {
 
             {/* Admin Dashboard Metrics (Only visible to Admin) */}
             {isAdmin && stats?.adminStats && (
-              <div className={`mt-4 pt-4 border-t ${darkMode ? "border-white/10" : "border-black/5"} w-full`}>
+              <div className={`mt-3 pt-3 border-t ${darkMode ? "border-white/10" : "border-black/5"} w-full`}>
                 <span className={`text-[10px] font-black uppercase tracking-widest mb-2 block ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Live Platform Pulse</span>
                 
                 <div className="flex w-full gap-2 md:gap-3">
