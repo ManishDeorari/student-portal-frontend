@@ -391,20 +391,41 @@ export default function PostModal({
                                           )}
                                           {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
                                        </div>
-                                       <p className={`text-[9px] font-bold opacity-60 font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
-                                         {member.uniqueId || "ID Undefined"}
-                                       </p>
+                                       <div className="flex flex-wrap items-center gap-3 text-left mt-1">
+                                         <div className="flex flex-col">
+                                           <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Enrollment No.</span>
+                                           <span className={`text-[10px] font-bold font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                             {member.userId?.enrollmentNumber || member.enrollmentNumber || member.uniqueId || "-"}
+                                           </span>
+                                         </div>
+                                         {(member.userId?.course || member.course) && (
+                                           <div className="flex flex-col border-l border-white/10 pl-3">
+                                             <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Course</span>
+                                             <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                               {member.userId?.course || member.course}
+                                             </span>
+                                           </div>
+                                         )}
+                                         {(member.userId?.semester || member.semester) && (
+                                           <div className="flex flex-col border-l border-white/10 pl-3">
+                                             <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Semester</span>
+                                             <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                               {member.userId?.semester || member.semester}
+                                             </span>
+                                           </div>
+                                         )}
+                                       </div>
                                     </div>
                                  </div>
 
                                  {entry.type === 'individual' && (
                                     <div className="flex items-center gap-3">
                                        <div className="flex flex-col items-end">
-                                          <span className={`text-[8px] font-black uppercase opacity-40 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Rank</span>
+                                          <span className={`text-[8px] font-black uppercase opacity-100 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Rank</span>
                                           <span className={`text-sm font-black ${darkMode ? "text-blue-300" : "text-blue-700"}`}>{entry.rank}</span>
                                        </div>
                                        <div className="flex flex-col items-end border-l border-white/10 pl-3">
-                                          <span className={`text-[8px] font-black uppercase opacity-40 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Points</span>
+                                          <span className={`text-[8px] font-black uppercase opacity-100 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Points</span>
                                           <span className={`px-2 py-0.5 rounded-md text-xs font-black ${darkMode ? "bg-green-500/20 text-green-300" : "bg-green-100 text-green-700"}`}>+{entry.points}</span>
                                        </div>
                                     </div>

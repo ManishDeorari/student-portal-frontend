@@ -37,23 +37,23 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
         <>
             <SectionCard title="Event Participation" hasData={hasData} isPublicView={isPublicView}>
                 <div className="flex flex-wrap gap-3 mb-5">
-                    <div className={`relative p-[1.5px] rounded-xl transition-all ${activeTab === "participated" ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/20' : 'bg-transparent border border-gray-300 dark:border-gray-700'}`}>
+                    <div className={`relative p-[1.5px] rounded-xl transition-all ${activeTab === "participated" ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-blue-500/20' : 'bg-transparent border-2 border-gray-400 dark:border-gray-500'}`}>
                         <button
                             onClick={() => setActiveTab("participated")}
                             className={`px-4 py-2 rounded-[calc(0.75rem-1.5px)] text-sm font-black transition-all h-full w-full ${activeTab === "participated"
                                     ? (darkMode ? "bg-[#1A1A1B] text-white" : "bg-white text-blue-600")
-                                    : (darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-black")
+                                    : (darkMode ? "text-gray-200 hover:text-white" : "text-gray-800 hover:text-black")
                                 }`}
                         >
                             Participated ({participatedEvents.length})
                         </button>
                     </div>
-                    <div className={`relative p-[1.5px] rounded-xl transition-all ${activeTab === "won" ? 'bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg shadow-amber-500/20' : 'bg-transparent border border-gray-300 dark:border-gray-700'}`}>
+                    <div className={`relative p-[1.5px] rounded-xl transition-all ${activeTab === "won" ? 'bg-gradient-to-r from-yellow-400 to-amber-500 shadow-lg shadow-amber-500/20' : 'bg-transparent border-2 border-gray-400 dark:border-gray-500'}`}>
                         <button
                             onClick={() => setActiveTab("won")}
                             className={`px-4 py-2 rounded-[calc(0.75rem-1.5px)] text-sm font-black transition-all h-full w-full flex items-center justify-center gap-1.5 ${activeTab === "won"
                                     ? (darkMode ? "bg-[#1A1A1B] text-white" : "bg-white text-amber-600")
-                                    : (darkMode ? "text-gray-400 hover:text-white" : "text-gray-600 hover:text-black")
+                                    : (darkMode ? "text-gray-200 hover:text-white" : "text-gray-800 hover:text-black")
                                 }`}
                         >
                             Won ({wonEvents.length})

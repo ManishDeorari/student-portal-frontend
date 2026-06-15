@@ -116,23 +116,23 @@ function EventsContent() {
 
                 {/* Tabs */}
                 <div className="flex flex-wrap gap-4 mb-8">
-                    <div className={`relative p-[2px] rounded-xl transition-all ${activeTab === "participated" ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-xl shadow-blue-500/20' : 'bg-transparent border border-gray-300 dark:border-gray-700'}`}>
+                    <div className={`relative p-[2px] rounded-xl transition-all ${activeTab === "participated" ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-xl shadow-blue-500/20' : 'bg-transparent border-2 border-gray-400 dark:border-gray-500'}`}>
                         <button
                             onClick={() => setActiveTab("participated")}
                             className={`px-5 py-2.5 rounded-[calc(0.75rem-2px)] text-base font-black transition-all h-full w-full ${activeTab === "participated"
                                 ? (darkMode ? "bg-slate-950 text-white" : "bg-white text-blue-600")
-                                : (darkMode ? "bg-transparent text-gray-400 hover:text-white" : "bg-transparent text-gray-600 hover:text-black")
+                                : (darkMode ? "bg-transparent text-gray-200 hover:text-white" : "bg-transparent text-gray-800 hover:text-black")
                                 }`}
                         >
                             Participated ({participatedEvents.length})
                         </button>
                     </div>
-                    <div className={`relative p-[2px] rounded-xl transition-all ${activeTab === "won" ? 'bg-gradient-to-r from-yellow-400 to-amber-500 shadow-xl shadow-amber-500/20' : 'bg-transparent border border-gray-300 dark:border-gray-700'}`}>
+                    <div className={`relative p-[2px] rounded-xl transition-all ${activeTab === "won" ? 'bg-gradient-to-r from-yellow-400 to-amber-500 shadow-xl shadow-amber-500/20' : 'bg-transparent border-2 border-gray-400 dark:border-gray-500'}`}>
                         <button
                             onClick={() => setActiveTab("won")}
                             className={`px-5 py-2.5 rounded-[calc(0.75rem-2px)] text-base font-black transition-all flex items-center justify-center gap-2 h-full w-full ${activeTab === "won"
                                 ? (darkMode ? "bg-slate-950 text-white" : "bg-white text-amber-600")
-                                : (darkMode ? "bg-transparent text-gray-400 hover:text-white" : "bg-transparent text-gray-600 hover:text-black")
+                                : (darkMode ? "bg-transparent text-gray-200 hover:text-white" : "bg-transparent text-gray-800 hover:text-black")
                                 }`}
                         >
                             Won Events ({wonEvents.length})
