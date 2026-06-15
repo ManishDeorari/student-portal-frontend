@@ -88,34 +88,33 @@ export default function WelcomeBanner({ user, darkMode }) {
               <div className={`mt-4 pt-4 border-t ${darkMode ? "border-white/10" : "border-black/5"} w-full`}>
                 <span className={`text-[10px] font-black uppercase tracking-widest mb-2 block ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Live Platform Pulse</span>
                 
-                <div className="grid grid-cols-4 gap-2 w-full">
-                  <div className={`relative overflow-hidden flex flex-col items-start p-2 sm:p-3 rounded-xl border shadow-sm ${darkMode ? "bg-gradient-to-br from-blue-500/20 to-transparent border-blue-500/30" : "bg-gradient-to-br from-blue-100 to-transparent border-blue-200"}`}>
-                    <span className={`text-[7px] sm:text-[9px] font-bold uppercase tracking-wider mb-0.5 flex items-center gap-1 w-full ${darkMode ? "text-blue-300" : "text-blue-600"}`}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shrink-0"></span>
-                      <span className="truncate">Active</span>
+                <div className="flex w-full gap-2 md:gap-3">
+                  <div className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl shadow-lg border-2 ${darkMode ? "border-blue-500 bg-blue-500/20 shadow-blue-500/20" : "border-blue-500 bg-blue-50 shadow-blue-500/30"}`}>
+                    <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-wider mb-0.5 truncate w-full text-center ${darkMode ? "text-blue-300" : "text-blue-600"}`}>
+                      Active
                     </span>
-                    <span className={`text-sm sm:text-lg font-black ${darkMode ? "text-white" : "text-black"}`}>{stats.adminStats.currentlyActive}</span>
+                    <span className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>{stats.adminStats.currentlyActive}</span>
                   </div>
 
-                  <div className={`relative overflow-hidden flex flex-col items-start p-2 sm:p-3 rounded-xl border shadow-sm ${darkMode ? "bg-gradient-to-br from-purple-500/20 to-transparent border-purple-500/30" : "bg-gradient-to-br from-purple-100 to-transparent border-purple-200"}`}>
-                    <span className={`text-[7px] sm:text-[9px] font-bold uppercase tracking-wider mb-0.5 truncate w-full ${darkMode ? "text-purple-300" : "text-purple-600"}`}>
-                      Logins Today
+                  <div className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl shadow-lg border-2 ${darkMode ? "border-purple-500 bg-purple-500/20 shadow-purple-500/20" : "border-purple-500 bg-purple-50 shadow-purple-500/30"}`}>
+                    <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-wider mb-0.5 truncate w-full text-center ${darkMode ? "text-purple-300" : "text-purple-600"}`}>
+                      Logins
                     </span>
-                    <span className={`text-sm sm:text-lg font-black ${darkMode ? "text-white" : "text-black"}`}>{stats.adminStats.loginsToday}</span>
+                    <span className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>{stats.adminStats.loginsToday}</span>
                   </div>
 
-                  <div className={`relative overflow-hidden flex flex-col items-start p-2 sm:p-3 rounded-xl border shadow-sm ${darkMode ? "bg-gradient-to-br from-pink-500/20 to-transparent border-pink-500/30" : "bg-gradient-to-br from-pink-100 to-transparent border-pink-200"}`}>
-                    <span className={`text-[7px] sm:text-[9px] font-bold uppercase tracking-wider mb-0.5 truncate w-full ${darkMode ? "text-pink-300" : "text-pink-600"}`}>
-                      Posts Today
+                  <div className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl shadow-lg border-2 ${darkMode ? "border-pink-500 bg-pink-500/20 shadow-pink-500/20" : "border-pink-500 bg-pink-50 shadow-pink-500/30"}`}>
+                    <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-wider mb-0.5 truncate w-full text-center ${darkMode ? "text-pink-300" : "text-pink-600"}`}>
+                      Posts
                     </span>
-                    <span className={`text-sm sm:text-lg font-black ${darkMode ? "text-white" : "text-black"}`}>{stats.adminStats.postsToday}</span>
+                    <span className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>{stats.adminStats.postsToday}</span>
                   </div>
 
-                  <div className={`relative overflow-hidden flex flex-col items-start p-2 sm:p-3 rounded-xl border shadow-sm ${darkMode ? "bg-gradient-to-br from-orange-500/20 to-transparent border-orange-500/30" : "bg-gradient-to-br from-orange-100 to-transparent border-orange-200"}`}>
-                    <span className={`text-[7px] sm:text-[9px] font-bold uppercase tracking-wider mb-0.5 truncate w-full ${darkMode ? "text-orange-300" : "text-orange-600"}`}>
-                      Pts Awarded
+                  <div className={`flex-1 flex flex-col items-center justify-center p-2 rounded-xl shadow-lg border-2 ${darkMode ? "border-orange-500 bg-orange-500/20 shadow-orange-500/20" : "border-orange-500 bg-orange-50 shadow-orange-500/30"}`}>
+                    <span className={`text-[8px] sm:text-[10px] font-black uppercase tracking-wider mb-0.5 truncate w-full text-center ${darkMode ? "text-orange-300" : "text-orange-600"}`}>
+                      Points
                     </span>
-                    <span className={`text-sm sm:text-lg font-black ${darkMode ? "text-white" : "text-black"}`}>+{stats.adminStats.pointsGivenToday}</span>
+                    <span className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>+{stats.adminStats.pointsGivenToday}</span>
                   </div>
                 </div>
               </div>
