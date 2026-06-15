@@ -102,8 +102,8 @@ export default function PostReactions({
           </button>
 
           {/* View Counter (center) */}
-          <div className={`font-black text-sm uppercase tracking-widest ${darkMode ? "text-slate-400" : "text-slate-500"} flex items-center gap-2`}>
-            <span className="text-lg opacity-80">👁️</span> {(post.viewedBy || []).length}
+          <div className={`font-black text-sm uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} flex items-center gap-2`}>
+            <span className="text-lg opacity-100">👁️</span> {(post.viewedBy || []).length}
           </div>
 
           {/* Comment Button (right, slightly left-pushed) */}

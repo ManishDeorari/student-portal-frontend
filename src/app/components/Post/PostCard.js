@@ -147,9 +147,9 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
       if (!token) return;
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/posts/${post._id}/tip`, {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}` 
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ amount })
       });
@@ -191,7 +191,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
 
   useEffect(() => {
     if (!postRef.current || !post._id || !currentUser?._id) return;
-    
+
     // Check if we already viewed it
     if (post.viewedBy && post.viewedBy.includes(currentUser._id)) return;
 
@@ -215,7 +215,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
         method: "POST",
         headers: { Authorization: `Bearer ${token}` }
       });
-    } catch(err) {}
+    } catch (err) { }
   };
 
   const handleLoadMore = () => {
@@ -326,14 +326,13 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   {post.eventRepostDetails?.originalEventId && (
                     <button
                       onClick={() => setShowOriginalEventModal(true)}
-                      className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${
-                        darkMode ? "bg-green-500/20 text-green-300 hover:bg-green-500/30" : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
-                      }`}
+                      className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${darkMode ? "bg-green-500/20 text-green-300 hover:bg-green-500/30" : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
+                        }`}
                     >
                       <span className="hidden sm:inline">View Original</span>
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
                     </button>
                   )}
@@ -413,10 +412,10 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                     <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Attached Documents</span>
                     <div className="flex flex-col gap-2">
                       {post.documents.map((doc, idx) => (
-                        <a 
-                          key={idx} 
-                          href={doc.url} 
-                          target="_blank" 
+                        <a
+                          key={idx}
+                          href={doc.url}
+                          target="_blank"
                           rel="noreferrer"
                           className={`flex items-center justify-between p-3 rounded-xl border transition-all hover:scale-[1.01] ${darkMode ? "bg-[#1A1A1B] border-white/10 hover:border-blue-500/50" : "bg-white border-gray-200 hover:border-blue-300"}`}
                         >
@@ -439,27 +438,27 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   <div className="flex items-center gap-4">
                     {(currentUser?.isAdmin || currentUser?.role === 'faculty' || post.user?._id === currentUser?._id) ? (
                       post.eventType !== "no_registration" && (
-                      <>
-                        <button
-                          onClick={() => setShowAdminModal(true)}
-                          className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
-                        >
-                          View Registrations
-                        </button>
-                        {post.showRegistrationInsights && (
-                          <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl border transition-all duration-300 ${darkMode ? "bg-blue-500/10 border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]" : "bg-blue-50 border-blue-100 shadow-sm"}`}>
-                            <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
-                              👥
+                        <>
+                          <button
+                            onClick={() => setShowAdminModal(true)}
+                            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
+                          >
+                            View Registrations
+                          </button>
+                          {post.showRegistrationInsights && (
+                            <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl border transition-all duration-300 ${darkMode ? "bg-blue-500/10 border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]" : "bg-blue-50 border-blue-100 shadow-sm"}`}>
+                              <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
+                                👥
+                              </div>
+                              <div className="flex flex-col">
+                                <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
+                                <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
+                                  Registered: <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.registrationCount || 0}</span>
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex flex-col">
-                              <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
-                              <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
-                                Registered: <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.registrationCount || 0}</span>
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                      </>
+                          )}
+                        </>
                       )
                     ) : (
                       currentUser?.role === 'student' && (
@@ -534,16 +533,15 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   {post.announcementDetails?.originalEventId && (
                     <button
                       onClick={() => setShowOriginalEventModal(true)}
-                    className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${
-                      darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
-                    }`}
-                  >
-                    <span className="hidden sm:inline">View Original</span>
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  </button>
+                      className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
+                        }`}
+                    >
+                      <span className="hidden sm:inline">View Original</span>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </button>
                   )}
                 </div>
               </div>
@@ -604,76 +602,76 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                           {(entry.type === 'group' ? entry.members : [entry]).map((member, midx) => (
                             <div key={midx} className={`p-3 flex items-center justify-between gap-3 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-blue-50/50"}`}>
                               <div className="flex items-center gap-4 flex-1 min-w-0">
-                                  <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 shadow-lg flex-shrink-0 relative">
-                                    {(() => {
-                                      const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
-                                      const isRestricted = !isAdmin;
-                                      return (
-                                        <>
-                                          <img
-                                            src={getOptimizedImageUrl(member.profilePicture || member.userId?.profilePicture || "/default-profile.jpg")}
-                                            alt={member.name}
-                                            className={`w-10 h-10 rounded-full object-cover border-2 border-white/10 ${isRestricted ? "select-none pointer-events-none" : ""}`}
-                                            onError={(e) => { e.target.src = "/default-profile.jpg"; }}
-                                            onContextMenu={(e) => { if (isRestricted) e.preventDefault(); }}
-                                            onDragStart={(e) => { if (isRestricted) e.preventDefault(); }}
+                                <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 shadow-lg flex-shrink-0 relative">
+                                  {(() => {
+                                    const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
+                                    const isRestricted = !isAdmin;
+                                    return (
+                                      <>
+                                        <img
+                                          src={getOptimizedImageUrl(member.profilePicture || member.userId?.profilePicture || "/default-profile.jpg")}
+                                          alt={member.name}
+                                          className={`w-10 h-10 rounded-full object-cover border-2 border-white/10 ${isRestricted ? "select-none pointer-events-none" : ""}`}
+                                          onError={(e) => { e.target.src = "/default-profile.jpg"; }}
+                                          onContextMenu={(e) => { if (isRestricted) e.preventDefault(); }}
+                                          onDragStart={(e) => { if (isRestricted) e.preventDefault(); }}
+                                        />
+                                        {isRestricted && (
+                                          <div
+                                            className="absolute inset-0 z-10 cursor-pointer rounded-full"
+                                            onContextMenu={(e) => e.preventDefault()}
                                           />
-                                          {isRestricted && (
-                                            <div 
-                                              className="absolute inset-0 z-10 cursor-pointer rounded-full"
-                                              onContextMenu={(e) => e.preventDefault()}
-                                            />
-                                          )}
-                                        </>
-                                      );
-                                    })()}
+                                        )}
+                                      </>
+                                    );
+                                  })()}
+                                </div>
+                                <div className="flex flex-col min-w-0 w-full mt-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    {member.userId?.publicId ? (
+                                      <Link href={`/profile/${member.userId.publicId}`} className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                        {member.name}
+                                      </Link>
+                                    ) : (
+                                      <span className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{member.name}</span>
+                                    )}
+                                    {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
                                   </div>
-                                  <div className="flex flex-col min-w-0 w-full mt-1">
-                                    <div className="flex items-center gap-2 mb-1">
-                                      {member.userId?.publicId ? (
-                                        <Link href={`/profile/${member.userId.publicId}`} className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}>
-                                          {member.name}
-                                        </Link>
-                                      ) : (
-                                        <span className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{member.name}</span>
-                                      )}
-                                      {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
+                                  <div className="flex flex-wrap items-center gap-3 text-left">
+                                    <div className="flex flex-col">
+                                      <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Enrollment No.</span>
+                                      <span className={`text-[10px] font-bold font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                        {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
+                                      </span>
                                     </div>
-                                    <div className="flex flex-wrap items-center gap-3 text-left">
-                                      <div className="flex flex-col">
-                                         <span className={`text-[8px] font-black uppercase tracking-widest opacity-40 ${darkMode ? "text-white" : "text-black"}`}>Enrollment No.</span>
-                                         <span className={`text-[10px] font-bold font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
-                                           {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
-                                         </span>
+                                    {(member.userId?.course || member.course) && (
+                                      <div className="flex flex-col border-l border-white/10 pl-3">
+                                        <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Course</span>
+                                        <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                          {member.userId?.course || member.course}
+                                        </span>
                                       </div>
-                                      {(member.userId?.course || member.course) && (
-                                        <div className="flex flex-col border-l border-white/10 pl-3">
-                                           <span className={`text-[8px] font-black uppercase tracking-widest opacity-40 ${darkMode ? "text-white" : "text-black"}`}>Course</span>
-                                           <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
-                                             {member.userId?.course || member.course}
-                                           </span>
-                                        </div>
-                                      )}
-                                      {(member.userId?.semester || member.semester) && (
-                                        <div className="flex flex-col border-l border-white/10 pl-3">
-                                           <span className={`text-[8px] font-black uppercase tracking-widest opacity-40 ${darkMode ? "text-white" : "text-black"}`}>Semester</span>
-                                           <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
-                                             {member.userId?.semester || member.semester}
-                                           </span>
-                                        </div>
-                                      )}
-                                    </div>
+                                    )}
+                                    {(member.userId?.semester || member.semester) && (
+                                      <div className="flex flex-col border-l border-white/10 pl-3">
+                                        <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Semester</span>
+                                        <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                          {member.userId?.semester || member.semester}
+                                        </span>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
+                              </div>
 
                               {entry.type === 'individual' && (
                                 <div className="flex items-center gap-3">
                                   <div className="flex flex-col items-end">
-                                    <span className={`text-[8px] font-black uppercase opacity-40 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Rank</span>
+                                    <span className={`text-[8px] font-black uppercase opacity-100 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Rank</span>
                                     <span className={`text-sm font-black ${darkMode ? "text-blue-300" : "text-blue-700"}`}>{entry.rank}</span>
                                   </div>
                                   <div className="flex flex-col items-end border-l border-white/10 pl-3">
-                                    <span className={`text-[8px] font-black uppercase opacity-40 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Points</span>
+                                    <span className={`text-[8px] font-black uppercase opacity-100 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Points</span>
                                     <span className={`px-2 py-0.5 rounded-md text-xs font-black ${darkMode ? "bg-green-500/20 text-green-300" : "bg-green-100 text-green-700"}`}>+{entry.points}</span>
                                   </div>
                                 </div>
@@ -714,7 +712,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             }}
             darkMode={darkMode}
           />
-          
+
           {!hideActions && (
             <>
               {/* Gradient Separator before Reactions */}
@@ -879,7 +877,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           )}
 
           {post.eventType !== "no_registration" && (
-            <EventRegistrationModal 
+            <EventRegistrationModal
               isOpen={showRegistrationModal}
               onClose={() => setShowRegistrationModal(false)}
               event={post}
@@ -898,7 +896,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           )}
 
           {post.eventType === "no_registration" && (
-            <CreateEventRepostModal 
+            <CreateEventRepostModal
               isOpen={showRepostModal}
               onClose={() => setShowRepostModal(false)}
               event={post}
