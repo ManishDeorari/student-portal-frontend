@@ -14,6 +14,7 @@ import TopEarnersWidget from "../components/dashboard/TopEarnersWidget";
 import { useTheme } from "@/context/ThemeContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { GooeyGradientBackground } from "../components/GooeyGradientBackground";
+import WelcomeBanner from "../components/dashboard/WelcomeBanner";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -225,26 +226,7 @@ export default function DashboardPage() {
 
           {/* Center Column: Feed */}
           <div className="flex-1 lg:flex-none w-full lg:w-[calc(50vw-3rem)] space-y-4 sm:space-y-8 order-1 lg:order-2 mx-auto">
-            <div className="p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl md:rounded-[2.5rem] shadow-xl overflow-hidden">
-              <section className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} p-3 sm:p-4 md:p-6 rounded-[calc(1.875rem-2.5px)] md:rounded-[calc(2.5rem-2.5px)] relative overflow-hidden group transition-colors duration-500`}>
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6">
-                  <div className="p-[2px] bg-gradient-to-tr from-blue-500 to-purple-500 rounded-xl sm:rounded-2xl md:rounded-3xl shadow-lg">
-                    <div className={`w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-[calc(0.75rem-2px)] sm:rounded-[calc(1rem-2px)] md:rounded-[calc(1.5rem-2px)] ${darkMode ? "bg-black" : "bg-white"} flex items-center justify-center group-hover:scale-110 transition-transform duration-500`}>
-                      <span className="text-2xl sm:text-3xl md:text-4xl text-white">👋</span>
-                    </div>
-                  </div>
-                  <div className="text-center sm:text-left">
-                    <h2 className={`text-xl sm:text-2xl md:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight mb-0.5 sm:mb-1`}>
-                      Welcome back, {user?.name || "Student"}!
-                    </h2>
-                    <div className="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-4 mt-2">
-                      <span className={`text-[9px] md:text-[10px] ${darkMode ? "bg-white/10 text-white" : "bg-gray-200 text-black"} px-2 md:px-3 py-1 rounded-full font-black uppercase tracking-widest border border-white/10`}>{user?.enrollmentNumber || "N/A"}</span>
-                      <span className={`text-[9px] md:text-[10px] ${darkMode ? "bg-blue-500 text-white" : "bg-blue-600 text-white"} px-2 md:px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-md`}>{user?.role || "Member"}</span>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </div>
+            <WelcomeBanner user={user} darkMode={darkMode} />
 
             {(user?.role?.toLowerCase() === "admin" || user?.role?.toLowerCase() === "faculty" || user?.isAdmin) && (
               <CreatePost setPosts={setPosts} currentUser={user} darkMode={darkMode} />
