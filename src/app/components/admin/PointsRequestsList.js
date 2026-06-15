@@ -88,7 +88,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                 <span className={`text-[9px] font-bold uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{post.user?.enrollmentNumber || "N/A"}</span>
               </div>
             </div>
-            <span className={`text-[9px] font-bold opacity-40 uppercase`}>
+            <span className={`text-[9px] font-bold opacity-100 uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
               {new Date(post.createdAt).toLocaleDateString()}
             </span>
           </div>
@@ -147,8 +147,8 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                           }}
                           className={`flex items-center justify-center w-7 h-7 rounded-full border transition-all active:scale-95 group/eye2 ${
                             darkMode 
-                              ? "border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-green-500/50 hover:bg-green-500/10" 
-                              : "border-gray-200 bg-white text-gray-400 hover:text-green-600 hover:border-green-400 font-bold"
+                              ? "border-gray-400 bg-white/5 text-gray-400 hover:text-white hover:border-green-500 hover:bg-green-500/10" 
+                              : "border-gray-400 bg-white text-gray-500 hover:text-green-600 hover:border-green-500 font-bold"
                           }`}
                           title="View Original Event"
                         >
@@ -193,8 +193,8 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                               }}
                               className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full border transition-all active:scale-95 group/eye2 ${
                                 darkMode 
-                                  ? "border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-blue-500/50 hover:bg-blue-500/10" 
-                                  : "border-gray-200 bg-white text-gray-400 hover:text-blue-600 hover:border-blue-400 font-bold"
+                                  ? "border-gray-400 bg-white/5 text-gray-400 hover:text-white hover:border-blue-500 hover:bg-blue-500/10" 
+                                  : "border-gray-400 bg-white text-gray-500 hover:text-blue-600 hover:border-blue-500 font-bold"
                               }`}
                               title="View Original Event"
                             >
@@ -234,8 +234,8 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                                 {w.isGroup && <span className="ml-1 opacity-50 text-[9px]">(Group)</span>}
                               </span>
                               <div className="flex items-center gap-2">
-                                <span className={`text-[9px] font-bold opacity-60 font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
-                                  {w.uniqueId || (w.isGroup && "Group IDs") || "ID Undefined"}
+                                <span className={`text-[9px] font-bold opacity-100 font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                  {w.userId?.enrollmentNumber || w.enrollmentNumber || w.uniqueId || (w.isGroup && "Group IDs") || "N/A"}
                                 </span>
                                 <span className={`text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"}`}>
                                   Rank {w.rank}
@@ -268,8 +268,8 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
               onClick={() => handleAction(post._id, "reject")}
               className={`flex-1 lg:flex-none px-4 sm:px-6 py-2.5 sm:py-3 border rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm ${
                 darkMode 
-                  ? "border-red-500/30 text-red-400 hover:bg-red-500/10" 
-                  : "border-red-100 text-red-600 hover:bg-red-50 shadow-red-100/20"
+                  ? "border-red-500 text-red-400 hover:bg-red-500/10" 
+                  : "border-red-500 text-red-600 hover:bg-red-50 shadow-red-100/20"
               }`}
             >
               Reject
@@ -281,8 +281,8 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
               }}
               className={`flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl border transition-all active:scale-95 group/eye ${
                 darkMode 
-                  ? "border-white/10 bg-white/5 text-gray-400 hover:text-white hover:border-blue-500/50 hover:bg-blue-500/10" 
-                  : "border-gray-200 bg-white text-gray-400 hover:text-blue-600 hover:border-blue-400 font-bold"
+                  ? "border-gray-400 bg-white/5 text-gray-400 hover:text-white hover:border-blue-500 hover:bg-blue-500/10" 
+                  : "border-gray-400 bg-white text-gray-500 hover:text-blue-600 hover:border-blue-500 font-bold"
               }`}
               title="View Full Post"
             >

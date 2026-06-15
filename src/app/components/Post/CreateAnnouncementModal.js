@@ -507,16 +507,16 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
 
                                   {/* Row 2: Metadata Grid */}
                                   <div className="grid grid-cols-3 gap-2 w-full">
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/5 text-blue-400" : "bg-gray-50 border-gray-100 text-blue-600"}`}>
-                                      <span className="text-[9px] font-black uppercase opacity-60">ENR</span>
+                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
+                                      <span className="text-[9px] font-black uppercase opacity-100">ENR</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.enrollmentNumber || "-"}</span>
                                     </div>
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/5 text-blue-400" : "bg-gray-50 border-gray-100 text-blue-600"}`}>
-                                      <span className="text-[9px] font-black uppercase opacity-60">CRS</span>
+                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
+                                      <span className="text-[9px] font-black uppercase opacity-100">CRS</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.course || "-"}</span>
                                     </div>
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/5 text-blue-400" : "bg-gray-50 border-gray-100 text-blue-600"}`}>
-                                      <span className="text-[9px] font-black uppercase opacity-60">SEM</span>
+                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
+                                      <span className="text-[9px] font-black uppercase opacity-100">SEM</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.semester || "-"}</span>
                                     </div>
                                   </div>
