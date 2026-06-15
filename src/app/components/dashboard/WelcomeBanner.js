@@ -85,26 +85,38 @@ export default function WelcomeBanner({ user, darkMode }) {
 
             {/* Admin Dashboard Metrics (Only visible to Admin) */}
             {isAdmin && stats?.adminStats && (
-              <div className={`mt-2 pt-4 border-t ${darkMode ? "border-white/10" : "border-black/5"} w-full flex flex-wrap justify-center sm:justify-start gap-3 md:gap-4`}>
-                <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-black uppercase tracking-widest mr-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Live Pulse</span>
-                </div>
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/5"}`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                  <span className={`text-sm font-black ${darkMode ? "text-blue-400" : "text-blue-600"}`}>{stats.adminStats.currentlyActive}</span>
-                  <span className={`text-[9px] font-bold uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Active</span>
-                </div>
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/5"}`}>
-                  <span className={`text-sm font-black ${darkMode ? "text-purple-400" : "text-purple-600"}`}>{stats.adminStats.loginsToday}</span>
-                  <span className={`text-[9px] font-bold uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Logins</span>
-                </div>
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/5"}`}>
-                  <span className={`text-sm font-black ${darkMode ? "text-pink-400" : "text-pink-600"}`}>{stats.adminStats.postsToday}</span>
-                  <span className={`text-[9px] font-bold uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Posts</span>
-                </div>
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-black/5 border-black/5"}`}>
-                  <span className={`text-sm font-black ${darkMode ? "text-orange-400" : "text-orange-600"}`}>+{stats.adminStats.pointsGivenToday}</span>
-                  <span className={`text-[9px] font-bold uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Pts</span>
+              <div className={`mt-4 pt-4 border-t ${darkMode ? "border-white/10" : "border-black/5"} w-full`}>
+                <span className={`text-[10px] font-black uppercase tracking-widest mb-3 block ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Live Platform Pulse</span>
+                
+                <div className="flex flex-wrap gap-3 sm:gap-4">
+                  <div className={`flex flex-col justify-between p-3 rounded-2xl border min-w-[120px] ${darkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-black/5 border-black/5 hover:bg-black/10"} transition-colors`}>
+                    <span className={`text-[9px] font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                      Currently Active
+                    </span>
+                    <span className={`text-2xl font-black ${darkMode ? "text-blue-400" : "text-blue-600"}`}>{stats.adminStats.currentlyActive}</span>
+                  </div>
+
+                  <div className={`flex flex-col justify-between p-3 rounded-2xl border min-w-[120px] ${darkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-black/5 border-black/5 hover:bg-black/10"} transition-colors`}>
+                    <span className={`text-[9px] font-bold uppercase tracking-wider mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Logins Today
+                    </span>
+                    <span className={`text-2xl font-black ${darkMode ? "text-purple-400" : "text-purple-600"}`}>{stats.adminStats.loginsToday}</span>
+                  </div>
+
+                  <div className={`flex flex-col justify-between p-3 rounded-2xl border min-w-[120px] ${darkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-black/5 border-black/5 hover:bg-black/10"} transition-colors`}>
+                    <span className={`text-[9px] font-bold uppercase tracking-wider mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Posts Today
+                    </span>
+                    <span className={`text-2xl font-black ${darkMode ? "text-pink-400" : "text-pink-600"}`}>{stats.adminStats.postsToday}</span>
+                  </div>
+
+                  <div className={`flex flex-col justify-between p-3 rounded-2xl border min-w-[120px] ${darkMode ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-black/5 border-black/5 hover:bg-black/10"} transition-colors`}>
+                    <span className={`text-[9px] font-bold uppercase tracking-wider mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                      Points Awarded
+                    </span>
+                    <span className={`text-2xl font-black ${darkMode ? "text-orange-400" : "text-orange-600"}`}>+{stats.adminStats.pointsGivenToday}</span>
+                  </div>
                 </div>
               </div>
             )}
