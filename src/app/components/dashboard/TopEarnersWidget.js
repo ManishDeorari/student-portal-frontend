@@ -54,12 +54,11 @@ export default function TopEarnersWidget({ darkMode }) {
             return (
               <div key={user._id} className="p-[1.5px] bg-gradient-to-tr from-yellow-400 via-orange-500 to-red-500 rounded-[17px] shadow-sm hover:shadow-md transition-all group shrink-0 flex-none h-[60px]">
                 <div className={`flex items-center px-3 rounded-[15.5px] transition-all h-full ${darkMode ? 'bg-[#1a1a1c] hover:bg-[#222225]' : 'bg-white hover:bg-orange-50/50'}`}>
-                  <div className="relative shrink-0 mr-3">
+                  <div className="relative shrink-0 mr-3 w-10 h-10 min-w-[40px] min-h-[40px]">
                     <Image 
                       src={user.profilePicture || "/default-profile.jpg"} 
                       alt={user.name} 
-                      width={40} 
-                      height={40} 
+                      fill
                       className={`rounded-full object-cover border-2 ${index === 0 ? 'border-yellow-400' : index === 1 ? 'border-gray-300' : index === 2 ? 'border-amber-600' : 'border-transparent'}`}
                     />
                     {index === 0 && (
@@ -83,6 +82,14 @@ export default function TopEarnersWidget({ darkMode }) {
                       <span className={`text-[8px] font-black tracking-widest uppercase truncate ${darkMode ? tier.colorClassDark : tier.colorClassLight}`}>
                         {tier.name}
                       </span>
+                      {(user.course || user.semester) && (
+                        <>
+                          <span className={`text-[8px] font-black ${darkMode ? "text-gray-500" : "text-gray-400"}`}>•</span>
+                          <span className={`text-[8px] font-black tracking-widest uppercase truncate ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                            {user.course} {user.semester}
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
