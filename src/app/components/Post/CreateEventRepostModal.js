@@ -8,6 +8,7 @@ import PostLoadingScreen from "./utils/PostLoadingScreen";
 
 const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false, event, setPosts, isInline = false }) => {
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(undefined);
   const [content, setContent] = useState("");
   const [repostDetails, setRepostDetails] = useState({
     campus: "None",
@@ -75,6 +76,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
     setErrors([]);
 
     setLoading(true);
+    setUploadProgress(undefined);
     try {
       const repostData = {
         content,
@@ -95,7 +97,8 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
         video, 
         "EventRepost", 
         [], 
-        { images: "student/events/reposts", videos: "student/events/reposts" }
+        { images: "student/events/reposts", videos: "student/events/reposts" },
+        setUploadProgress
       );
 
       if (result.post) {
@@ -116,6 +119,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
       toast.error("❌ An error occurred.");
     } finally {
       setLoading(false);
+      setUploadProgress(undefined);
     }
   };
 
@@ -298,7 +302,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
           </form>
         </div>
       </div>
-      <PostLoadingScreen type="EventRepost" loading={loading} darkMode={darkMode} />
+      <PostLoadingScreen type="EventRepost" loading={loading} darkMode={darkMode} progress={uploadProgress} />
     </div>
   );
 

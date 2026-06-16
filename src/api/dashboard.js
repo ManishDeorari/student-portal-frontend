@@ -1,4 +1,23 @@
+import axios from "axios";
+
 const BASE = process.env.NEXT_PUBLIC_API_URL + "/api";
+
+const uploadToCloudinaryWithProgress = async (file, folder, uploadUrl, onProgress) => {
+  const data = new FormData();
+  data.append("file", file);
+  data.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+  data.append("folder", folder);
+
+  const response = await axios.post(uploadUrl, data, {
+    onUploadProgress: (progressEvent) => {
+      if (onProgress && progressEvent.total) {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        onProgress(percentCompleted);
+      }
+    },
+  });
+  return response.data;
+};
 
 // ================== FETCH POSTS ==================
 export const fetchPosts = async (page = 1, limit = 10, type = "Regular") => {
@@ -7,7 +26,7 @@ export const fetchPosts = async (page = 1, limit = 10, type = "Regular") => {
   return res.json();
 };
 
-export const createPost = async (contentOrData, image, video, type = "Regular", documents = [], customFolders = {}) => {
+export const createPost = async (contentOrData, image, video, type = "Regular", documents = [], customFolders = {}, onProgress = null) => {
   let imageObjects = [];
   let videoObject = null;
   let documentObjects = [];
@@ -26,25 +45,17 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
   if (image && image.length > 0) {
     console.group("📤 Uploading Images to Cloudinary");
     for (let img of image) {
-      const imageData = new FormData();
-      imageData.append("file", img);
-      imageData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      imageData.append("folder", customFolders.images || "student/images"); // Optional folder for better management
-
-      const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, {
-        method: "POST",
-        body: imageData,
-      });
-
-      const uploadJson = await uploadRes.json();
-      if (uploadRes.ok && uploadJson.secure_url && uploadJson.public_id) {
-        imageObjects.push({
-          url: uploadJson.secure_url,
-          public_id: uploadJson.public_id,
-        });
-        console.log("✅ Image uploaded:", uploadJson.secure_url);
-      } else {
-        console.error("❌ Image upload failed:", uploadJson);
+      try {
+        const uploadJson = await uploadToCloudinaryWithProgress(img, customFolders.images || "student/images", process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, null);
+        if (uploadJson.secure_url && uploadJson.public_id) {
+          imageObjects.push({
+            url: uploadJson.secure_url,
+            public_id: uploadJson.public_id,
+          });
+          console.log("✅ Image uploaded:", uploadJson.secure_url);
+        }
+      } catch (err) {
+        console.error("❌ Image upload failed:", err);
       }
     }
     console.groupEnd();
@@ -53,25 +64,17 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
   // ✅ Upload video
   if (video) {
     console.group("🎥 Uploading Video to Cloudinary");
-    const videoData = new FormData();
-    videoData.append("file", video);
-    videoData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-    videoData.append("folder", customFolders.videos || "student/videos");
-
-    const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, {
-      method: "POST",
-      body: videoData,
-    });
-
-    const uploadJson = await uploadRes.json();
-    if (uploadRes.ok && uploadJson.secure_url && uploadJson.public_id) {
-      videoObject = {
-        url: uploadJson.secure_url,
-        public_id: uploadJson.public_id,
-      };
-      console.log("✅ Video uploaded:", uploadJson.secure_url);
-    } else {
-      console.error("❌ Video upload failed:", uploadJson);
+    try {
+      const uploadJson = await uploadToCloudinaryWithProgress(video, customFolders.videos || "student/videos", process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, onProgress);
+      if (uploadJson.secure_url && uploadJson.public_id) {
+        videoObject = {
+          url: uploadJson.secure_url,
+          public_id: uploadJson.public_id,
+        };
+        console.log("✅ Video uploaded:", uploadJson.secure_url);
+      }
+    } catch (err) {
+      console.error("❌ Video upload failed:", err);
     }
     console.groupEnd();
   }
@@ -80,27 +83,19 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
   if (documents && documents.length > 0) {
     console.group("📄 Uploading Documents to Cloudinary");
     for (let doc of documents) {
-      const docData = new FormData();
-      docData.append("file", doc);
-      docData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      docData.append("folder", "student/documents");
-
-      const uploadRes = await fetch(RAW_UPLOAD_URL, {
-        method: "POST",
-        body: docData,
-      });
-
-      const uploadJson = await uploadRes.json();
-      if (uploadRes.ok && uploadJson.secure_url && uploadJson.public_id) {
-        documentObjects.push({
-          url: uploadJson.secure_url,
-          public_id: uploadJson.public_id,
-          original_filename: doc.name,
-          format: doc.name.split('.').pop(),
-        });
-        console.log("✅ Document uploaded:", uploadJson.secure_url);
-      } else {
-        console.error("❌ Document upload failed:", uploadJson);
+      try {
+        const uploadJson = await uploadToCloudinaryWithProgress(doc, "student/documents", RAW_UPLOAD_URL, !video ? onProgress : null);
+        if (uploadJson.secure_url && uploadJson.public_id) {
+          documentObjects.push({
+            url: uploadJson.secure_url,
+            public_id: uploadJson.public_id,
+            original_filename: doc.name,
+            format: doc.name.split('.').pop(),
+          });
+          console.log("✅ Document uploaded:", uploadJson.secure_url);
+        }
+      } catch (err) {
+        console.error("❌ Document upload failed:", err);
       }
     }
     console.groupEnd();
@@ -126,7 +121,7 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
 };
 
 // ================== ANNOUNCEMENTS ==================
-export const createAnnouncement = async (announcementData, images = [], video = null, documents = []) => {
+export const createAnnouncement = async (announcementData, images = [], video = null, documents = [], onProgress = null) => {
   let imageObjects = [];
   let videoObject = null;
   let documentObjects = [];
@@ -136,58 +131,44 @@ export const createAnnouncement = async (announcementData, images = [], video = 
   // 1. Upload Images
   if (images && images.length > 0) {
     for (let img of images) {
-      const imageData = new FormData();
-      imageData.append("file", img);
-      imageData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      imageData.append("folder", "student/announcements/images");
-
-      const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, {
-        method: "POST",
-        body: imageData,
-      });
-      const uploadJson = await uploadRes.json();
-      if (uploadRes.ok) {
-        imageObjects.push({ url: uploadJson.secure_url, public_id: uploadJson.public_id });
+      try {
+        const uploadJson = await uploadToCloudinaryWithProgress(img, "student/announcements/images", process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, null);
+        if (uploadJson.secure_url && uploadJson.public_id) {
+          imageObjects.push({ url: uploadJson.secure_url, public_id: uploadJson.public_id });
+        }
+      } catch (err) {
+        console.error("❌ Image upload failed:", err);
       }
     }
   }
 
   // 2. Upload Video
   if (video) {
-    const videoData = new FormData();
-    videoData.append("file", video);
-    videoData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-    videoData.append("folder", "student/announcements/videos");
-    const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, {
-      method: "POST",
-      body: videoData,
-    });
-    const uploadJson = await uploadRes.json();
-    if (uploadRes.ok) {
-      videoObject = { url: uploadJson.secure_url, public_id: uploadJson.public_id };
+    try {
+      const uploadJson = await uploadToCloudinaryWithProgress(video, "student/announcements/videos", process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, onProgress);
+      if (uploadJson.secure_url && uploadJson.public_id) {
+        videoObject = { url: uploadJson.secure_url, public_id: uploadJson.public_id };
+      }
+    } catch (err) {
+      console.error("❌ Video upload failed:", err);
     }
   }
 
   // 3. Upload Documents
   if (documents && documents.length > 0) {
     for (let doc of documents) {
-      const docData = new FormData();
-      docData.append("file", doc);
-      docData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      docData.append("folder", "student/announcements/documents");
-
-      const uploadRes = await fetch(RAW_UPLOAD_URL, {
-        method: "POST",
-        body: docData,
-      });
-      const uploadJson = await uploadRes.json();
-      if (uploadRes.ok && uploadJson.secure_url && uploadJson.public_id) {
-        documentObjects.push({
-          url: uploadJson.secure_url,
-          public_id: uploadJson.public_id,
-          original_filename: doc.name,
-          format: doc.name.split('.').pop(),
-        });
+      try {
+        const uploadJson = await uploadToCloudinaryWithProgress(doc, "student/announcements/documents", RAW_UPLOAD_URL, !video ? onProgress : null);
+        if (uploadJson.secure_url && uploadJson.public_id) {
+          documentObjects.push({
+            url: uploadJson.secure_url,
+            public_id: uploadJson.public_id,
+            original_filename: doc.name,
+            format: doc.name.split('.').pop(),
+          });
+        }
+      } catch (err) {
+        console.error("❌ Document upload failed:", err);
       }
     }
   }
@@ -387,69 +368,54 @@ export const editComment = async (postId, commentId, newText) => {
 };
 // ================== EVENTS & REGISTRATIONS ==================
 
-export const createEvent = async (eventData, images = [], video = null, documents = []) => {
+export const createEvent = async (eventData, images = [], video = null, documents = [], onProgress = null) => {
   let imageObjects = [];
   let videoObject = null;
   let documentObjects = [];
 
+  const RAW_UPLOAD_URL = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL?.replace('/image/upload', '/raw/upload') || "https://api.cloudinary.com/v1_1/djw8l0wxn/raw/upload";
+
   // 1. Upload Images
   if (images && images.length > 0) {
     for (let img of images) {
-      const imageData = new FormData();
-      imageData.append("file", img);
-      imageData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      imageData.append("folder", "student/events/images");
-
-      const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, {
-        method: "POST",
-        body: imageData,
-      });
-      const uploadJson = await uploadRes.json();
-      if (uploadRes.ok) {
-        imageObjects.push({ url: uploadJson.secure_url, public_id: uploadJson.public_id });
+      try {
+        const uploadJson = await uploadToCloudinaryWithProgress(img, "student/events/images", process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, null);
+        if (uploadJson.secure_url && uploadJson.public_id) {
+          imageObjects.push({ url: uploadJson.secure_url, public_id: uploadJson.public_id });
+        }
+      } catch (err) {
+        console.error("❌ Image upload failed:", err);
       }
     }
   }
 
   // 2. Upload Video
   if (video) {
-    const videoData = new FormData();
-    videoData.append("file", video);
-    videoData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-    videoData.append("folder", "student/events/videos");
-    const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, {
-      method: "POST",
-      body: videoData,
-    });
-    const uploadJson = await uploadRes.json();
-    if (uploadRes.ok) {
-      videoObject = { url: uploadJson.secure_url, public_id: uploadJson.public_id };
+    try {
+      const uploadJson = await uploadToCloudinaryWithProgress(video, "student/events/videos", process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, onProgress);
+      if (uploadJson.secure_url && uploadJson.public_id) {
+        videoObject = { url: uploadJson.secure_url, public_id: uploadJson.public_id };
+      }
+    } catch (err) {
+      console.error("❌ Video upload failed:", err);
     }
   }
 
   // 3. Upload Documents
   if (documents && documents.length > 0) {
     for (let doc of documents) {
-      const docData = new FormData();
-      docData.append("file", doc);
-      docData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-      docData.append("folder", "student/events/documents");
-
-      // For documents/raw files, we often use auto or raw. Let's use the standard image upload URL which usually works for raw if set up, or standard cloudinary endpoints.
-      // Usually NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL is just the base upload endpoint like .../image/upload
-      // To be safe we should upload as "raw" or "auto" resource type if it's a generic upload url.
-      const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL.replace("/image/", "/auto/"), {
-        method: "POST",
-        body: docData,
-      });
-      const uploadJson = await uploadRes.json();
-      if (uploadRes.ok) {
-        documentObjects.push({ 
-          url: uploadJson.secure_url, 
-          public_id: uploadJson.public_id,
-          original_filename: uploadJson.original_filename || doc.name,
-          format: uploadJson.format || doc.name.split('.').pop()
-        });
+      try {
+        const uploadJson = await uploadToCloudinaryWithProgress(doc, "student/events/documents", RAW_UPLOAD_URL, !video ? onProgress : null);
+        if (uploadJson.secure_url && uploadJson.public_id) {
+          documentObjects.push({ 
+            url: uploadJson.secure_url, 
+            public_id: uploadJson.public_id,
+            original_filename: uploadJson.original_filename || doc.name,
+            format: uploadJson.format || doc.name.split('.').pop()
+          });
+        }
+      } catch (err) {
+        console.error("❌ Document upload failed:", err);
       }
     }
   }

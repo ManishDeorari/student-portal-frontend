@@ -8,6 +8,7 @@ import PostLoadingScreen from "./utils/PostLoadingScreen";
 
 const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, setPosts, isInline = false }) => {
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(undefined);
   const [content, setContent] = useState("");
   const [sessionDetails, setSessionDetails] = useState({
     schoolOrCollege: "Graphic Era Hill University",
@@ -76,6 +77,7 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
     setErrors([]);
 
     setLoading(true);
+    setUploadProgress(undefined);
     try {
       // For Sessions, we set the type and request points for the owner
       const sessionData = {
@@ -86,7 +88,7 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
         pointsStatus: "pending"
       };
 
-      const result = await createPost(sessionData, images, video);
+      const result = await createPost(sessionData, images, video, "Session", [], {}, setUploadProgress);
 
       if (result.post) {
         toast.success("🎉 Session created! Awaiting admin approval for points.");
@@ -106,6 +108,7 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
       toast.error("❌ An error occurred.");
     } finally {
       setLoading(false);
+      setUploadProgress(undefined);
     }
   };
 
@@ -294,8 +297,10 @@ const CreateSessionModal = ({ isOpen, onClose, currentUser, darkMode = false, se
             </button>
           </form>
         </div>
-      </div>
-      <PostLoadingScreen type="Session" loading={loading} darkMode={darkMode} />
+       </div>
+      {!isInline && (
+        <PostLoadingScreen type="Session" loading={loading} darkMode={darkMode} progress={uploadProgress} />
+      )}
     </div>
   );
 

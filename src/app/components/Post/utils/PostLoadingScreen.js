@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Megaphone, Calendar, Users } from "lucide-react";
 
-const PostLoadingScreen = ({ type = "Regular", loading = false, darkMode = false }) => {
+const PostLoadingScreen = ({ type = "Regular", loading = false, darkMode = false, progress = undefined }) => {
   const [statusIndex, setStatusIndex] = useState(0);
 
   const statuses = {
@@ -89,15 +89,30 @@ const PostLoadingScreen = ({ type = "Regular", loading = false, darkMode = false
                 </div>
 
                 {/* Animated Progress Loader Bar */}
-                <div className={`w-full h-[3px] ${darkMode ? "bg-white/10" : "bg-gray-100"} rounded-full overflow-hidden`}>
-                  <motion.div
-                    animate={{ 
-                      x: ["-100%", "100%"] 
-                    }}
-                    transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-full h-full bg-gradient-to-r from-transparent via-blue-500 to-transparent"
-                  />
+                <div className={`w-full h-[3px] ${darkMode ? "bg-white/10" : "bg-gray-100"} rounded-full overflow-hidden mt-2 relative`}>
+                  {progress !== undefined ? (
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progress}%` }}
+                      transition={{ ease: "linear", duration: 0.2 }}
+                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"
+                    />
+                  ) : (
+                    <motion.div
+                      animate={{ x: ["-100%", "100%"] }}
+                      transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                      className="w-full h-full bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+                    />
+                  )}
                 </div>
+
+                {progress !== undefined && (
+                  <div className="flex flex-col items-center mt-[-10px]">
+                    <span className={`text-[10px] font-black ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                      {progress}%
+                    </span>
+                  </div>
+                )}
 
                 <div className="flex flex-col items-center opacity-40">
                   <span className={`${darkMode ? "text-white" : "text-gray-900"} text-[8px] font-black uppercase tracking-[0.5em]`}>SECURE UPLOAD</span>

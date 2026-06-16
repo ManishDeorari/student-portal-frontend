@@ -10,6 +10,7 @@ import PostLoadingScreen from "./utils/PostLoadingScreen";
 
 const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = false, setPosts, isInline = false }) => {
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(undefined);
   const [errors, setErrors] = useState([]);
   const [formData, setFormData] = useState({
     content: "",
@@ -178,6 +179,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
     }
 
     setLoading(true);
+    setUploadProgress(undefined);
     try {
       const winnersData = winners
         .filter(w => w.name.trim() !== "")
@@ -207,7 +209,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
         }
       };
 
-      const result = await createAnnouncement(announcementData, images, video, documents);
+      const result = await createAnnouncement(announcementData, images, video, documents, setUploadProgress);
 
       if (result.post) {
         toast.success("🎉 Announcement created successfully!");
@@ -229,6 +231,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
       toast.error("❌ An error occurred.");
     } finally {
       setLoading(false);
+      setUploadProgress(undefined);
     }
   };
 
@@ -593,9 +596,11 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
               {loading ? "Publishing Announcement..." : "Post Announcement Now"}
             </button>
           </form>
-        </div>
       </div>
-      <PostLoadingScreen type="Announcement" loading={loading} darkMode={darkMode} />
+      </div>
+      {!isInline && (
+        <PostLoadingScreen type="Announcement" loading={loading} darkMode={darkMode} progress={uploadProgress} />
+      )}
     </>
   );
 

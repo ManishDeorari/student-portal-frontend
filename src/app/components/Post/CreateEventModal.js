@@ -8,6 +8,7 @@ import PostLoadingScreen from "./utils/PostLoadingScreen";
 
 const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setPosts, isInline = false }) => {
   const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(undefined);
   const [errors, setErrors] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -143,6 +144,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
     setErrors([]);
 
     setLoading(true);
+    setUploadProgress(undefined);
     try {
       const eventData = {
         ...formData,
@@ -151,7 +153,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
         tags: formData.tags.split(",").map(t => t.trim()).filter(Boolean),
       };
 
-      const result = await createEvent(eventData, images, video, documents);
+      const result = await createEvent(eventData, images, video, documents, setUploadProgress);
 
       if (result.event) {
         toast.success("🎉 Event created successfully!");
@@ -166,6 +168,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
       toast.error("❌ An error occurred.");
     } finally {
       setLoading(false);
+      setUploadProgress(undefined);
     }
   };
 
@@ -466,8 +469,10 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
             {loading ? "Processing Fields..." : "Post Event Now"}
           </button>
         </form>
-      </div>
-      <PostLoadingScreen type="Event" loading={loading} darkMode={darkMode} />
+       </div>
+      {!isInline && (
+        <PostLoadingScreen type="Event" loading={loading} darkMode={darkMode} progress={uploadProgress} />
+      )}
      </div>
   );
 

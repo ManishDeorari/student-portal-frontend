@@ -37,45 +37,27 @@ export const downloadFileSilently = async (url, originalName) => {
     const secureUrl = url.replace('http://', 'https://');
     const isCloudinary = secureUrl.includes("res.cloudinary.com");
     
-    let fetchUrl = secureUrl;
-    let headers = {};
+    let downloadUrl = secureUrl;
 
     if (isCloudinary) {
-      fetchUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/files/proxy?url=${encodeURIComponent(secureUrl)}&name=${encodeURIComponent(originalName || "document")}`;
+      downloadUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/files/proxy?url=${encodeURIComponent(secureUrl)}&name=${encodeURIComponent(originalName || "document")}`;
       const token = localStorage.getItem("token");
       if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
+        downloadUrl += `&token=${token}`;
       }
     }
     
-    // Fetch the file as a Blob
-    const response = await fetch(fetchUrl, { headers });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const blob = await response.blob();
-    
-    // Create a local object URL
-    const blobUrl = window.URL.createObjectURL(blob);
-    
-    // Trigger download
+    // Trigger download securely without exposing the Cloudinary URL.
+    // Since the backend sets Content-Disposition: attachment, it will download seamlessly.
     const a = document.createElement("a");
-    a.href = blobUrl;
+    a.href = downloadUrl;
     a.download = originalName || "download";
     document.body.appendChild(a);
     a.click();
-    
-    // Clean up
     document.body.removeChild(a);
-    window.URL.revokeObjectURL(blobUrl);
   } catch (error) {
-    console.error("Download failed, falling back to new tab:", error);
-    // Fallback: open in new tab if fetch fails due to CORS or other errors
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = originalName || "download";
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    console.error("Download failed:", error);
+    // Ultimate fallback if something completely breaks
+    window.open(url, "_blank");
   }
 };

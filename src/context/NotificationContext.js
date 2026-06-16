@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import socket from "@/utils/socket";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
-import { ShieldAlert, X, MessageSquare, UserPlus, Users, Bell, Award } from "lucide-react";
+import { ShieldAlert, X, MessageSquare, UserPlus, Users, Bell, Award, Eye } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 

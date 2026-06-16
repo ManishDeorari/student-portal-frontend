@@ -16,6 +16,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
   const [documents, setDocuments] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState(undefined);
   const [error, setError] = useState("");
   const [publishAt, setPublishAt] = useState("");
   const [selectedType, setSelectedType] = useState("Regular");
@@ -107,6 +108,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
 
     setLoading(true);
     setError("");
+    setUploadProgress(undefined);
 
     try {
       const postPayload = {
@@ -117,7 +119,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
         postPayload.publishAt = new Date(publishAt).toISOString();
       }
 
-      const result = await createPost(postPayload, images, video, selectedType, documents);
+      const result = await createPost(postPayload, images, video, selectedType, documents, {}, setUploadProgress);
 
       const newPost = result?.data || result?.post || (Array.isArray(result.posts) ? result.posts[0] : null);
 
@@ -128,6 +130,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
       setDocuments([]);
       setPublishAt("");
       setSelectedType("Regular");
+      setUploadProgress(undefined);
 
       if (newPost && setPosts) {
         localStorage.removeItem("postDraft");
@@ -401,7 +404,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
         </div>
       )}
 
-      <PostLoadingScreen type={selectedType} loading={loading} darkMode={darkMode} />
+      <PostLoadingScreen loading={loading} type={selectedType} darkMode={darkMode} progress={uploadProgress} />
       </div>
     </div>
   );
