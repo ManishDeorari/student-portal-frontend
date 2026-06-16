@@ -50,7 +50,7 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
   const handleRequestPoints = async (field) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/profile/points-request`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/points-request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
