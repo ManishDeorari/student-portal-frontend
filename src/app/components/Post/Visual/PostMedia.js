@@ -59,30 +59,16 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
 
       {/* Video */}
       {post.video?.url && (
-        <div className="relative mt-2">
-          <video
-            controls
-            onClick={(e) => e.stopPropagation()}
-            onContextMenu={(e) => isRestricted && e.preventDefault()}
-            className={`rounded-lg w-full max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} ${isRestricted ? 'select-none' : ''}`}
-            controlsList={isRestricted ? "nodownload" : ""}
-          >
-            <source src={post.video.url} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          {!isRestricted && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                downloadFileSilently(post.video.url, post.title ? `${post.title.replace(/[^a-zA-Z0-9]/g, '_')}_video.mp4` : "post_video.mp4");
-              }}
-              className={`absolute top-2 right-2 p-2 rounded-full backdrop-blur-md shadow-lg transition-all hover:scale-110 active:scale-95 z-10 ${darkMode ? "bg-black/50 text-white hover:bg-blue-600" : "bg-white/80 text-gray-800 hover:bg-blue-50 hover:text-blue-600"}`}
-              title="Download Video"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            </button>
-          )}
-        </div>
+        <video
+          controls
+          onClick={(e) => e.stopPropagation()}
+          onContextMenu={(e) => isRestricted && e.preventDefault()}
+          className={`rounded-lg w-full max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} mt-2 ${isRestricted ? 'select-none' : ''}`}
+          controlsList={isRestricted ? "nodownload" : ""}
+        >
+          <source src={post.video.url} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       )}
 
       {/* Documents */}

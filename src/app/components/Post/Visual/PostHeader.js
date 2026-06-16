@@ -89,7 +89,7 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
         <p className={`text-xs font-semibold ${darkMode ? "text-gray-400" : "text-gray-500"} mt-0.5 truncate`}>{new Date(post.createdAt).toLocaleString()}</p>
       </div>
       
-      {!hideActions && (
+      {!hideActions && (isAdmin || canEdit || canDelete) && (
         <div className="relative ml-auto" ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(prev => !prev)}
