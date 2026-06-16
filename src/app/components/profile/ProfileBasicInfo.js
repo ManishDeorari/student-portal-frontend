@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Copy, Edit, UserPlus, Check, Award } from "lucide-react";
+import { Copy, Pencil, UserPlus, Check, Award } from "lucide-react";
 import toast from "react-hot-toast";
 import ProfileAvatar from "./ProfileAvatar";
 import ProfileBanner from "./ProfileBanner";
@@ -173,7 +173,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                     className={`p-1.5 shadow-sm border rounded-full transition-all ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-[#FAFAFA] text-gray-900 border-gray-200 hover:bg-gray-50'}`}
                                     title="Edit Profile"
                                 >
-                                    <Edit className="w-5 h-5" />
+                                    <Pencil className="w-4 h-4" />
                                 </button>
                             )}
                         </div>

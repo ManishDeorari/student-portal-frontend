@@ -198,7 +198,11 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
                    <XCircle className="w-5 h-5"/>
                 </button>
              </div>
-             <iframe src={selectedPdf} className="w-full flex-1 border-0" title="Resume PDF" />
+             <iframe 
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(selectedPdf)}&embedded=true`} 
+                className="w-full flex-1 border-0 bg-white" 
+                title="Resume PDF" 
+             />
           </div>
         </div>
       )}
