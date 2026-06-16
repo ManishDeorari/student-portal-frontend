@@ -20,22 +20,13 @@ const CATEGORY_GROUPS = [
         id: "studentEngagement",
         label: "Student Engagement",
         icon: "🤝",
-        children: [
-            { id: "connections", label: "Networking" },
-            { id: "resumePoints", label: "Resume" },
-            { id: "githubPoints", label: "GitHub" },
-            { id: "portfolioPoints", label: "Portfolio" },
-        ]
+        description: "Earn points by uploading your Resume, GitHub, Portfolio, and connecting with peers."
     },
     {
         id: "contentContribution",
         label: "Content Contribution",
         icon: "📝",
-        children: [
-            { id: "posts", label: "Posts" },
-            { id: "likes", label: "Reactions" },
-            { id: "comments", label: "Comments" },
-        ]
+        description: "Earn points by creating informative posts, commenting, and reacting to discussions."
     },
     {
         id: "referrals",
@@ -56,11 +47,7 @@ const CATEGORY_GROUPS = [
         id: "studentParticipation",
         label: "Student Participation",
         icon: "🎓",
-        children: [
-            { id: "participationPoints", label: "Participation" },
-            { id: "repostingPoints", label: "Reposting" },
-            { id: "rankingPoints", label: "Ranking" },
-        ]
+        description: "Earn points by participating in events, reposting announcements, and ranking high in competitions."
     },
     {
         id: "other",
@@ -138,14 +125,14 @@ export default function PointsDistributionModal({ isOpen, onClose, user }) {
                                     >
                                         <div className={`rounded-[calc(1rem-2px)] flex flex-col w-full ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
                                             <div
-                                                onClick={() => group.children && toggleExpand(group.id)}
-                                                className={`flex items-center justify-between p-4 transition-all ${group.children ? 'cursor-pointer' : ''}`}
+                                                onClick={() => group.description && toggleExpand(group.id)}
+                                                className={`flex items-center justify-between p-4 transition-all ${group.description ? 'cursor-pointer' : ''}`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <span className="text-xl">{group.icon}</span>
                                                     <div className="flex flex-col">
                                                         <span className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{group.label}</span>
-                                                        {group.children && (
+                                                        {group.description && (
                                                             <span className={`text-[10px] font-bold uppercase tracking-tighter ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                                                                 {expanded[group.id] ? 'Click to hide details' : 'Click to expand details'}
                                                             </span>
@@ -156,32 +143,29 @@ export default function PointsDistributionModal({ isOpen, onClose, user }) {
                                                     <span className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                                                         {points[group.id] || 0}
                                                     </span>
-                                                    {group.children && (
+                                                    {group.description && (
                                                         expanded[group.id] ? <ChevronDown className={`w-4 h-4 ${darkMode ? 'text-white' : 'text-gray-900'}`} /> : <ChevronRight className={`w-4 h-4 ${darkMode ? 'text-white' : 'text-gray-900'}`} />
                                                     )}
                                                 </div>
                                             </div>
 
-                                            {/* Children */}
+                                            {/* Description */}
                                             <AnimatePresence>
-                                                {group.children && expanded[group.id] && (
+                                                {group.description && expanded[group.id] && (
                                                     <motion.div
                                                         initial={{ height: 0, opacity: 0 }}
                                                         animate={{ height: "auto", opacity: 1 }}
                                                         exit={{ height: 0, opacity: 0 }}
                                                         className="overflow-hidden pb-4"
                                                     >
-                                                        {group.children.map(child => (
-                                                            <div key={child.id} className="relative p-[2px] mx-4 mb-2 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
-                                                              <div className={`flex items-center justify-between py-2 px-4 rounded-[calc(0.5rem-2px)] ${darkMode ? 'bg-black' : 'bg-[#FAFAFA]'}`}>
-                                                                  <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{child.label}</span>
-                                                                  <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{points[child.id] || 0}</span>
-                                                              </div>
-                                                            </div>
-                                                        ))}
+                                                        <div className="relative p-[2px] mx-4 mb-2 rounded-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+                                                          <div className={`py-3 px-4 rounded-[calc(0.5rem-2px)] ${darkMode ? 'bg-black text-gray-300' : 'bg-[#FAFAFA] text-gray-700'}`}>
+                                                              <p className="text-sm italic">{group.description}</p>
+                                                          </div>
+                                                        </div>
                                                     </motion.div>
                                                 )}
-                                            </AnimatePresence>
+                                            </AnimatePresence>              </AnimatePresence>
                                         </div>
                                     </div>
                                 ))}
