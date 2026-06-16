@@ -227,11 +227,20 @@ export const NotificationProvider = ({ children }) => {
             "feedback",
             "admin_notice",
             "announcement",
-            "notice"
+            "notice",
+            "points_earned"
           ];
 
           if (!allowedToastTypes.includes(notification.type)) {
             return;
+          }
+
+          // Prevent popup spam for micro point earnings (likes, comments, etc)
+          if (notification.type === "points_earned") {
+            const msg = notification.message || "";
+            if (msg.includes("Like") || msg.includes("Comment") || msg.includes("Reply") || msg.includes("creating a post")) {
+              return;
+            }
           }
 
           // 🚀 UNIVERSAL PREMIUM TOAST

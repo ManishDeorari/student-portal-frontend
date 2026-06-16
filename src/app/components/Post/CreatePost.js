@@ -78,11 +78,17 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
 
   const handleDocumentChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length + documents.length > 5) {
+    
+    const validFiles = files.filter(f => f.size <= 20 * 1024 * 1024);
+    if (validFiles.length < files.length) {
+      toast.error("❌ Some documents exceed the 20MB limit.");
+    }
+    
+    if (validFiles.length + documents.length > 5) {
       toast.error("You can upload up to 5 documents.");
       return;
     }
-    setDocuments([...documents, ...files]);
+    setDocuments([...documents, ...validFiles]);
     setError("");
     e.target.value = "";
   };

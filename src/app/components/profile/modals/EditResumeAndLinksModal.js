@@ -11,6 +11,7 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
   const isInitialCloudinary = currentData?.resume?.includes("res.cloudinary.com") || !currentData?.resume;
   const [resumeInputType, setResumeInputType] = useState(isInitialCloudinary ? "file" : "link");
   const [resumeFile, setResumeFile] = useState(null);
+  const [isDeletedLocally, setIsDeletedLocally] = useState(false);
   const [formData, setFormData] = useState({
     resumeLink: !isInitialCloudinary ? (currentData?.resume || "") : "",
     github: currentData?.github || "",
@@ -27,9 +28,15 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type === "application/pdf") {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("❌ Resume size must be less than 5MB.");
+        e.target.value = "";
+        return;
+      }
       setResumeFile(file);
-    } else {
-      toast.error("Only PDF files are allowed.");
+    } else if (file) {
+      toast.error("❌ Only PDF files are allowed.");
+      e.target.value = "";
     }
   };
 
@@ -64,8 +71,8 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
       if (resumeInputType === "file") {
         if (resumeFile) {
           uploadedResumeUrl = await uploadResumeToCloudinary(resumeFile);
-        } else if (!isInitialCloudinary) {
-          uploadedResumeUrl = ""; // Switched to file but no file selected
+        } else if (isDeletedLocally || !isInitialCloudinary) {
+          uploadedResumeUrl = ""; // Switched to file but no file selected or deleted
         }
       } else {
         uploadedResumeUrl = formData.resumeLink;
@@ -76,6 +83,11 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
         github: formData.github,
         portfolio: formData.portfolio,
       };
+
+      // Ensure old file is deleted from Cloudinary if changed or removed
+      if (currentData?.resume?.includes("res.cloudinary.com") && uploadedResumeUrl !== currentData.resume) {
+        payload.oldImageUrl = currentData.resume;
+      }
 
       const token = localStorage.getItem("token");
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
@@ -172,10 +184,20 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
                     />
                   </div>
                 </div>
-                {isInitialCloudinary && currentData?.resume && !resumeFile && (
-                  <p className={`text-xs mt-2 italic ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                    Current file: <a href={currentData.resume} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">View Resume</a>
-                  </p>
+                {!isDeletedLocally && isInitialCloudinary && currentData?.resume && !resumeFile && (
+                  <div className={`mt-3 flex items-center justify-between p-2.5 rounded-xl border ${darkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
+                    <span className={`text-xs font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'} flex items-center gap-2`}>
+                      <FileText className="w-4 h-4 text-blue-500" />
+                      Current Uploaded File
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setIsDeletedLocally(true)}
+                      className="text-xs font-bold text-red-500 hover:text-red-600 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                    >
+                      <X className="w-3.5 h-3.5" /> Remove
+                    </button>
+                  </div>
                 )}
               </>
             ) : (

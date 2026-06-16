@@ -206,6 +206,9 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
           resume: profile.resume,
           github: profile.github,
           portfolio: profile.portfolio,
+          resumePointsStatus: profile.resumePointsStatus,
+          githubPointsStatus: profile.githubPointsStatus,
+          portfolioPointsStatus: profile.portfolioPointsStatus,
         }}
         onSave={handleSave}
       />

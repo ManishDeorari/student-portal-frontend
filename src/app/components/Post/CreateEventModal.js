@@ -100,11 +100,17 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
 
   const handleDocumentChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length + documents.length > 3) {
+    
+    const validFiles = files.filter(f => f.size <= 20 * 1024 * 1024);
+    if (validFiles.length < files.length) {
+      toast.error("❌ Some documents exceed the 20MB limit.");
+    }
+    
+    if (validFiles.length + documents.length > 3) {
       toast.error("You can upload up to 3 documents.");
       return;
     }
-    setDocuments([...documents, ...files]);
+    setDocuments([...documents, ...validFiles]);
   };
 
   const removeDocument = (index) => {
