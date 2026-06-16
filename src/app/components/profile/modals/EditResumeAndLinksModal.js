@@ -8,8 +8,11 @@ import toast from "react-hot-toast";
 export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, onSave }) {
   const { darkMode } = useTheme();
   
+  const isInitialCloudinary = currentData?.resume?.includes("res.cloudinary.com") || !currentData?.resume;
+  const [resumeInputType, setResumeInputType] = useState(isInitialCloudinary ? "file" : "link");
   const [resumeFile, setResumeFile] = useState(null);
   const [formData, setFormData] = useState({
+    resumeLink: !isInitialCloudinary ? (currentData?.resume || "") : "",
     github: currentData?.github || "",
     portfolio: currentData?.portfolio || "",
   });
@@ -58,8 +61,14 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
     try {
       let uploadedResumeUrl = currentData?.resume || "";
 
-      if (resumeFile) {
-        uploadedResumeUrl = await uploadResumeToCloudinary(resumeFile);
+      if (resumeInputType === "file") {
+        if (resumeFile) {
+          uploadedResumeUrl = await uploadResumeToCloudinary(resumeFile);
+        } else if (!isInitialCloudinary) {
+          uploadedResumeUrl = ""; // Switched to file but no file selected
+        }
+      } else {
+        uploadedResumeUrl = formData.resumeLink;
       }
 
       const payload = {
@@ -84,10 +93,10 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
       toast.success("Resume and Links updated!");
       onSave({
         ...payload,
-        // Resetting points status to 'none' if they updated the field
-        ...(uploadedResumeUrl !== currentData?.resume && { resumePointsStatus: "none" }),
-        ...(formData.github !== currentData?.github && { githubPointsStatus: "none" }),
-        ...(formData.portfolio !== currentData?.portfolio && { portfolioPointsStatus: "none" }),
+        // Resetting points status to 'none' if they updated the field AND it's not already approved
+        ...(uploadedResumeUrl !== currentData?.resume && currentData?.resumePointsStatus !== "approved" && { resumePointsStatus: "none" }),
+        ...(formData.github !== currentData?.github && currentData?.githubPointsStatus !== "approved" && { githubPointsStatus: "none" }),
+        ...(formData.portfolio !== currentData?.portfolio && currentData?.portfolioPointsStatus !== "approved" && { portfolioPointsStatus: "none" }),
       });
       onClose();
     } catch (error) {
@@ -127,25 +136,59 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           
-          {/* Resume Upload */}
+          {/* Resume Upload / Link */}
           <div>
-            <label className={`block text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-              <UploadCloud className="w-4 h-4" /> Resume (PDF only)
-            </label>
-            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
-              <div className={`flex items-center gap-3 p-2.5 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={handleFileChange}
-                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-                />
+            <div className="flex items-center justify-between mb-2">
+              <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                <UploadCloud className="w-4 h-4" /> Resume
+              </label>
+              <div className={`flex items-center gap-2 p-1 rounded-lg ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+                <button
+                  type="button"
+                  onClick={() => setResumeInputType("file")}
+                  className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all ${resumeInputType === "file" ? (darkMode ? 'bg-white/20 text-white' : 'bg-white text-gray-900 shadow-sm') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
+                >
+                  Upload PDF
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setResumeInputType("link")}
+                  className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all ${resumeInputType === "link" ? (darkMode ? 'bg-white/20 text-white' : 'bg-white text-gray-900 shadow-sm') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
+                >
+                  Drive Link
+                </button>
               </div>
             </div>
-            {currentData?.resume && !resumeFile && (
-              <p className={`text-xs mt-2 italic ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                Current file: <a href={currentData.resume} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">View Resume</a>
-              </p>
+
+            {resumeInputType === "file" ? (
+              <>
+                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                  <div className={`flex items-center gap-3 p-2.5 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      onChange={handleFileChange}
+                      className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                    />
+                  </div>
+                </div>
+                {isInitialCloudinary && currentData?.resume && !resumeFile && (
+                  <p className={`text-xs mt-2 italic ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Current file: <a href={currentData.resume} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">View Resume</a>
+                  </p>
+                )}
+              </>
+            ) : (
+              <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                <input
+                  type="url"
+                  name="resumeLink"
+                  value={formData.resumeLink}
+                  onChange={handleChange}
+                  placeholder="https://drive.google.com/..."
+                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                />
+              </div>
             )}
           </div>
 

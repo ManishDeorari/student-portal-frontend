@@ -6,37 +6,29 @@ import EditResumeAndLinksModal from "./modals/EditResumeAndLinksModal";
 import { FileText, Github, Globe, CheckCircle, Clock, XCircle, HandHeart } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import toast from "react-hot-toast";
+import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
 
 export default function ProfileResumeAndLinks({ profile, setProfile, isPublicView }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedPdf, setSelectedPdf] = useState(null);
   const [isPdfLoading, setIsPdfLoading] = useState(false);
   const { darkMode } = useTheme();
 
-  const handleViewPdf = async () => {
+  const handleDownloadPdf = async () => {
     if (!profile.resume) return;
+    
+    if (!profile.resume.includes("res.cloudinary.com")) {
+      window.open(profile.resume, "_blank");
+      return;
+    }
+
     setIsPdfLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${profile._id}/resume`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error("Failed to securely load PDF");
-      const blob = await res.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      setSelectedPdf(objectUrl);
+      await downloadFileSilently(profile.resume, `${profile.name}_Resume.pdf`);
     } catch (err) {
-      toast.error("Error loading secure PDF");
+      toast.error("Error downloading PDF");
       console.error(err);
     } finally {
       setIsPdfLoading(false);
-    }
-  };
-
-  const closePdfModal = () => {
-    if (selectedPdf) {
-      URL.revokeObjectURL(selectedPdf);
-      setSelectedPdf(null);
     }
   };
 
@@ -131,11 +123,11 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
                     <span className="font-bold text-sm tracking-widest uppercase">Resume</span>
                   </div>
                   <button
-                    onClick={handleViewPdf}
+                    onClick={handleDownloadPdf}
                     disabled={isPdfLoading}
                     className={`text-xs font-bold underline transition-colors text-left disabled:opacity-50 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
                   >
-                    {isPdfLoading ? "Loading Securely..." : "View PDF"}
+                    {isPdfLoading ? "Downloading..." : (!profile.resume.includes("res.cloudinary.com") ? "View Link" : "Download Resume")}
                   </button>
                 </div>
                 <div className="mt-4">
@@ -218,30 +210,6 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
         onSave={handleSave}
       />
 
-      {selectedPdf && (
-        <div className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
-          <div className={`relative w-full max-w-4xl h-[80vh] rounded-2xl overflow-hidden flex flex-col shadow-2xl ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
-             <div className="p-4 bg-gradient-to-r from-pink-500 to-rose-500 flex justify-between items-center text-white">
-                <h3 className="font-bold tracking-widest uppercase text-sm">Resume Viewer (Secure)</h3>
-                <button onClick={closePdfModal} className="hover:bg-white/20 p-1 rounded-full transition">
-                   <XCircle className="w-5 h-5"/>
-                </button>
-             </div>
-             <object 
-                data={selectedPdf} 
-                type="application/pdf" 
-                className="w-full flex-1 border-0 bg-white"
-             >
-                <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                   <p className="mb-4">Your browser's tracking prevention blocked the embedded viewer, or it doesn't support embedded PDFs.</p>
-                   <a href={selectedPdf} target="_blank" rel="noopener noreferrer" className="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700 transition">
-                      Click here to open PDF securely
-                   </a>
-                </div>
-             </object>
-          </div>
-        </div>
-      )}
     </>
   );
 }
