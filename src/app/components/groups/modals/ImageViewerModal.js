@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { FaTimes, FaDownload, FaSearchPlus, FaSearchMinus, FaExpandArrowsAlt } from "react-icons/fa";
-import { downloadFileSilently } from "../../../../utils/cloudinaryHelper";
+import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
 
 export default function ImageViewerModal({ isOpen, onClose, imageUrl }) {
     const [scale, setScale] = useState(1);

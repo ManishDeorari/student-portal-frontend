@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { FaTimes, FaDownload, FaTrash } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
-import { downloadFileSilently } from "../../../../utils/cloudinaryHelper";
+import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
 
 export default function GroupMediaModal({ 
     isOpen, 
