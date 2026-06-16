@@ -34,21 +34,8 @@ export const getOptimizedImageUrl = (url) => {
 export const downloadFileSilently = async (url, originalName) => {
   try {
     const secureUrl = url.replace('http://', 'https://');
-    const isCloudinary = secureUrl.includes("res.cloudinary.com");
     
-    if (isCloudinary) {
-      // Use Cloudinary's native attachment flag to force a download without a new tab
-      const directDownloadUrl = getCloudinaryDownloadUrl(secureUrl, originalName);
-      const a = document.createElement("a");
-      a.href = directDownloadUrl;
-      // We don't need target="_blank" because Cloudinary will return Content-Disposition: attachment
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      return;
-    }
-    
-    // Attempt to fetch the file directly on the client side for non-Cloudinary links
+    // Attempt to fetch the file directly on the client side
     const response = await fetch(secureUrl);
     if (!response.ok) {
       throw new Error(`Failed to fetch file: ${response.status}`);
