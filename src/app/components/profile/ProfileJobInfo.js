@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import SectionCard from "./SectionCard";
 import EditJobInfoModal from "./modals/EditJobInfoModal";
+import { downloadFileSilently } from "../../utils/cloudinaryHelper";
 
 export default function ProfileJobInfo({ profile, setProfile }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -67,13 +68,12 @@ export default function ProfileJobInfo({ profile, setProfile }) {
                 <p>
                     <strong>Resume:</strong>{" "}
                     {profile.jobPreferences?.resumeLink ? (
-                        <a
-                            href={profile.jobPreferences.resumeLink}
-                            className="text-blue-600 underline"
-                            target="_blank"
+                        <button
+                            onClick={() => downloadFileSilently(profile.jobPreferences.resumeLink, `${profile.name}_Resume.pdf`)}
+                            className="text-blue-600 underline cursor-pointer"
                         >
-                            View Resume
-                        </a>
+                            Download Resume
+                        </button>
                     ) : (
                         "No resume uploaded."
                     )}

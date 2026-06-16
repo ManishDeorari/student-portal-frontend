@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { fetchPendingPointsRequests, approvePointsRequest, fetchPendingProfilePointsRequests, approveProfilePointsRequest } from "../../../api/dashboard";
 import toast from "react-hot-toast";
 import PostModal from "../Post/Visual/PostModal";
+import { downloadFileSilently } from "../../utils/cloudinaryHelper";
 
 const PointsRequestsList = ({ darkMode = false, user }) => {
   const [requests, setRequests] = useState([]);
@@ -362,9 +363,18 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                                   <div className="flex flex-col gap-1">
                                     <span className="text-sm font-black capitalize tracking-widest">{field}</span>
                                     {user[field] && (
-                                      <a href={user[field]} target="_blank" rel="noopener noreferrer" className={`text-xs font-bold underline transition-all hover:opacity-80 ${darkMode ? "text-blue-400" : "text-blue-600"} truncate max-w-[250px]`}>
-                                        {field === "resume" ? "View Resume PDF" : user[field]}
-                                      </a>
+                                      field === "resume" ? (
+                                        <button 
+                                          onClick={() => downloadFileSilently(user[field], `${user.name}_Resume.pdf`)}
+                                          className={`text-xs font-bold underline text-left transition-all hover:opacity-80 ${darkMode ? "text-blue-400" : "text-blue-600"} truncate max-w-[250px]`}
+                                        >
+                                          Download Resume PDF
+                                        </button>
+                                      ) : (
+                                        <a href={user[field]} target="_blank" rel="noopener noreferrer" className={`text-xs font-bold underline transition-all hover:opacity-80 ${darkMode ? "text-blue-400" : "text-blue-600"} truncate max-w-[250px]`}>
+                                          {user[field]}
+                                        </a>
+                                      )
                                     )}
                                   </div>
                                   <div className="flex gap-2 w-full sm:w-auto">
