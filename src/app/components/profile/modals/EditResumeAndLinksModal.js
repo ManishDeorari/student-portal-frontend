@@ -103,13 +103,7 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
 
       const data = await res.json();
       toast.success("Resume and Links updated!");
-      onSave({
-        ...payload,
-        // Resetting points status to 'none' if they updated the field AND it's not already approved
-        ...(uploadedResumeUrl !== currentData?.resume && currentData?.resumePointsStatus !== "approved" && { resumePointsStatus: "none" }),
-        ...(formData.github !== currentData?.github && currentData?.githubPointsStatus !== "approved" && { githubPointsStatus: "none" }),
-        ...(formData.portfolio !== currentData?.portfolio && currentData?.portfolioPointsStatus !== "approved" && { portfolioPointsStatus: "none" }),
-      });
+      onSave(data);
       onClose();
     } catch (error) {
       console.error(error);
