@@ -6,7 +6,7 @@ import EditResumeAndLinksModal from "./modals/EditResumeAndLinksModal";
 import { FileText, Github, Globe, CheckCircle, Clock, XCircle, HandHeart } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import toast from "react-hot-toast";
-import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
+import { downloadFileSilently } from "../../utils/cloudinaryHelper";
 
 export default function ProfileResumeAndLinks({ profile, setProfile, isPublicView }) {
   const [isEditing, setIsEditing] = useState(false);
