@@ -59,26 +59,40 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
 
       {/* Video */}
       {post.video?.url && (
-        <video
-          controls
-          onClick={(e) => e.stopPropagation()}
-          onContextMenu={(e) => isRestricted && e.preventDefault()}
-          className={`rounded-lg w-full max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} mt-2 ${isRestricted ? 'select-none' : ''}`}
-        >
-          <source src={post.video.url} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div className="flex flex-col gap-2 mt-2">
+          <video
+            controls
+            onClick={(e) => e.stopPropagation()}
+            onContextMenu={(e) => isRestricted && e.preventDefault()}
+            className={`rounded-lg w-full max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} ${isRestricted ? 'select-none' : ''}`}
+            controlsList="nodownload"
+          >
+            <source src={post.video.url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              downloadFileSilently(post.video.url, post.title ? `${post.title.replace(/[^a-zA-Z0-9]/g, '_')}_video.mp4` : "post_video.mp4");
+            }}
+            className={`self-start flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${darkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-gray-800"}`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Download Video
+          </button>
+        </div>
       )}
 
       {/* Documents */}
       {post.documents?.length > 0 && (
         <div className="mt-4 grid grid-cols-1 gap-3">
           {post.documents.map((doc, index) => (
-            <div key={index} className={`p-[1.5px] rounded-2xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm transition-transform hover:scale-[1.02] group/doc cursor-pointer`}
-                 onClick={(e) => {
-                   e.stopPropagation();
-                   downloadFileSilently(doc.url, doc.original_filename);
-                 }}
+            <a key={index} 
+               href={doc.url}
+               target="_blank"
+               rel="noopener noreferrer"
+               className={`p-[1.5px] rounded-2xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm transition-transform hover:scale-[1.02] group/doc block`}
+               onClick={(e) => e.stopPropagation()}
             >
               <div className={`flex items-center justify-between p-4 rounded-[calc(1rem-1.5px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
                 <div className="flex items-center gap-4 overflow-hidden">

@@ -34,34 +34,24 @@ export const getOptimizedImageUrl = (url) => {
 export const downloadFileSilently = async (url, originalName) => {
   try {
     const secureUrl = url.replace('http://', 'https://');
+    const isCloudinary = secureUrl.includes("res.cloudinary.com");
     
-    // Attempt to fetch the file directly on the client side
-    const response = await fetch(secureUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch file: ${response.status}`);
+    // For Cloudinary files (like images/videos), we can force a native download using fl_attachment
+    if (isCloudinary) {
+      const directDownloadUrl = getCloudinaryDownloadUrl(secureUrl, originalName);
+      const a = document.createElement("a");
+      a.href = directDownloadUrl;
+      // Appending to body and clicking triggers the download natively
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      return;
     }
     
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    
-    const a = document.createElement("a");
-    a.href = blobUrl;
-    a.download = originalName || "document";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    
-    // Clean up
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    // For non-Cloudinary files, just open in a new tab and let the browser handle it
+    window.open(secureUrl, "_blank");
   } catch (error) {
     console.error("Silent download failed, falling back to new tab:", error);
-    // Fallback: open in new tab
-    const a = document.createElement("a");
-    a.href = url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    window.open(url, "_blank");
   }
 };
