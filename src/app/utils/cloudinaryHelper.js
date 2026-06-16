@@ -33,31 +33,48 @@ export const getOptimizedImageUrl = (url) => {
  */
 export const downloadFileSilently = async (url, originalName) => {
   try {
-    // If it's a Cloudinary URL, ensure it's HTTPS
     const secureUrl = url.replace('http://', 'https://');
     const isCloudinary = secureUrl.includes("res.cloudinary.com");
     
-    let downloadUrl = secureUrl;
-
     if (isCloudinary) {
-      downloadUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/files/proxy?url=${encodeURIComponent(secureUrl)}&name=${encodeURIComponent(originalName || "document")}`;
-      const token = localStorage.getItem("token");
-      if (token) {
-        downloadUrl += `&token=${token}`;
-      }
+      // Use Cloudinary's native attachment flag to force a download without a new tab
+      const directDownloadUrl = getCloudinaryDownloadUrl(secureUrl, originalName);
+      const a = document.createElement("a");
+      a.href = directDownloadUrl;
+      // We don't need target="_blank" because Cloudinary will return Content-Disposition: attachment
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      return;
     }
     
-    // Trigger download securely without exposing the Cloudinary URL.
-    // Since the backend sets Content-Disposition: attachment, it will download seamlessly.
+    // Attempt to fetch the file directly on the client side for non-Cloudinary links
+    const response = await fetch(secureUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch file: ${response.status}`);
+    }
+    
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    
     const a = document.createElement("a");
-    a.href = downloadUrl;
-    a.download = originalName || "download";
+    a.href = blobUrl;
+    a.download = originalName || "document";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    
+    // Clean up
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
   } catch (error) {
-    console.error("Download failed:", error);
-    // Ultimate fallback if something completely breaks
-    window.open(url, "_blank");
+    console.error("Silent download failed, falling back to new tab:", error);
+    // Fallback: open in new tab
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 };

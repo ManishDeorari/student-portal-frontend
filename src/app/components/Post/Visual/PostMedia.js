@@ -64,7 +64,6 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
           onClick={(e) => e.stopPropagation()}
           onContextMenu={(e) => isRestricted && e.preventDefault()}
           className={`rounded-lg w-full max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} mt-2 ${isRestricted ? 'select-none' : ''}`}
-          controlsList={isRestricted ? "nodownload" : ""}
         >
           <source src={post.video.url} type="video/mp4" />
           Your browser does not support the video tag.
