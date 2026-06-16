@@ -22,6 +22,9 @@ const CATEGORY_GROUPS = [
         icon: "🤝",
         children: [
             { id: "connections", label: "Networking" },
+            { id: "resumePoints", label: "Resume" },
+            { id: "githubPoints", label: "GitHub" },
+            { id: "portfolioPoints", label: "Portfolio" },
         ]
     },
     {
@@ -53,6 +56,11 @@ const CATEGORY_GROUPS = [
         id: "studentParticipation",
         label: "Student Participation",
         icon: "🎓",
+        children: [
+            { id: "participationPoints", label: "Participation" },
+            { id: "repostingPoints", label: "Reposting" },
+            { id: "rankingPoints", label: "Ranking" },
+        ]
     },
     {
         id: "other",
@@ -197,17 +205,7 @@ export default function PointsDistributionModal({ isOpen, onClose, user }) {
                             )}
                         </div>
 
-                        {/* Footer */}
-                        <div className={`p-4 border-t ${darkMode ? 'bg-[#121212] border-white/20' : 'bg-gray-50 border-gray-200'} text-center flex justify-center`}>
-                            <div className="relative p-[2px] rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 w-full sm:w-auto">
-                              <button
-                                  onClick={onClose}
-                                  className={`px-10 py-2.5 w-full h-full rounded-[calc(0.75rem-2px)] font-bold transition-all active:scale-95 ${darkMode ? 'bg-black hover:bg-black/80 text-white' : 'bg-white hover:bg-gray-50 text-slate-800'}`}
-                              >
-                                  Done
-                              </button>
-                            </div>
-                        </div>
+                        {/* Footer removed per user request */}
                         </div>
                     </motion.div>
                 </div>
