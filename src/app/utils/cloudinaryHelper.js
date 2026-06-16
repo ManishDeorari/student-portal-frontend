@@ -35,9 +35,21 @@ export const downloadFileSilently = async (url, originalName) => {
   try {
     // If it's a Cloudinary URL, ensure it's HTTPS
     const secureUrl = url.replace('http://', 'https://');
+    const isCloudinary = secureUrl.includes("res.cloudinary.com");
+    
+    let fetchUrl = secureUrl;
+    let headers = {};
+
+    if (isCloudinary) {
+      fetchUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/files/proxy?url=${encodeURIComponent(secureUrl)}&name=${encodeURIComponent(originalName || "document")}`;
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+    }
     
     // Fetch the file as a Blob
-    const response = await fetch(secureUrl);
+    const response = await fetch(fetchUrl, { headers });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const blob = await response.blob();
     

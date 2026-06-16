@@ -10,7 +10,35 @@ import toast from "react-hot-toast";
 export default function ProfileResumeAndLinks({ profile, setProfile, isPublicView }) {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedPdf, setSelectedPdf] = useState(null);
+  const [isPdfLoading, setIsPdfLoading] = useState(false);
   const { darkMode } = useTheme();
+
+  const handleViewPdf = async () => {
+    if (!profile.resume) return;
+    setIsPdfLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${profile._id}/resume`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error("Failed to securely load PDF");
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      setSelectedPdf(objectUrl);
+    } catch (err) {
+      toast.error("Error loading secure PDF");
+      console.error(err);
+    } finally {
+      setIsPdfLoading(false);
+    }
+  };
+
+  const closePdfModal = () => {
+    if (selectedPdf) {
+      URL.revokeObjectURL(selectedPdf);
+      setSelectedPdf(null);
+    }
+  };
 
   const handleSave = (updatedData) => {
     setProfile((prev) => ({
@@ -103,10 +131,11 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
                     <span className="font-bold text-sm tracking-widest uppercase">Resume</span>
                   </div>
                   <button
-                    onClick={() => setSelectedPdf(profile.resume)}
-                    className={`text-xs font-bold underline transition-colors text-left ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
+                    onClick={handleViewPdf}
+                    disabled={isPdfLoading}
+                    className={`text-xs font-bold underline transition-colors text-left disabled:opacity-50 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
                   >
-                    View PDF
+                    {isPdfLoading ? "Loading Securely..." : "View PDF"}
                   </button>
                 </div>
                 <div className="mt-4">
@@ -193,8 +222,8 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
         <div className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
           <div className={`relative w-full max-w-4xl h-[80vh] rounded-2xl overflow-hidden flex flex-col shadow-2xl ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
              <div className="p-4 bg-gradient-to-r from-pink-500 to-rose-500 flex justify-between items-center text-white">
-                <h3 className="font-bold tracking-widest uppercase text-sm">Resume Viewer</h3>
-                <button onClick={() => setSelectedPdf(null)} className="hover:bg-white/20 p-1 rounded-full transition">
+                <h3 className="font-bold tracking-widest uppercase text-sm">Resume Viewer (Secure)</h3>
+                <button onClick={closePdfModal} className="hover:bg-white/20 p-1 rounded-full transition">
                    <XCircle className="w-5 h-5"/>
                 </button>
              </div>
