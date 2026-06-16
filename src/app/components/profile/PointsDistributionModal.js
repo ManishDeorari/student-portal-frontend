@@ -165,7 +165,7 @@ export default function PointsDistributionModal({ isOpen, onClose, user }) {
                                                         </div>
                                                     </motion.div>
                                                 )}
-                                            </AnimatePresence>              </AnimatePresence>
+                                            </AnimatePresence>
                                         </div>
                                     </div>
                                 ))}
