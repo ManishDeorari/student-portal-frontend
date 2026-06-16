@@ -59,16 +59,30 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
 
       {/* Video */}
       {post.video?.url && (
-        <video
-          controls
-          onClick={(e) => e.stopPropagation()}
-          onContextMenu={(e) => isRestricted && e.preventDefault()}
-          className={`rounded-lg w-full max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} mt-2 ${isRestricted ? 'select-none' : ''}`}
-          controlsList={isRestricted ? "nodownload" : ""}
-        >
-          <source src={post.video.url} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div className="relative mt-2">
+          <video
+            controls
+            onClick={(e) => e.stopPropagation()}
+            onContextMenu={(e) => isRestricted && e.preventDefault()}
+            className={`rounded-lg w-full max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} ${isRestricted ? 'select-none' : ''}`}
+            controlsList="nodownload"
+          >
+            <source src={post.video.url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          {!isRestricted && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                downloadFileSilently(post.video.url, `${post.title || 'Video'}.mp4`);
+              }}
+              className="absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-all hover:scale-110 active:scale-95 shadow-md backdrop-blur-sm z-10"
+              title="Download Video"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            </button>
+          )}
+        </div>
       )}
 
       {/* Documents */}

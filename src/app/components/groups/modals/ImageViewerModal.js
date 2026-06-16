@@ -89,16 +89,7 @@ export default function ImageViewerModal({ isOpen, onClose, imageUrl }) {
                     >
                         <FaSearchMinus size={18} />
                     </button>
-                    <div className="w-[1px] h-8 bg-white/20 mx-2" />
-                    <a 
-                        href={imageUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="p-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl transition-all hover:scale-110 active:scale-95"
-                        title="Download Full Image"
-                    >
-                        <FaDownload size={18} />
-                    </a>
+
                     <button 
                         onClick={onClose} 
                         className="p-3 bg-red-500 hover:bg-red-600 text-white rounded-2xl transition-all hover:scale-110 active:scale-95 shadow-lg shadow-red-500/40"

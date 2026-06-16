@@ -7,7 +7,7 @@ import Link from "next/link";
 import PostHeader from "./Visual/PostHeader";
 import PostContent from "./Visual/PostContent";
 import PostMedia from "./Visual/PostMedia";
-import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
+import { getOptimizedImageUrl, downloadFileSilently } from "../../utils/cloudinaryHelper";
 import PostReactions from "./Visual/PostReactions";
 import dynamic from "next/dynamic";
 const PostModal = dynamic(() => import("./Visual/PostModal"), { ssr: false });
@@ -412,12 +412,10 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                     <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Attached Documents</span>
                     <div className="flex flex-col gap-2">
                       {post.documents.map((doc, idx) => (
-                        <a
+                        <div
                           key={idx}
-                          href={doc.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={`flex items-center justify-between p-3 rounded-xl border transition-all hover:scale-[1.01] ${darkMode ? "bg-[#1A1A1B] border-white/10 hover:border-blue-500/50" : "bg-white border-gray-200 hover:border-blue-300"}`}
+                          onClick={() => downloadFileSilently(doc.url, doc.original_filename)}
+                          className={`flex items-center justify-between p-3 rounded-xl border transition-all hover:scale-[1.01] cursor-pointer ${darkMode ? "bg-[#1A1A1B] border-white/10 hover:border-blue-500/50" : "bg-white border-gray-200 hover:border-blue-300"}`}
                         >
                           <div className="flex items-center gap-3 overflow-hidden">
                             <span className="text-xl shrink-0">📄</span>
@@ -428,7 +426,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                           <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shrink-0 ${darkMode ? "bg-white/10 text-gray-400" : "bg-gray-100 text-gray-600"}`}>
                             {doc.format || "FILE"}
                           </span>
-                        </a>
+                        </div>
                       ))}
                     </div>
                   </div>
