@@ -339,31 +339,33 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
               </div>
               <div className="grid grid-cols-1 gap-6">
                 {profileRequests.slice(0, profileLimit).map((user) => (
-                  <div key={user._id} className="group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] bg-gradient-to-r from-purple-500/50 to-pink-500/50">
+                  <div key={user._id} className="group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] bg-gradient-to-r from-purple-500 to-pink-500">
                     <div className={`p-3 sm:p-6 flex flex-col gap-4 rounded-[calc(2rem-2px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                       <div className="flex items-center gap-3">
-                        <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border" />
+                        <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border-2 border-purple-500" />
                         <div className="flex flex-col">
                           <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{user.name}</span>
-                          <span className={`text-[9px] font-bold uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{user.enrollmentNumber || "N/A"}</span>
+                          <span className={`text-[9px] font-bold uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                            {user.enrollmentNumber || "N/A"} • {user.course || "N/A"} • Sem {user.semester || "N/A"}
+                          </span>
                         </div>
                       </div>
                       <div className="space-y-3">
                         {["resume", "github", "portfolio"].map(field => {
                           if (user[`${field}PointsStatus`] === "pending") {
                             return (
-                              <div key={field} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/5">
-                                <div className="flex flex-col">
-                                  <span className="text-sm font-bold capitalize">{field}</span>
+                              <div key={field} className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border-2 ${darkMode ? "border-purple-500 bg-purple-500/10" : "border-purple-500 bg-purple-50"}`}>
+                                <div className="flex flex-col gap-1">
+                                  <span className="text-sm font-black capitalize tracking-widest">{field}</span>
                                   {user[field] && (
-                                    <a href={user[field]} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-xs hover:underline truncate max-w-[200px]">
+                                    <a href={user[field]} target="_blank" rel="noopener noreferrer" className={`text-xs font-bold underline transition-all hover:opacity-80 ${darkMode ? "text-blue-400" : "text-blue-600"} truncate max-w-[250px]`}>
                                       {field === "resume" ? "View Resume PDF" : user[field]}
                                     </a>
                                   )}
                                 </div>
-                                <div className="flex gap-2">
-                                  <button onClick={() => handleProfileAction(user._id, field, "approve")} className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-[10px] font-black uppercase shadow-lg active:scale-95">Approve (10 pt)</button>
-                                  <button onClick={() => handleProfileAction(user._id, field, "reject")} className={`px-4 py-2 border rounded-xl text-[10px] font-black uppercase active:scale-95 ${darkMode ? "border-red-500 text-red-400 hover:bg-red-500/10" : "border-red-500 text-red-600 hover:bg-red-50"}`}>Reject</button>
+                                <div className="flex gap-2 w-full sm:w-auto">
+                                  <button onClick={() => handleProfileAction(user._id, field, "approve")} className="flex-1 sm:flex-none px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md">Approve</button>
+                                  <button onClick={() => handleProfileAction(user._id, field, "reject")} className={`flex-1 sm:flex-none px-6 py-2.5 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-sm ${darkMode ? "border-red-500 text-red-500 hover:bg-red-500/10" : "border-red-500 text-red-600 hover:bg-red-50"}`}>Reject</button>
                                 </div>
                               </div>
                             );

@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 
 export default function ProfileResumeAndLinks({ profile, setProfile, isPublicView }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedPdf, setSelectedPdf] = useState(null);
   const { darkMode } = useTheme();
 
   const handleSave = (updatedData) => {
@@ -92,58 +93,87 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
           </p>
         )}
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {profile.resume ? (
-            <div>
-              <a
-                href={profile.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex items-center gap-2 p-3 rounded-xl border transition-all hover:shadow-md ${darkMode ? 'bg-slate-800/50 border-white/10 hover:bg-slate-800 text-blue-400 hover:text-blue-300' : 'bg-gray-50 border-gray-200 hover:bg-gray-100 text-blue-600 hover:text-blue-800'}`}
-              >
-                <FileText className="w-5 h-5" />
-                <span className="font-semibold">View Resume (PDF)</span>
-              </a>
-              {renderStatusAndAction("resume", profile.resume, profile.resumePointsStatus)}
+            <div className={`p-[2px] rounded-2xl bg-gradient-to-tr from-pink-500 to-rose-500 transition-all hover:scale-[1.02] shadow-sm`}>
+              <div className={`h-full flex flex-col justify-between p-4 rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <FileText className={`w-5 h-5 ${darkMode ? 'text-pink-400' : 'text-pink-500'}`} />
+                    <span className="font-bold text-sm tracking-widest uppercase">Resume</span>
+                  </div>
+                  <button
+                    onClick={() => setSelectedPdf(profile.resume)}
+                    className={`text-xs font-bold underline transition-colors text-left ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
+                  >
+                    View PDF
+                  </button>
+                </div>
+                <div className="mt-4">
+                  {renderStatusAndAction("resume", profile.resume, profile.resumePointsStatus)}
+                </div>
+              </div>
             </div>
           ) : (
-            <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>No resume uploaded yet.</p>
+             <div className={`p-4 rounded-2xl border-2 border-dashed flex items-center justify-center ${darkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
+                <p className={`text-xs font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>No Resume</p>
+             </div>
           )}
 
-          {profile.github && (
-            <div>
-              <a
-                href={profile.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex items-center gap-2 font-medium transition-colors ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'}`}
-              >
-                <Github className="w-5 h-5" />
-                {profile.github.replace(/^https?:\/\//, '')}
-              </a>
-              {renderStatusAndAction("github", profile.github, profile.githubPointsStatus)}
+          {profile.github ? (
+            <div className={`p-[2px] rounded-2xl bg-gradient-to-tr from-gray-600 to-slate-800 transition-all hover:scale-[1.02] shadow-sm`}>
+              <div className={`h-full flex flex-col justify-between p-4 rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <Github className={`w-5 h-5 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`} />
+                    <span className="font-bold text-sm tracking-widest uppercase">GitHub</span>
+                  </div>
+                  <a
+                    href={profile.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`text-xs font-bold underline truncate transition-colors ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
+                  >
+                    {profile.github.replace(/^https?:\/\//, '')}
+                  </a>
+                </div>
+                <div className="mt-4">
+                  {renderStatusAndAction("github", profile.github, profile.githubPointsStatus)}
+                </div>
+              </div>
             </div>
+          ) : (
+             <div className={`p-4 rounded-2xl border-2 border-dashed flex items-center justify-center ${darkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
+                <p className={`text-xs font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>No GitHub</p>
+             </div>
           )}
 
-          {profile.portfolio && (
-            <div>
-              <a
-                href={profile.portfolio}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`inline-flex items-center gap-2 font-medium transition-colors ${darkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-800'}`}
-              >
-                <Globe className="w-5 h-5" />
-                {profile.portfolio.replace(/^https?:\/\//, '')}
-              </a>
-              {renderStatusAndAction("portfolio", profile.portfolio, profile.portfolioPointsStatus)}
+          {profile.portfolio ? (
+            <div className={`p-[2px] rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 transition-all hover:scale-[1.02] shadow-sm`}>
+               <div className={`h-full flex flex-col justify-between p-4 rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <Globe className={`w-5 h-5 ${darkMode ? 'text-indigo-400' : 'text-indigo-500'}`} />
+                    <span className="font-bold text-sm tracking-widest uppercase">Portfolio</span>
+                  </div>
+                  <a
+                    href={profile.portfolio}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`text-xs font-bold underline truncate transition-colors ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
+                  >
+                    {profile.portfolio.replace(/^https?:\/\//, '')}
+                  </a>
+                </div>
+                <div className="mt-4">
+                  {renderStatusAndAction("portfolio", profile.portfolio, profile.portfolioPointsStatus)}
+                </div>
+              </div>
             </div>
-          )}
-
-          {!hasData && (
-            <p className={`font-medium ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-              No resume or portfolio details added yet.
-            </p>
+          ) : (
+             <div className={`p-4 rounded-2xl border-2 border-dashed flex items-center justify-center ${darkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
+                <p className={`text-xs font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>No Portfolio</p>
+             </div>
           )}
         </div>
       </SectionCard>
@@ -158,6 +188,20 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
         }}
         onSave={handleSave}
       />
+
+      {selectedPdf && (
+        <div className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center p-4">
+          <div className={`relative w-full max-w-4xl h-[80vh] rounded-2xl overflow-hidden flex flex-col shadow-2xl ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
+             <div className="p-4 bg-gradient-to-r from-pink-500 to-rose-500 flex justify-between items-center text-white">
+                <h3 className="font-bold tracking-widest uppercase text-sm">Resume Viewer</h3>
+                <button onClick={() => setSelectedPdf(null)} className="hover:bg-white/20 p-1 rounded-full transition">
+                   <XCircle className="w-5 h-5"/>
+                </button>
+             </div>
+             <iframe src={selectedPdf} className="w-full flex-1 border-0" title="Resume PDF" />
+          </div>
+        </div>
+      )}
     </>
   );
 }

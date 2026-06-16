@@ -100,7 +100,8 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className={`relative w-full max-w-lg overflow-hidden rounded-2xl shadow-2xl ${darkMode ? 'bg-[#1a1a1b] text-white' : 'bg-white text-gray-900'}`}>
+      <div className="relative p-[2px] bg-gradient-to-tr from-pink-500 via-purple-500 to-indigo-500 rounded-2xl shadow-2xl w-full max-w-lg">
+        <div className={`relative w-full h-full overflow-hidden rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#1a1a1b] text-white' : 'bg-white text-gray-900'}`}>
         
         {/* Header */}
         <div className={`p-4 flex items-center justify-between border-b ${darkMode ? 'border-white/10' : 'border-gray-100'}`}>
@@ -206,6 +207,7 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
