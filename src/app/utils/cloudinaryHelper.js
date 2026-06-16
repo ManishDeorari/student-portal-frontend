@@ -32,6 +32,19 @@ export const getOptimizedImageUrl = (url) => {
  * and hides the raw Cloudinary URL.
  */
 export const downloadFileSilently = async (url, originalName) => {
+  if (!url) return;
+  
+  if (!url.includes("res.cloudinary.com")) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    return;
+  }
+
   try {
     const secureUrl = url.replace('http://', 'https://');
     
