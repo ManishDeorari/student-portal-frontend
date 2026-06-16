@@ -87,12 +87,12 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
       {post.documents?.length > 0 && (
         <div className="mt-4 grid grid-cols-1 gap-3">
           {post.documents.map((doc, index) => (
-            <a key={index} 
-               href={doc.url}
-               target="_blank"
-               rel="noopener noreferrer"
-               className={`p-[1.5px] rounded-2xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm transition-transform hover:scale-[1.02] group/doc block`}
-               onClick={(e) => e.stopPropagation()}
+            <div key={index} 
+               className={`p-[1.5px] rounded-2xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm transition-transform hover:scale-[1.02] group/doc cursor-pointer`}
+               onClick={(e) => {
+                 e.stopPropagation();
+                 downloadFileSilently(doc.url, doc.name || doc.original_filename);
+               }}
             >
               <div className={`flex items-center justify-between p-4 rounded-[calc(1rem-1.5px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
                 <div className="flex items-center gap-4 overflow-hidden">
@@ -112,7 +112,7 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 </div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
       )}
