@@ -198,11 +198,18 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
                    <XCircle className="w-5 h-5"/>
                 </button>
              </div>
-             <iframe 
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(selectedPdf)}&embedded=true`} 
-                className="w-full flex-1 border-0 bg-white" 
-                title="Resume PDF" 
-             />
+             <object 
+                data={selectedPdf} 
+                type="application/pdf" 
+                className="w-full flex-1 border-0 bg-white"
+             >
+                <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+                   <p className="mb-4">Your browser's tracking prevention blocked the embedded viewer, or it doesn't support embedded PDFs.</p>
+                   <a href={selectedPdf} target="_blank" rel="noopener noreferrer" className="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold shadow-lg hover:bg-blue-700 transition">
+                      Click here to open PDF securely
+                   </a>
+                </div>
+             </object>
           </div>
         </div>
       )}

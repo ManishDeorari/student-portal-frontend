@@ -324,8 +324,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-3 duration-500">
       {/* 0. PROFILE FIELDS SECTION */}
-      {profileRequests.length > 0 && (
-        <div className="relative p-[2px] bg-gradient-to-tr from-purple-400 to-pink-400 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500">
+      <div className="relative p-[2px] bg-gradient-to-tr from-purple-400 to-pink-400 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500">
           <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-10 rounded-[calc(2.5rem-2px)] relative overflow-hidden group`}>
             <div className="space-y-6">
               <div className="flex items-center justify-between border-b pb-4 border-dashed border-gray-200 dark:border-white/10">
@@ -337,50 +336,55 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                   {profileRequests.reduce((acc, user) => acc + (user.resumePointsStatus === "pending" ? 1 : 0) + (user.githubPointsStatus === "pending" ? 1 : 0) + (user.portfolioPointsStatus === "pending" ? 1 : 0), 0)} Pending
                 </span>
               </div>
-              <div className="grid grid-cols-1 gap-6">
-                {profileRequests.slice(0, profileLimit).map((user) => (
-                  <div key={user._id} className="group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] bg-gradient-to-r from-purple-500 to-pink-500">
-                    <div className={`p-3 sm:p-6 flex flex-col gap-4 rounded-[calc(2rem-2px)] ${darkMode ? "bg-black" : "bg-white"}`}>
-                      <div className="flex items-center gap-3">
-                        <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border-2 border-purple-500" />
-                        <div className="flex flex-col">
-                          <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{user.name}</span>
-                          <span className={`text-[9px] font-bold uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                            {user.enrollmentNumber || "N/A"} • {user.course || "N/A"} • Sem {user.semester || "N/A"}
-                          </span>
+              {profileRequests.length === 0 ? (
+                <div className={`p-10 text-center rounded-[2.5rem] border-2 border-dashed ${darkMode ? "border-white/5 bg-white/5" : "border-gray-100 bg-gray-50/50"}`}>
+                  <p className={`text-sm font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>No pending profile requests! ✨</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-6">
+                  {profileRequests.slice(0, profileLimit).map((user) => (
+                    <div key={user._id} className="group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] bg-gradient-to-r from-purple-500 to-pink-500">
+                      <div className={`p-3 sm:p-6 flex flex-col gap-4 rounded-[calc(2rem-2px)] ${darkMode ? "bg-black" : "bg-white"}`}>
+                        <div className="flex items-center gap-3">
+                          <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border-2 border-purple-500" />
+                          <div className="flex flex-col">
+                            <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{user.name}</span>
+                            <span className={`text-[9px] font-bold uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                              {user.enrollmentNumber || "N/A"} • {user.course || "N/A"} • Sem {user.semester || "N/A"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          {["resume", "github", "portfolio"].map(field => {
+                            if (user[`${field}PointsStatus`] === "pending") {
+                              return (
+                                <div key={field} className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border-2 ${darkMode ? "border-purple-500 bg-purple-500/10" : "border-purple-500 bg-purple-50"}`}>
+                                  <div className="flex flex-col gap-1">
+                                    <span className="text-sm font-black capitalize tracking-widest">{field}</span>
+                                    {user[field] && (
+                                      <a href={user[field]} target="_blank" rel="noopener noreferrer" className={`text-xs font-bold underline transition-all hover:opacity-80 ${darkMode ? "text-blue-400" : "text-blue-600"} truncate max-w-[250px]`}>
+                                        {field === "resume" ? "View Resume PDF" : user[field]}
+                                      </a>
+                                    )}
+                                  </div>
+                                  <div className="flex gap-2 w-full sm:w-auto">
+                                    <button onClick={() => handleProfileAction(user._id, field, "approve")} className="flex-1 sm:flex-none px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md">Approve</button>
+                                    <button onClick={() => handleProfileAction(user._id, field, "reject")} className={`flex-1 sm:flex-none px-6 py-2.5 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-sm ${darkMode ? "border-red-500 text-red-500 hover:bg-red-500/10" : "border-red-500 text-red-600 hover:bg-red-50"}`}>Reject</button>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })}
                         </div>
                       </div>
-                      <div className="space-y-3">
-                        {["resume", "github", "portfolio"].map(field => {
-                          if (user[`${field}PointsStatus`] === "pending") {
-                            return (
-                              <div key={field} className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border-2 ${darkMode ? "border-purple-500 bg-purple-500/10" : "border-purple-500 bg-purple-50"}`}>
-                                <div className="flex flex-col gap-1">
-                                  <span className="text-sm font-black capitalize tracking-widest">{field}</span>
-                                  {user[field] && (
-                                    <a href={user[field]} target="_blank" rel="noopener noreferrer" className={`text-xs font-bold underline transition-all hover:opacity-80 ${darkMode ? "text-blue-400" : "text-blue-600"} truncate max-w-[250px]`}>
-                                      {field === "resume" ? "View Resume PDF" : user[field]}
-                                    </a>
-                                  )}
-                                </div>
-                                <div className="flex gap-2 w-full sm:w-auto">
-                                  <button onClick={() => handleProfileAction(user._id, field, "approve")} className="flex-1 sm:flex-none px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md">Approve</button>
-                                  <button onClick={() => handleProfileAction(user._id, field, "reject")} className={`flex-1 sm:flex-none px-6 py-2.5 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-sm ${darkMode ? "border-red-500 text-red-500 hover:bg-red-500/10" : "border-red-500 text-red-600 hover:bg-red-50"}`}>Reject</button>
-                                </div>
-                              </div>
-                            );
-                          }
-                          return null;
-                        })}
-                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         </div>
-      )}
 
       {/* 1. EVENTS SECTION */}
       <div className="relative p-[2px] bg-gradient-to-tr from-blue-400 to-purple-400 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500">
