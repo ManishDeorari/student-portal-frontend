@@ -8,8 +8,7 @@ import ProfileExperience from "../components/profile/ProfileExperience";
 import ProfileEducation from "../components/profile/ProfileEducation";
 import ProfileActivity from "../components/profile/ProfileActivity";
 import ProfileEventParticipation from "../components/profile/ProfileEventParticipation";
-import ProfileWorkProfile from "../components/profile/ProfileWorkProfile";
-import ProfileJobPreference from "../components/profile/ProfileJobPreference";
+import ProfileResumeAndLinks from "../components/profile/ProfileResumeAndLinks";
 import ProfileBasicInfo from "../components/profile/ProfileBasicInfo";
 
 import { useSearchParams, useRouter, useParams } from "next/navigation";
@@ -180,8 +179,7 @@ function ProfileContent() {
         {(profile.role === "student" || profile.role === "alumni") && (
           <ProfileEventParticipation profile={profile} isPublicView={isPublicView} />
         )}
-        <ProfileWorkProfile profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
-        <ProfileJobPreference profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
+        <ProfileResumeAndLinks profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
       </div>
     </GooeyGradientBackground>
   );

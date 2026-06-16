@@ -222,15 +222,39 @@ export const fetchPendingPointsRequests = async () => {
 export const approvePointsRequest = async (postId, action, awardedPoints = undefined) => {
   const payload = { action };
   if (awardedPoints !== undefined) payload.awardedPoints = awardedPoints;
-
+  const token = localStorage.getItem("token");
   const res = await fetch(`${BASE}/points-requests/${postId}/action`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ action, awardedPoints }),
   });
+  if (!res.ok) throw new Error("Failed to process request");
+  return res.json();
+};
+
+export const fetchPendingProfilePointsRequests = async () => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE}/points-requests/profile/pending`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error("Failed to fetch profile points requests");
+  return res.json();
+};
+
+export const approveProfilePointsRequest = async (userId, field, action) => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE}/points-requests/profile/${userId}/action`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ action, field }),
+  });
+  if (!res.ok) throw new Error("Failed to process request");
   return res.json();
 };
 

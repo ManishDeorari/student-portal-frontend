@@ -1,16 +1,19 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { fetchPendingPointsRequests, approvePointsRequest } from "../../../api/dashboard";
+import { fetchPendingPointsRequests, approvePointsRequest, fetchPendingProfilePointsRequests, approveProfilePointsRequest } from "../../../api/dashboard";
 import toast from "react-hot-toast";
 import PostModal from "../Post/Visual/PostModal";
 
 const PointsRequestsList = ({ darkMode = false, user }) => {
   const [requests, setRequests] = useState([]);
+  const [profileRequests, setProfileRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showPostModal, setShowPostModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [pointsOverrides, setPointsOverrides] = useState({});
   const [sessionPointsDefault, setSessionPointsDefault] = useState(30);
+
+  const [profileLimit, setProfileLimit] = useState(10);
 
   const [eventLimit, setEventLimit] = useState(10);
   const [sessionLimit, setSessionLimit] = useState(10);
@@ -22,8 +25,12 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
 
   const loadRequests = async () => {
     try {
-      const data = await fetchPendingPointsRequests();
+      const [data, profileData] = await Promise.all([
+        fetchPendingPointsRequests(),
+        fetchPendingProfilePointsRequests()
+      ]);
       setRequests(data);
+      setProfileRequests(profileData);
     } catch (err) {
       toast.error("Failed to load points requests");
     } finally {
@@ -54,6 +61,25 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
       }
     } catch (err) {
       toast.error("Process failed");
+    }
+  };
+
+  const handleProfileAction = async (userId, field, action) => {
+    try {
+      const res = await approveProfilePointsRequest(userId, field, action);
+      if (res.message) {
+        toast.success(res.message);
+        setProfileRequests(prev => {
+          return prev.map(user => {
+            if (user._id === userId) {
+              return { ...user, [`${field}PointsStatus`]: action === "approve" ? "approved" : "rejected" };
+            }
+            return user;
+          }).filter(user => user.resumePointsStatus === "pending" || user.githubPointsStatus === "pending" || user.portfolioPointsStatus === "pending");
+        });
+      }
+    } catch (err) {
+      toast.error("Profile point process failed");
     }
   };
 
@@ -297,6 +323,63 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-3 duration-500">
+      {/* 0. PROFILE FIELDS SECTION */}
+      {profileRequests.length > 0 && (
+        <div className="relative p-[2px] bg-gradient-to-tr from-purple-400 to-pink-400 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500">
+          <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-10 rounded-[calc(2.5rem-2px)] relative overflow-hidden group`}>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-b pb-4 border-dashed border-gray-200 dark:border-white/10">
+                <h3 className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-slate-900"} flex items-center gap-2 sm:gap-3`}>
+                  <span className="p-2 bg-purple-600/20 rounded-xl text-purple-400">📄</span>
+                  Profile Completion Points
+                </h3>
+                <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-purple-500/10 text-purple-500 border border-purple-500/20`}>
+                  {profileRequests.reduce((acc, user) => acc + (user.resumePointsStatus === "pending" ? 1 : 0) + (user.githubPointsStatus === "pending" ? 1 : 0) + (user.portfolioPointsStatus === "pending" ? 1 : 0), 0)} Pending
+                </span>
+              </div>
+              <div className="grid grid-cols-1 gap-6">
+                {profileRequests.slice(0, profileLimit).map((user) => (
+                  <div key={user._id} className="group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] bg-gradient-to-r from-purple-500/50 to-pink-500/50">
+                    <div className={`p-3 sm:p-6 flex flex-col gap-4 rounded-[calc(2rem-2px)] ${darkMode ? "bg-black" : "bg-white"}`}>
+                      <div className="flex items-center gap-3">
+                        <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border" />
+                        <div className="flex flex-col">
+                          <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{user.name}</span>
+                          <span className={`text-[9px] font-bold uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{user.enrollmentNumber || "N/A"}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        {["resume", "github", "portfolio"].map(field => {
+                          if (user[`${field}PointsStatus`] === "pending") {
+                            return (
+                              <div key={field} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/5">
+                                <div className="flex flex-col">
+                                  <span className="text-sm font-bold capitalize">{field}</span>
+                                  {user[field] && (
+                                    <a href={user[field]} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-xs hover:underline truncate max-w-[200px]">
+                                      {field === "resume" ? "View Resume PDF" : user[field]}
+                                    </a>
+                                  )}
+                                </div>
+                                <div className="flex gap-2">
+                                  <button onClick={() => handleProfileAction(user._id, field, "approve")} className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-[10px] font-black uppercase shadow-lg active:scale-95">Approve (10 pt)</button>
+                                  <button onClick={() => handleProfileAction(user._id, field, "reject")} className={`px-4 py-2 border rounded-xl text-[10px] font-black uppercase active:scale-95 ${darkMode ? "border-red-500 text-red-400 hover:bg-red-500/10" : "border-red-500 text-red-600 hover:bg-red-50"}`}>Reject</button>
+                                </div>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
+
       {/* 1. EVENTS SECTION */}
       <div className="relative p-[2px] bg-gradient-to-tr from-blue-400 to-purple-400 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500">
         <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-10 rounded-[calc(2.5rem-2px)] relative overflow-hidden group`}>
