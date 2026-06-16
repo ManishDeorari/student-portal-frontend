@@ -22,6 +22,8 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
         const missing = [];
         if (!profile.profilePicture || profile.profilePicture.includes("default-profile.jpg")) missing.push("Profile Picture");
         if (!profile.bannerImage || profile.bannerImage.includes("default_banner.jpg")) missing.push("Banner Image");
+        if (!profile.secondaryEmail || profile.secondaryEmail === "") missing.push("Secondary Email");
+        if (!profile.universityRollNumber || profile.universityRollNumber === "") missing.push("University Roll Number");
         if (!profile.phone || profile.phone === "Not provided" || profile.phone === "") missing.push("Phone Number");
         if (!profile.address || profile.address === "Not set" || profile.address === "") missing.push("Address");
         if (!profile.whatsapp || profile.whatsapp === "Not linked" || profile.whatsapp === "") missing.push("WhatsApp");
@@ -180,11 +182,11 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                             <span className={`font-bold uppercase tracking-widest text-[10px] px-2 py-0.5 rounded border italic ${darkMode ? 'text-blue-400 bg-blue-900/30 border-blue-900/50' : 'text-blue-600 bg-blue-50 border-blue-100'}`}>
                                 {profile.role || "Member"}
                             </span>
-                            {!(profile.isMainAdmin || profile.email === "manishdeorari377@gmail.com") && (
+                            {!(profile.isMainAdmin || profile.email === "manishdeorari377@gmail.com") && profile.role !== 'student' && profile.role !== 'alumni' && (
                                 <>
                                     <span className={`${darkMode ? 'text-gray-600' : 'text-gray-300'}`}>•</span>
                                     <span className={`font-bold uppercase tracking-widest text-[10px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        {profile.role === 'admin' || profile.role === 'faculty' ? (profile.employeeId || "N/A") : (profile.enrollmentNumber || "N/A")}
+                                        {profile.employeeId || "N/A"}
                                     </span>
                                 </>
                             )}
@@ -232,7 +234,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
 
                     {/* Contact row - 2 Rows with Gradient Borders */}
                     <div className="w-full mt-5 sm:mt-8 space-y-3 sm:space-y-4">
-                        {/* Level 1: Basics (Email & Address) */}
+                        {/* Level 1: Basics (Emails) */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="p-[2.5px] bg-gradient-to-tr from-blue-600/40 to-purple-600/40 rounded-2xl shadow-lg">
                                 <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
@@ -245,36 +247,65 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                     </div>
                                 </div>
                             </div>
-                            <div className="p-[2.5px] bg-gradient-to-tr from-orange-600/40 to-red-600/40 rounded-2xl shadow-lg">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-cyan-600/40 to-teal-600/40 rounded-2xl shadow-lg">
                                 <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
-                                    <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Resident Address</label>
-                                    <span className={`text-sm font-bold leading-tight ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>{profile.address || "Not set"}</span>
+                                    <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Secondary Email</label>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-sm font-bold truncate lowercase ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>{profile.secondaryEmail || "Not set"}</span>
+                                        {profile.secondaryEmail && (
+                                            <button onClick={() => copyToClipboard(profile.secondaryEmail, "secondaryEmail")} className="text-blue-300 hover:text-blue-600">
+                                                {copied === "secondaryEmail" ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         {/* New Level: Role Specific Info */}
                         {profile.role === 'student' ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div className="p-[2.5px] bg-gradient-to-tr from-pink-600/40 to-rose-600/40 rounded-2xl shadow-lg">
-                                    <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
-                                        <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Course</label>
-                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.course || "N/A"}</span>
+                            <>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-indigo-600/40 to-blue-600/40 rounded-2xl shadow-lg">
+                                        <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Enrollment Number</label>
+                                            <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.enrollmentNumber || "N/A"}</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-purple-600/40 to-fuchsia-600/40 rounded-2xl shadow-lg">
+                                        <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>University Roll Number</label>
+                                            <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.universityRollNumber || "Not set"}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="p-[2.5px] bg-gradient-to-tr from-cyan-600/40 to-blue-600/40 rounded-2xl shadow-lg">
-                                    <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
-                                        <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Semester</label>
-                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.semester || "N/A"}</span>
+                                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-pink-600/40 to-rose-600/40 rounded-2xl shadow-lg">
+                                        <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Course</label>
+                                            <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.course || "N/A"}</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-rose-500/40 to-orange-500/40 rounded-2xl shadow-lg">
+                                        <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Domain</label>
+                                            <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.domain || "N/A"}</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-cyan-600/40 to-blue-600/40 rounded-2xl shadow-lg">
+                                        <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Semester</label>
+                                            <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.semester || "N/A"}</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-amber-600/40 to-orange-600/40 rounded-2xl shadow-lg">
+                                        <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Section</label>
+                                            <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.section || "N/A"}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="p-[2.5px] bg-gradient-to-tr from-amber-600/40 to-orange-600/40 rounded-2xl shadow-lg">
-                                    <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
-                                        <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Section</label>
-                                        <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.section || "N/A"}</span>
-                                    </div>
-                                </div>
-                            </div>
+                            </>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="p-[2.5px] bg-gradient-to-tr from-violet-600/40 to-purple-600/40 rounded-2xl shadow-lg">
@@ -331,6 +362,14 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                         <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className={`font-black text-base hover:underline italic ${darkMode ? 'text-indigo-400' : 'text-indigo-500'}`}>Connect Now →</a>
                                     ) : <span className={`text-base font-bold italic ${darkMode ? 'text-gray-500' : 'text-gray-300'}`}>None</span>}
                                 </div>
+                            </div>
+                        </div>
+                        
+                        {/* Level 3: Address */}
+                        <div className="p-[2.5px] bg-gradient-to-tr from-orange-600/40 to-red-600/40 rounded-2xl shadow-lg w-full">
+                            <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
+                                <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Resident Address</label>
+                                <span className={`text-sm font-bold leading-tight ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>{profile.address || "Not set"}</span>
                             </div>
                         </div>
                     </div>
