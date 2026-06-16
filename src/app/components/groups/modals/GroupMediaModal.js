@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { FaTimes, FaDownload, FaTrash } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
+import { downloadFileSilently } from "../../../../utils/cloudinaryHelper";
 
 export default function GroupMediaModal({ 
     isOpen, 
@@ -57,16 +58,13 @@ export default function GroupMediaModal({
                                                 alt="Shared Group Media" 
                                             />
                                             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-4 backdrop-blur-[2px]">
-                                                <a 
-                                                    href={msg.mediaUrl} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer" 
-                                                    onClick={e => e.stopPropagation()} 
+                                                <button 
+                                                    onClick={(e) => { e.stopPropagation(); downloadFileSilently(msg.mediaUrl, "group_media.jpg"); }} 
                                                     className="p-4 bg-white text-black rounded-2xl hover:scale-110 transition-all shadow-2xl hover:bg-blue-500 hover:text-white"
-                                                    title="View Full Size"
+                                                    title="Download Image"
                                                 >
                                                     <FaDownload size={16} />
-                                                </a>
+                                                </button>
                                                 {isAdmin && (
                                                     <button 
                                                         onClick={(e) => { e.stopPropagation(); onDelete(msg._id); }}

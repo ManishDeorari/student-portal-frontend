@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { FaTimes, FaUsers, FaSearch, FaTrash, FaChevronRight, FaImage, FaDownload } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
+import { downloadFileSilently } from "../../utils/cloudinaryHelper";
 
 export default function GroupDetailsPanel({ 
     isOpen, 
@@ -181,9 +182,12 @@ export default function GroupDetailsPanel({
                                                                 <FaTrash size={10} />
                                                             </button>
                                                         )}
-                                                        <a href={msg.mediaUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="p-1.5 bg-[#FAFAFA] text-black rounded-lg hover:scale-110 transition-transform">
+                                                        <button 
+                                                            onClick={(e) => { e.stopPropagation(); downloadFileSilently(msg.mediaUrl, "group_media.jpg"); }} 
+                                                            className="p-1.5 bg-[#FAFAFA] text-black rounded-lg hover:scale-110 transition-transform"
+                                                        >
                                                             <FaDownload size={10} />
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             ))}

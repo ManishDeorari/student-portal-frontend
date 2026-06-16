@@ -414,7 +414,10 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                       {post.documents.map((doc, idx) => (
                         <div
                           key={idx}
-                          onClick={() => downloadFileSilently(doc.url, doc.original_filename)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            downloadFileSilently(doc.url, doc.original_filename);
+                          }}
                           className={`flex items-center justify-between p-3 rounded-xl border transition-all hover:scale-[1.01] cursor-pointer ${darkMode ? "bg-[#1A1A1B] border-white/10 hover:border-blue-500/50" : "bg-white border-gray-200 hover:border-blue-300"}`}
                         >
                           <div className="flex items-center gap-3 overflow-hidden">
@@ -423,9 +426,14 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                               {doc.original_filename || `Document ${idx + 1}`}
                             </span>
                           </div>
-                          <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shrink-0 ${darkMode ? "bg-white/10 text-gray-400" : "bg-gray-100 text-gray-600"}`}>
-                            {doc.format || "FILE"}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shrink-0 ${darkMode ? "bg-white/10 text-gray-400" : "bg-gray-100 text-gray-600"}`}>
+                              {doc.format || "FILE"}
+                            </span>
+                            <div className="w-6 h-6 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-500">
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>

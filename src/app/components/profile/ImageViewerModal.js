@@ -91,7 +91,16 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
         >
           <ZoomOut size={20} />
         </button>
-
+        <div className="w-[1px] h-8 bg-[#FAFAFA]/20 mx-1" />
+        {!isRestricted && (
+          <button
+            onClick={() => downloadFileSilently(imageUrl, "image_preview.jpg")}
+            className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all hover:scale-110 active:scale-95"
+            title="Download"
+          >
+            <Download size={20} />
+          </button>
+        )}
         <button
           onClick={onClose}
           className="bg-red-500/20 hover:bg-red-500/40 text-red-500 rounded-full p-3 transition-all"

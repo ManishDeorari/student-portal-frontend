@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { FaTimes, FaDownload, FaSearchPlus, FaSearchMinus, FaExpandArrowsAlt } from "react-icons/fa";
+import { downloadFileSilently } from "../../../../utils/cloudinaryHelper";
 
 export default function ImageViewerModal({ isOpen, onClose, imageUrl }) {
     const [scale, setScale] = useState(1);
@@ -89,7 +90,14 @@ export default function ImageViewerModal({ isOpen, onClose, imageUrl }) {
                     >
                         <FaSearchMinus size={18} />
                     </button>
-
+                    <div className="w-[1px] h-8 bg-white/20 mx-2" />
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); downloadFileSilently(imageUrl, "image_preview.jpg"); }} 
+                        className="p-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl transition-all hover:scale-110 active:scale-95"
+                        title="Download Full Image"
+                    >
+                        <FaDownload size={18} />
+                    </button>
                     <button 
                         onClick={onClose} 
                         className="p-3 bg-red-500 hover:bg-red-600 text-white rounded-2xl transition-all hover:scale-110 active:scale-95 shadow-lg shadow-red-500/40"
