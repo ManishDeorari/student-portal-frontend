@@ -228,9 +228,7 @@ export default function DashboardPage() {
           <div className="flex-1 lg:flex-none w-full lg:w-[calc(50vw-3rem)] space-y-4 sm:space-y-8 order-1 lg:order-2 mx-auto">
             <WelcomeBanner user={user} darkMode={darkMode} />
 
-            {(user?.role?.toLowerCase() === "admin" || user?.role?.toLowerCase() === "faculty" || user?.isAdmin) && (
-              <CreatePost setPosts={setPosts} currentUser={user} darkMode={darkMode} />
-            )}
+            <CreatePost setPosts={setPosts} currentUser={user} darkMode={darkMode} />
 
             <div className="p-[1.5px] rounded-[2.5rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl w-full mx-auto max-w-full">
               <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-2 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
