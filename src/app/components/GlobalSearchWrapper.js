@@ -43,14 +43,7 @@ export default function GlobalSearchWrapper() {
 
   return (
     <>
-      {/* Mobile floating search button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className={`fixed bottom-4 right-4 z-50 p-3 rounded-full shadow-2xl transition-transform hover:scale-110 md:hidden ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black"}`}
-        aria-label="Search"
-      >
-        🔍
-      </button>
+
 
       <GlobalSearchModal 
         isOpen={isOpen} 
