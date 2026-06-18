@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FaTimes, FaDownload, FaTrash } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
 import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
+import { getProxiedMediaUrl } from "../../../utils/mediaProxy";
 
 export default function GroupMediaModal({ 
     isOpen, 
@@ -44,7 +45,9 @@ export default function GroupMediaModal({
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                {mediaList.map((msg) => (
+                                {mediaList.map((msg) => {
+                                    const proxiedUrl = getProxiedMediaUrl(msg.mediaUrl);
+                                    return (
                                     <div 
                                         key={msg._id} 
                                         onClick={() => onViewImage(msg.mediaUrl)}
@@ -52,8 +55,9 @@ export default function GroupMediaModal({
                                     >
                                         <div className="relative w-full h-full rounded-[calc(1.5rem-1.5px)] overflow-hidden bg-slate-900">
                                             <Image 
-                                                src={msg.mediaUrl} 
+                                                src={proxiedUrl} 
                                                 fill 
+                                                unoptimized={proxiedUrl?.includes("/api/files/proxy")}
                                                 className="object-cover transition-transform duration-700 group-hover:scale-110" 
                                                 alt="Shared Group Media" 
                                             />
@@ -74,10 +78,11 @@ export default function GroupMediaModal({
                                                         <FaTrash size={16} />
                                                     </button>
                                                 )}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         )}
                     </div>

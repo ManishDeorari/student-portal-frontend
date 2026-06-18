@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { BadgeCheck } from "lucide-react";
+import { getProxiedMediaUrl } from "@/app/utils/mediaProxy";
 
 export default function UserAvatar({ user, src, alt, width, height, className = "", wrapperClassName = "", onClick, unoptimized, ...props }) {
   const [currentUser, setCurrentUser] = useState(null);
@@ -16,8 +17,9 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
   const isComplete = user?.profileCompletionAwarded === true;
   const showBadge = isComplete;
 
-  const imageSrc = src || user?.profilePicture || "/default-profile.jpg";
-  const finalUnoptimized = unoptimized !== undefined ? unoptimized : imageSrc.includes("default-profile.jpg");
+  const rawImageSrc = src || user?.profilePicture || "/default-profile.jpg";
+  const imageSrc = getProxiedMediaUrl(rawImageSrc);
+  const finalUnoptimized = unoptimized !== undefined ? unoptimized : imageSrc.includes("default-profile.jpg") || imageSrc.includes("/api/files/proxy");
 
   return (
     <div className={`relative inline-flex flex-shrink-0 ${wrapperClassName}`} onClick={onClick}>
