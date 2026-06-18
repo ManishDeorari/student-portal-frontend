@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X, ZoomIn, ZoomOut, Maximize, Download } from "lucide-react";
 import { downloadFileSilently } from "../../utils/cloudinaryHelper";
-import { getProxiedMediaUrl } from "../../utils/mediaProxy";
 
 export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
   const [scale, setScale] = useState(1);
@@ -20,8 +19,6 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
   }, [onClose]);
 
   if (!imageUrl) return null;
-
-  const proxiedImageUrl = getProxiedMediaUrl(imageUrl);
 
   const handleZoomIn = (e) => {
     e.stopPropagation();
@@ -125,7 +122,7 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
       >
         <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-[0_20px_60px_rgba(37,99,235,0.4)]">
           <img
-            src={proxiedImageUrl}
+            src={imageUrl}
             alt="Full view"
             className={`max-w-[90vw] max-h-[90vh] object-contain rounded-[calc(1rem-2.5px)] shadow-2xl ${isRestricted ? 'select-none pointer-events-none [-webkit-touch-callout:none]' : ''}`}
             onContextMenu={(e) => isRestricted && e.preventDefault()}

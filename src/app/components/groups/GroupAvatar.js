@@ -1,14 +1,14 @@
 // frontend/src/app/components/groups/GroupAvatar.js
 "use client";
 import React from "react";
-import { getProxiedMediaUrl } from "../../utils/mediaProxy";
+
 
 export default function GroupAvatar({ group, size = 48, className = "" }) {
     if (!group) return null;
 
     const { profileImage, profileImageSettings, name } = group;
-    const rawImageUrl = profileImage || "/default-group.jpg";
-    const imageUrl = getProxiedMediaUrl(rawImageUrl);
+    const imageUrl = profileImage || "/default-group.jpg";
+    const rawImageUrl = imageUrl; // Keep this variable for compatibility
     
     // Default settings if not present
     const settings = profileImageSettings || { x: 0, y: 0, width: 100, height: 100 };

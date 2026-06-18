@@ -5,7 +5,6 @@ import ImageViewerModal from "./ImageViewerModal";
 import Image from "next/image";
 import { useTheme } from "@/context/ThemeContext";
 import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
-import { getProxiedMediaUrl } from "../../utils/mediaProxy";
 
 export default function ProfileBanner({ image, onUpload, userId, isPublicView }) {
   const { darkMode } = useTheme();
@@ -25,7 +24,7 @@ export default function ProfileBanner({ image, onUpload, userId, isPublicView })
   const isRestricted = isPublicView && !isAdmin;
 
   const bannerImg = image || "/default_banner.jpg";
-  const finalImageSrc = getProxiedMediaUrl(getOptimizedImageUrl(bannerImg));
+  const finalImageSrc = getOptimizedImageUrl(bannerImg);
 
   return (
     <div className="relative w-full h-48 overflow-hidden rounded-lg">
@@ -34,7 +33,7 @@ export default function ProfileBanner({ image, onUpload, userId, isPublicView })
           src={finalImageSrc}
           alt="Banner"
           fill
-          unoptimized={bannerImg === "/default_banner.jpg" || finalImageSrc.includes("/api/files/proxy")}
+          unoptimized={bannerImg === "/default_banner.jpg"}
           className={`object-cover cursor-pointer ${isRestricted ? 'select-none pointer-events-none' : ''}`}
           onContextMenu={(e) => isRestricted && e.preventDefault()}
           onDragStart={(e) => isRestricted && e.preventDefault()}

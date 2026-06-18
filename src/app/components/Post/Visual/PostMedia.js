@@ -4,7 +4,6 @@ import Image from "next/image";
 import ImageGallery from "../utils/ImageGallery";
 import FullImageViewer from "../utils/FullImageViewer";
 import { downloadFileSilently, getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
-import { getProxiedMediaUrl } from "../../../utils/mediaProxy";
 
 const getDocumentIcon = (filename) => {
   if (!filename) return "📄";
@@ -22,8 +21,8 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
 
   const isRestricted = post.user?._id !== currentUser?._id && currentUser?.role !== 'admin';
 
-  const singleImageSrc = post.image ? getProxiedMediaUrl(post.image) : null;
-  const videoSrc = post.video?.url ? getProxiedMediaUrl(post.video.url) : null;
+  const singleImageSrc = post.image ? post.image : null;
+  const videoSrc = post.video?.url ? post.video.url : null;
 
   return (
     <div className="mt-2">
@@ -47,7 +46,6 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
             alt="post"
             width={800}
             height={400}
-            unoptimized={singleImageSrc.includes("/api/files/proxy")}
             onContextMenu={(e) => isRestricted && e.preventDefault()}
             onDragStart={(e) => isRestricted && e.preventDefault()}
             className={`rounded-lg max-h-96 w-full object-contain ${isRestricted ? 'select-none' : ''} transition-transform group-hover:scale-[1.01]`}

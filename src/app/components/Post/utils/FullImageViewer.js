@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { getCloudinaryDownloadUrl, downloadFileSilently } from "../../../utils/cloudinaryHelper";
-import { getProxiedMediaUrl } from "../../../utils/mediaProxy";
+import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn, ZoomOut, Maximize, Download, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -176,7 +175,7 @@ export default function FullImageViewer({ images, startIndex, onClose, isRestric
           onMouseDown={handleMouseDown}
         >
           <img
-            src={getProxiedMediaUrl(images[currentIndex])}
+            src={images[currentIndex]}
             alt={`Image ${currentIndex + 1}`}
             className={`max-w-[90vw] max-h-[90vh] object-contain rounded-xl shadow-2xl transition-shadow ${isRestricted ? 'select-none pointer-events-none shadow-none' : ''}`}
             onContextMenu={(e) => isRestricted && e.preventDefault()}
