@@ -21,7 +21,7 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
 
   return (
     <div
-      className={`relative inline-flex flex-shrink-0 ${wrapperClassName}`}
+      className={`relative inline-flex flex-shrink-0 rounded-full ${wrapperClassName}`}
       style={{ overflow: 'visible' }}
       onClick={onClick}
     >
@@ -30,7 +30,7 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
         alt={alt || user?.name || "User Avatar"}
         width={width || 48}
         height={height || 48}
-        className={className}
+        className={`rounded-full object-cover ${className}`}
         unoptimized={finalUnoptimized}
         {...props}
       />

@@ -11,6 +11,7 @@ import { getOptimizedImageUrl, downloadFileSilently } from "../../utils/cloudina
 import PostReactions from "./Visual/PostReactions";
 import dynamic from "next/dynamic";
 const PostModal = dynamic(() => import("./Visual/PostModal"), { ssr: false });
+import SmartPostModal from "./SmartPostModal";
 import CommentInput from "./Visual/CommentInput";
 const CommentCard = dynamic(() => import("./Visual/commentCard"), { ssr: false });
 import EventRegistrationModal from "./EventRegistrationModal";
@@ -818,48 +819,16 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
 
           <AnimatePresence>
             {showModal && (
-              <PostModal
-                {...{
-                  post,
-                  currentUser,
-                  showModal,
-                  setShowModal,
-                  toggleEdit,
-                  handleReact,
-                  userReacted,
-                  getReactionCount,
-                  showThread,
-                  setShowThread,
-                  handleReply,
-                  handleDeleteComment,
-                  handleComment,
-                  handleEditComment,
-                  handleEditReply,
-                  handleDeleteReply,
-                  handleReactToReply,
-                  handlePinComment,
-                  comment,
-                  setComment,
-                  editing,
-                  setEditing,
-                  editContent,
-                  setEditContent,
-                  editTitle,
-                  setEditTitle,
-                  handleEditSave: () => handleEditSave({ content: editContent, title: editTitle }),
-                  handleBlurSave,
-                  toggleEdit,
-                  handleDelete,
-                  showEditEmoji,
-                  setShowEditEmoji,
-                  textareaRef,
-                  // ✅ ADD THESE for FullImageViewer support
-                  setShowViewer,
-                  setStartIndex,
-                  darkMode,
-                  setPosts,
-                  handleReactToComment,
-                  hideInteractions: hideActions
+              <SmartPostModal
+                post={post}
+                currentUser={currentUser}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                darkMode={darkMode}
+                onPostUpdate={() => {
+                  if (setPosts) {
+                    setPosts((prev) => prev.filter((p) => p._id !== post._id));
+                  }
                 }}
               />
             )}
@@ -934,23 +903,27 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
       </div>
 
       <AnimatePresence>
-        {showOriginalEventModal && (
-          <PostModal
-            showModal={showOriginalEventModal}
-            setShowModal={setShowOriginalEventModal}
-            post={{
-              ...(post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
-              type: "Event",
-              content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description,
-              user: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy === "object"
-                ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy
-                : post.user
-            }}
-            currentUser={currentUser}
-            darkMode={darkMode}
-            hideInteractions={true}
-          />
-        )}
+        {showOriginalEventModal && (() => {
+          const origEvent = post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId;
+          const origId = origEvent?._id || origEvent?.id || origEvent;
+          if (!origId) return null;
+          const origPost = {
+            _id: origId,
+            type: "Event",
+            title: origEvent?.title || "",
+            content: origEvent?.description || origEvent?.content || "",
+            user: typeof origEvent?.createdBy === "object" ? origEvent.createdBy : (post.user || {}),
+          };
+          return (
+            <SmartPostModal
+              showModal={showOriginalEventModal}
+              setShowModal={setShowOriginalEventModal}
+              post={origPost}
+              currentUser={currentUser}
+              darkMode={darkMode}
+            />
+          );
+        })()}
       </AnimatePresence>
     </div>
   );
