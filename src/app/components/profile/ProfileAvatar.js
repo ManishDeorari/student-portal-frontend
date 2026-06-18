@@ -24,8 +24,8 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
   const isRestricted = isPublicView && !isAdmin;
 
   return (
-    <div className="relative group">
-      <div className="p-[3px] bg-gradient-to-tr from-blue-600 via-purple-500 to-pink-500 rounded-full shadow-2xl transition-transform duration-300 group-hover:scale-105 inline-block aspect-square w-fit h-fit">
+    <div className="relative group flex justify-center">
+      <div className="p-[3px] bg-gradient-to-tr from-blue-600 via-purple-500 to-pink-500 rounded-full shadow-2xl transition-transform duration-300 group-hover:scale-105 flex items-center justify-center aspect-square w-fit h-fit">
         <UserAvatar
           user={user}
           src={getOptimizedImageUrl(profileImg)}
