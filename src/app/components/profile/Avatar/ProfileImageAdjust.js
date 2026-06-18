@@ -133,7 +133,7 @@ export default function ProfileImageAdjust({ imageUrl, onApply, onReset }) {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="p-[3.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-full mb-6 shadow-md border-transparent">
+      <div className="p-[3.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-full mb-6 shadow-md border-transparent inline-block aspect-square w-fit h-fit">
         <div className={`w-40 h-40 rounded-full overflow-hidden border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'} relative`}>
           <Image
             src={imageUrl}
