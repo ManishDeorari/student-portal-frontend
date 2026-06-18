@@ -156,6 +156,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     {/* Avatar - Centered */}
                     <div className="relative z-10">
                         <ProfileAvatar
+                            user={profile}
                             image={profile.profilePicture}
                             onUpload={onRefresh}
                             userId={profile._id}

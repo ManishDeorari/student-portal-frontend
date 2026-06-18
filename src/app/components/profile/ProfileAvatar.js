@@ -1,11 +1,11 @@
 import { Camera } from "lucide-react";
 import { useState } from "react";
 import ProfileEditorModal from "./Avatar/ProfileEditorModal";
-import ImageViewerModal from "./ImageViewerModal"; // import here
-import Image from "next/image";
+import ImageViewerModal from "./ImageViewerModal";
+import UserAvatar from "../ui/UserAvatar";
 import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
 
-export default function ProfileAvatar({ image, onUpload, userId, isPublicView }) {
+export default function ProfileAvatar({ user, image, onUpload, userId, isPublicView }) {
   const [showEditor, setShowEditor] = useState(false);
   const [showViewer, setShowViewer] = useState(false);
 
@@ -26,16 +26,18 @@ export default function ProfileAvatar({ image, onUpload, userId, isPublicView })
   return (
     <div className="relative group">
       <div className="p-[3px] bg-gradient-to-tr from-blue-600 via-purple-500 to-pink-500 rounded-full shadow-2xl transition-transform duration-300 group-hover:scale-105">
-        <Image
+        <UserAvatar
+          user={user}
           src={getOptimizedImageUrl(profileImg)}
           alt="Profile"
           width={160}
           height={160}
+          wrapperClassName="w-40 h-40"
           unoptimized={profileImg === "/default-profile.jpg"}
           onClick={() => setShowViewer(true)} // open full view
           onContextMenu={(e) => isRestricted && e.preventDefault()}
           onDragStart={(e) => isRestricted && e.preventDefault()}
-          className={`rounded-full object-cover w-40 h-40 cursor-pointer ${isRestricted ? 'select-none pointer-events-none [-webkit-touch-callout:none]' : ''}`}
+          className={`rounded-full object-cover w-full h-full cursor-pointer ${isRestricted ? 'select-none pointer-events-none [-webkit-touch-callout:none]' : ''}`}
         />
         {isRestricted && (
           <div 

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import UserAvatar from "./ui/UserAvatar";
 
 export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkMode = false, token }) {
   const [query, setQuery] = useState("");
@@ -89,7 +90,7 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
           {isLoading ? (
             <div className="p-8 text-center opacity-50">Searching...</div>
           ) : !hasResults && query.trim().length >= 2 ? (
-            <div className="p-8 text-center opacity-50">No results found for "{query}"</div>
+            <div className="p-8 text-center opacity-50">No results found for &quot;{query}&quot;</div>
           ) : query.trim().length < 2 ? (
             <div className="p-8 text-center opacity-50 text-sm">Type at least 2 characters to search</div>
           ) : (
@@ -100,11 +101,11 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
                   <div className="space-y-1">
                     {results.users.map(user => (
                       <Link href={`/profile/${user.publicId || user._id}`} key={user._id} onClick={onClose} className={`flex items-center gap-3 p-2 rounded-xl transition-colors ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`}>
-                        <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 relative shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-gray-200 relative shrink-0 flex items-center justify-center">
                           {user.profilePicture ? (
-                             <Image src={user.profilePicture} alt="Profile" fill className="object-cover" />
+                             <UserAvatar user={user} src={user.profilePicture} alt="Profile" width={32} height={32} wrapperClassName="w-8 h-8 rounded-full" className="object-cover w-full h-full rounded-full" />
                           ) : (
-                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-tr from-blue-500 to-purple-500 text-white text-xs font-bold">{user.name.charAt(0)}</div>
+                             <div className="w-full h-full rounded-full flex items-center justify-center bg-gradient-to-tr from-blue-500 to-purple-500 text-white text-xs font-bold">{user.name.charAt(0)}</div>
                           )}
                         </div>
                         <div>

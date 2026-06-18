@@ -7,6 +7,7 @@ import { triggerReactionEffect } from "../hooks/useEmojiAnimation";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import UserAvatar from "../../ui/UserAvatar";
 import { createPortal } from "react-dom";
 import ConfirmationModal from "./ConfirmationModal";
 import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
@@ -151,11 +152,13 @@ export default function CommentCard({
         <div className="flex justify-between items-start">
           <div className="flex gap-3 w-full">
             <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex-shrink-0 w-8 h-8 shadow-sm relative">
-              <Image
+              <UserAvatar
+                user={comment.user}
                 src={getOptimizedImageUrl(comment.user?.profilePicture || "/default-profile.jpg")}
                 alt="User"
                 width={32}
                 height={32}
+                wrapperClassName="w-full h-full"
                 onContextMenu={(e) => isRestricted && e.preventDefault()}
                 onDragStart={(e) => isRestricted && e.preventDefault()}
                 className={`w-full h-full rounded-full border border-white/5 object-cover ${isRestricted ? "select-none pointer-events-none" : ""}`}

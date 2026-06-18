@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import UserAvatar from "../../ui/UserAvatar";
 import { FaTimes, FaSearch, FaUserPlus, FaCheck, FaChevronDown } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
 import Link from "next/link";
@@ -99,15 +100,16 @@ export default function GroupMembersModal({
                                 <div key={member._id} className="p-[1.5px] rounded-[2rem] bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 shadow-lg transition-all hover:scale-[1.01]">
                                     <div className={`p-4 rounded-[calc(2rem-1.5px)] flex items-center justify-between ${darkMode ? "bg-slate-950" : "bg-white"}`}>
                                         <div className="flex items-center gap-5">
-                                            <div className="p-[2.5px] rounded-2xl bg-gradient-to-tr from-blue-400 to-pink-500 shadow-xl">
-                                                <div className="relative w-14 h-14 rounded-[calc(1rem-2.5px)] overflow-hidden bg-slate-800">
-                                                    <Image 
-                                                        src={member.profilePicture || "/default-profile.jpg"} 
-                                                        fill 
-                                                        className="object-cover" 
-                                                        alt={member.name} 
-                                                    />
-                                                </div>
+                                            <div className="p-[2.5px] rounded-2xl bg-gradient-to-tr from-blue-400 to-pink-500 shadow-xl flex items-center justify-center">
+                                                <UserAvatar 
+                                                    user={member}
+                                                    src={member.profilePicture || "/default-profile.jpg"} 
+                                                    width={56}
+                                                    height={56}
+                                                    wrapperClassName="w-14 h-14 rounded-[calc(1rem-2.5px)] overflow-hidden bg-slate-800"
+                                                    className="w-full h-full object-cover rounded-[calc(1rem-2.5px)]" 
+                                                    alt={member.name} 
+                                                />
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2">
