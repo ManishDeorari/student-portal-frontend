@@ -232,7 +232,12 @@ function EventsContent() {
                                             <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl transition-transform hover:scale-[1.01]">
                                                 <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
                                                     <div className="min-w-0">
-                                                        <h3 className={`text-xl font-black leading-tight mb-1 truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{ev.title || "Event"}</h3>
+                                                        <h3 className={`text-xl font-black leading-tight mb-1 truncate ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                                            Event Name: <span className="font-medium">{ev.title || "Event"}</span>
+                                                        </h3>
+                                                        <div className={`text-xs font-bold mb-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                                            Type: <span className="font-black text-blue-500">{ev.participationType || "Online Registered"}</span>
+                                                        </div>
                                                         <div className={`flex flex-wrap items-center gap-3 text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
                                                             <span className="flex items-center gap-1.5 bg-blue-500/10 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-md"><Calendar className="w-4 h-4" /> {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}</span>
                                                             {ev.startTime && <span className="bg-purple-500/10 text-purple-600 dark:text-purple-400 px-2.5 py-1 rounded-md">{ev.startTime}</span>}
@@ -288,23 +293,42 @@ function EventsContent() {
                                     <div className="grid gap-4 md:grid-cols-2">
                                         {wonEvents.slice(0, displayLimit).map((post, idx) => {
                                             const eventName = post.announcementDetails?.eventName || "Event";
-                                            // Target user might be the logged in user or a different public profile
-                                            // But we don't have the targetUser's ID strictly here except publicId string.
-                                            // Let's find the winner matching any user if we don't know the exact ID, or just map the winner that has highest points?
-                                            // Wait, the API ensures this post is in the list because the user won. 
-                                            // So we just find the winner that matches the publicId or the current user if publicId is "me"
-                                            
-                                            // A safer bet is to find a winner whose uniqueId or userId matches.
-                                            // Since we don't know the precise _id of the profile owner here, we can just show all winners, or highlight the target.
-                                            // Actually, let's just show the event details and "View Announcement" to keep it clean.
+                                            const targetPublicId = publicId === "me" ? currentUser?.publicId : publicId;
+                                            const targetUserId = publicId === "me" ? currentUser?._id : (publicId?.length === 24 ? publicId : null);
+
+                                            const winnerInfo = post.announcementDetails?.winners?.find(w => {
+                                                const wUserIdObj = w.userId;
+                                                if (wUserIdObj) {
+                                                    const wId = wUserIdObj._id ? wUserIdObj._id.toString() : wUserIdObj.toString();
+                                                    const wPubId = wUserIdObj.publicId;
+                                                    if (targetUserId && wId === targetUserId.toString()) return true;
+                                                    if (targetPublicId && wPubId === targetPublicId) return true;
+                                                }
+                                                if (w.groupMembers && w.groupMembers.length > 0) {
+                                                    return w.groupMembers.some(m => {
+                                                        const mId = m?._id ? m._id.toString() : m?.toString();
+                                                        const mPubId = m?.publicId;
+                                                        if (targetUserId && mId === targetUserId.toString()) return true;
+                                                        if (targetPublicId && mPubId === targetPublicId) return true;
+                                                        return false;
+                                                    });
+                                                }
+                                                return false;
+                                            });
                                             
                                             return (
                                                 <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-2xl transition-transform hover:scale-[1.01]">
                                                     <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
                                                         <div className="min-w-0">
-                                                            <h3 className={`text-xl font-black leading-tight mb-1 truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{eventName}</h3>
+                                                            <h3 className={`text-xl font-black leading-tight mb-1 truncate ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                                                Event Name: <span className="font-medium">{eventName}</span>
+                                                            </h3>
+                                                            <div className={`text-xs font-bold mb-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                                                Rank: <span className="font-black text-yellow-500">{winnerInfo?.rank || "N/A"}</span>
+                                                            </div>
                                                             <div className={`flex flex-wrap items-center gap-3 text-sm font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
                                                                 <span className="flex items-center gap-1.5 bg-blue-500/10 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-md"><Calendar className="w-4 h-4" /> {new Date(post.createdAt).toLocaleDateString()}</span>
+                                                                {winnerInfo?.points > 0 && <span className="text-green-600 dark:text-green-400 bg-green-500/10 px-2.5 py-1 rounded-md">+{winnerInfo.points} PTS</span>}
                                                                 <span className="flex items-center gap-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-500 px-2.5 py-1 rounded-md uppercase tracking-widest font-black text-[10px]"><Trophy className="w-4 h-4" /> Winner</span>
                                                             </div>
                                                         </div>

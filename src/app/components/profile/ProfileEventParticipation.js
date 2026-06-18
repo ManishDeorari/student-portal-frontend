@@ -161,13 +161,18 @@ export default function ProfileEventParticipation({ profile, setProfile, isPubli
                                         {participatedEvents.slice(0, 5).map((ev, idx) => (
                                             <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl transition-transform hover:scale-[1.02]">
                                                 <div className={`flex justify-between items-center gap-2 p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
-                                                    <div className="flex flex-col gap-1.5 min-w-0">
-                                                        <h4 className={`font-black text-lg leading-tight truncate ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{ev.title || "Event"}</h4>
-                                                        <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
-                                                            <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-1 rounded-md">
+                                                    <div className="flex flex-col gap-1 min-w-0">
+                                                        <h4 className={`font-black text-base leading-tight truncate ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
+                                                            Event Name: <span className="font-medium">{ev.title || "Event"}</span>
+                                                        </h4>
+                                                        <div className={`text-[11px] font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                                            Type: <span className="font-black text-blue-500">{ev.participationType || "Online Registered"}</span>
+                                                        </div>
+                                                        <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold mt-1">
+                                                            <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">
                                                                 <Calendar className="w-3 h-3"/> {ev.startDate ? new Date(ev.startDate).toLocaleDateString() : "Unknown Date"}
                                                             </span>
-                                                            {ev.startTime && <span className="text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-1 rounded-md">{ev.startTime}</span>}
+                                                            {ev.startTime && <span className="text-purple-600 dark:text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">{ev.startTime}</span>}
                                                         </div>
                                                     </div>
                                                     <button
@@ -198,20 +203,28 @@ export default function ProfileEventParticipation({ profile, setProfile, isPubli
                                     <div className="space-y-3">
                                         {wonEvents.slice(0, 5).map((post, idx) => {
                                             const eventName = post.announcementDetails?.eventName || "Event";
-                                            const winnerInfo = post.announcementDetails?.winners?.find(
-                                                w => w.userId === profile._id || (w.groupMembers && w.groupMembers.includes(profile._id))
-                                            );
+                                            const winnerInfo = post.announcementDetails?.winners?.find(w => {
+                                                const wId = w.userId?._id ? w.userId._id.toString() : w.userId?.toString();
+                                                const matchesUser = wId === profile._id.toString();
+                                                const matchesGroup = w.groupMembers && w.groupMembers.some(m => {
+                                                    const mId = m?._id ? m._id.toString() : m?.toString();
+                                                    return mId === profile._id.toString();
+                                                });
+                                                return matchesUser || matchesGroup;
+                                            });
                                             
                                             return (
                                                 <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-xl transition-transform hover:scale-[1.02]">
                                                     <div className={`flex justify-between items-center gap-2 p-3 rounded-[calc(0.75rem-1.5px)] h-full ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
-                                                        <div className="flex flex-col gap-1.5 min-w-0">
-                                                            <h4 className={`font-black text-lg leading-tight truncate ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
-                                                                {eventName}
+                                                        <div className="flex flex-col gap-1 min-w-0">
+                                                            <h4 className={`font-black text-base leading-tight truncate ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
+                                                                Event Name: <span className="font-medium">{eventName}</span>
                                                             </h4>
-                                                            <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
-                                                                <span className="text-yellow-600 dark:text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded-md">Rank {winnerInfo?.rank || "N/A"}</span>
-                                                                {winnerInfo?.points > 0 && <span className="text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-1 rounded-md">+{winnerInfo.points} PTS</span>}
+                                                            <div className={`text-[11px] font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                                                Rank: <span className="font-black text-yellow-500">{winnerInfo?.rank || "N/A"}</span>
+                                                            </div>
+                                                            <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold mt-1">
+                                                                {winnerInfo?.points > 0 && <span className="text-green-600 dark:text-green-400 bg-green-500/10 px-2 py-0.5 rounded">+{winnerInfo.points} PTS</span>}
                                                                 <span className="text-amber-600 dark:text-amber-500 px-1 uppercase tracking-widest font-black text-[10px]">Winner</span>
                                                             </div>
                                                         </div>
