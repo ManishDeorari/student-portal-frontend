@@ -26,13 +26,13 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
         alt={alt || user?.name || "User Avatar"}
         width={width || 48}
         height={height || 48}
-        className={className}
+        className={`${className} aspect-square object-cover rounded-full`}
         unoptimized={finalUnoptimized}
         {...props}
       />
       {showBadge && (
         <div 
-          className="absolute bottom-0 right-0 translate-x-[15%] translate-y-[15%] bg-white dark:bg-slate-900 rounded-full flex items-center justify-center p-[2px] shadow-md z-20 border border-gray-100 dark:border-slate-700"
+          className="absolute bottom-0 right-0 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center p-[2px] shadow-md z-20 border border-gray-100 dark:border-slate-700"
           title="100% Profile Completed"
         >
           <BadgeCheck className="text-green-500 w-3.5 h-3.5 sm:w-4 sm:h-4" />

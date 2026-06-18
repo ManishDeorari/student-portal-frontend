@@ -207,9 +207,14 @@ export default function SmartPostModal({
           showModal={showOriginalEventModal}
           setShowModal={setShowOriginalEventModal}
           post={{
-            ...(post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
+            _id: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId) === "object" 
+              ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)._id 
+              : (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
+            ...(typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId) === "object" 
+              ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId) 
+              : {}),
             type: "Event",
-            content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description,
+            content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description || "",
             user: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy === "object"
               ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy
               : post.user
