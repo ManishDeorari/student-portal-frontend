@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getGamificationTier } from "@/utils/gamification";
+import { getProxiedMediaUrl } from "@/app/utils/mediaProxy";
 
 export default function TopEarnersWidget({ darkMode }) {
   const [topEarners, setTopEarners] = useState([]);
@@ -56,9 +57,10 @@ export default function TopEarnersWidget({ darkMode }) {
                 <div className={`flex items-center px-3 rounded-[15.5px] transition-all h-full ${darkMode ? 'bg-[#1a1a1c] hover:bg-[#222225]' : 'bg-white hover:bg-orange-50/50'}`}>
                   <div className="relative shrink-0 mr-3 w-10 h-10 min-w-[40px] min-h-[40px]">
                     <Image 
-                      src={user.profilePicture || "/default-profile.jpg"} 
+                      src={user.profilePicture ? getProxiedMediaUrl(user.profilePicture) : "/default-profile.jpg"} 
                       alt={user.name} 
                       fill
+                      unoptimized={user.profilePicture ? getProxiedMediaUrl(user.profilePicture).includes("/api/files/proxy") : true}
                       className={`rounded-full object-cover border-2 ${index === 0 ? 'border-yellow-400' : index === 1 ? 'border-gray-300' : index === 2 ? 'border-amber-600' : 'border-transparent'}`}
                     />
                     {index === 0 && (

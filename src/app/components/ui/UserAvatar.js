@@ -19,7 +19,7 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
 
   const rawImageSrc = src || user?.profilePicture || "/default-profile.jpg";
   const imageSrc = getProxiedMediaUrl(rawImageSrc);
-  const finalUnoptimized = unoptimized !== undefined ? unoptimized : imageSrc.includes("default-profile.jpg") || imageSrc.includes("/api/files/proxy");
+  const finalUnoptimized = imageSrc.includes("/api/files/proxy") || (unoptimized !== undefined ? unoptimized : imageSrc.includes("default-profile.jpg"));
 
   return (
     <div className={`relative inline-flex flex-shrink-0 ${wrapperClassName}`} onClick={onClick}>
