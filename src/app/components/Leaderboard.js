@@ -106,7 +106,7 @@ export default function Leaderboard() {
                           width={48}
                           height={48}
                           wrapperClassName="w-9 h-9 sm:w-12 sm:h-12"
-                          className="w-full h-full rounded-xl object-cover border-2 border-white/10 bg-gray-800 shadow-2xl group-hover:scale-110 transition-transform duration-500"
+                          className="w-full h-full rounded-full object-cover border-2 border-white/10 bg-gray-800 shadow-2xl group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="flex flex-col md:flex-row md:items-center gap-2 sm:gap-6 min-w-0">
                           <div className="w-48 sm:w-56 shrink-0">

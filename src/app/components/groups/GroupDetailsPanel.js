@@ -108,7 +108,7 @@ export default function GroupDetailsPanel({
                                         {filteredMembers.map(member => (
                                             <div key={member._id} className="flex items-center justify-between group">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white/10">
+                                                    <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-white/10">
                                                         {member.profilePicture ? (
                                                             <Image src={member.profilePicture} fill className="object-cover" alt={member.name} />
                                                         ) : (

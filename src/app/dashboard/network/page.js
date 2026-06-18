@@ -258,7 +258,7 @@ const NetworkPage = () => {
                   <div key={user._id} className="relative p-[1.5px] bg-gradient-to-br from-blue-500/50 via-purple-500/50 to-pink-500/50 rounded-2xl group transition-all duration-500 hover:from-blue-500 hover:via-purple-500 hover:to-pink-500 shadow-sm hover:shadow-xl">
                     <div className={`rounded-2xl p-3 sm:p-5 flex items-center justify-between gap-3 sm:gap-4 relative overflow-hidden h-full ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-900'} transition-colors`}>
                       <div className="flex items-center gap-3 sm:gap-4 min-w-0 relative z-10 w-full">
-                        <div className="relative p-[2px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shrink-0 shadow-lg flex items-center justify-center">
+                        <div className="relative p-[2px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shrink-0 shadow-lg flex items-center justify-center aspect-square w-fit h-fit">
                           <UserAvatar
                             user={user}
                             src={user.profilePicture || "/default-profile.jpg"}
@@ -350,7 +350,7 @@ const NetworkPage = () => {
                     {section.data.slice(0, suggestionLimits[section.id]).map((user) => (
                       <div key={user._id} className="relative p-[1.5px] bg-gradient-to-br from-blue-400/50 via-purple-400/50 to-pink-400/50 rounded-2xl h-full group transition-all duration-500 hover:from-blue-500 hover:to-pink-500 hover:shadow-xl">
                         <div className={`rounded-2xl flex flex-col items-center text-center p-3 sm:p-6 space-y-2 sm:space-y-4 transition-all relative overflow-hidden h-full ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-900 border'}`}>
-                          <div className="relative p-[2px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shrink-0 shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center">
+                          <div className="relative p-[2px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shrink-0 shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center aspect-square w-fit h-fit">
                             <UserAvatar
                                user={user}
                                src={user.profilePicture || "/default-profile.jpg"}
