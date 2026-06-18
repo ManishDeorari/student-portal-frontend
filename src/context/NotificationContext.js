@@ -228,7 +228,8 @@ export const NotificationProvider = ({ children }) => {
             "admin_notice",
             "announcement",
             "notice",
-            "points_earned"
+            "points_earned",
+            "points_deducted"
           ];
 
           if (!allowedToastTypes.includes(notification.type)) {
@@ -309,6 +310,14 @@ export const NotificationProvider = ({ children }) => {
                 label: "Points Earning",
                 accent: "text-yellow-400",
                 bgAccent: "bg-yellow-500/20"
+              };
+            } else if (type === "points_deducted") {
+              theme = {
+                gradient: "from-red-500 via-rose-600 to-red-700",
+                icon: <Award className="w-3.5 h-3.5" />,
+                label: "Points Deduction",
+                accent: "text-red-400",
+                bgAccent: "bg-red-500/20"
               };
             } else if (type === "profile_visit") {
                 theme = {
