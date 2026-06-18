@@ -2,6 +2,10 @@ import toast from "react-hot-toast";
 import socket from "../../../../utils/socket";
 import { triggerReactionEffect } from "./useEmojiAnimation";
 
+// IMPORTANT: Only actual Event-type posts live in /api/events.
+// Announcement, EventRepost, Regular, Session are all stored as Posts → /api/posts.
+const isEventType = (post) => post?.type === "Event";
+
 export default function usePostActions({
   post,
   setPosts,
@@ -23,7 +27,7 @@ export default function usePostActions({
     if (!checkAuth()) return;
 
     try {
-      const isEvent = post.type === "Event";
+      const isEvent = isEventType(post);
       const endpoint = isEvent ? `/api/events/${post._id}/react` : `/api/posts/${post._id}/react`;
       
       const res = await fetch(
@@ -77,7 +81,7 @@ export default function usePostActions({
     }
 
     try {
-      const isEvent = post.type === "Event";
+      const isEvent = isEventType(post);
       const endpoint = isEvent ? `/api/events/${post._id}` : `/api/posts/${post._id}`;
       
       const res = await fetch(
@@ -103,13 +107,14 @@ export default function usePostActions({
       socket.emit("updatePost", updated);
       toast.success(isEvent ? "✏️ Event updated successfully" : "✏️ Post updated successfully", { autoClose: 1500 });
     } catch (error) {
+      const isEvent = isEventType(post);
       toast.error(isEvent ? "❌ Failed to update event" : "❌ Failed to update post");
     }
   };
 
   const handleDelete = async () => {
     if (!checkAuth()) return;
-    const isEvent = post.type === "Event";
+    const isEvent = isEventType(post);
 
     try {
       const endpoint = isEvent ? `/api/events/${post._id}` : `/api/posts/${post._id}`;
@@ -127,6 +132,7 @@ export default function usePostActions({
       setPosts((prev) => prev.filter((p) => p._id !== post._id));
       toast.success(isEvent ? "🗑️ Event deleted" : "🗑️ Post deleted", { autoClose: 1500 });
     } catch (err) {
+      const isEvent = isEventType(post);
       toast.error(isEvent ? "❌ Failed to delete event" : "❌ Failed to delete post");
     }
   };

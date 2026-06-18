@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { BadgeCheck } from "lucide-react";
 
-export default function UserAvatar({ user, src, alt, width, height, className = "", wrapperClassName = "", onClick, unoptimized, ...props }) {
+export default function UserAvatar({ user, src, alt, width, height, className = "", wrapperClassName = "", onClick, unoptimized, showBadgeInline = false, ...props }) {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -20,23 +20,33 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
   const finalUnoptimized = unoptimized !== undefined ? unoptimized : imageSrc.includes("default-profile.jpg");
 
   return (
-    <div className={`relative inline-flex flex-shrink-0 ${wrapperClassName}`} onClick={onClick}>
+    <div
+      className={`relative inline-flex flex-shrink-0 ${wrapperClassName}`}
+      style={{ overflow: 'visible' }}
+      onClick={onClick}
+    >
       <Image
         src={imageSrc}
         alt={alt || user?.name || "User Avatar"}
         width={width || 48}
         height={height || 48}
-        className={`${className} aspect-square object-cover rounded-full`}
+        className={className}
         unoptimized={finalUnoptimized}
         {...props}
       />
       {showBadge && (
-        <div 
-          className="absolute bottom-0 right-0 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center p-[2px] shadow-md z-20 border border-gray-100 dark:border-slate-700"
+        <span
+          className="absolute bottom-0 right-0 z-30 pointer-events-none flex items-center justify-center rounded-full bg-white dark:bg-slate-900 border border-white dark:border-slate-800 shadow-md"
           title="100% Profile Completed"
+          style={{
+            width: '1.1rem',
+            height: '1.1rem',
+            transform: 'translate(30%, 30%)',
+            overflow: 'visible',
+          }}
         >
-          <BadgeCheck className="text-green-500 w-3.5 h-3.5 sm:w-4 sm:h-4" />
-        </div>
+          <BadgeCheck className="text-green-500" style={{ width: '100%', height: '100%' }} />
+        </span>
       )}
     </div>
   );

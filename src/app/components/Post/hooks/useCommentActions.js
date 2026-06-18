@@ -3,6 +3,10 @@ import toast from "react-hot-toast";
 import socket from "../../../../utils/socket";
 import { triggerReactionEffect } from "./useEmojiAnimation";
 
+// IMPORTANT: Only actual Event-type posts live in /api/events.
+// Announcement, EventRepost, Regular, Session are all stored as Posts → /api/posts.
+const isEventType = (post) => post?.type === "Event";
+
 export default function useCommentActions({
   post,
   currentUser,
@@ -27,7 +31,7 @@ export default function useCommentActions({
       if (!checkAuth() || !comment.trim() || isSubmitting) return;
       setIsSubmitting(true);
       try {
-        const isEvent = post.type === "Event";
+        const isEvent = isEventType(post);
         const endpoint = isEvent ? `/api/events/${post._id}/comment` : `/api/posts/${post._id}/comment`;
         
         const res = await fetch(
@@ -79,7 +83,7 @@ export default function useCommentActions({
       }
 
       try {
-        const isEvent = post.type === "Event";
+        const isEvent = isEventType(post);
         const endpoint = isEvent ? `/api/events/${post._id}/comment/${parentCommentId}/reply` : `/api/posts/${post._id}/comment/${parentCommentId}/reply`;
 
         const res = await fetch(
@@ -117,7 +121,7 @@ export default function useCommentActions({
       }
 
       try {
-        const isEvent = post.type === "Event";
+        const isEvent = isEventType(post);
         const endpoint = isEvent ? `/api/events/${post._id}/comment/${commentId}` : `/api/posts/${post._id}/comment/${commentId}`;
         
         const res = await fetch(
@@ -150,7 +154,7 @@ export default function useCommentActions({
   const handleDeleteComment = useCallback(
     async (commentId) => {
       try {
-        const isEvent = post.type === "Event";
+        const isEvent = isEventType(post);
         const endpoint = isEvent ? `/api/events/${post._id}/comment/${commentId}` : `/api/posts/${post._id}/comment/${commentId}`;
         
         const res = await fetch(
@@ -178,7 +182,7 @@ export default function useCommentActions({
       if (!checkAuth() || !newText.trim()) return alert("Reply cannot be empty");
 
       try {
-        const isEvent = post.type === "Event";
+        const isEvent = isEventType(post);
         const endpoint = isEvent 
           ? `/api/events/${post._id}/comment/${commentId}/reply/${replyId}`
           : `/api/posts/${post._id}/comment/${commentId}/reply/${replyId}`;
@@ -208,7 +212,7 @@ export default function useCommentActions({
 
   const handleDeleteReply = useCallback(async (commentId, replyId) => {
     try {
-      const isEvent = post.type === "Event";
+      const isEvent = isEventType(post);
       const endpoint = isEvent 
         ? `/api/events/${post._id}/comment/${commentId}/reply/${replyId}`
         : `/api/posts/${post._id}/comment/${commentId}/reply/${replyId}`;
@@ -236,7 +240,7 @@ export default function useCommentActions({
   const handleReactToReply = useCallback(
     async (commentId, replyId, emoji) => {
       try {
-        const isEvent = post.type === "Event";
+        const isEvent = isEventType(post);
         const endpoint = isEvent 
           ? `/api/events/${post._id}/comment/${commentId}/reply/${replyId}/react`
           : `/api/posts/${post._id}/comment/${commentId}/reply/${replyId}/react`;
@@ -267,7 +271,7 @@ export default function useCommentActions({
   const handleReactToComment = useCallback(
     async (commentId, emoji) => {
       try {
-        const isEvent = post.type === "Event";
+        const isEvent = isEventType(post);
         const endpoint = isEvent 
           ? `/api/events/${post._id}/comment/${commentId}/react`
           : `/api/posts/${post._id}/comments/${commentId}/react`;
@@ -300,7 +304,7 @@ export default function useCommentActions({
     async (commentId) => {
       if (!checkAuth()) return;
       try {
-        const isEvent = post.type === "Event";
+        const isEvent = isEventType(post);
         const endpoint = isEvent 
           ? `/api/events/${post._id}/comment/${commentId}/pin`
           : `/api/posts/${post._id}/comment/${commentId}/pin`;

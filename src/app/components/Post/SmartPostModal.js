@@ -46,8 +46,9 @@ export default function SmartPostModal({
     
     const fetchFullPost = async () => {
       try {
-        const isEvent = initialPost.type === "Event";
-        const endpoint = isEvent ? `/api/events/${initialPost._id}` : `/api/posts/${initialPost._id}`;
+        // ONLY actual Event type lives in /api/events. Announcement/EventRepost/Regular are all Posts.
+        const isEventType = initialPost.type === "Event";
+        const endpoint = isEventType ? `/api/events/${initialPost._id}` : `/api/posts/${initialPost._id}`;
         const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         
         const res = await fetch(`${API_URL}${endpoint}`, {
@@ -56,6 +57,12 @@ export default function SmartPostModal({
         
         if (res.ok) {
           const fullPost = await res.json();
+          // For Event API responses, map the shape to match Post structure
+          if (isEventType && fullPost.createdBy && !fullPost.user) {
+            fullPost.user = fullPost.createdBy;
+            fullPost.type = "Event";
+            fullPost.content = fullPost.content || fullPost.description;
+          }
           setPosts([fullPost]);
         }
       } catch (err) {
@@ -65,6 +72,7 @@ export default function SmartPostModal({
     
     fetchFullPost();
   }, [initialPost?._id, showModal, token]);
+
 
   // Handle post deletion by watching posts array
   useEffect(() => {
@@ -207,14 +215,9 @@ export default function SmartPostModal({
           showModal={showOriginalEventModal}
           setShowModal={setShowOriginalEventModal}
           post={{
-            _id: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId) === "object" 
-              ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)._id 
-              : (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
-            ...(typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId) === "object" 
-              ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId) 
-              : {}),
+            ...(post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
             type: "Event",
-            content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description || "",
+            content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description,
             user: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy === "object"
               ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy
               : post.user
