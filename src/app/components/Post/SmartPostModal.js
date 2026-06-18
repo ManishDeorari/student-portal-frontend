@@ -210,22 +210,27 @@ export default function SmartPostModal({
         onShowOriginalEvent={() => setShowOriginalEventModal(true)}
       />
       
-      {showOriginalEventModal && (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId) && (
-        <SmartPostModal
-          showModal={showOriginalEventModal}
-          setShowModal={setShowOriginalEventModal}
-          post={{
-            ...(post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
-            type: "Event",
-            content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description,
-            user: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy === "object"
-              ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy
-              : post.user
-          }}
-          currentUser={currentUser}
-          darkMode={darkMode}
-        />
-      )}
+      {showOriginalEventModal && (() => {
+        const origEvent = post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId;
+        const origId = origEvent?._id || origEvent?.id || origEvent;
+        if (!origId) return null;
+        const origPost = {
+          _id: origId,
+          type: "Event",
+          title: origEvent?.title || "",
+          content: origEvent?.description || origEvent?.content || "",
+          user: typeof origEvent?.createdBy === "object" ? origEvent.createdBy : (post.user || {}),
+        };
+        return (
+          <SmartPostModal
+            showModal={showOriginalEventModal}
+            setShowModal={setShowOriginalEventModal}
+            post={origPost}
+            currentUser={currentUser}
+            darkMode={darkMode}
+          />
+        );
+      })()}
     </>
   );
 }

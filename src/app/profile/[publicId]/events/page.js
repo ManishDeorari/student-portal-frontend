@@ -9,6 +9,7 @@ import { useTheme } from "@/context/ThemeContext";
 import AuthGuard from "@/app/components/AuthGuard";
 import { GooeyGradientBackground } from "@/app/components/GooeyGradientBackground";
 import SmartPostModal from "@/app/components/Post/SmartPostModal";
+import socket from "@/utils/socket";
 
 function EventsContent() {
     const params = useParams();
@@ -60,6 +61,80 @@ function EventsContent() {
         }
         fetchEvents();
     }, [fetchEvents]);
+
+    // ⚡ Real-time events list socket updater
+    useEffect(() => {
+        if (!socket) return;
+
+        const updateEventInState = (updated) => {
+            setEventsData((prev) => {
+                const participated = (prev.participatedEvents || []).map((item) => {
+                    if (item._id === updated._id) {
+                        return { ...item, ...updated };
+                    }
+                    return item;
+                });
+
+                const won = (prev.wonEvents || []).map((item) => {
+                    if (item._id === updated._id) {
+                        return { ...item, ...updated };
+                    }
+                    if (item.announcementDetails?.originalEventId?._id === updated._id) {
+                        return {
+                            ...item,
+                            announcementDetails: {
+                                ...item.announcementDetails,
+                                originalEventId: {
+                                    ...item.announcementDetails.originalEventId,
+                                    ...updated
+                                }
+                            }
+                        };
+                    }
+                    return item;
+                });
+
+                return {
+                    participatedEvents: participated,
+                    wonEvents: won
+                };
+            });
+        };
+
+        const removeEventFromState = ({ postId }) => {
+            setEventsData((prev) => {
+                const participated = (prev.participatedEvents || []).filter((item) => item._id !== postId);
+                const won = (prev.wonEvents || []).filter((item) => item._id !== postId).map((item) => {
+                    if (item.announcementDetails?.originalEventId?._id === postId) {
+                        return {
+                            ...item,
+                            announcementDetails: {
+                                ...item.announcementDetails,
+                                originalEventId: null
+                            }
+                        };
+                    }
+                    return item;
+                });
+                return {
+                    participatedEvents: participated,
+                    wonEvents: won
+                };
+            });
+        };
+
+        socket.on("postUpdated", updateEventInState);
+        socket.on("postReacted", updateEventInState);
+        socket.on("updatePost", updateEventInState);
+        socket.on("postDeleted", removeEventFromState);
+
+        return () => {
+            socket.off("postUpdated", updateEventInState);
+            socket.off("postReacted", updateEventInState);
+            socket.off("updatePost", updateEventInState);
+            socket.off("postDeleted", removeEventFromState);
+        };
+    }, []);
 
     const handleViewEvent = (event) => {
         const formattedEvent = {

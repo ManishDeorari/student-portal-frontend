@@ -1,15 +1,101 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import SectionCard from "./SectionCard";
 import { Activity, Trophy, Calendar, Eye, Users } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import SmartPostModal from "../Post/SmartPostModal";
+import socket from "@/utils/socket";
 
-export default function ProfileEventParticipation({ profile, isPublicView }) {
+export default function ProfileEventParticipation({ profile, setProfile, isPublicView }) {
     const { darkMode } = useTheme();
     const [activeTab, setActiveTab] = useState("participated"); // "participated" or "won"
     const [showPostModal, setShowPostModal] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
+
+    // ⚡ Real-time socket updates for events inside profile
+    useEffect(() => {
+        if (!socket || !setProfile) return;
+
+        const updateEventInState = (updated) => {
+            setProfile((prev) => {
+                if (!prev.events) return prev;
+
+                const participated = (prev.events.participatedEvents || []).map((item) => {
+                    if (item._id === updated._id) {
+                        return { ...item, ...updated };
+                    }
+                    return item;
+                });
+
+                const won = (prev.events.wonEvents || []).map((item) => {
+                    if (item._id === updated._id) {
+                        return { ...item, ...updated };
+                    }
+                    if (item.announcementDetails?.originalEventId?._id === updated._id) {
+                        return {
+                            ...item,
+                            announcementDetails: {
+                                ...item.announcementDetails,
+                                originalEventId: {
+                                    ...item.announcementDetails.originalEventId,
+                                    ...updated
+                                }
+                            }
+                        };
+                    }
+                    return item;
+                });
+
+                return {
+                    ...prev,
+                    events: {
+                        participatedEvents: participated,
+                        wonEvents: won
+                    }
+                };
+            });
+        };
+
+        const removeEventFromState = ({ postId }) => {
+            setProfile((prev) => {
+                if (!prev.events) return prev;
+
+                const participated = (prev.events.participatedEvents || []).filter((item) => item._id !== postId);
+                const won = (prev.events.wonEvents || []).filter((item) => item._id !== postId).map((item) => {
+                    if (item.announcementDetails?.originalEventId?._id === postId) {
+                        return {
+                            ...item,
+                            announcementDetails: {
+                                ...item.announcementDetails,
+                                originalEventId: null
+                            }
+                        };
+                    }
+                    return item;
+                });
+
+                return {
+                    ...prev,
+                    events: {
+                        participatedEvents: participated,
+                        wonEvents: won
+                    }
+                };
+            });
+        };
+
+        socket.on("postUpdated", updateEventInState);
+        socket.on("postReacted", updateEventInState);
+        socket.on("updatePost", updateEventInState);
+        socket.on("postDeleted", removeEventFromState);
+
+        return () => {
+            socket.off("postUpdated", updateEventInState);
+            socket.off("postReacted", updateEventInState);
+            socket.off("updatePost", updateEventInState);
+            socket.off("postDeleted", removeEventFromState);
+        };
+    }, [setProfile]);
 
     const participatedEvents = profile.events?.participatedEvents || [];
     const wonEvents = profile.events?.wonEvents || [];

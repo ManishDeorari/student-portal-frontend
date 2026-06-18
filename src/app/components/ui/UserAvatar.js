@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { BadgeCheck } from "lucide-react";
 
-export default function UserAvatar({ user, src, alt, width, height, className = "", wrapperClassName = "", onClick, unoptimized, showBadgeInline = false, ...props }) {
+export default function UserAvatar({ user, src, alt, width, height, className = "", wrapperClassName = "", onClick, unoptimized, hideBadge = false, ...props }) {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
         unoptimized={finalUnoptimized}
         {...props}
       />
-      {showBadge && (
+      {showBadge && !hideBadge && (
         <span
           className="absolute bottom-0 right-0 z-30 pointer-events-none flex items-center justify-center rounded-full bg-white dark:bg-slate-900 border border-white dark:border-slate-800 shadow-md"
           title="100% Profile Completed"

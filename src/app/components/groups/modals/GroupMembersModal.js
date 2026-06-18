@@ -106,7 +106,7 @@ export default function GroupMembersModal({
                                                     src={member.profilePicture || "/default-profile.jpg"} 
                                                     width={56}
                                                     height={56}
-                                                    wrapperClassName="w-14 h-14 rounded-[calc(1rem-2.5px)] overflow-hidden bg-slate-800"
+                                                    wrapperClassName="w-14 h-14 rounded-[calc(1rem-2.5px)] bg-slate-800"
                                                     className="w-full h-full object-cover rounded-[calc(1rem-2.5px)]" 
                                                     alt={member.name} 
                                                 />

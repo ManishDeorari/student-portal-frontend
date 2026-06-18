@@ -4,6 +4,7 @@ import { fetchPendingPointsRequests, approvePointsRequest, fetchPendingProfilePo
 import toast from "react-hot-toast";
 import SmartPostModal from "../Post/SmartPostModal";
 import { downloadFileSilently } from "../../utils/cloudinaryHelper";
+import socket from "@/utils/socket";
 
 const PointsRequestsList = ({ darkMode = false, user }) => {
   const [requests, setRequests] = useState([]);
@@ -19,6 +20,27 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
   const [eventLimit, setEventLimit] = useState(10);
   const [sessionLimit, setSessionLimit] = useState(10);
   const [repostLimit, setRepostLimit] = useState(10);
+
+  // ⚡ Live socket updates for pending requests
+  useEffect(() => {
+    if (!socket) return;
+    const handlePostDeleted = ({ postId }) => {
+      setRequests(prev => prev.filter(r => r._id !== postId));
+    };
+    const handlePostUpdated = (updated) => {
+      setRequests(prev => prev.map(r => r._id === updated._id ? { ...r, ...updated } : r));
+    };
+    socket.on("postDeleted", handlePostDeleted);
+    socket.on("postUpdated", handlePostUpdated);
+    socket.on("postReacted", handlePostUpdated);
+    socket.on("updatePost", handlePostUpdated);
+    return () => {
+      socket.off("postDeleted", handlePostDeleted);
+      socket.off("postUpdated", handlePostUpdated);
+      socket.off("postReacted", handlePostUpdated);
+      socket.off("updatePost", handlePostUpdated);
+    };
+  }, []);
 
   useEffect(() => {
     loadRequests();

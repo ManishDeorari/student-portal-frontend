@@ -289,9 +289,27 @@ export default function useCommentActions({
         );
 
         const updated = await res.json();
-        const finalUpdated = isEvent ? updated : (updated.post || updated);
-        setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...finalUpdated } : p)));
-        socket.emit("updatePost", finalUpdated);
+        if (isEvent) {
+          // Event API returns the full updated event
+          setPosts((prev) => prev.map((p) => (p._id === post._id ? { ...p, ...updated } : p)));
+          socket.emit("updatePost", updated);
+        } else {
+          // Post API returns { comment: updatedComment } — patch just that comment's reactions
+          const updatedComment = updated.comment || updated;
+          setPosts((prev) => prev.map((p) => {
+            if (p._id !== post._id) return p;
+            return {
+              ...p,
+              comments: p.comments.map((c) =>
+                c._id?.toString() === commentId?.toString()
+                  ? { ...c, reactions: updatedComment.reactions }
+                  : c
+              )
+            };
+          }));
+          if (updated.comment) socket.emit("commentReacted", { postId: post._id, commentId, emoji });
+          else socket.emit("updatePost", updated);
+        }
         triggerReactionEffect(emoji);
       } catch (err) {
         toast.error("❌ Failed to react to comment");

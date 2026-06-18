@@ -18,7 +18,6 @@ export default function usePostSocket(postId, currentUser, setSomeoneTyping, set
     const handleCommentReacted = ({ postId: incomingId, commentId, userId, emoji }) => {
       if (incomingId !== postId) return;
       console.log("💬 commentReacted received. UI will update via postUpdated socket.");
-      // Optionally: show animation or toast here.
     };
 
     // 🔁 Optional fallback: request updated post manually
@@ -34,16 +33,45 @@ export default function usePostSocket(postId, currentUser, setSomeoneTyping, set
       }
     };
 
+    // ⚡ Live socket updates for post changes
+    const handlePostUpdated = (updatedPost) => {
+      if (updatedPost && updatedPost._id === postId) {
+        // Map the type if it is an event and shape needs adjustment
+        const isEventType = updatedPost.type === "Event" || (!updatedPost.type && updatedPost.createdBy && !updatedPost.user);
+        if (isEventType && updatedPost.createdBy && !updatedPost.user) {
+          updatedPost.user = updatedPost.createdBy;
+          updatedPost.type = "Event";
+          updatedPost.content = updatedPost.content || updatedPost.description;
+        }
+        setPosts((prev) => prev.map((p) => (p._id === postId ? { ...p, ...updatedPost } : p)));
+      }
+    };
+
+    const handlePostDeleted = ({ postId: deletedId }) => {
+      if (deletedId === postId) {
+        setPosts((prev) => prev.filter((p) => p._id !== postId));
+      }
+    };
+
     // ✅ Attach listeners
     socket.on("typing", handleTyping);
     socket.on("commentReacted", handleCommentReacted);
     socket.on("updatePostRequest", handleUpdatePostRequest);
+    socket.on("postUpdated", handlePostUpdated);
+    socket.on("postReacted", handlePostUpdated);
+    socket.on("updatePost", handlePostUpdated);
+    socket.on("postDeleted", handlePostDeleted);
 
     // ✅ Clean up on unmount
     return () => {
       socket.off("typing", handleTyping);
       socket.off("commentReacted", handleCommentReacted);
       socket.off("updatePostRequest", handleUpdatePostRequest);
+      socket.off("postUpdated", handlePostUpdated);
+      socket.off("postReacted", handlePostUpdated);
+      socket.off("updatePost", handlePostUpdated);
+      socket.off("postDeleted", handlePostDeleted);
     };
   }, [postId, currentUser?._id, setSomeoneTyping, setPosts]);
 }
+

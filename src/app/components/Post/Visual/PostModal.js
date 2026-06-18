@@ -381,6 +381,7 @@ export default function PostModal({
                                          height={40}
                                          wrapperClassName="w-10 h-10 rounded-full border-2 border-white/10"
                                          className="object-cover w-full h-full"
+                                         hideBadge={true}
                                        />
                                     </div>
                                     <div className="flex flex-col min-w-0">
