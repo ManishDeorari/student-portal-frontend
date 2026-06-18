@@ -38,6 +38,33 @@ export default function SmartPostModal({
   const textareaRef = useRef(null);
   const likeIconRef = useRef(null);
   const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+  const [showOriginalEventModal, setShowOriginalEventModal] = useState(false);
+
+  // Fetch full post on mount to guarantee populated data (fixes "unknown user" in comments)
+  useEffect(() => {
+    if (!initialPost || !showModal || !initialPost._id) return;
+    
+    const fetchFullPost = async () => {
+      try {
+        const isEvent = initialPost.type === "Event";
+        const endpoint = isEvent ? `/api/events/${initialPost._id}` : `/api/posts/${initialPost._id}`;
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        
+        const res = await fetch(`${API_URL}${endpoint}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (res.ok) {
+          const fullPost = await res.json();
+          setPosts([fullPost]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch full post data:", err);
+      }
+    };
+    
+    fetchFullPost();
+  }, [initialPost?._id, showModal, token]);
 
   // Handle post deletion by watching posts array
   useEffect(() => {
@@ -121,56 +148,76 @@ export default function SmartPostModal({
   };
 
   return (
-    <PostModal
-      showModal={showModal}
-      setShowModal={setShowModal}
-      post={post}
-      currentUser={currentUser}
-      handleReact={handleReact}
-      getReactionCount={getReactionCount}
-      userReacted={userReacted}
-      reactionEffect={reactionEffect}
-      setReactionEffect={setReactionEffect}
-      handleReply={handleReply}
-      handleDeleteComment={handleDeleteComment}
-      handleComment={handleComment}
-      handleEditComment={handleEditComment}
-      handleEditReply={handleEditReply}
-      handleDeleteReply={handleDeleteReply}
-      handleReactToReply={handleReactToReply}
-      handleReactToComment={handleReactToComment}
-      handlePinComment={handlePinComment}
-      comment={comment}
-      setComment={setComment}
-      editing={editing}
-      setEditing={setEditing}
-      editContent={editContent}
-      setEditContent={setEditContent}
-      editTitle={editTitle}
-      setEditTitle={setEditTitle}
-      handleEditSave={() => handleEditSave({ content: editContent, title: editTitle })}
-      handleBlurSave={handleBlurSave}
-      toggleEdit={(editKey, setEditContentFunc, isEditing, originalContent) => {
-        toggleEdit(editKey, (val) => {
-          setEditContentFunc(val);
-          setEditTitle(post.title || "");
-        }, isEditing, originalContent);
-      }}
-      handleDelete={() => {
-        handleDelete();
-        if (onPostUpdate) onPostUpdate();
-      }}
-      showEditEmoji={showEditEmoji}
-      setShowEditEmoji={setShowEditEmoji}
-      textareaRef={textareaRef}
-      setShowViewer={setShowViewer}
-      setStartIndex={setStartIndex}
-      hasLiked={hasLiked}
-      isLiking={isLiking}
-      likeIconRef={likeIconRef}
-      darkMode={darkMode}
-      setPosts={setPosts}
-      hideInteractions={false}
-    />
+    <>
+      <PostModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        post={post}
+        currentUser={currentUser}
+        handleReact={handleReact}
+        getReactionCount={getReactionCount}
+        userReacted={userReacted}
+        reactionEffect={reactionEffect}
+        setReactionEffect={setReactionEffect}
+        handleReply={handleReply}
+        handleDeleteComment={handleDeleteComment}
+        handleComment={handleComment}
+        handleEditComment={handleEditComment}
+        handleEditReply={handleEditReply}
+        handleDeleteReply={handleDeleteReply}
+        handleReactToReply={handleReactToReply}
+        handleReactToComment={handleReactToComment}
+        handlePinComment={handlePinComment}
+        comment={comment}
+        setComment={setComment}
+        editing={editing}
+        setEditing={setEditing}
+        editContent={editContent}
+        setEditContent={setEditContent}
+        editTitle={editTitle}
+        setEditTitle={setEditTitle}
+        handleEditSave={() => handleEditSave({ content: editContent, title: editTitle })}
+        handleBlurSave={handleBlurSave}
+        toggleEdit={(editKey, setEditContentFunc, isEditing, originalContent) => {
+          toggleEdit(editKey, (val) => {
+            setEditContentFunc(val);
+            setEditTitle(post.title || "");
+          }, isEditing, originalContent);
+        }}
+        handleDelete={() => {
+          handleDelete();
+          if (onPostUpdate) onPostUpdate();
+        }}
+        showEditEmoji={showEditEmoji}
+        setShowEditEmoji={setShowEditEmoji}
+        textareaRef={textareaRef}
+        setShowViewer={setShowViewer}
+        setStartIndex={setStartIndex}
+        hasLiked={hasLiked}
+        isLiking={isLiking}
+        likeIconRef={likeIconRef}
+        darkMode={darkMode}
+        setPosts={setPosts}
+        hideInteractions={false}
+        onShowOriginalEvent={() => setShowOriginalEventModal(true)}
+      />
+      
+      {showOriginalEventModal && (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId) && (
+        <SmartPostModal
+          showModal={showOriginalEventModal}
+          setShowModal={setShowOriginalEventModal}
+          post={{
+            ...(post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId),
+            type: "Event",
+            content: (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.description,
+            user: typeof (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy === "object"
+              ? (post.eventRepostDetails?.originalEventId || post.announcementDetails?.originalEventId)?.createdBy
+              : post.user
+          }}
+          currentUser={currentUser}
+          darkMode={darkMode}
+        />
+      )}
+    </>
   );
 }
