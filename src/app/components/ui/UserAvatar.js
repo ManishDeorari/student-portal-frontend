@@ -21,8 +21,8 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
 
   return (
     <div
-      className={`relative inline-flex flex-shrink-0 rounded-full ${wrapperClassName}`}
-      style={{ overflow: 'visible' }}
+      className={`relative inline-flex flex-shrink-0 items-center justify-center rounded-full aspect-square ${wrapperClassName}`}
+      style={{ overflow: 'visible', width: width || 48, height: height || 48 }}
       onClick={onClick}
     >
       <Image
