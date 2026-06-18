@@ -13,9 +13,8 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
     } catch (e) {}
   }, []);
 
-  const isAdminOrFaculty = currentUser?.role === "admin" || currentUser?.role === "faculty" || currentUser?.isAdmin || currentUser?.isMainAdmin;
   const isComplete = user?.profileCompletionAwarded === true;
-  const showBadge = isAdminOrFaculty && isComplete;
+  const showBadge = isComplete;
 
   const imageSrc = src || user?.profilePicture || "/default-profile.jpg";
   const finalUnoptimized = unoptimized !== undefined ? unoptimized : imageSrc.includes("default-profile.jpg");

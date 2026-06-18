@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import UserAvatar from "../ui/UserAvatar";
 import { fetchEventRegistrations, downloadEventCSV } from "../../../api/dashboard";
 import toast from "react-hot-toast";
 
@@ -91,9 +91,13 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                     onClick={() => toggleRow(reg._id)}
                     className={`p-4 rounded-[15px] flex items-center gap-4 cursor-pointer transition-all ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black hover:bg-gray-50"}`}
                   >
-                    <div className="relative w-10 h-10 rounded-full overflow-hidden border">
-                      <Image src={reg.userId?.profilePicture || "/default-profile.jpg"} alt={reg.userId?.name || "User"} fill className="object-cover" />
-                    </div>
+                    <UserAvatar 
+                      user={reg.userId}
+                      width={40}
+                      height={40}
+                      className="object-cover w-full h-full"
+                      wrapperClassName="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
+                    />
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>
                         {reg.isGroup && reg.groupName && (

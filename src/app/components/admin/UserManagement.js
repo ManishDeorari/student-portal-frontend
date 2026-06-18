@@ -7,6 +7,7 @@ import { useTheme } from "@/context/ThemeContext";
 import HybridInput from "../ui/HybridInput";
 import EmojiPickerToggle from "../Post/utils/EmojiPickerToggle";
 import AdminEditUserModal from "./modals/AdminEditUserModal";
+import UserAvatar from "../ui/UserAvatar";
 import AdminSearchEditModal from "./modals/AdminSearchEditModal";
 import { toast } from "react-hot-toast";
 
@@ -404,10 +405,14 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                 <div className="relative shrink-0">
                                                     <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 ${u.isAdmin ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
                                                     {u.profilePicture ? (
-                                                        <img 
-                                                            src={u.profilePicture} 
-                                                            alt={u.name} 
-                                                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover relative z-10 border-2 ${darkMode ? "border-white/10" : "border-white"}`}
+                                                        <UserAvatar
+                                                            user={u}
+                                                            src={u.profilePicture}
+                                                            alt={u.name}
+                                                            width={48}
+                                                            height={48}
+                                                            wrapperClassName="w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10"
+                                                            className={`w-full h-full rounded-full object-cover border-2 ${darkMode ? "border-white/10" : "border-white"}`}
                                                         />
                                                     ) : (
                                                         <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg`}>

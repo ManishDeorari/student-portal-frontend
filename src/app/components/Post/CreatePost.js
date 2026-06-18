@@ -25,7 +25,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
   const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
 
   const availableTags = [];
-  // if (currentUser?.role === "student") availableTags.push("Session");
+  if (currentUser?.role === "student") availableTags.push("Session");
   if (currentUser?.role === "faculty" || currentUser?.isAdmin) {
     availableTags.push("Event");
     availableTags.push("Announcement");
@@ -158,9 +158,9 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
 
   // Determine available tabs
   const tabs = [{ id: "Post", label: "✍️ Regular Post" }];
-  // if (currentUser?.role === "student") {
-  //   tabs.push({ id: "Session", label: "🤝 Session" });
-  // }
+  if (currentUser?.role === "student") {
+    tabs.push({ id: "Session", label: "🤝 Session" });
+  }
   if (currentUser?.role === "faculty" || currentUser?.isAdmin) {
     tabs.push({ id: "Announcement", label: "📢 Announcement" });
     tabs.push({ id: "Event", label: "📅 Event" });
