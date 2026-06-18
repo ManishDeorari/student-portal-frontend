@@ -60,6 +60,18 @@ export default function ProfileStats({ profile: initialProfile, isPublicView }) 
         };
     }, [initialProfile?._id, isPublicView]);
 
+    // Sync stats immediately when parent passes updated profile
+    useEffect(() => {
+        if (initialProfile) {
+            setStats(prev => ({
+                ...prev,
+                connections: initialProfile.connections?.length || 0,
+                points: initialProfile.points?.total || 0,
+                fullPoints: initialProfile.points || {},
+            }));
+        }
+    }, [initialProfile]);
+
     if (!initialProfile) return null;
 
     const connectionsLink = isPublicView
