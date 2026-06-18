@@ -8,7 +8,7 @@ import { ArrowLeft, Calendar, Trophy, Eye } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import AuthGuard from "@/app/components/AuthGuard";
 import { GooeyGradientBackground } from "@/app/components/GooeyGradientBackground";
-import PostModal from "@/app/components/Post/Visual/PostModal";
+import SmartPostModal from "@/app/components/Post/SmartPostModal";
 
 function EventsContent() {
     const params = useParams();
@@ -273,13 +273,12 @@ function EventsContent() {
             </div>
 
             {showPostModal && selectedPost && (
-                <PostModal 
+                <SmartPostModal 
                     showModal={showPostModal}
                     setShowModal={setShowPostModal}
                     post={selectedPost} 
                     darkMode={darkMode}
                     currentUser={currentUser}
-                    hideInteractions={true}
                 />
             )}
         </GooeyGradientBackground>

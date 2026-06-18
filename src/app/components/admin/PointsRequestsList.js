@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchPendingPointsRequests, approvePointsRequest, fetchPendingProfilePointsRequests, approveProfilePointsRequest } from "../../../api/dashboard";
 import toast from "react-hot-toast";
-import PostModal from "../Post/Visual/PostModal";
+import SmartPostModal from "../Post/SmartPostModal";
 import { downloadFileSilently } from "../../utils/cloudinaryHelper";
 
 const PointsRequestsList = ({ darkMode = false, user }) => {
@@ -572,20 +572,13 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
       </div>
 
       {showPostModal && selectedPost && (
-        <PostModal
+        <SmartPostModal
           showModal={showPostModal}
           setShowModal={setShowPostModal}
           post={selectedPost}
           currentUser={user}
           darkMode={darkMode}
-          hideInteractions={true}
-          // No-op handlers just in case, though hidden
-          handleReact={() => {}}
-          getReactionCount={() => 0}
-          userReacted={() => false}
-          handleComment={() => {}}
-          handleDelete={() => {}}
-          toggleEdit={() => {}}
+          onPostUpdate={loadRequests}
         />
       )}
     </div>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import SectionCard from "./SectionCard";
 import { Activity, Trophy, Calendar, Eye, Users } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
-import PostModal from "../Post/Visual/PostModal";
+import SmartPostModal from "../Post/SmartPostModal";
 
 export default function ProfileEventParticipation({ profile, isPublicView }) {
     const { darkMode } = useTheme();
@@ -158,13 +158,12 @@ export default function ProfileEventParticipation({ profile, isPublicView }) {
             </SectionCard>
 
             {showPostModal && selectedPost && (
-                <PostModal 
+                <SmartPostModal 
                     showModal={showPostModal}
                     setShowModal={setShowPostModal}
                     post={selectedPost} 
                     darkMode={darkMode}
                     currentUser={profile}
-                    hideInteractions={true}
                 />
             )}
         </>
