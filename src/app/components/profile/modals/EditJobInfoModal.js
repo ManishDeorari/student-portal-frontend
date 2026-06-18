@@ -59,6 +59,7 @@ export default function EditJobInfoModal({ isOpen, onClose, currentProfile, onSa
             if (!res.ok) throw new Error("Failed to update job info");
 
             const updatedUser = await res.json();
+            localStorage.setItem("user", JSON.stringify(updatedUser));
             onSave(updatedUser);
             toast.success("Job Info updated successfully!");
             onClose();

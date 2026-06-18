@@ -188,6 +188,7 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
             if (!res.ok) throw new Error("Failed to update experience");
 
             const updatedUser = await res.json();
+            localStorage.setItem("user", JSON.stringify(updatedUser));
             onSave(updatedUser);
             toast.success("Experience updated successfully!");
             onClose();

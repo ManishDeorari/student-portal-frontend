@@ -102,6 +102,7 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
       if (!res.ok) throw new Error("Failed to update profile");
 
       const data = await res.json();
+      localStorage.setItem("user", JSON.stringify(data));
       toast.success("Resume and Links updated!");
       onSave(data);
       onClose();

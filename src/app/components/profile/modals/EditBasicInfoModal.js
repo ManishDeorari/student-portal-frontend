@@ -153,6 +153,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
             if (!res.ok) throw new Error("Failed to update profile info");
 
             const updatedUser = await res.json();
+            localStorage.setItem("user", JSON.stringify(updatedUser));
             onSave(updatedUser);
             toast.success("Profile details updated successfully!");
             onClose();

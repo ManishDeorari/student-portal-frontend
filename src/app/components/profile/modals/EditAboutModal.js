@@ -28,6 +28,7 @@ export default function EditAboutModal({ isOpen, onClose, currentBio, onSave }) 
             if (!res.ok) throw new Error("Failed to update bio");
 
             const updatedUser = await res.json();
+            localStorage.setItem("user", JSON.stringify(updatedUser));
             onSave(updatedUser);
             toast.success("Bio updated successfully!");
             onClose();
