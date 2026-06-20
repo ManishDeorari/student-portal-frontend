@@ -32,8 +32,8 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
   }, []);
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="relative w-10 h-10 sm:w-12 sm:h-12">
+    <div className="flex items-center gap-2 sm:gap-3">
+      <div className="relative w-8 h-8 sm:w-12 sm:h-12 flex-shrink-0">
         <UserAvatar
           user={post.user}
           src={getOptimizedImageUrl(profileImg)}
