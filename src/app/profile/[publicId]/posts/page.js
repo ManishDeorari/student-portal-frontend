@@ -56,11 +56,8 @@ function PostsContent() {
 
     const filteredPosts = posts.filter(post => {
         if (activeFilter === "all") return true;
-        if (activeFilter === "announcement") return post.type === "Announcement";
-        if (activeFilter === "event") return post.type === "Event";
-        if (activeFilter === "project") return post.type === "Project";
-        if (activeFilter === "achievement") return post.type === "Achievement";
-        return true;
+        if (activeFilter === "Regular") return post.type === "Regular" || !post.type;
+        return post.type === activeFilter;
     });
 
     if (loading) {
@@ -101,16 +98,22 @@ function PostsContent() {
 
                     {/* Content Scroll Area */}
                     <div className="flex-1 overflow-y-auto custom-scrollbar pb-20">
-                        {/* Filters */}
                         <div className="max-w-3xl mx-auto w-full px-4 sm:px-6 mt-2 mb-6">
                             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                                {["all", "announcement", "event", "project", "achievement"].map((filter) => (
+                                {[
+                                    { id: "all", label: "All", icon: "🌍" },
+                                    { id: "Regular", label: "Posts", icon: "📝" },
+                                    { id: "Announcement", label: "Announcements", icon: "📢" },
+                                    { id: "Event", label: "Events", icon: "📅" },
+                                    { id: "Session", label: "Sessions", icon: "🎥" }
+                                ].map((filter) => (
                                     <button
-                                        key={filter}
-                                        onClick={() => setActiveFilter(filter)}
-                                        className={`px-4 py-2 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-widest whitespace-nowrap transition-colors ${activeFilter === filter ? (darkMode ? "bg-white text-black" : "bg-black text-white") : (darkMode ? "bg-white/10 text-gray-400 hover:text-white" : "bg-black/5 text-gray-600 hover:text-black")}`}
+                                        key={filter.id}
+                                        onClick={() => setActiveFilter(filter.id)}
+                                        className={`px-4 py-2 rounded-full text-[10px] sm:text-xs font-black tracking-widest whitespace-nowrap transition-colors flex items-center gap-1.5 ${activeFilter === filter.id ? (darkMode ? "bg-white text-black" : "bg-black text-white") : (darkMode ? "bg-white/10 text-gray-400 hover:text-white" : "bg-black/5 text-gray-600 hover:text-black")}`}
                                     >
-                                        {filter === "all" ? "All Posts" : filter}
+                                        <span className="text-sm">{filter.icon}</span>
+                                        <span className="uppercase">{filter.label}</span>
                                     </button>
                                 ))}
                             </div>
