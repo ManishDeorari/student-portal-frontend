@@ -85,7 +85,8 @@ export default function GroupSidebar({
                             >
                                     <GroupAvatar
                                         group={group}
-                                        size={44}
+                                        size="100%"
+                                        className="w-full h-full"
                                     />
                                 </div>
 
