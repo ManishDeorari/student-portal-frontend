@@ -266,20 +266,19 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                       Winners Requesting Points
                     </span>
                     <div className="flex flex-wrap gap-2">
-                    <div className=\"flex flex-wrap gap-2\">
                       {post.announcementDetails.winners.map((w, i) => (
                         <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
-                          <div className={`flex items-center gap-3 px-3 py-2 rounded-[calc(0.75rem-1.5px)] ${darkMode ? \"bg-black\" : \"bg-white\"}`}>
-                            <div className=\"relative\">
+                          <div className={`flex items-center gap-3 px-3 py-2 rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
+                            <div className="relative">
                               <img 
-                                src={w.userId?.profilePicture || w.profilePicture || \"/default-profile.jpg\"} 
-                                alt=\"profile\" 
-                                className=\"w-8 h-8 rounded-full object-cover aspect-square shrink-0 border border-white/10\" 
+                                src={w.userId?.profilePicture || w.profilePicture || "/default-profile.jpg"} 
+                                alt="profile" 
+                                className="w-8 h-8 rounded-full object-cover aspect-square shrink-0 border border-white/10" 
                               />
-                              <span className=\"absolute -bottom-1 -right-1 text-xs\">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? \"✅\" : \"❓\"}</span>
+                              <span className="absolute -bottom-1 -right-1 text-xs">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? "✅" : "❓"}</span>
                             </div>
-                            <div className=\"flex flex-col min-w-0\">
-                              <span className={`text-xs font-black uppercase tracking-tight truncate ${darkMode ? \"text-white\" : \"text-slate-800\"}`}>
+                            <div className="flex flex-col min-w-0">
+                              <span className={`text-xs font-black uppercase tracking-tight truncate ${darkMode ? "text-white" : "text-slate-800"}`}>
                                 {w.name}
                                 {w.isGroup && <span className="ml-1 opacity-50 text-[9px]">(Group)</span>}
                               </span>
