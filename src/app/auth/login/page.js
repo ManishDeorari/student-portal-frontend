@@ -377,7 +377,7 @@ function LoginContent() {
           className="w-full lg:w-1/2 max-w-[310px] sm:max-w-[420px] lg:max-w-[420px] lg:ml-12 mt-6 sm:mt-12 lg:mt-0 mb-8 mx-auto lg:mx-0"
         >
           <div className="p-[2px] sm:p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl relative">
-            <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:py-6 sm:px-8 relative overflow-hidden transition-all duration-500 flex flex-col h-[650px]`}>
+            <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:py-6 sm:px-8 relative overflow-hidden transition-all duration-500 h-[520px] sm:h-[600px] flex flex-col`}>
               {view === "LOGIN" && (
                 <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 flex-1 flex flex-col justify-center">
                   <div className="space-y-1 sm:space-y-2 text-center">
@@ -467,12 +467,13 @@ function LoginContent() {
 
               
               {view === "SIGNUP" && (
-                <div className="flex flex-col h-full overflow-hidden">
+                <div className="flex flex-col h-full flex-1 min-h-0">
                 <div className="space-y-0.5 text-center mb-4 shrink-0">
                   <h2 className={`text-2xl sm:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Join Global Network</h2>
                   <p className={`text-xs sm:text-sm ${darkMode ? "text-white font-bold" : "text-black font-bold"} opacity-70`}>Create account to connect</p>
                 </div>
-                <form onSubmit={handleSignupSubmit} className="space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-2 pb-2">
+                <form onSubmit={handleSignupSubmit} className="flex-1 flex flex-col min-h-0 space-y-4">
+                  <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-4">
                 {error && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -676,29 +677,32 @@ function LoginContent() {
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95 disabled:opacity-50"
-                >
-                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-3 sm:py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
-                    <span className="text-white font-black text-xs uppercase tracking-widest">
-                      {loading ? "Creating Account..." : "Join Portal"}
-                    </span>
                   </div>
-                </button>
+                  <div className="shrink-0 space-y-3 pt-2">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95 disabled:opacity-50"
+                    >
+                      <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-3 sm:py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
+                        <span className="text-white font-black text-xs uppercase tracking-widest">
+                          {loading ? "Creating Account..." : "Join Portal"}
+                        </span>
+                      </div>
+                    </button>
 
-                <p className={`text-sm text-center ${darkMode ? "text-white font-bold" : "text-black font-bold"}`}>
-                  Already a member?{" "}
-                  <button type="button" onClick={() => setView("LOGIN")} className="text-blue-500 font-extrabold hover:underline underline-offset-4">Login</button>
-                </p>
+                    <p className={`text-sm text-center ${darkMode ? "text-white font-bold" : "text-black font-bold"}`}>
+                      Already a member?{" "}
+                      <button type="button" onClick={() => setView("LOGIN")} className="text-blue-500 font-extrabold hover:underline underline-offset-4">Login</button>
+                    </p>
+                  </div>
                 </form>
                 </div>
               )}
 
 
               {view === "FORGOT_EMAIL" && (
-                <form onSubmit={handleForgotPassword} className="space-y-6 flex-1 flex flex-col justify-center">
+                <form onSubmit={handleForgotPassword} className="space-y-6">
                   <div className="space-y-2 text-center">
                     <h2 className={`text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Reset Access</h2>
                     <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>We&apos;ll send a code to your registered email</p>
@@ -744,7 +748,7 @@ function LoginContent() {
               )}
 
               {view === "FORGOT_OTP" && (
-                <form onSubmit={handleResetPassword} className="space-y-6 flex-1 flex flex-col justify-center">
+                <form onSubmit={handleResetPassword} className="space-y-6">
                   <div className="space-y-2 text-center">
                     <h2 className={`text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Security Check</h2>
                     <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>Verification code sent to your inbox</p>
