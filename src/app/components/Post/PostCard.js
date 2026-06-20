@@ -607,8 +607,8 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
 
                         <div className="divide-y divide-white/5">
                           {(entry.type === 'group' ? entry.members : [entry]).map((member, midx) => (
-                            <div key={midx} className={`p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-blue-50/50"}`}>
-                              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1 min-w-0 w-full">
+                            <div key={midx} className={`p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-blue-50/50"}`}>
+                              <div className="flex items-center gap-4 flex-1 min-w-0">
                                 <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 shadow-lg flex-shrink-0 relative">
                                   {(() => {
                                     const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
@@ -672,12 +672,12 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                               </div>
 
                               {entry.type === 'individual' && (
-                                <div className="flex items-center gap-3 w-full sm:w-auto justify-start sm:justify-end mt-2 sm:mt-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5 sm:border-transparent">
+                                <div className="flex items-center gap-3 w-full sm:w-auto justify-start sm:justify-end pl-[56px] sm:pl-0 mt-1 sm:mt-0 pt-2 sm:pt-0 border-t border-black/5 dark:border-white/5 sm:border-t-0">
                                   <div className="flex flex-col items-start sm:items-end">
                                     <span className={`text-[8px] font-black uppercase opacity-100 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Rank</span>
                                     <span className={`text-sm font-black ${darkMode ? "text-blue-300" : "text-blue-700"}`}>{entry.rank}</span>
                                   </div>
-                                  <div className="flex flex-col items-start sm:items-end border-l border-white/10 pl-3">
+                                  <div className="flex flex-col items-start sm:items-end border-l border-black/10 dark:border-white/10 pl-3">
                                     <span className={`text-[8px] font-black uppercase opacity-100 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Points</span>
                                     <span className={`px-2 py-0.5 rounded-md text-xs font-black ${darkMode ? "bg-green-500/20 text-green-300" : "bg-green-100 text-green-700"}`}>+{entry.points}</span>
                                   </div>

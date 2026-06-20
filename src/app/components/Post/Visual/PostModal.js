@@ -185,8 +185,8 @@ export default function PostModal(props) {
                         )}
                         <div className={`p-2 sm:p-3 ${entry.type === 'group' ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3' : ''}`}>
                           {(entry.type === 'group' ? entry.members : [entry]).map((member, midx) => (
-                            <div key={midx} className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 rounded-2xl ${darkMode ? "bg-[#0f172a]/50 border border-slate-800" : "bg-white border border-gray-100 shadow-sm"}`}>
-                              <div className="flex items-center gap-3 w-full sm:w-auto">
+                            <div key={midx} className={`flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 gap-2 sm:gap-3 rounded-2xl ${darkMode ? "bg-[#0f172a]/50 border border-slate-800" : "bg-white border border-gray-100 shadow-sm"}`}>
+                              <div className="flex items-center gap-3">
                                 <Link href={`/profile/${member.userId?._id || member.userId?.id || member.userId}`}>
                                   <div className="flex items-center justify-center aspect-square w-fit h-fit relative p-[2px] bg-gradient-to-tr from-blue-400 to-purple-500 rounded-full cursor-pointer hover:scale-105 transition-transform">
                                     <UserAvatar
@@ -201,20 +201,25 @@ export default function PostModal(props) {
                                       {member.userId?.name || member.name}
                                     </span>
                                   </Link>
-                                  {member.enrollmentNumber && (
-                                    <span className={`text-[10px] ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
-                                      {member.enrollmentNumber}
-                                    </span>
-                                  )}
-                                  {member.userId?.course && (
-                                    <span className={`text-[10px] ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
-                                      {member.userId.course} {member.userId.semester ? `• Sem ${member.userId.semester}` : ''}
-                                    </span>
-                                  )}
+                                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
+                                    {member.enrollmentNumber && (
+                                      <span className={`text-[10px] ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+                                        {member.enrollmentNumber}
+                                      </span>
+                                    )}
+                                    {member.userId?.course && (
+                                      <>
+                                        <span className={`text-[10px] opacity-50 ${darkMode ? "text-white" : "text-black"}`}>•</span>
+                                        <span className={`text-[10px] ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
+                                          {member.userId.course} {member.userId.semester ? `• Sem ${member.userId.semester}` : ''}
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                               {entry.type === 'individual' && (
-                                <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-1 w-full sm:w-auto justify-end sm:justify-end mt-1 sm:mt-0">
+                                <div className="flex sm:flex-col items-center sm:items-end justify-start sm:justify-end gap-2 sm:gap-1 mt-1 sm:mt-0 pl-14 sm:pl-0 pt-2 sm:pt-0 border-t border-black/5 dark:border-white/5 sm:border-t-0">
                                   <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-50 text-blue-700"}`}>
                                     Rank: {entry.rank}
                                   </span>

@@ -32,7 +32,7 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
           alt="Profile"
           width={160}
           height={160}
-          wrapperClassName="w-28 h-28 sm:w-40 sm:h-40"
+          wrapperClassName="w-40 h-40"
           unoptimized={profileImg === "/default-profile.jpg"}
           onClick={() => setShowViewer(true)} // open full view
           onContextMenu={(e) => isRestricted && e.preventDefault()}
