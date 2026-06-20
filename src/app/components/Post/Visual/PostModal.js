@@ -96,14 +96,6 @@ export default function PostModal(props) {
               darkMode={darkMode}
               hideViewFullPost={true}
             />
-            {post.images && post.images.length > 0 && (
-              <PostMedia
-                post={post}
-                currentUser={currentUser}
-                darkMode={darkMode}
-                setSelectedImage={setStartIndex}
-              />
-            )}
           </div>
 
           {/* Event Repost Link */}
@@ -189,6 +181,18 @@ export default function PostModal(props) {
                   )}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Media (moved below event repost and announcement links) */}
+          {post.images && post.images.length > 0 && (
+            <div className="mb-6">
+              <PostMedia
+                post={post}
+                currentUser={currentUser}
+                darkMode={darkMode}
+                setSelectedImage={setStartIndex}
+              />
             </div>
           )}
 
