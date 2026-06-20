@@ -637,10 +637,10 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                   <div className="flex items-center gap-2 mb-1">
                                     {member.userId?.publicId ? (
                                       <Link href={`/profile/${member.userId.publicId}`} className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}>
-                                        {member.name}
+                                        {member.userId?.name || member.name || "User"}
                                       </Link>
                                     ) : (
-                                      <span className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{member.name}</span>
+                                      <span className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{member.userId?.name || member.name || "User"}</span>
                                     )}
                                     {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
                                   </div>
