@@ -80,7 +80,7 @@ export default function AdminSearchEditModal({ isOpen, onClose, users, onEditUse
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 p-[1px]">
                                                 {u.profilePicture ? (
-                                                    <img src={u.profilePicture} alt="" className="w-full h-full rounded-full object-cover" />
+                                                    <img src={u.profilePicture} alt="" className="w-full h-full rounded-full object-cover aspect-square shrink-0" />
                                                 ) : (
                                                     <div className={`w-full h-full rounded-full ${darkMode ? "bg-slate-800" : "bg-white"} flex items-center justify-center font-bold text-sm`}>
                                                         {u.name.charAt(0)}

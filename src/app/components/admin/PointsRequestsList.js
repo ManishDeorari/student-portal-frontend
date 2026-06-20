@@ -130,7 +130,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
-                <img src={post.user?.profilePicture || "/default-profile.jpg"} alt="profile" className="w-full h-full object-cover" />
+                <img src={post.user?.profilePicture || "/default-profile.jpg"} alt="profile" className="w-full h-full object-cover aspect-square shrink-0" />
               </div>
               <div className="flex flex-col">
                 <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{post.user?.name || "Member"}</span>
@@ -266,19 +266,20 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                       Winners Requesting Points
                     </span>
                     <div className="flex flex-wrap gap-2">
+                    <div className=\"flex flex-wrap gap-2\">
                       {post.announcementDetails.winners.map((w, i) => (
                         <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
-                          <div className={`flex items-center gap-3 px-3 py-2 rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
-                            <div className="relative">
+                          <div className={`flex items-center gap-3 px-3 py-2 rounded-[calc(0.75rem-1.5px)] ${darkMode ? \"bg-black\" : \"bg-white\"}`}>
+                            <div className=\"relative\">
                               <img 
-                                src={w.userId?.profilePicture || w.profilePicture || "/default-profile.jpg"} 
-                                alt="profile" 
-                                className="w-8 h-8 rounded-full object-cover border border-white/10" 
+                                src={w.userId?.profilePicture || w.profilePicture || \"/default-profile.jpg\"} 
+                                alt=\"profile\" 
+                                className=\"w-8 h-8 rounded-full object-cover aspect-square shrink-0 border border-white/10\" 
                               />
-                              <span className="absolute -bottom-1 -right-1 text-xs">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? "✅" : "❓"}</span>
+                              <span className=\"absolute -bottom-1 -right-1 text-xs\">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? \"✅\" : \"❓\"}</span>
                             </div>
-                            <div className="flex flex-col min-w-0">
-                              <span className={`text-xs font-black uppercase tracking-tight truncate ${darkMode ? "text-white" : "text-slate-800"}`}>
+                            <div className=\"flex flex-col min-w-0\">
+                              <span className={`text-xs font-black uppercase tracking-tight truncate ${darkMode ? \"text-white\" : \"text-slate-800\"}`}>
                                 {w.name}
                                 {w.isGroup && <span className="ml-1 opacity-50 text-[9px]">(Group)</span>}
                               </span>
@@ -369,7 +370,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                     <div key={user._id} className="group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] bg-gradient-to-r from-purple-500 to-pink-500">
                       <div className={`p-3 sm:p-6 flex flex-col gap-4 rounded-[calc(2rem-2px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                         <div className="flex items-center gap-3">
-                          <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border-2 border-purple-500" />
+                          <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border-2 border-purple-500 object-cover aspect-square shrink-0" />
                           <div className="flex flex-col">
                             <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{user.name}</span>
                             <span className={`text-[9px] font-bold uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
