@@ -6,6 +6,7 @@ import { FaTimes, FaSearch, FaUserPlus, FaCheck, FaChevronDown } from "react-ico
 import { BadgeCheck } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import Link from "next/link";
+import ImageViewerModal from "../../profile/ImageViewerModal";
 
 export default function GroupMembersModal({ 
     isOpen, 
@@ -17,6 +18,11 @@ export default function GroupMembersModal({
     const { darkMode } = useTheme();
     const [searchTerm, setSearchTerm] = useState("");
     const [roleFilter, setRoleFilter] = useState("ALL");
+    const [viewerImage, setViewerImage] = useState(null);
+    const [viewerOwnerId, setViewerOwnerId] = useState(null);
+
+    const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin === true || currentUser?.isMainAdmin === true || currentUser?.email === "manishdeorari377@gmail.com";
+    const isRestricted = !isAdmin && String(viewerOwnerId) !== String(currentUser?._id);
 
     if (!isOpen) return null;
 
@@ -101,7 +107,14 @@ export default function GroupMembersModal({
                                 <div key={member._id} className="p-[1.5px] rounded-[2rem] bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 shadow-lg transition-all hover:scale-[1.01]">
                                     <div className={`p-4 rounded-[calc(2rem-1.5px)] flex items-center justify-between ${darkMode ? "bg-slate-950" : "bg-white"}`}>
                                         <div className="flex items-center gap-5">
-                                            <div className="p-[2.5px] rounded-full bg-gradient-to-tr from-blue-400 to-pink-500 shadow-xl flex items-center justify-center shrink-0 w-[61px] h-[61px] aspect-square">
+                                            <div 
+                                                className="p-[2.5px] rounded-full bg-gradient-to-tr from-blue-400 to-pink-500 shadow-xl flex items-center justify-center shrink-0 w-[61px] h-[61px] aspect-square cursor-pointer hover:scale-105 transition-transform"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setViewerImage(member.profilePicture || "/default-profile.jpg");
+                                                    setViewerOwnerId(member._id);
+                                                }}
+                                            >
                                                 <UserAvatar 
                                                     user={member}
                                                     src={member.profilePicture || "/default-profile.jpg"} 
@@ -153,6 +166,14 @@ export default function GroupMembersModal({
                     </div>
                 </div>
             </div>
+
+            {viewerImage && (
+                <ImageViewerModal
+                    imageUrl={viewerImage}
+                    onClose={() => { setViewerImage(null); setViewerOwnerId(null); }}
+                    isRestricted={isRestricted}
+                />
+            )}
         </div>
 
     );

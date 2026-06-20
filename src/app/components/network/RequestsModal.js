@@ -9,6 +9,7 @@ import {
 } from "@/api/connect";
 import Link from "next/link";
 import Image from "next/image";
+import ImageViewerModal from "../profile/ImageViewerModal";
 import { useTheme } from "@/context/ThemeContext";
 
 const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
@@ -16,6 +17,22 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
     const [activeTab, setActiveTab] = useState("received"); // 'received' or 'sent'
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [viewerImage, setViewerImage] = useState(null);
+    const [viewerOwnerId, setViewerOwnerId] = useState(null);
+
+    let isAdmin = false;
+    let currentUserId = null;
+    if (typeof window !== "undefined") {
+        try {
+            const userStr = localStorage.getItem("user");
+            if (userStr) {
+                const u = JSON.parse(userStr);
+                isAdmin = u.role === "admin" || u.isAdmin === true || u.isMainAdmin === true || u.email === "manishdeorari377@gmail.com";
+                currentUserId = u._id;
+            }
+        } catch (e) {}
+    }
+    const isRestricted = !isAdmin && String(viewerOwnerId) !== String(currentUserId);
 
     const fetchRequests = useCallback(async () => {
         setLoading(true);
@@ -114,13 +131,20 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
                                 <div key={user._id} className="relative p-[1.5px] bg-gradient-to-br from-blue-400/30 to-purple-400/30 rounded-2xl group transition-all duration-500 hover:from-blue-400 hover:to-purple-400">
                                     <div className={`flex items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl transition-all relative overflow-hidden ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-900'}`}>
                                         <div className="flex items-center gap-4 min-w-0 z-10">
-                                            <div className="relative p-[1.5px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-md shrink-0">
+                                            <div 
+                                                className="relative p-[1.5px] bg-gradient-to-br from-blue-400 to-purple-400 rounded-full shadow-md shrink-0 cursor-pointer group/avatar"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setViewerImage(user.profilePicture || "/default-profile.jpg");
+                                                    setViewerOwnerId(user._id);
+                                                }}
+                                            >
                                                 <Image
                                                     src={user.profilePicture || "/default-profile.jpg"}
                                                     alt={user.name}
                                                     width={56}
                                                     height={56}
-                                                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover aspect-square border-2 ${darkMode ? 'border-slate-800' : 'border-white'}`}
+                                                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover aspect-square border-2 transition-transform duration-300 group-hover/avatar:scale-110 ${darkMode ? 'border-slate-800' : 'border-white'}`}
                                                 />
                                             </div>
                                             <div className="min-w-0">
@@ -178,6 +202,14 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
                     </div>
                 </div>
             </div>
+
+            {viewerImage && (
+                <ImageViewerModal
+                    imageUrl={viewerImage}
+                    onClose={() => { setViewerImage(null); setViewerOwnerId(null); }}
+                    isRestricted={isRestricted}
+                />
+            )}
         </div>
     );
 };

@@ -8,6 +8,7 @@ import HybridInput from "../ui/HybridInput";
 import EmojiPickerToggle from "../Post/utils/EmojiPickerToggle";
 import AdminEditUserModal from "./modals/AdminEditUserModal";
 import UserAvatar from "../ui/UserAvatar";
+import ImageViewerModal from "../profile/ImageViewerModal";
 import AdminSearchEditModal from "./modals/AdminSearchEditModal";
 import { toast } from "react-hot-toast";
 
@@ -35,6 +36,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
     const [editUserModal, setEditUserModal] = useState(null); // userData
     const [semesterConfirmModal, setSemesterConfirmModal] = useState(null); // "increase" | "decrease" | null
     const [isBulkProcessing, setIsBulkProcessing] = useState(false);
+    const [viewerImage, setViewerImage] = useState(null);
     
     const [displayLimit, setDisplayLimit] = useState(20);
     const handleShowMore = () => setDisplayLimit(prev => prev + 20);
@@ -413,6 +415,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                             height={48}
                                                             wrapperClassName="w-12 h-12 rounded-full relative z-10 shrink-0 aspect-square"
                                                             className={`w-full h-full rounded-full object-cover aspect-square border-2 ${darkMode ? "border-white/10" : "border-white"}`}
+                                                            onClick={(e) => { e.stopPropagation(); setViewerImage(u.profilePicture); }}
                                                         />
                                                     ) : (
                                                         <div className={`w-12 h-12 rounded-full relative z-10 shrink-0 aspect-square ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-lg`}>
@@ -790,6 +793,14 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                     </div>
                 )}
             </AnimatePresence>
+            {/* Image Viewer */}
+            {viewerImage && (
+                <ImageViewerModal
+                    imageUrl={viewerImage}
+                    onClose={() => setViewerImage(null)}
+                    isRestricted={false}
+                />
+            )}
         </div>
     );
 }

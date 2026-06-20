@@ -9,14 +9,64 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const [isObscured, setIsObscured] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") onClose();
+
+      // Screenshot protection for restricted users
+      if (isRestricted) {
+        // Detect common screenshot shortcuts (PrintScreen, Meta+Shift+S, Meta+Shift+3/4, Ctrl+P)
+        if (
+          e.key === "PrintScreen" || 
+          (e.metaKey && e.shiftKey) || 
+          (e.ctrlKey && e.key === "p") ||
+          (e.metaKey && e.key === "p") ||
+          (e.altKey && e.key === "PrintScreen")
+        ) {
+          setIsObscured(true);
+          setTimeout(() => setIsObscured(false), 2000);
+        }
+      }
     };
+
+    const handleVisibilityChange = () => {
+      if (isRestricted && (document.hidden || document.visibilityState === "hidden")) {
+        setIsObscured(true);
+      } else {
+        setIsObscured(false);
+      }
+    };
+
+    const handleWindowBlur = () => {
+      if (isRestricted) setIsObscured(true);
+    };
+
+    const handleWindowFocus = () => {
+      if (isRestricted) setIsObscured(false);
+    };
+
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+    if (isRestricted) {
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      window.addEventListener("blur", handleWindowBlur);
+      window.addEventListener("focus", handleWindowFocus);
+      window.addEventListener("keyup", (e) => {
+          if (e.key === "PrintScreen") {
+              setIsObscured(true);
+              setTimeout(() => setIsObscured(false), 2000);
+          }
+      });
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleWindowBlur);
+      window.removeEventListener("focus", handleWindowFocus);
+    };
+  }, [onClose, isRestricted]);
 
   if (!imageUrl) return null;
 
@@ -124,7 +174,7 @@ export default function ImageViewerModal({ imageUrl, onClose, isRestricted }) {
           <img
             src={imageUrl}
             alt="Full view"
-            className={`max-w-[90vw] max-h-[90vh] object-contain rounded-[calc(1rem-2.5px)] shadow-2xl ${isRestricted ? 'select-none pointer-events-none [-webkit-touch-callout:none]' : ''}`}
+            className={`max-w-[90vw] max-h-[90vh] object-contain rounded-[calc(1rem-2.5px)] shadow-2xl transition-all duration-200 ${isRestricted ? 'select-none pointer-events-none [-webkit-touch-callout:none]' : ''} ${isObscured ? 'blur-3xl brightness-0' : ''}`}
             onContextMenu={(e) => isRestricted && e.preventDefault()}
             draggable={false}
           />

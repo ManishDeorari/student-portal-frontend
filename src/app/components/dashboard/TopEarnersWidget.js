@@ -2,10 +2,27 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getGamificationTier } from "@/utils/gamification";
+import ImageViewerModal from "../profile/ImageViewerModal";
 
 export default function TopEarnersWidget({ darkMode }) {
   const [topEarners, setTopEarners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [viewerImage, setViewerImage] = useState(null);
+  const [viewerOwnerId, setViewerOwnerId] = useState(null);
+
+  let isAdmin = false;
+  let currentUserId = null;
+  if (typeof window !== "undefined") {
+    try {
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const u = JSON.parse(userStr);
+        isAdmin = u.role === "admin" || u.isAdmin === true || u.isMainAdmin === true || u.email === "manishdeorari377@gmail.com";
+        currentUserId = u._id;
+      }
+    } catch (e) {}
+  }
+  const isRestricted = !isAdmin && String(viewerOwnerId) !== String(currentUserId);
 
   useEffect(() => {
     const fetchTopEarners = async () => {
@@ -54,12 +71,19 @@ export default function TopEarnersWidget({ darkMode }) {
             return (
               <div key={user._id} className="p-[1.5px] bg-gradient-to-tr from-yellow-400 via-orange-500 to-red-500 rounded-[17px] shadow-sm hover:shadow-md transition-all group shrink-0 flex-none h-[60px]">
                 <div className={`flex items-center px-3 rounded-[15.5px] transition-all h-full ${darkMode ? 'bg-[#1a1a1c] hover:bg-[#222225]' : 'bg-white hover:bg-orange-50/50'}`}>
-                  <div className="relative shrink-0 mr-3 w-10 h-10 min-w-[40px] min-h-[40px]">
+                  <div 
+                    className="relative shrink-0 mr-3 w-10 h-10 min-w-[40px] min-h-[40px] cursor-pointer group/avatar"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setViewerImage(user.profilePicture || "/default-profile.jpg");
+                      setViewerOwnerId(user._id);
+                    }}
+                  >
                     <Image 
                       src={user.profilePicture || "/default-profile.jpg"} 
                       alt={user.name} 
                       fill
-                      className={`rounded-full object-cover border-2 ${index === 0 ? 'border-yellow-400' : index === 1 ? 'border-gray-300' : index === 2 ? 'border-amber-600' : 'border-transparent'}`}
+                      className={`rounded-full object-cover border-2 transition-transform duration-300 group-hover/avatar:scale-110 ${index === 0 ? 'border-yellow-400' : index === 1 ? 'border-gray-300' : index === 2 ? 'border-amber-600' : 'border-transparent'}`}
                     />
                     {index === 0 && (
                       <div className="absolute -top-2.5 -right-2.5 text-xl drop-shadow-md z-10 animate-pulse">👑</div>
@@ -99,6 +123,14 @@ export default function TopEarnersWidget({ darkMode }) {
           </div>
         </div>
       </div>
+      
+      {viewerImage && (
+        <ImageViewerModal
+          imageUrl={viewerImage}
+          onClose={() => { setViewerImage(null); setViewerOwnerId(null); }}
+          isRestricted={isRestricted}
+        />
+      )}
     </div>
   );
 }
