@@ -440,7 +440,7 @@ function LoginContent() {
                           {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
                         </button>
                       </div>
-                      <p className={`text-[9px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1.5 ml-4 font-semibold`}>Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol.</p>
+                      <p className={`text-[10px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1.5 ml-4 font-semibold`}>Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol.</p>
                     </div>
                   </div>
 
@@ -510,7 +510,7 @@ function LoginContent() {
 
                 <div className="space-y-1.5">
                   <div className="space-y-0.5">
-                    <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name</label>
+                    <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name</label>
                     <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                       <input
                         type="text"
@@ -518,14 +518,14 @@ function LoginContent() {
                         placeholder="John Doe"
                         value={signupForm.name}
                         onChange={handleSignupChange}
-                        className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                        className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                         required
                       />
                     </div>
                   </div>
 
                   <div className="space-y-0.5">
-                    <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>
+                    <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>
                       {signupForm.role === "faculty" ? "Employee ID" : "Enrollment No."}
                     </label>
                     <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
@@ -535,12 +535,12 @@ function LoginContent() {
                         placeholder={signupForm.role === "faculty" ? "Ex: Emp-123" : "Ex: 2021001"}
                         value={signupForm.enrollmentNumber}
                         onChange={handleSignupChange}
-                        className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                        className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                         required
                       />
                     </div>
                     {signupForm.role === "student" && (
-                      <p className={`text-[9px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1 ml-4 font-semibold`}>
+                      <p className={`text-[10px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1 ml-4 font-semibold`}>
                         Format: PV-H followed by digits only (e.g. PV-H209001)
                       </p>
                     )}
@@ -549,7 +549,7 @@ function LoginContent() {
                   {signupForm.role === "faculty" ? (
                     <>
                       <div className="space-y-0.5">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Position</label>
+                        <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Position</label>
                         <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                           <input
                             type="text"
@@ -557,13 +557,13 @@ function LoginContent() {
                             placeholder="Ex: Assistant Professor"
                             value={signupForm.position}
                             onChange={handleSignupChange}
-                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             required
                           />
                         </div>
                       </div>
                       <div className="space-y-0.5">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Department</label>
+                        <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Department</label>
                         <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                           <input
                             type="text"
@@ -571,7 +571,7 @@ function LoginContent() {
                             placeholder="Ex: CS"
                             value={signupForm.department}
                             onChange={handleSignupChange}
-                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             required
                           />
                         </div>
@@ -581,7 +581,7 @@ function LoginContent() {
                     <>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-0.5">
-                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course</label>
+                          <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course</label>
                           <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                             <input
                               type="text"
@@ -589,13 +589,13 @@ function LoginContent() {
                               placeholder="Ex: BTECH"
                               value={signupForm.course}
                               onChange={handleSignupChange}
-                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               required
                             />
                           </div>
                         </div>
                         <div className="space-y-0.5">
-                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Semester</label>
+                          <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Semester</label>
                           <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                             <input
                               type="number"
@@ -603,7 +603,7 @@ function LoginContent() {
                               placeholder="1-8"
                               value={signupForm.semester}
                               onChange={handleSignupChange}
-                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               required
                             />
                           </div>
@@ -611,7 +611,7 @@ function LoginContent() {
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-0.5">
-                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Domain (Optional)</label>
+                          <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Domain (Optional)</label>
                           <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                             <input
                               type="text"
@@ -619,12 +619,12 @@ function LoginContent() {
                               placeholder="Ex: Web Dev"
                               value={signupForm.domain}
                               onChange={handleSignupChange}
-                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             />
                           </div>
                         </div>
                         <div className="space-y-0.5">
-                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section (Optional)</label>
+                          <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section (Optional)</label>
                           <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                             <input
                               type="text"
@@ -632,7 +632,7 @@ function LoginContent() {
                               placeholder="Ex: A"
                               value={signupForm.section}
                               onChange={handleSignupChange}
-                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             />
                           </div>
                         </div>
@@ -641,7 +641,7 @@ function LoginContent() {
                   )}
 
                   <div className="space-y-0.5">
-                    <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
+                    <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
                     <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                       <input
                         type="email"
@@ -649,14 +649,14 @@ function LoginContent() {
                         placeholder="john@univ.edu"
                         value={signupForm.email}
                         onChange={handleSignupChange}
-                        className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                        className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                         required
                       />
                     </div>
                   </div>
 
                   <div className="space-y-0.5">
-                    <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password</label>
+                    <label className={`text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password</label>
                     <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                       <input
                         type={showPassword ? "text" : "password"}
@@ -664,7 +664,7 @@ function LoginContent() {
                         placeholder="••••••••"
                         value={signupForm.password}
                         onChange={handleSignupChange}
-                        className={`w-full px-4 sm:px-6 pr-12 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                        className={`w-full px-4 sm:px-6 pr-12 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                         required
                       />
                       <button
@@ -686,7 +686,7 @@ function LoginContent() {
                       className="w-full relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95 disabled:opacity-50"
                     >
                       <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-3 sm:py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
-                        <span className="text-white font-black text-xs uppercase tracking-widest">
+                        <span className="text-white font-black text-xs uppercase tracking-widest leading-none">
                           {loading ? "Creating Account..." : "Join Portal"}
                         </span>
                       </div>
@@ -789,7 +789,7 @@ function LoginContent() {
                           {showNewPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
                         </button>
                       </div>
-                      <p className={`text-[9px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1.5 ml-4 font-semibold`}>Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol.</p>
+                      <p className={`text-[10px] ${darkMode ? "text-white/60" : "text-black/60"} mt-1.5 ml-4 font-semibold`}>Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol.</p>
                     </div>
                   </div>
 
