@@ -82,7 +82,8 @@ function PostsContent() {
                             <div className="flex items-center gap-4">
                                 <button
                                     onClick={() => router.back()}
-                                    className={`p-2.5 rounded-xl transition-all active:scale-95 ${darkMode ? "hover:bg-white/10 text-gray-300 hover:text-white" : "hover:bg-black/5 text-gray-600 hover:text-gray-900"}`}
+                                    className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center ${darkMode ? "bg-white/10 hover:bg-white/20 text-white shadow-white/5" : "bg-white hover:bg-gray-50 text-black shadow-black/5 border border-gray-200"}`}
+                                    aria-label="Go back"
                                 >
                                     <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                                 </button>
@@ -98,24 +99,38 @@ function PostsContent() {
 
                     {/* Content Scroll Area */}
                     <div className="flex-1 overflow-y-auto custom-scrollbar pb-20">
-                        <div className="max-w-3xl mx-auto w-full px-4 sm:px-6 mt-2 mb-6">
-                            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                                {[
-                                    { id: "all", label: "All", icon: "🌍" },
-                                    { id: "Regular", label: "Posts", icon: "📝" },
-                                    { id: "Announcement", label: "Announcements", icon: "📢" },
-                                    { id: "Event", label: "Events", icon: "📅" },
-                                    { id: "Session", label: "Sessions", icon: "🎥" }
-                                ].map((filter) => (
-                                    <button
-                                        key={filter.id}
-                                        onClick={() => setActiveFilter(filter.id)}
-                                        className={`px-4 py-2 rounded-full text-[10px] sm:text-xs font-black tracking-widest whitespace-nowrap transition-colors flex items-center gap-1.5 ${activeFilter === filter.id ? (darkMode ? "bg-white text-black" : "bg-black text-white") : (darkMode ? "bg-white/10 text-gray-400 hover:text-white" : "bg-black/5 text-gray-600 hover:text-black")}`}
-                                    >
-                                        <span className="text-sm">{filter.icon}</span>
-                                        <span className="uppercase">{filter.label}</span>
-                                    </button>
-                                ))}
+                        <div className="max-w-4xl mx-auto w-full px-2 sm:px-6 mt-2 mb-8">
+                            <div className="p-[1.5px] rounded-[2.5rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl w-full mx-auto max-w-full">
+                                <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-2 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
+                                    {[
+                                        { id: "all", label: "All", icon: "🌍" },
+                                        { id: "Regular", label: "Posts", icon: "📝" },
+                                        { id: "Announcement", label: "Announcements", icon: "📢" },
+                                        { id: "Event", label: "Events", icon: "📅" },
+                                        { id: "Session", label: "Sessions", icon: "🎥" }
+                                    ].map((tab) => (
+                                        <div 
+                                            key={tab.id} 
+                                            className={`p-[1.5px] rounded-full transition-all bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 ${
+                                                activeFilter === tab.id 
+                                                    ? 'scale-105 shadow-lg shadow-blue-500/30 relative z-10' 
+                                                    : 'hover:scale-105 relative z-0'
+                                            }`}
+                                        >
+                                            <button
+                                                onClick={() => setActiveFilter(tab.id)}
+                                                className={`flex items-center gap-1.5 px-4 py-2 rounded-[calc(9999px-1.5px)] font-black text-xs uppercase tracking-widest transition-all h-full w-full ${
+                                                    activeFilter === tab.id
+                                                        ? "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white"
+                                                        : (darkMode ? "bg-[#121213] text-white/80 hover:text-white" : "bg-white text-black/80 hover:text-blue-700")
+                                                } active:scale-95`}
+                                            >
+                                                <span className="text-sm">{tab.icon}</span>
+                                                <span>{tab.label}</span>
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
