@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, MessageSquare, UserPlus, Eye, ShieldAlert, Bell, ChevronRight } from "lucide-react";
+import { Clock, MessageSquare, UserPlus, Eye, ShieldAlert, Bell, ChevronRight, Award } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const getNotificationIcon = (type, darkMode) => {
