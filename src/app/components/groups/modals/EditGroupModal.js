@@ -175,7 +175,7 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
                             <div className="flex flex-col items-center mb-4">
                                 <div 
                                     onClick={() => fileInputRef.current.click()}
-                                    className="relative shrink-0 w-28 h-28 p-[2px] bg-gradient-to-tr from-blue-500 to-pink-500 rounded-[2.5rem] shadow-xl cursor-pointer hover:scale-105 transition-all group"
+                                    className="relative w-28 h-28 p-[2px] bg-gradient-to-tr from-blue-500 to-pink-500 rounded-[2.5rem] shadow-xl cursor-pointer hover:scale-105 transition-all group"
                                 >
                                     <div className={`w-full h-full rounded-[calc(2.5rem-2px)] flex items-center justify-center overflow-hidden ${darkMode ? "bg-slate-950" : "bg-slate-50"}`}>
                                         <GroupAvatar 
@@ -337,8 +337,8 @@ export default function EditGroupModal({ isOpen, onClose, onUpdate, group, onRem
                                         <div key={member._id} className="p-[1.5px] rounded-3xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 transition-all hover:scale-[1.01] hover:shadow-xl group">
                                             <div className={`p-4 rounded-[calc(1.5rem-1.5px)] flex items-center justify-between transition-all ${darkMode ? "bg-slate-950" : "bg-slate-50"}`}>
                                                 <div className="flex items-center gap-3 sm:gap-5 min-w-0">
-                                                    <div className="p-[2px] rounded-2xl bg-gradient-to-tr from-blue-400 via-purple-500 to-pink-400 shadow-lg shrink-0">
-                                                        <div className="relative w-12 h-12 shrink-0 rounded-[calc(1rem-2.5px)] overflow-hidden bg-slate-800">
+                                                    <div className="p-[2px] rounded-2xl bg-gradient-to-tr from-blue-400 via-purple-500 to-pink-400 shadow-lg">
+                                                        <div className="relative w-12 h-12 rounded-[calc(1rem-2.5px)] overflow-hidden bg-slate-800">
                                                             <Image src={member.profilePicture || "/default-profile.jpg"} width={48} height={48} className="object-cover" alt={member.name} />
                                                         </div>
                                                     </div>

@@ -108,7 +108,7 @@ export default function GroupMembersModal({
                                     <div className={`p-4 rounded-[calc(2rem-1.5px)] flex items-center justify-between ${darkMode ? "bg-slate-950" : "bg-white"}`}>
                                         <div className="flex items-center gap-5">
                                             <div 
-                                                className="p-[2.5px] rounded-full bg-gradient-to-tr from-blue-400 to-pink-500 shadow-xl flex items-center justify-center shrink-0 w-[61px] h-[61px] aspect-square cursor-pointer hover:scale-105 transition-transform"
+                                                className="p-[2px] rounded-full bg-gradient-to-tr from-blue-400 to-pink-500 shadow-md flex items-center justify-center shrink-0 cursor-pointer hover:scale-105 transition-transform"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setViewerImage(member.profilePicture || "/default-profile.jpg");
@@ -118,11 +118,12 @@ export default function GroupMembersModal({
                                                 <UserAvatar 
                                                     user={member}
                                                     src={member.profilePicture || "/default-profile.jpg"} 
-                                                    width={56}
-                                                    height={56}
-                                                    wrapperClassName="w-14 h-14 bg-slate-800 rounded-full shrink-0 aspect-square"
-                                                    className="w-full h-full object-cover rounded-full aspect-square" 
+                                                    width={50}
+                                                    height={50}
+                                                    wrapperClassName="w-10 h-10 sm:w-12 sm:h-12 bg-slate-800 rounded-full shrink-0 aspect-square border border-white dark:border-slate-900"
+                                                    className="w-full h-full object-cover rounded-full" 
                                                     alt={member.name} 
+                                                    hideBadge={true}
                                                 />
                                             </div>
                                             <div>
