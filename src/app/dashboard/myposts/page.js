@@ -123,6 +123,7 @@ export default function MyPostsPage() {
             </div>
           </div>
         </div>
+        </div>
 
         {posts.length > 0 ? (
           <div className="space-y-8">

@@ -187,6 +187,7 @@ function EventsContent() {
                         </div>
                     </div>
                 </div>
+                </div>
 
                 {/* Tabs */}
                 <div className="flex flex-wrap gap-4 mb-8">
