@@ -61,7 +61,7 @@ export default function WelcomeBanner({ user, darkMode }) {
             {/* Badges & Community Stats */}
             <div className="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-3 items-center">
               <span className={`text-[10px] md:text-xs ${darkMode ? "bg-white/10 text-white" : "bg-gray-200 text-black"} px-3 py-1.5 rounded-full font-black uppercase tracking-widest border border-white/10 shadow-sm`}>
-                {user?.enrollmentNumber || user?.employeeId || "N/A"} {user?.domain ? `• ${user.branch}` : ""}
+                {user?.enrollmentNumber || user?.employeeId || "N/A"}
               </span>
               <span className={`text-[10px] md:text-xs px-3 py-1.5 rounded-full font-black uppercase tracking-widest shadow-md flex items-center gap-1.5 ${
                 isAdmin ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-white" : "bg-blue-500 text-white"

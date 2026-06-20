@@ -22,7 +22,7 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
   return (
     <div
       className={`relative inline-flex flex-shrink-0 items-center justify-center rounded-full aspect-square ${wrapperClassName}`}
-      style={{ overflow: 'visible', width: width || 48, height: height || 48 }}
+      style={{ overflow: 'visible', ...(!wrapperClassName.includes('w-') ? { width: width || 48 } : {}), ...(!wrapperClassName.includes('h-') ? { height: height || 48 } : {}) }}
       onClick={onClick}
     >
       <Image
@@ -36,12 +36,17 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
       />
       {showBadge && !hideBadge && (
         <span
-          className="absolute bottom-0 right-0 z-30 pointer-events-none flex items-center justify-center rounded-full bg-white dark:bg-slate-900 border border-white dark:border-slate-800 shadow-md"
+          className="absolute z-30 pointer-events-none flex items-center justify-center rounded-full bg-white dark:bg-slate-900 border-2 border-white dark:border-slate-800 shadow-md"
           title="100% Profile Completed"
           style={{
-            width: '1.1rem',
-            height: '1.1rem',
-            transform: 'translate(30%, 30%)',
+            width: '28%',
+            height: '28%',
+            minWidth: '1.1rem',
+            minHeight: '1.1rem',
+            maxWidth: '2.5rem',
+            maxHeight: '2.5rem',
+            bottom: '2%',
+            right: '2%',
             overflow: 'visible',
           }}
         >
