@@ -137,6 +137,12 @@ function EventsContent() {
     }, []);
 
     const handleViewEvent = (event) => {
+        if (event.isEventRepostPost) {
+            setSelectedPost(event);
+            setShowPostModal(true);
+            return;
+        }
+        
         const formattedEvent = {
             ...event,
             type: "Event",

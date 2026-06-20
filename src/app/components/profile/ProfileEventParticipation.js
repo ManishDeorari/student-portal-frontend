@@ -103,6 +103,12 @@ export default function ProfileEventParticipation({ profile, setProfile, isPubli
     const hasData = participatedEvents.length > 0 || wonEvents.length > 0;
 
     const handleViewEvent = (event) => {
+        if (event.isEventRepostPost) {
+            setSelectedPost(event);
+            setShowPostModal(true);
+            return;
+        }
+
         // Format as post so PostModal can render it
         const formattedEvent = {
             ...event,

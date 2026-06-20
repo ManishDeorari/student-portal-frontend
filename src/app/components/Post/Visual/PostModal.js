@@ -106,6 +106,64 @@ export default function PostModal(props) {
             )}
           </div>
 
+          {/* Event Repost Link */}
+          {post.type === "EventRepost" && post.eventRepostDetails && (
+            <div className={`mt-2 mb-4 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-green-500/80 to-emerald-600/80" : "from-green-400 to-emerald-500"} shadow-xl overflow-hidden relative`}>
+              <div className={`p-2 sm:p-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} flex flex-col space-y-2`}>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${darkMode ? "text-green-400/80" : "text-green-600/80"} flex items-center gap-2`}>
+                      Linked Original Event
+                    </span>
+                    <span className={`text-lg sm:text-xl font-black ${darkMode ? "text-white" : "text-gray-900"} line-clamp-1`}>
+                      {post.eventRepostDetails.eventName || post.eventRepostDetails.originalEventId?.title || "Event Attended"}
+                    </span>
+                  </div>
+                  {post.eventRepostDetails.originalEventId && onShowOriginalEvent && (
+                    <button
+                      onClick={onShowOriginalEvent}
+                      className={`flex-shrink-0 flex items-center justify-center w-auto h-auto px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${darkMode ? "bg-green-500/20 text-green-300 hover:bg-green-500/30" : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"}`}
+                      title="View Original"
+                    >
+                      <Eye className="w-4 h-4 sm:hidden" />
+                      <span className="hidden sm:inline">View Original</span>
+                    </button>
+                  )}
+                </div>
+                
+                {/* Details */}
+                {((post.eventRepostDetails.campus && post.eventRepostDetails.campus !== "None") || post.eventRepostDetails.place || post.eventRepostDetails.date || post.eventRepostDetails.time) && (
+                  <div className={`mt-2 p-2 sm:p-3 rounded-xl border ${darkMode ? "bg-[#0f172a] border-slate-800" : "bg-gray-50 border-gray-100"} flex flex-wrap gap-x-4 gap-y-2`}>
+                    {post.eventRepostDetails.date && (
+                      <div className="flex flex-col">
+                        <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-slate-500" : "text-slate-400"}`}>Date Attended</span>
+                        <span className={`text-xs sm:text-sm font-black ${darkMode ? "text-green-300" : "text-green-700"} truncate`}>{new Date(post.eventRepostDetails.date).toLocaleDateString()}</span>
+                      </div>
+                    )}
+                    {post.eventRepostDetails.time && (
+                      <div className="flex flex-col">
+                        <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-slate-500" : "text-slate-400"}`}>Time Attended</span>
+                        <span className={`text-xs sm:text-sm font-black ${darkMode ? "text-green-300" : "text-green-700"} truncate`}>{post.eventRepostDetails.time}</span>
+                      </div>
+                    )}
+                    {post.eventRepostDetails.campus && post.eventRepostDetails.campus !== "None" && (
+                      <div className="flex flex-col">
+                        <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-slate-500" : "text-slate-400"}`}>Campus</span>
+                        <span className={`text-xs sm:text-sm font-black ${darkMode ? "text-green-300" : "text-green-700"} truncate`}>{post.eventRepostDetails.campus}</span>
+                      </div>
+                    )}
+                    {post.eventRepostDetails.place && (
+                      <div className="flex flex-col">
+                        <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-slate-500" : "text-slate-400"}`}>Place</span>
+                        <span className={`text-xs sm:text-sm font-black ${darkMode ? "text-green-300" : "text-green-700"} truncate`}>{post.eventRepostDetails.place}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Original Event Link for Announcements */}
           {post.type === "Announcement" && (post.announcementDetails?.originalEventId || post.announcementDetails?.eventName) && (
             <div className={`mt-2 mb-4 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-blue-500/80 to-purple-600/80" : "from-blue-400 to-purple-500"} shadow-xl overflow-hidden relative`}>
