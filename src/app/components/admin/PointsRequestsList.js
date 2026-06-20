@@ -373,7 +373,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                           <div className="flex flex-col">
                             <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{user.name}</span>
                             <span className={`text-[9px] font-bold uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                              {user.enrollmentNumber || "N/A"} • {user.course || "N/A"} • {user.domain || "N/A"} • Sem {user.semester || "N/A"}
+                              {user.enrollmentNumber || "N/A"} • {user.course || "N/A"} • {user.branch || "N/A"} • Sem {user.semester || "N/A"}
                             </span>
                           </div>
                         </div>

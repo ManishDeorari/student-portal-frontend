@@ -86,7 +86,7 @@ export default function StudentExport() {
         const r3 = [
             "", "", "", "", "", // A-E
             "", // F
-            "Course", "Semester", "Section", "Domain", // G-J
+            "Course", "Semester", "Section", "Branch", // G-J
             "City", "State", "Country", // K-M
             "School Name", "Passing Year", "Grades/%", // N-P
             "School Name", "Passing Year", "Grades/%", // Q-S
@@ -166,7 +166,7 @@ export default function StudentExport() {
                 u.name,
                 linkedinText,
                 formatPhone(u.phone), // F
-                u.course || "N/A", u.semester || "N/A", u.section || "N/A", u.domain || "N/A", // G-J
+                u.course || "N/A", u.semester || "N/A", u.section || "N/A", u.branch || "N/A", // G-J
                 city, state, country, // K-M
                 hs.institution || "NA", hs.endDate?.split(" ").pop() || "NA", hs.grade || "NA",
                 inter.institution || "NA", inter.endDate?.split(" ").pop() || "NA", inter.grade || "NA",
@@ -336,7 +336,7 @@ export default function StudentExport() {
                                                 {u.course || "NA"}
                                             </span>
                                             <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-orange-500/10 border border-orange-500/20 text-orange-400`}>
-                                                {u.domain || "NA"}
+                                                {u.branch || "NA"}
                                             </span>
                                             <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
                                                 SEM {u.semester || "NA"}

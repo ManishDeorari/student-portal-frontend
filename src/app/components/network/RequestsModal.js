@@ -158,7 +158,7 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
                                                     </p>
                                                 )}
                                                 <p className={`text-[9px] font-black uppercase tracking-widest truncate mt-1 ${darkMode ? 'text-white' : 'text-slate-600'}`}>
-                                                    {user.course || (user.role === "faculty" ? "Faculty" : "Student")} {user.domain ? `• ${user.domain}` : ""}
+                                                    {user.course || (user.role === "faculty" ? "Faculty" : "Student")} {user.branch ? `• ${user.branch}` : ""}
                                                 </p>
                                             </div>
                                         </div>

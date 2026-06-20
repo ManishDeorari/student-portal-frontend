@@ -289,8 +289,8 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                     </div>
                                     <div className="p-[2.5px] bg-gradient-to-tr from-rose-500/40 to-orange-500/40 rounded-2xl shadow-lg">
                                         <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
-                                            <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Domain</label>
-                                            <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.domain || "N/A"}</span>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Branch</label>
+                                            <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.branch || "N/A"}</span>
                                         </div>
                                     </div>
                                     <div className="p-[2.5px] bg-gradient-to-tr from-cyan-600/40 to-blue-600/40 rounded-2xl shadow-lg">

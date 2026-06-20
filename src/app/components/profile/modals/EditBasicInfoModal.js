@@ -17,7 +17,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
         section: "",
         secondaryEmail: "",
         universityRollNumber: "",
-        domain: "",
+        branch: "",
     });
 
     // Address structure
@@ -38,7 +38,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                 section: currentProfile.section || "",
                 secondaryEmail: currentProfile.secondaryEmail || "",
                 universityRollNumber: currentProfile.universityRollNumber || "",
-                domain: currentProfile.domain || "",
+                branch: currentProfile.branch || "",
             });
 
             // Parse existing address (expected format: "City, State, Country")
@@ -242,13 +242,13 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                             </div>
                             <div>
                                 <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>
-                                    <User className="w-3.5 h-3.5" /> Domain (Optional)
+                                    <User className="w-3.5 h-3.5" /> Branch (Optional)
                                 </label>
                                 <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
                                     <input
                                         type="text"
-                                        name="domain"
-                                        value={formData.domain}
+                                        name="branch"
+                                        value={formData.branch}
                                         onChange={handleChange}
                                         placeholder="Ex: CS, AI & DS, IT..."
                                         className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}

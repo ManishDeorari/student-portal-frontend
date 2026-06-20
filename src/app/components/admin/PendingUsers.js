@@ -324,7 +324,7 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
                         {u.course || "NA"}
                       </span>
                       <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-orange-500/10 border border-orange-500/20 text-orange-400`}>
-                        {u.domain || "NA"}
+                        {u.branch || "NA"}
                       </span>
                       <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
                         SEM {u.semester || "NA"}
