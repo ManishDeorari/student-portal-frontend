@@ -72,13 +72,7 @@ function PostsContent() {
         <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${darkMode ? "bg-[#0A0A0A] text-white" : "bg-[#f8f9fa] text-gray-900"}`}>
             <GooeyGradientBackground />
             
-            <button
-                onClick={() => router.back()}
-                className={`fixed top-8 left-8 z-50 flex items-center justify-center p-3 border rounded-xl transition-all backdrop-blur-md group shadow-xl ${darkMode ? 'bg-[#FAFAFA]/10 border-white/20 text-white hover:bg-[#FAFAFA]/20' : 'bg-white/50 border-gray-300 text-gray-800 hover:bg-white/80'}`}
-                title="Go Back"
-            >
-                <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
-            </button>
+
             
             <div className="flex relative z-10 h-screen overflow-hidden">
                 {isAdmin ? <AdminSidebar /> : <Sidebar />}
@@ -101,8 +95,15 @@ function PostsContent() {
 
                     {/* Content Scroll Area */}
                     <div className="flex-1 overflow-y-auto custom-scrollbar pb-20">
-                        <div className="max-w-4xl mx-auto w-full px-2 sm:px-6 mt-2 mb-8">
-                            <div className="p-[1.5px] rounded-[2.5rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl w-full mx-auto max-w-full">
+                        <div className="max-w-4xl mx-auto w-full px-2 sm:px-6 mt-2 mb-8 flex flex-col sm:flex-row items-center gap-4">
+                            <button
+                                onClick={() => router.back()}
+                                className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-white/10 hover:bg-white/20 text-white shadow-white/5" : "bg-white hover:bg-gray-50 text-black shadow-black/5 border border-gray-200"}`}
+                                aria-label="Go back"
+                            >
+                                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </button>
+                            <div className="flex-1 p-[1.5px] rounded-[2.5rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl w-full mx-auto max-w-full">
                                 <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-2 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
                                     {[
                                         { id: "all", label: "All", icon: "🌍" },
