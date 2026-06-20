@@ -190,7 +190,9 @@ export default function PostModal(props) {
                                 <Link href={`/profile/${member.userId?._id || member.userId?.id || member.userId}`}>
                                   <div className="flex items-center justify-center aspect-square w-fit h-fit relative p-[2px] bg-gradient-to-tr from-blue-400 to-purple-500 rounded-full cursor-pointer hover:scale-105 transition-transform">
                                     <UserAvatar
-                                      user={member.userId}
+                                      user={typeof member.userId === 'object' ? member.userId : null}
+                                      src={member.profilePicture || member.userId?.profilePicture}
+                                      alt={member.name || member.userId?.name || "User"}
                                       className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white object-cover"
                                     />
                                   </div>
@@ -202,16 +204,16 @@ export default function PostModal(props) {
                                     </span>
                                   </Link>
                                   <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
-                                    {member.enrollmentNumber && (
+                                    {(member.userId?.enrollmentNumber || member.enrollmentNumber) && (
                                       <span className={`text-[10px] ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
-                                        {member.enrollmentNumber}
+                                        {member.userId?.enrollmentNumber || member.enrollmentNumber}
                                       </span>
                                     )}
-                                    {member.userId?.course && (
+                                    {(member.userId?.course || member.course) && (
                                       <>
                                         <span className={`text-[10px] opacity-50 ${darkMode ? "text-white" : "text-black"}`}>•</span>
                                         <span className={`text-[10px] ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
-                                          {member.userId.course} {member.userId.semester ? `• Sem ${member.userId.semester}` : ''}
+                                          {member.userId?.course || member.course} {(member.userId?.semester || member.semester) ? `• Sem ${member.userId?.semester || member.semester}` : ''}
                                         </span>
                                       </>
                                     )}
