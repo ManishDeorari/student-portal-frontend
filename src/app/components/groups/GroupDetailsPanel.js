@@ -122,7 +122,7 @@ export default function GroupDetailsPanel({
                                                                 <span className="px-2 py-0.5 rounded-md bg-yellow-500/20 text-yellow-500 text-[8px] font-black uppercase tracking-tighter">Admin</span>
                                                             )}
                                                         </div>
-                                                        <span className="text-[10px] text-gray-500 font-medium">@{member.enrollmentNumber || member.role}</span>
+                                                        <span className="text-[10px] text-gray-500 font-medium">@{member.enrollmentNumber || member.role} {member.domain ? `• ${member.domain}` : ""}</span>
                                                     </div>
                                                 </div>
                                                 {isAdmin && member._id !== currentUser?._id && member._id !== group.admin?._id && (

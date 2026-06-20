@@ -49,6 +49,7 @@ function LoginContent() {
     course: "",
     semester: "",
     section: "",
+    domain: "",
   });
   const [showSignupSuccess, setShowSignupSuccess] = useState(false);
   const handleSignupChange = (e) => {
@@ -249,6 +250,7 @@ function LoginContent() {
           course: signupForm.course,
           semester: Number(signupForm.semester),
           section: signupForm.section,
+          domain: signupForm.domain,
         };
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -375,9 +377,9 @@ function LoginContent() {
           className="w-full lg:w-1/2 max-w-[310px] sm:max-w-[420px] lg:max-w-[420px] lg:ml-12 mt-6 sm:mt-12 lg:mt-0 mb-8 mx-auto lg:mx-0"
         >
           <div className="p-[2px] sm:p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl relative">
-            <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:py-6 sm:px-8 space-y-4 sm:space-y-5 relative overflow-hidden transition-all duration-500`}>
+            <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:py-6 sm:px-8 relative overflow-hidden transition-all duration-500 flex flex-col h-[650px]`}>
               {view === "LOGIN" && (
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 flex-1 flex flex-col justify-center">
                   <div className="space-y-1 sm:space-y-2 text-center">
                     <h2 className={`text-2xl sm:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Welcome Back</h2>
                     <p className={`text-xs sm:text-sm ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>Enter your credentials to access your account</p>
@@ -465,12 +467,12 @@ function LoginContent() {
 
               
               {view === "SIGNUP" && (
-                <>
-                <div className="space-y-0.5 text-center mb-4">
+                <div className="flex flex-col h-full overflow-hidden">
+                <div className="space-y-0.5 text-center mb-4 shrink-0">
                   <h2 className={`text-2xl sm:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Join Global Network</h2>
                   <p className={`text-xs sm:text-sm ${darkMode ? "text-white font-bold" : "text-black font-bold"} opacity-70`}>Create account to connect</p>
                 </div>
-                <form onSubmit={handleSignupSubmit} className="space-y-4">
+                <form onSubmit={handleSignupSubmit} className="space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-2 pb-2">
                 {error && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -605,17 +607,32 @@ function LoginContent() {
                           </div>
                         </div>
                       </div>
-                      <div className="space-y-0.5">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section (Optional)</label>
-                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
-                          <input
-                            type="text"
-                            name="section"
-                            placeholder="Ex: A"
-                            value={signupForm.section}
-                            onChange={handleSignupChange}
-                            className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
-                          />
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-0.5">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section (Optional)</label>
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <input
+                              type="text"
+                              name="section"
+                              placeholder="Ex: A"
+                              value={signupForm.section}
+                              onChange={handleSignupChange}
+                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-0.5">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Domain (Optional)</label>
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <input
+                              type="text"
+                              name="domain"
+                              placeholder="Ex: Web Dev"
+                              value={signupForm.domain}
+                              onChange={handleSignupChange}
+                              className={`w-full px-4 sm:px-6 py-2.5 rounded-[calc(1rem-1.5px)] outline-none text-sm ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            />
+                          </div>
                         </div>
                       </div>
                     </>
@@ -675,13 +692,13 @@ function LoginContent() {
                   Already a member?{" "}
                   <button type="button" onClick={() => setView("LOGIN")} className="text-blue-500 font-extrabold hover:underline underline-offset-4">Login</button>
                 </p>
-              </form>
-                </>
+                </form>
+                </div>
               )}
 
 
               {view === "FORGOT_EMAIL" && (
-                <form onSubmit={handleForgotPassword} className="space-y-6">
+                <form onSubmit={handleForgotPassword} className="space-y-6 flex-1 flex flex-col justify-center">
                   <div className="space-y-2 text-center">
                     <h2 className={`text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Reset Access</h2>
                     <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>We&apos;ll send a code to your registered email</p>
@@ -727,7 +744,7 @@ function LoginContent() {
               )}
 
               {view === "FORGOT_OTP" && (
-                <form onSubmit={handleResetPassword} className="space-y-6">
+                <form onSubmit={handleResetPassword} className="space-y-6 flex-1 flex flex-col justify-center">
                   <div className="space-y-2 text-center">
                     <h2 className={`text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Security Check</h2>
                     <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>Verification code sent to your inbox</p>

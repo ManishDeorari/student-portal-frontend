@@ -659,6 +659,14 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                         </span>
                                       </div>
                                     )}
+                                    {(member.userId?.domain || member.domain) && (
+                                      <div className="flex flex-col border-l border-white/10 pl-3">
+                                        <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Domain</span>
+                                        <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
+                                          {member.userId?.domain || member.domain}
+                                        </span>
+                                      </div>
+                                    )}
                                     {(member.userId?.semester || member.semester) && (
                                       <div className="flex flex-col border-l border-white/10 pl-3">
                                         <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Semester</span>

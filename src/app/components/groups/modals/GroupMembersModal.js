@@ -151,6 +151,7 @@ export default function GroupMembersModal({
                                                         {(role === 'faculty' || role === 'admin') 
                                                             ? (member.employeeId || "Faculty") 
                                                             : (member.enrollmentNumber || "Student")}
+                                                        {member.domain ? ` • ${member.domain}` : ""}
                                                     </p>
                                                 ) : (
                                                     <div className="h-3" />

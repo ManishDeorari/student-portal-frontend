@@ -20,7 +20,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
   });
 
   const [winners, setWinners] = useState([
-    { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", semester: "" }
+    { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", domain: "", semester: "" }
   ]);
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
@@ -72,12 +72,13 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
     updatedWinners[index].profilePicture = user.profilePicture || "";
     updatedWinners[index].enrollmentNumber = user.enrollmentNumber || "";
     updatedWinners[index].course = user.course || "";
+    updatedWinners[index].domain = user.domain || "";
     updatedWinners[index].semester = user.semester || "";
     setWinners(updatedWinners);
   };
 
   const addWinnerRow = () => {
-    setWinners([...winners, { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", semester: "" }]);
+    setWinners([...winners, { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", domain: "", semester: "" }]);
   };
 
   const addGroupWinnerRows = (count) => {
@@ -92,6 +93,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
       groupName: "",
       enrollmentNumber: "",
       course: "",
+      domain: "",
       semester: ""
     }));
     setWinners([...winners, ...newRows]);
@@ -195,6 +197,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
           profilePicture: w.profilePicture || "",
           enrollmentNumber: w.enrollmentNumber || "",
           course: w.course || "",
+          domain: w.domain || "",
           semester: w.semester || ""
         }));
 
@@ -500,6 +503,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                              handleWinnerChange(idx, "profilePicture", "");
                                              handleWinnerChange(idx, "enrollmentNumber", "");
                                              handleWinnerChange(idx, "course", "");
+                                             handleWinnerChange(idx, "domain", "");
                                              handleWinnerChange(idx, "semester", "");
                                            }
                                         }}
@@ -509,7 +513,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                   </div>
 
                                   {/* Row 2: Metadata Grid */}
-                                  <div className="grid grid-cols-3 gap-2 w-full">
+                                  <div className="grid grid-cols-4 gap-2 w-full">
                                     <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
                                       <span className="text-[9px] font-black uppercase opacity-100">ENR</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.enrollmentNumber || "-"}</span>
@@ -517,6 +521,10 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                     <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
                                       <span className="text-[9px] font-black uppercase opacity-100">CRS</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.course || "-"}</span>
+                                    </div>
+                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
+                                      <span className="text-[9px] font-black uppercase opacity-100">DOM</span>
+                                      <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.domain || "-"}</span>
                                     </div>
                                     <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
                                       <span className="text-[9px] font-black uppercase opacity-100">SEM</span>

@@ -110,7 +110,7 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
                         </div>
                         <div>
                           <p className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>{user.name}</p>
-                          <p className={`text-[10px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{user.role} • {user.enrollmentNumber}</p>
+                          <p className={`text-[10px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{user.role} • {user.enrollmentNumber} {user.domain ? `• ${user.domain}` : ""}</p>
                         </div>
                       </Link>
                     ))}

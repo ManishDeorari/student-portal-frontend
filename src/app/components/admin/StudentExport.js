@@ -65,33 +65,33 @@ export default function StudentExport() {
         const r1 = [
             "S.No", "ID", "Enrollment No", "Name", "Linkedin URL", // A-E (Labels for merge)
             "PHONE", // F
-            "CURRENT COURSE", "", "", // G-I
-            "ADDRESS", "", "", // J-L
-            "EDUCATION DETAILS", ...Array(17).fill("") // M-AD (18 columns)
+            "CURRENT COURSE", "", "", "", // G-J
+            "ADDRESS", "", "", // K-M
+            "EDUCATION DETAILS", ...Array(17).fill("") // N-AE (18 columns)
         ];
 
         // Row 2: Sub-Groups
         const r2 = [
             "", "", "", "", "", // A-E
             "", // F
-            "", "", "", // G-I
-            "", "", "", // J-L
-            "High School", "", "", // M-O
-            "Intermediate", "", "", // P-R
-            "Undergraduate", "", "", "", "", "", // S-X
-            "Postgraduate", "", "", "", "", "" // Y-AD
+            "", "", "", "", // G-J
+            "", "", "", // K-M
+            "High School", "", "", // N-P
+            "Intermediate", "", "", // Q-S
+            "Undergraduate", "", "", "", "", "", // T-Y
+            "Postgraduate", "", "", "", "", "" // Z-AE
         ];
 
         // Row 3: Column Names
         const r3 = [
             "", "", "", "", "", // A-E
             "", // F
-            "Course", "Semester", "Section", // G-I
-            "City", "State", "Country", // J-L
-            "School Name", "Passing Year", "Grades/%", // M-O
-            "School Name", "Passing Year", "Grades/%", // P-R
-            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%", // S-X
-            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%" // Y-AD
+            "Course", "Semester", "Section", "Domain", // G-J
+            "City", "State", "Country", // K-M
+            "School Name", "Passing Year", "Grades/%", // N-P
+            "School Name", "Passing Year", "Grades/%", // Q-S
+            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%", // T-Y
+            "College Name", "Campus", "Course", "Start Year", "End Year", "Grades/%" // Z-AE
         ];
 
         worksheet.addRow(r1);
@@ -113,15 +113,15 @@ export default function StudentExport() {
         worksheet.getCell("F3").value = "Contact No"; 
 
         // Top Group Colspans
-        worksheet.mergeCells("G1:I2"); // Current Course
-        worksheet.mergeCells("J1:L2"); // Address
-        worksheet.mergeCells("M1:AD1"); // Education Details
+        worksheet.mergeCells("G1:J2"); // Current Course
+        worksheet.mergeCells("K1:M2"); // Address
+        worksheet.mergeCells("N1:AE1"); // Education Details
 
         // Sub-group Colspans (Row 2)
-        worksheet.mergeCells("M2:O2"); // High School
-        worksheet.mergeCells("P2:R2"); // Intermediate
-        worksheet.mergeCells("S2:X2"); // Undergraduate
-        worksheet.mergeCells("Y2:AD2"); // Postgraduate
+        worksheet.mergeCells("N2:P2"); // High School
+        worksheet.mergeCells("Q2:S2"); // Intermediate
+        worksheet.mergeCells("T2:Y2"); // Undergraduate
+        worksheet.mergeCells("Z2:AE2"); // Postgraduate
 
         const MANDATORY_DEGREES = [
             "High School (Secondary - Class 10)",
@@ -166,8 +166,8 @@ export default function StudentExport() {
                 u.name,
                 linkedinText,
                 formatPhone(u.phone), // F
-                u.course || "N/A", u.semester || "N/A", u.section || "N/A", // G-I
-                city, state, country, // J-L
+                u.course || "N/A", u.semester || "N/A", u.section || "N/A", u.domain || "N/A", // G-J
+                city, state, country, // K-M
                 hs.institution || "NA", hs.endDate?.split(" ").pop() || "NA", hs.grade || "NA",
                 inter.institution || "NA", inter.endDate?.split(" ").pop() || "NA", inter.grade || "NA",
                 ug.institution || "NA", ug.campus || "NA", ug.course || ug.fieldOfStudy || "NA", ug.startDate?.split(" ").pop() || "NA", ug.endDate?.split(" ").pop() || "NA", ug.grade || "NA",
@@ -334,6 +334,9 @@ export default function StudentExport() {
                                         <div className="flex-1 flex flex-wrap items-center gap-2">
                                             <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
                                                 {u.course || "NA"}
+                                            </span>
+                                            <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-orange-500/10 border border-orange-500/20 text-orange-400`}>
+                                                {u.domain || "NA"}
                                             </span>
                                             <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-blue-500/10 border border-blue-500/20 text-blue-400`}>
                                                 SEM {u.semester || "NA"}

@@ -16,6 +16,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
         position: "",
         department: "",
         enrollmentNumber: "",
+        domain: "",
         employeeId: "",
     });
     const [isSaving, setIsSaving] = useState(false);
@@ -30,6 +31,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                 position: user.position || "",
                 department: user.department || "",
                 enrollmentNumber: user.enrollmentNumber || "",
+                domain: user.domain || "",
                 employeeId: user.employeeId || "",
             });
         }
@@ -170,6 +172,18 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                                 type="text"
                                                 name="enrollmentNumber"
                                                 value={formData.enrollmentNumber}
+                                                onChange={handleChange}
+                                                className={`w-full p-3 rounded-[calc(0.75rem-1.5px)] outline-none text-sm font-bold ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Domain</label>
+                                        <div className="p-[1.5px] bg-gradient-to-tr from-orange-500 to-yellow-600 rounded-xl">
+                                            <input
+                                                type="text"
+                                                name="domain"
+                                                value={formData.domain}
                                                 onChange={handleChange}
                                                 className={`w-full p-3 rounded-[calc(0.75rem-1.5px)] outline-none text-sm font-bold ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
                                             />
