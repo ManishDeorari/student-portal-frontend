@@ -136,7 +136,7 @@ export default function NotificationsPage() {
       }
     } else if (note.type === "group_joined" || note.type === "group_added") {
       router.push("/dashboard/groups");
-    } else if (note.type === "points_earned") {
+    } else if (note.type === "points_earned" || note.type === "silent_points_deducted") {
       if (note.postId) {
         try {
           const res = await fetch(`${API_URL}/api/posts/${note.postId._id || note.postId}`);
@@ -183,7 +183,7 @@ export default function NotificationsPage() {
     } else if (activeTab === "NOTICE") {
       filtered = notifications.filter(n => ["admin_notice", "academic_update"].includes(n.type));
     } else if (activeTab === "POINTS") {
-      filtered = notifications.filter(n => n.type === "points_earned");
+      filtered = notifications.filter(n => ["points_earned", "points_deducted", "silent_points_deducted"].includes(n.type));
     } else if (activeTab === "GROUP") {
       filtered = notifications.filter(n => ["group_joined", "group_added", "group_removed", "group_disbanded"].includes(n.type));
     }
@@ -361,7 +361,7 @@ export default function NotificationsPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.98 }}
                         onClick={() => handleNotificationClick(note)}
-                        className={`relative p-[2px] bg-gradient-to-r ${note.type === 'points_earned' ? 'from-amber-400 via-yellow-500 to-amber-500' : 'from-blue-500 via-purple-500 to-pink-500'} rounded-2xl transition-all duration-300 group shadow-md`}
+                        className={`relative p-[2px] bg-gradient-to-r ${(note.type === 'points_earned' || note.type === 'silent_points_deducted') ? 'from-amber-400 via-yellow-500 to-amber-500' : 'from-blue-500 via-purple-500 to-pink-500'} rounded-2xl transition-all duration-300 group shadow-md`}
                       >
                         <div className={`relative flex items-start gap-2.5 sm:gap-4 p-2.5 sm:py-3 sm:px-5 rounded-[calc(1rem-2px)] transition-all ${
                           !note.isRead
@@ -369,8 +369,8 @@ export default function NotificationsPage() {
                             : (darkMode ? "bg-black/80 shadow-inner" : "bg-gray-50 shadow-inner")
                         } ${!note.isRead ? 'cursor-pointer active:scale-[0.99]' : 'cursor-default'}`}>
                           <div className="relative shrink-0">
-                            <div className={`p-[2px] rounded-2xl bg-gradient-to-br ${note.type === 'points_earned' ? 'from-purple-500 to-blue-500' : 'from-blue-500 to-purple-500'} shadow-[0_0_10px_rgba(255,255,255,0.1)] ${!note.isRead ? 'opacity-100' : 'opacity-80 grayscale-[20%]'}`}>
-                              {note.type === "points_earned" ? (
+                            <div className={`p-[2px] rounded-2xl bg-gradient-to-br ${(note.type === 'points_earned' || note.type === 'silent_points_deducted') ? 'from-purple-500 to-blue-500' : 'from-blue-500 to-purple-500'} shadow-[0_0_10px_rgba(255,255,255,0.1)] ${!note.isRead ? 'opacity-100' : 'opacity-80 grayscale-[20%]'}`}>
+                              {(note.type === "points_earned" || note.type === "silent_points_deducted") ? (
                                 <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-[0.9rem] flex items-center justify-center ${darkMode ? 'bg-white/10' : 'bg-black/5'}`}>
                                   <Award className={`w-5 h-5 sm:w-8 sm:h-8 ${darkMode ? 'text-white' : 'text-slate-900'}`} />
                                 </div>
@@ -397,14 +397,14 @@ export default function NotificationsPage() {
                             <div className="flex items-start justify-between gap-2 sm:gap-4">
                               <div>
                                 <div className="flex flex-col gap-1">
-                                  {note.type === "points_earned" ? (
+                                  {(note.type === "points_earned" || note.type === "silent_points_deducted") ? (
                                     <>
                                       <span className="font-black text-sm sm:text-lg tracking-tight bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">System</span>
                                       {(() => {
                                         let msg = note.message;
                                         let cat = "Reward";
                                         let pts = "0";
-                                        const isPenalty = note.message?.startsWith("MANUAL_PENALTY::");
+                                        const isPenalty = note.type === "silent_points_deducted" || note.message?.startsWith("MANUAL_PENALTY::");
 
                                         if (note.message?.startsWith("MANUAL_AWARD::")) {
                                           const parts = note.message.split("::");

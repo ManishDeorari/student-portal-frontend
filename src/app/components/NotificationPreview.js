@@ -79,7 +79,7 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                         {latestNotifications.length > 0 ? (
                             latestNotifications.map((note) => {
                                 const unread = isNoteUnread(note);
-                                const isPenalty = note.message?.startsWith("MANUAL_PENALTY::");
+                                const isPenalty = note.type === "silent_points_deducted" || note.message?.startsWith("MANUAL_PENALTY::");
 
                                 return (
                                     <motion.div
@@ -100,9 +100,9 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                                     ? (isPenalty ? "border-red-500 shadow-lg shadow-red-500/40" : "border-blue-500 shadow-lg shadow-blue-500/40")
                                                     : "border-transparent opacity-80"
                                                     }`}>
-                                                    {note.type === "academic_update" || note.type === "admin_notice" || note.type === "points_earned" ? (
-                                                        <div className={`w-8 h-8 rounded-[0.5rem] flex items-center justify-center ${darkMode ? "bg-white/10" : "bg-slate-100"}`}>
-                                                            {getNotificationIcon(note.type, darkMode)}
+                                                    {(note.type === "points_earned" || note.type === "silent_points_deducted") ? (
+                                                        <div className={`w-8 h-8 rounded-[0.7rem] flex items-center justify-center ${darkMode ? 'bg-white/10' : 'bg-black/5'}`}>
+                                                            <Award className={`w-4 h-4 ${darkMode ? 'text-white' : 'text-slate-900'}`} />
                                                         </div>
                                                     ) : (
                                                         <Image
@@ -121,32 +121,29 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                             <div className="flex-1 min-w-0">
                                                 <p className={`text-[11px] leading-[1.4] ${darkMode ? "text-white" : "text-slate-900"}`}>
                                                     <span className={`font-black uppercase tracking-tight ${unread && !darkMode ? (isPenalty ? "text-red-600" : "text-blue-600") : ""}`}>
-                                                        {note.type === "points_earned" ? (isPenalty ? "Moderator" : "System") : (note.sender?.name || (typeof note.sender === "string" ? "User" : "System"))}
+                                                        {(note.type === "points_earned" || note.type === "silent_points_deducted") ? (isPenalty ? "Moderator" : "System") : (note.sender?.name || (typeof note.sender === "string" ? "User" : "System"))}
                                                     </span>{" "}
                                                     <span className={`font-medium ${unread ? "opacity-100" : "opacity-60"}`}>
                                                         {note.message?.startsWith("MANUAL_AWARD::") ? (() => {
                                                             const parts = note.message.split("::");
                                                             const msg = parts[1] || "Points Awarded";
                                                             const pts = parts[3] || "0";
-                                                            const cat = (parts[2] || "Other").replace(/([A-Z])/g, ' $1').trim();
                                                             return `${msg} +${pts} PTS`;
                                                         })() : note.message?.startsWith("MANUAL_PENALTY::") ? (() => {
                                                             const parts = note.message.split("::");
                                                             const msg = parts[1] || "Points Deducted";
                                                             const pts = parts[3] || "0";
                                                             return `${msg} -${pts} PTS`;
-                                                        })() : note.type === "points_earned" ? (() => {
+                                                        })() : (note.type === "points_earned" || note.type === "silent_points_deducted") ? (() => {
                                                             let msg = note.message;
-                                                            let pts = "10";
-                                                            let cat = "Reward";
-
+                                                            let pts = "0";
                                                             const match = note.message?.match(/\+?(\d+)\s*(?:PTS|pts|points|Points)/i);
                                                             if (match) {
                                                                 pts = match[1];
-                                                                msg = note.message.replace(match[0], '').trim() || "Points Earned";
+                                                                msg = note.message.replace(match[0], '').trim() || "Points Update";
                                                             }
-
                                                             const lowerMsg = msg?.toLowerCase() || "";
+                                                            let cat = "Reward";
                                                             if (lowerMsg.includes("post")) cat = "Post";
                                                             else if (lowerMsg.includes("like")) cat = "Like";
                                                             else if (lowerMsg.includes("comment")) cat = "Comment";
@@ -154,7 +151,7 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                                             else if (lowerMsg.includes("login") || lowerMsg.includes("daily")) cat = "Login";
                                                             else if (lowerMsg.includes("announcement") || lowerMsg.includes("announce") || lowerMsg.includes("earned") || lowerMsg.includes("first")) cat = "Student Participation";
 
-                                                            return `${msg} +${pts} PTS`;
+                                                            return `${msg} ${isPenalty ? '-' : '+'}${pts} PTS`;
                                                         })() : note.message}
                                                     </span>
                                                 </p>
