@@ -14,6 +14,7 @@ import EventRegistrationModal from "../EventRegistrationModal";
 import AdminRegistrationsModal from "../AdminRegistrationsModal";
 import ConfirmationModal from "./ConfirmationModal";
 import UserAvatar from "../../ui/UserAvatar";
+import { Eye } from "lucide-react";
 
 export default function PostModal(props) {
   const {
@@ -121,8 +122,10 @@ export default function PostModal(props) {
                   {post.announcementDetails?.originalEventId && onShowOriginalEvent && (
                     <button
                       onClick={onShowOriginalEvent}
-                      className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"}`}
+                      className={`flex-shrink-0 flex items-center justify-center gap-1.5 w-8 h-8 sm:w-auto sm:h-auto sm:px-4 sm:py-2 rounded-full sm:rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"}`}
+                      title="View Original"
                     >
+                      <Eye className="w-4 h-4 sm:hidden" />
                       <span className="hidden sm:inline">View Original</span>
                     </button>
                   )}
@@ -203,19 +206,16 @@ export default function PostModal(props) {
                                       {member.userId?.name || member.name}
                                     </span>
                                   </Link>
-                                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
+                                  <div className="flex flex-col border-l border-black/10 dark:border-white/10 pl-2 ml-1">
                                     {(member.userId?.enrollmentNumber || member.enrollmentNumber) && (
-                                      <span className={`text-[10px] ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+                                      <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
                                         {member.userId?.enrollmentNumber || member.enrollmentNumber}
                                       </span>
                                     )}
                                     {(member.userId?.course || member.course) && (
-                                      <>
-                                        <span className={`text-[10px] opacity-50 ${darkMode ? "text-white" : "text-black"}`}>•</span>
-                                        <span className={`text-[10px] ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
-                                          {member.userId?.course || member.course} {(member.userId?.semester || member.semester) ? `• Sem ${member.userId?.semester || member.semester}` : ''}
-                                        </span>
-                                      </>
+                                      <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
+                                        {member.userId?.course || member.course} {(member.userId?.semester || member.semester) ? `• Sem ${member.userId?.semester || member.semester}` : ''}
+                                      </span>
                                     )}
                                   </div>
                                 </div>

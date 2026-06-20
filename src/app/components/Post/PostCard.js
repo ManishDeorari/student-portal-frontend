@@ -647,14 +647,14 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                   <div className="flex flex-wrap items-center gap-3 text-left">
                                     <div className="flex flex-col">
                                       <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Enrollment No.</span>
-                                      <span className={`text-[10px] font-bold font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                      <span className={`text-[10px] font-black font-mono tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
                                         {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
                                       </span>
                                     </div>
                                     {(member.userId?.course || member.course) && (
                                       <div className="flex flex-col border-l border-white/10 pl-3">
                                         <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Course</span>
-                                        <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                        <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
                                           {member.userId?.course || member.course}
                                         </span>
                                       </div>
@@ -662,7 +662,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                     {(member.userId?.semester || member.semester) && (
                                       <div className="flex flex-col border-l border-white/10 pl-3">
                                         <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Semester</span>
-                                        <span className={`text-[10px] font-bold ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                        <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
                                           {member.userId?.semester || member.semester}
                                         </span>
                                       </div>
