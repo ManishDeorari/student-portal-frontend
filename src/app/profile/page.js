@@ -147,19 +147,19 @@ function ProfileContent() {
     <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
       <SidebarComponent />
 
-      {/* 🔷 Top-Left Back Button (Fixed) */}
-      {isPublicView && (
-        <button
-          onClick={() => router.back()}
-          className={`fixed top-24 left-8 z-50 flex items-center justify-center p-3 border rounded-xl transition-all backdrop-blur-md group shadow-xl ${darkMode ? 'bg-[#FAFAFA]/10 border-white/20 text-white hover:bg-[#FAFAFA]/20' : 'bg-[#FAFAFA]/20 border-white/30 text-white hover:bg-[#FAFAFA]/30'}`}
-          title="Go Back"
-        >
-          <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
-        </button>
-      )}
-
       {/* 🔷 Top Profile Section */}
       <div className="max-w-4xl mx-auto px-4 pt-6">
+        {isPublicView && (
+            <div className="flex items-center gap-4 mb-4">
+                <button
+                    onClick={() => router.back()}
+                    className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-black hover:bg-gray-900 text-white shadow-white/5 border border-gray-800" : "bg-white hover:bg-gray-50 text-black shadow-black/5 border border-gray-200"}`}
+                    aria-label="Go back"
+                >
+                    <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
+            </div>
+        )}
         <div className="w-full">
           <ProfileBasicInfo
             profile={profile}

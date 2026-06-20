@@ -7,6 +7,7 @@ import { getUserConnections, sendConnectionRequest } from "@/api/connect";
 import { useParams } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { GooeyGradientBackground } from "../../../components/GooeyGradientBackground";
+import { ArrowLeft } from "lucide-react";
 
 const UserConnectionsPage = () => {
     const { id } = useParams();
@@ -74,8 +75,8 @@ const UserConnectionsPage = () => {
                 <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-2xl overflow-hidden">
                     <div className={`px-8 py-6 rounded-[calc(1.5rem-1px)] ${darkMode ? 'bg-black text-white' : 'bg-[#FAFAFA] text-slate-900'} flex flex-col md:flex-row items-center justify-between gap-6`}>
                         <div className="flex items-center gap-4">
-                            <button onClick={() => window.history.back()} className={`p-2.5 rounded-xl transition-all border ${darkMode ? "bg-[#FAFAFA]/5 border-white/10 hover:bg-[#FAFAFA]/10 text-white" : "bg-gray-100 border-gray-200 hover:bg-gray-200 text-slate-900 shadow-gray-200/50"}`}>
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                            <button onClick={() => window.history.back()} className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-black hover:bg-gray-900 text-white shadow-white/5 border border-gray-800" : "bg-white hover:bg-gray-50 text-black shadow-black/5 border border-gray-200"}`} aria-label="Go back">
+                                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                             </button>
                             <div>
                                 <h1 className={`text-3xl font-black tracking-tight ${darkMode ? 'text-white' : 'text-slate-900'}`}>Connections</h1>

@@ -170,17 +170,16 @@ function EventsContent() {
         <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
             <SidebarComponent />
 
-            {/* 🔷 Left-most Back Button */}
-            <button
-                onClick={() => router.back()}
-                className={`fixed top-24 left-8 z-50 flex items-center justify-center p-3 border rounded-xl transition-all backdrop-blur-md group shadow-xl ${darkMode ? 'bg-[#FAFAFA]/10 border-white/20 text-white hover:bg-[#FAFAFA]/20' : 'bg-white/50 border-gray-300 text-gray-800 hover:bg-white/80'}`}
-                title="Go Back"
-            >
-                <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
-            </button>
-
             <div className="max-w-4xl mx-auto py-12 px-4">
-                <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-xl mb-10 overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-center gap-4 mb-10">
+                    <button
+                        onClick={() => router.back()}
+                        className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-black hover:bg-gray-900 text-white shadow-white/5 border border-gray-800" : "bg-white hover:bg-gray-50 text-black shadow-black/5 border border-gray-200"}`}
+                        aria-label="Go back"
+                    >
+                        <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </button>
+                    <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-xl overflow-hidden flex-1 w-full">
                     <div className={`px-8 py-6 rounded-[calc(1.5rem-1px)] ${darkMode ? 'bg-slate-950' : 'bg-[#FAFAFA]'}`}>
                         <div className="flex items-center gap-4">
                             <div className="h-10 w-2 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
