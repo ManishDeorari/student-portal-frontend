@@ -189,8 +189,8 @@ export default function PostModal(props) {
                         <div className={`p-2 sm:p-3 ${entry.type === 'group' ? 'grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3' : ''}`}>
                           {(entry.type === 'group' ? entry.members : [entry]).map((member, midx) => (
                             <div key={midx} className={`flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 gap-2 sm:gap-3 rounded-2xl ${darkMode ? "bg-[#0f172a]/50 border border-slate-800" : "bg-white border border-gray-100 shadow-sm"}`}>
-                              <div className="flex items-center gap-3">
-                                <Link href={`/profile/${member.userId?._id || member.userId?.id || member.userId}`}>
+                              <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
+                                <Link href={`/profile/${member.userId?.publicId || member.userId?._id || member.userId?.id || member.userId || ''}`}>
                                   <div className="flex items-center justify-center aspect-square w-fit h-fit relative p-[2px] bg-gradient-to-tr from-blue-400 to-purple-500 rounded-full cursor-pointer hover:scale-105 transition-transform">
                                     <UserAvatar
                                       user={typeof member.userId === 'object' ? member.userId : null}
@@ -200,36 +200,53 @@ export default function PostModal(props) {
                                     />
                                   </div>
                                 </Link>
-                                <div className="flex flex-col">
-                                  <Link href={`/profile/${member.userId?._id || member.userId?.id || member.userId}`}>
-                                    <span className={`text-sm sm:text-base font-bold cursor-pointer hover:underline ${darkMode ? "text-white" : "text-gray-900"}`}>
-                                      {member.userId?.name || member.name}
-                                    </span>
-                                  </Link>
-                                  <div className="flex flex-col border-l border-black/10 dark:border-white/10 pl-2 ml-1">
-                                    {(member.userId?.enrollmentNumber || member.enrollmentNumber) && (
-                                      <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
-                                        {member.userId?.enrollmentNumber || member.enrollmentNumber}
-                                      </span>
+                                <div className="flex flex-col min-w-0 w-full mt-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    {member.userId?.publicId ? (
+                                      <Link href={`/profile/${member.userId.publicId}`} className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}>
+                                        {member.userId?.name || member.name || "User"}
+                                      </Link>
+                                    ) : (
+                                      <span className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{member.userId?.name || member.name || "User"}</span>
                                     )}
-                                    {(member.userId?.course || member.course) && (
-                                      <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
-                                        {member.userId?.course || member.course} {(member.userId?.semester || member.semester) ? `• Sem ${member.userId?.semester || member.semester}` : ''}
+                                    {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
+                                  </div>
+                                  <div className="flex flex-wrap items-center gap-3 text-left">
+                                    <div className="flex flex-col">
+                                      <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Enrollment No.</span>
+                                      <span className={`text-[10px] font-black font-mono tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
+                                        {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
                                       </span>
+                                    </div>
+                                    {(member.userId?.course || member.course) && (
+                                      <div className="flex flex-col border-l border-white/10 pl-3">
+                                        <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Course</span>
+                                        <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
+                                          {member.userId?.course || member.course}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {(member.userId?.semester || member.semester) && (
+                                      <div className="flex flex-col border-l border-white/10 pl-3">
+                                        <span className={`text-[8px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>Semester</span>
+                                        <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
+                                          {member.userId?.semester || member.semester}
+                                        </span>
+                                      </div>
                                     )}
                                   </div>
                                 </div>
                               </div>
                               {entry.type === 'individual' && (
-                                <div className="flex sm:flex-col items-center sm:items-end justify-start sm:justify-end gap-2 sm:gap-1 mt-1 sm:mt-0 pl-14 sm:pl-0 pt-2 sm:pt-0 border-t border-black/5 dark:border-white/5 sm:border-t-0">
-                                  <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-50 text-blue-700"}`}>
-                                    Rank: {entry.rank}
-                                  </span>
-                                  {entry.points > 0 && (
-                                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${darkMode ? "bg-purple-500/20 text-purple-300" : "bg-purple-50 text-purple-700"}`}>
-                                      {entry.points} pts
-                                    </span>
-                                  )}
+                                <div className="flex items-center gap-3 w-full sm:w-auto justify-start sm:justify-end pl-[56px] sm:pl-0 mt-1 sm:mt-0 pt-2 sm:pt-0 border-t border-black/5 dark:border-white/5 sm:border-t-0">
+                                  <div className="flex flex-col items-start sm:items-end">
+                                    <span className={`text-[8px] font-black uppercase opacity-100 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Rank</span>
+                                    <span className={`text-sm font-black ${darkMode ? "text-blue-300" : "text-blue-700"}`}>{entry.rank}</span>
+                                  </div>
+                                  <div className="flex flex-col items-start sm:items-end border-l border-black/10 dark:border-white/10 pl-3">
+                                    <span className={`text-[8px] font-black uppercase opacity-100 mb-0.5 ${darkMode ? "text-white" : "text-black"}`}>Points</span>
+                                    <span className={`text-sm font-black ${darkMode ? "text-purple-300" : "text-purple-600"}`}>+{entry.points}</span>
+                                  </div>
                                 </div>
                               )}
                             </div>
