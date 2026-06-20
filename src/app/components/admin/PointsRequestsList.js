@@ -130,7 +130,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
-                <img src={post.user?.profilePicture || "/default-profile.jpg"} alt="profile" className="w-full h-full object-cover aspect-square shrink-0" />
+                <img src={post.user?.profilePicture || "/default-profile.jpg"} alt="profile" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col">
                 <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{post.user?.name || "Member"}</span>
@@ -273,7 +273,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                               <img 
                                 src={w.userId?.profilePicture || w.profilePicture || "/default-profile.jpg"} 
                                 alt="profile" 
-                                className="w-8 h-8 rounded-full object-cover aspect-square shrink-0 border border-white/10" 
+                                className="w-8 h-8 rounded-full object-cover border border-white/10" 
                               />
                               <span className="absolute -bottom-1 -right-1 text-xs">{(w.userId || (w.isGroup && w.groupMembers?.length > 0)) ? "✅" : "❓"}</span>
                             </div>
@@ -369,7 +369,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                     <div key={user._id} className="group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] bg-gradient-to-r from-purple-500 to-pink-500">
                       <div className={`p-3 sm:p-6 flex flex-col gap-4 rounded-[calc(2rem-2px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                         <div className="flex items-center gap-3">
-                          <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border-2 border-purple-500 object-cover aspect-square shrink-0" />
+                          <img src={user.profilePicture || "/default-profile.jpg"} alt="profile" className="w-10 h-10 rounded-full border-2 border-purple-500" />
                           <div className="flex flex-col">
                             <span className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>{user.name}</span>
                             <span className={`text-[9px] font-bold uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>

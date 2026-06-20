@@ -314,7 +314,7 @@ export default function StudentExport() {
                                                     <img 
                                                         src={u.profilePicture} 
                                                         alt={u.name}
-                                                        className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover aspect-square shrink-0 relative z-10 border-2 border-white/10"
+                                                        className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover relative z-10 border-2 border-white/10"
                                                     />
                                                 ) : (
                                                     <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg text-blue-500`}>

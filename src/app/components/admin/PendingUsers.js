@@ -302,7 +302,7 @@ function Table({ users, selected, toggleUser, toggleSelectAll, onApprove, onDele
                       <img 
                         src={u.profilePicture} 
                         alt={u.name} 
-                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover aspect-square shrink-0 relative z-10 border-2 ${darkMode ? "border-white/10" : "border-white"}`} 
+                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover relative z-10 border-2 ${darkMode ? "border-white/10" : "border-white"}`} 
                       />
                     ) : (
                       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg text-blue-500`}>

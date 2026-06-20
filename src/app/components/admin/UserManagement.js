@@ -402,7 +402,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
 
                                             {/* Profile Column */}
                                             <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
-                                                <div className="relative shrink-0">
+                                                <div className="relative shrink-0 flex items-center justify-center w-12 h-12 aspect-square">
                                                     <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 ${u.isAdmin ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
                                                     {u.profilePicture ? (
                                                         <UserAvatar
@@ -411,11 +411,11 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                             alt={u.name}
                                                             width={48}
                                                             height={48}
-                                                            wrapperClassName="w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10"
-                                                            className={`w-full h-full rounded-full object-cover border-2 ${darkMode ? "border-white/10" : "border-white"}`}
+                                                            wrapperClassName="w-12 h-12 rounded-full relative z-10 shrink-0 aspect-square"
+                                                            className={`w-full h-full rounded-full object-cover aspect-square border-2 ${darkMode ? "border-white/10" : "border-white"}`}
                                                         />
                                                     ) : (
-                                                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg`}>
+                                                        <div className={`w-12 h-12 rounded-full relative z-10 shrink-0 aspect-square ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-lg`}>
                                                             {u.name.charAt(0)}
                                                         </div>
                                                     )}
