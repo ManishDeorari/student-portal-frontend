@@ -72,6 +72,14 @@ function PostsContent() {
         <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${darkMode ? "bg-[#0A0A0A] text-white" : "bg-[#f8f9fa] text-gray-900"}`}>
             <GooeyGradientBackground />
             
+            <button
+                onClick={() => router.back()}
+                className={`fixed top-8 left-8 z-50 flex items-center justify-center p-3 border rounded-xl transition-all backdrop-blur-md group shadow-xl ${darkMode ? 'bg-[#FAFAFA]/10 border-white/20 text-white hover:bg-[#FAFAFA]/20' : 'bg-white/50 border-gray-300 text-gray-800 hover:bg-white/80'}`}
+                title="Go Back"
+            >
+                <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+            </button>
+            
             <div className="flex relative z-10 h-screen overflow-hidden">
                 {isAdmin ? <AdminSidebar /> : <Sidebar />}
 
@@ -79,14 +87,8 @@ function PostsContent() {
                     {/* Header - Transparent */}
                     <div className="shrink-0 z-20 bg-transparent border-none">
                         <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+
                             <div className="flex items-center gap-4">
-                                <button
-                                    onClick={() => router.back()}
-                                    className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center ${darkMode ? "bg-white/10 hover:bg-white/20 text-white shadow-white/5" : "bg-white hover:bg-gray-50 text-black shadow-black/5 border border-gray-200"}`}
-                                    aria-label="Go back"
-                                >
-                                    <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-                                </button>
                                 <div>
                                     <h1 className="text-xl sm:text-2xl font-black tracking-tight">User Posts</h1>
                                     <p className={`text-xs sm:text-sm font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
