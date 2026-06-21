@@ -191,7 +191,7 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
               alt="Preview"
               fill
               className={`object-cover rounded-[calc(1rem-3.5px)] border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'} shadow-inner`}
-              style={bannerImageFocus ? { objectPosition: `${bannerImageFocus.x}% ${bannerImageFocus.y}%` } : {}}
+              style={bannerImageFocus?.pctX ? { objectPosition: `${bannerImageFocus.pctX}% ${bannerImageFocus.pctY}%` } : {}}
             />
           </div>
         </div>

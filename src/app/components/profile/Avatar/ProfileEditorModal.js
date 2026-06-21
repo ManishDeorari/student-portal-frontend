@@ -243,7 +243,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
                 alt="Preview"
                 fill
                 className={`object-cover border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'} rounded-full`}
-                style={profileImageFocus ? { objectPosition: `${profileImageFocus.x}% ${profileImageFocus.y}%` } : {}}
+                style={profileImageFocus?.pctX ? { objectPosition: `${profileImageFocus.pctX}% ${profileImageFocus.pctY}%` } : {}}
               />
             </div>
           </div>

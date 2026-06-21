@@ -10,6 +10,7 @@ export default function ProfileImageCropper({ imageSrc, onComplete }) {
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [croppedAreaPct, setCroppedAreaPct] = useState(null);
 
   // Store original image for reset
   const originalImageRef = useRef(null);
@@ -20,7 +21,8 @@ export default function ProfileImageCropper({ imageSrc, onComplete }) {
     }
   }, [imageSrc]);
 
-  const onCropComplete = useCallback((_, croppedPixels) => {
+  const onCropComplete = useCallback((croppedArea, croppedPixels) => {
+    setCroppedAreaPct(croppedArea);
     setCroppedAreaPixels(croppedPixels);
   }, []);
 
@@ -34,13 +36,16 @@ export default function ProfileImageCropper({ imageSrc, onComplete }) {
   };
 
   const handleFixPosition = async () => {
-    if (!croppedAreaPixels) return;
+    if (!croppedAreaPixels || !croppedAreaPct) return;
     try {
       const focalX = croppedAreaPixels.x + croppedAreaPixels.width / 2;
       const focalY = croppedAreaPixels.y + croppedAreaPixels.height / 2;
       
+      const pctX = croppedAreaPct.x + croppedAreaPct.width / 2;
+      const pctY = croppedAreaPct.y + croppedAreaPct.height / 2;
+      
       if (onComplete) {
-        onComplete(null, { x: focalX, y: focalY });
+        onComplete(null, { x: focalX, y: focalY, pctX, pctY });
       }
     } catch (e) {
       console.error("Fix position error:", e);
