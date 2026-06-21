@@ -56,22 +56,36 @@ export default function ProfileActivityHeatmap({ profile }) {
 
         for (let i = 0; i < allDays.length; i += 7) {
             const colDays = allDays.slice(i, i + 7);
-            resultCols.push(colDays);
             
-            // Check month of the first day in this column
+            let isNewMonth = false;
+
             if (colDays[0]) {
                 const month = colDays[0].dateObj.getMonth();
-                if (month !== currentMonth) {
-                    // Only add if it's not overlapping too closely with a previous label
-                    if (mLabels.length === 0 || (resultCols.length - 1 - mLabels[mLabels.length - 1].colIndex) > 2) {
+                
+                if (resultCols.length === 0) {
+                    currentMonth = month;
+                    mLabels.push({
+                        label: colDays[0].dateObj.toLocaleString('default', { month: 'short' }),
+                        colIndex: 0
+                    });
+                } else if (month !== currentMonth) {
+                    isNewMonth = true;
+                    currentMonth = month;
+                    
+                    // Add label if it doesn't overlap the previous one too closely
+                    if (mLabels.length === 0 || (resultCols.length - mLabels[mLabels.length - 1].colIndex) > 2) {
                         mLabels.push({
                             label: colDays[0].dateObj.toLocaleString('default', { month: 'short' }),
-                            colIndex: resultCols.length - 1
+                            colIndex: resultCols.length
                         });
-                        currentMonth = month;
                     }
                 }
             }
+
+            resultCols.push({
+                days: colDays,
+                isNewMonth
+            });
         }
         
         return { 
@@ -156,7 +170,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                             {monthLabels.map((m, i) => (
                                                 <span 
                                                     key={i} 
-                                                    className="absolute" 
+                                                    className="absolute whitespace-nowrap" 
                                                     style={{ left: `${m.colIndex * 18}px` }}
                                                 >
                                                     {m.label}
@@ -164,16 +178,18 @@ export default function ProfileActivityHeatmap({ profile }) {
                                             ))}
                                         </div>
 
-                                        {/* Activity Grid */}
                                         <div className="flex gap-1 relative">
                                             {columns.map((col, colIndex) => (
-                                                <div key={colIndex} className="flex flex-col gap-1">
-                                                    {col.map((day, rowIndex) => {
+                                                <div 
+                                                    key={colIndex} 
+                                                    className={`flex flex-col gap-1 ${col.isNewMonth ? `border-l-2 ${darkMode ? 'border-gray-800' : 'border-gray-200'} pl-1` : ''}`}
+                                                >
+                                                    {col.days.map((day, rowIndex) => {
                                                         const isToday = day.date === todayDateString;
                                                         return (
                                                             <div
                                                                 key={day.date}
-                                                                className={`w-3.5 h-3.5 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(day.level)} ${isToday ? 'ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213] scale-110 z-10 hover:scale-125' : 'hover:scale-125 hover:ring-2 hover:ring-offset-1 dark:hover:ring-offset-[#121213] hover:ring-green-400'}`}
+                                                                className={`w-3.5 h-3.5 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(day.level)} ${isToday ? 'ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213] scale-110 z-10 hover:scale-125' : 'hover:scale-125 hover:ring-2 hover:ring-offset-1 dark:hover:ring-offset-[#121213] hover:ring-green-400 z-10'}`}
                                                                 title={`${isToday ? 'TODAY: ' : ''}${day.count} activities on ${day.date}`}
                                                             />
                                                         );
@@ -181,23 +197,26 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                 </div>
                                             ))}
                                         </div>
-
                                     </div>
                                 </div>
                                 
                                 {/* Legend */}
                                 <div className={`flex items-center justify-end gap-2 text-[10px] font-bold uppercase tracking-widest mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                    <div className="flex items-center gap-1 mr-4 text-gray-400">
+                                    <div className="flex items-center gap-1 mr-auto text-gray-400">
                                         <Info className="w-3 h-3" />
                                         <span className="normal-case tracking-normal">Tracking logins, posts, events & profile updates</span>
                                     </div>
-                                    <span>Less Activity</span>
+                                    <div className="flex items-center gap-1.5 mr-4">
+                                        <div className="w-3 h-3 rounded-sm ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213]"></div>
+                                        <span>Today</span>
+                                    </div>
+                                    <span>Less</span>
                                     <div className={`w-3 h-3 rounded-sm ${getColorClass(0)}`}></div>
                                     <div className={`w-3 h-3 rounded-sm ${getColorClass(1)}`}></div>
                                     <div className={`w-3 h-3 rounded-sm ${getColorClass(2)}`}></div>
                                     <div className={`w-3 h-3 rounded-sm ${getColorClass(3)}`}></div>
                                     <div className={`w-3 h-3 rounded-sm ${getColorClass(4)}`}></div>
-                                    <span>More Activity</span>
+                                    <span>More</span>
                                 </div>
                             </div>
                         </motion.div>
