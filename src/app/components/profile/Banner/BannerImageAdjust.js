@@ -24,16 +24,7 @@ export default function BannerImageAdjust({ imageUrl, onApply, onReset }) {
     tempFilter = `sepia(${-temperature}%) hue-rotate(180deg) saturate(80%)`;
   }
 
-  const filterStyle = `
-    brightness(${brightness}%)
-    contrast(${contrast}%)
-    saturate(${saturation}%)
-    blur(${blur}px)
-    hue-rotate(${hue}deg)
-    invert(${invert}%)
-    grayscale(${grayscale}%)
-    ${tempFilter}
-  `;
+  const filterStyle = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%) blur(${blur}px) hue-rotate(${hue}deg) invert(${invert}%) grayscale(${grayscale}%) ${tempFilter}`.trim();
 
   const handleApply = () => {
     const canvas = document.createElement("canvas");

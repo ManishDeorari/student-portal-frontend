@@ -25,16 +25,7 @@ export default function ProfileImageAdjust({ imageUrl, onApply, onReset }) {
   }
 
   // Preview filter for the image
-  const filterStyle = `
-    brightness(${brightness}%)
-    contrast(${contrast}%)
-    saturate(${saturation}%)
-    blur(${blur}px)
-    hue-rotate(${hue}deg)
-    invert(${invert}%)
-    grayscale(${grayscale}%)
-    ${tempFilter}
-  `;
+  const filterStyle = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%) blur(${blur}px) hue-rotate(${hue}deg) invert(${invert}%) grayscale(${grayscale}%) ${tempFilter}`.trim();
 
   const handleApply = () => {
     const canvas = document.createElement("canvas");
