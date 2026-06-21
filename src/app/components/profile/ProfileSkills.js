@@ -67,7 +67,7 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
                             const hasEndorsed = skill.endorsements?.includes(currentUserId);
                             
                             return (
-                                <div key={idx} className={`p-[2px] rounded-full shadow-sm transition-all duration-300 ${hasEndorsed ? 'bg-gradient-to-tr from-blue-500 to-indigo-500' : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500'}`}>
+                                <div key={idx} className={`p-[2px] rounded-full shadow-sm transition-transform duration-300 hover:scale-110 hover:z-20 relative ${hasEndorsed ? 'bg-gradient-to-tr from-blue-500 to-indigo-500' : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500'}`}>
                                     <button
                                         onClick={() => isPublicView && toggleEndorsement(skill.name)}
                                         disabled={!isPublicView && true} // Only clickable in public view
