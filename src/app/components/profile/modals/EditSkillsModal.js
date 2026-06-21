@@ -137,11 +137,11 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t flex justify-end gap-3 flex-shrink-0 border-opacity-20 border-gray-500">
+                    <div className="mt-8 pt-6 border-t flex justify-end gap-3 flex-shrink-0 border-opacity-20 border-gray-500">
                         <button
                             type="button"
                             onClick={onClose}
-                            className={`px-5 py-2.5 rounded-xl font-bold transition-transform hover:scale-95 active:scale-95 ${darkMode ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-900'}`}
+                            className={`px-5 py-2.5 rounded-xl border-[2px] font-bold transition-all active:scale-95 ${darkMode ? 'border-slate-700 text-gray-300 hover:bg-slate-800' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
                             disabled={loading}
                         >
                             Cancel

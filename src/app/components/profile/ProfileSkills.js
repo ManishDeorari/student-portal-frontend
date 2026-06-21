@@ -67,43 +67,40 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
                             const hasEndorsed = skill.endorsements?.includes(currentUserId);
                             
                             return (
-                                <button
-                                    key={idx}
-                                    onClick={() => isPublicView && toggleEndorsement(skill.name)}
-                                    disabled={!isPublicView && true} // Only clickable in public view
-                                    className={`relative group flex items-center gap-2 px-4 py-2 rounded-full border-[1.5px] transition-all duration-300
-                                        ${isPublicView ? "cursor-pointer active:scale-95" : "cursor-default"}
-                                        ${hasEndorsed 
-                                            ? "border-blue-500 bg-blue-500/10" 
-                                            : darkMode 
-                                                ? "border-slate-700 bg-slate-800 hover:border-slate-600" 
-                                                : "border-gray-200 bg-white hover:border-gray-300"
-                                        }
-                                        ${isPublicView && !hasEndorsed && darkMode ? "hover:bg-slate-700" : ""}
-                                        ${isPublicView && !hasEndorsed && !darkMode ? "hover:bg-gray-50" : ""}
-                                    `}
-                                    title={isPublicView ? (hasEndorsed ? "Remove endorsement" : "Endorse this skill") : ""}
-                                >
-                                    <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                        {skill.name}
-                                    </span>
-                                    
-                                    {endorsementCount > 0 && (
-                                        <div className="flex items-center gap-1 pl-2 border-l border-current opacity-80">
-                                            <BadgeCheck className={`w-4 h-4 ${hasEndorsed ? 'text-blue-500' : (darkMode ? 'text-gray-400' : 'text-gray-500')}`} />
-                                            <span className={`text-xs font-black ${hasEndorsed ? 'text-blue-500' : (darkMode ? 'text-gray-400' : 'text-gray-600')}`}>
-                                                {endorsementCount}
-                                            </span>
-                                        </div>
-                                    )}
+                                <div key={idx} className={`p-[2px] rounded-full shadow-sm transition-all duration-300 ${hasEndorsed ? 'bg-gradient-to-tr from-blue-500 to-indigo-500' : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500'}`}>
+                                    <button
+                                        onClick={() => isPublicView && toggleEndorsement(skill.name)}
+                                        disabled={!isPublicView && true} // Only clickable in public view
+                                        className={`relative group flex items-center gap-2 px-4 py-2 rounded-[calc(9999px-2px)] transition-all duration-300 h-full w-full
+                                            ${isPublicView ? "cursor-pointer active:scale-95" : "cursor-default"}
+                                            ${hasEndorsed 
+                                                ? (darkMode ? "bg-blue-900/40" : "bg-blue-50")
+                                                : (darkMode ? "bg-[#121213] hover:bg-slate-800" : "bg-white hover:bg-gray-50")
+                                            }
+                                        `}
+                                        title={isPublicView ? (hasEndorsed ? "Remove endorsement" : "Endorse this skill") : ""}
+                                    >
+                                        <span className={`text-sm font-bold ${hasEndorsed ? (darkMode ? 'text-blue-300' : 'text-blue-700') : (darkMode ? 'text-white' : 'text-gray-900')}`}>
+                                            {skill.name}
+                                        </span>
+                                        
+                                        {endorsementCount > 0 && (
+                                            <div className={`flex items-center gap-1 pl-2 border-l ${hasEndorsed ? 'border-blue-400' : (darkMode ? 'border-gray-600' : 'border-gray-300')} opacity-80`}>
+                                                <BadgeCheck className={`w-4 h-4 ${hasEndorsed ? (darkMode ? 'text-blue-400' : 'text-blue-600') : (darkMode ? 'text-gray-400' : 'text-gray-500')}`} />
+                                                <span className={`text-xs font-black ${hasEndorsed ? (darkMode ? 'text-blue-400' : 'text-blue-600') : (darkMode ? 'text-gray-400' : 'text-gray-600')}`}>
+                                                    {endorsementCount}
+                                                </span>
+                                            </div>
+                                        )}
 
-                                    {/* Hover hint for touch devices - subtle indicator */}
-                                    {isPublicView && (
-                                        <div className={`absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded text-[10px] font-bold text-white bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none`}>
-                                            {hasEndorsed ? 'Remove Endorsement' : 'Endorse Skill'}
-                                        </div>
-                                    )}
-                                </button>
+                                        {/* Hover hint for touch devices - subtle indicator */}
+                                        {isPublicView && (
+                                            <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${hasEndorsed ? 'bg-red-500' : 'bg-blue-500'} opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100`}>
+                                                <div className="w-1 h-1 bg-white rounded-full"></div>
+                                            </div>
+                                        )}
+                                    </button>
+                                </div>
                             );
                         })}
                     </div>
