@@ -303,7 +303,7 @@ function Table({
                     <div className="relative shrink-0">
                       <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 bg-purple-500`}></div>
                       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-purple-500/20 text-purple-300" : "bg-purple-100 text-purple-700"} border-2 border-purple-500/30 flex items-center justify-center font-black text-sm sm:text-lg`}>
-                        {u.name.charAt(0)}
+                        <img src="/default-profile.jpg" className="w-full h-full rounded-full object-cover" alt="Default" />
                       </div>
                     </div>
                     <div className="min-w-0">

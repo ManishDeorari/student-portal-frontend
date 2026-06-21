@@ -79,13 +79,7 @@ export default function AdminSearchEditModal({ isOpen, onClose, users, onEditUse
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 p-[1px]">
-                                                {u.profilePicture ? (
-                                                    <img src={u.profilePicture} alt="" className="w-full h-full rounded-full object-cover" />
-                                                ) : (
-                                                    <div className={`w-full h-full rounded-full ${darkMode ? "bg-slate-800" : "bg-white"} flex items-center justify-center font-bold text-sm`}>
-                                                        {u.name.charAt(0)}
-                                                    </div>
-                                                )}
+                                                <img src={u.profilePicture || "/default-profile.jpg"} alt="" className="w-full h-full rounded-full object-cover" />
                                             </div>
                                             <div>
                                                 <p className={`text-sm font-black ${darkMode ? "text-white" : "text-slate-900"}`}>{u.name}</p>

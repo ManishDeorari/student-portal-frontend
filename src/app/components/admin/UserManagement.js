@@ -419,7 +419,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                         />
                                                     ) : (
                                                         <div className={`w-12 h-12 rounded-full relative z-10 shrink-0 aspect-square ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-lg`}>
-                                                            {u.name.charAt(0)}
+                                                            <img src="/default-profile.jpg" className="w-full h-full rounded-full object-cover" alt="Default" />
                                                         </div>
                                                     )}
                                                 </div>

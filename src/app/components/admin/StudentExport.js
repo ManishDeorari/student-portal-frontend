@@ -310,17 +310,11 @@ export default function StudentExport() {
                                         <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
                                             <div className="relative shrink-0">
                                                 <div className="absolute -inset-1 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full blur-[2px] opacity-30"></div>
-                                                {u.profilePicture ? (
-                                                    <img 
-                                                        src={u.profilePicture} 
+                                                <img 
+                                                        src={u.profilePicture || "/default-profile.jpg"} 
                                                         alt={u.name}
                                                         className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover relative z-10 border-2 border-white/10"
                                                     />
-                                                ) : (
-                                                    <div className={`h-10 w-10 sm:h-12 sm:w-12 rounded-full relative z-10 ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"} border-2 border-blue-400/20 flex items-center justify-center font-black text-sm sm:text-lg text-blue-500`}>
-                                                        {u.name.charAt(0)}
-                                                    </div>
-                                                )}
                                             </div>
                                             <div className="min-w-0">
                                                 <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>

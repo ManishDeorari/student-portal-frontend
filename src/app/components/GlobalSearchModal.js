@@ -99,21 +99,26 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
                 <div>
                   <h3 className={`text-xs font-black uppercase tracking-widest mb-2 px-2 ${darkMode ? "text-white" : "text-black"}`}>Users</h3>
                   <div className="space-y-1">
-                    {results.users.map(user => (
-                      <Link href={`/profile/${user.publicId || user._id}`} key={user._id} onClick={onClose} className={`flex items-center gap-3 p-2 rounded-xl transition-colors ${darkMode ? "hover:bg-white/10" : "hover:bg-black/5"}`}>
-                        <div className="w-8 h-8 rounded-full bg-gray-200 relative shrink-0 flex items-center justify-center">
-                          {user.profilePicture ? (
-                             <UserAvatar user={user} src={user.profilePicture} alt="Profile" width={32} height={32} wrapperClassName="w-8 h-8 rounded-full" className="object-cover w-full h-full rounded-full" />
-                          ) : (
-                             <div className="w-full h-full rounded-full flex items-center justify-center bg-gradient-to-tr from-blue-500 to-purple-500 text-white text-xs font-bold">{user.name.charAt(0)}</div>
-                          )}
+                      {results.users.map(user => (
+                        <div key={user._id} className="p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl mb-1.5 hover:scale-[1.02] transition-all duration-300 shadow-sm">
+                          <Link href={`/profile/${user.publicId || user._id}`} onClick={onClose} className={`flex items-center gap-3 p-2 rounded-[calc(0.75rem-1.5px)] w-full transition-colors ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                            <div className="w-10 h-10 p-[1.5px] bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full relative shrink-0 flex items-center justify-center">
+                              <div className={`w-full h-full rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-gray-200"}`}>
+                                <UserAvatar user={user} src={user.profilePicture} alt="Profile" width={40} height={40} wrapperClassName="w-full h-full rounded-full" className="object-cover w-full h-full rounded-full" />
+                              </div>
+                            </div>
+                            <div>
+                              <p className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>{user.name}</p>
+                              <p className={`text-[10px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                {user.enrollmentNumber} 
+                                {user.course ? ` • ${user.course}` : ""} 
+                                {user.branch ? ` • ${user.branch}` : ""} 
+                                {user.semester ? ` • Sem ${user.semester}` : ""}
+                              </p>
+                            </div>
+                          </Link>
                         </div>
-                        <div>
-                          <p className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>{user.name}</p>
-                          <p className={`text-[10px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{user.role} • {user.enrollmentNumber} {user.branch ? `• ${user.branch}` : ""}</p>
-                        </div>
-                      </Link>
-                    ))}
+                      ))}
                   </div>
                 </div>
               )}
