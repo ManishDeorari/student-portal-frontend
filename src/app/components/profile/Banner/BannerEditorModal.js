@@ -11,13 +11,13 @@ import BannerImageFilters from "./BannerImageFilters";
 import BannerImageAdjust from "./BannerImageAdjust";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
 
-export default function BannerEditorModal({ onClose, onUploaded, userId, currentImage }) {
+export default function BannerEditorModal({ onClose, onUploaded, userId, currentImage, currentFocus }) {
   const { darkMode } = useTheme();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(currentImage || "/default_banner.jpg");
   const [uploading, setUploading] = useState(false);
   const [activeTab, setActiveTab] = useState(null);
-  const [bannerImageFocus, setBannerImageFocus] = useState(null);
+  const [bannerImageFocus, setBannerImageFocus] = useState(currentFocus || null);
   const adjustOriginalRef = useRef({ url: null, file: null });
   const [adjustKey, setAdjustKey] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -191,6 +191,7 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
               alt="Preview"
               fill
               className={`object-cover rounded-[calc(1rem-3.5px)] border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'} shadow-inner`}
+              style={bannerImageFocus ? { objectPosition: `${bannerImageFocus.x}% ${bannerImageFocus.y}%` } : {}}
             />
           </div>
         </div>

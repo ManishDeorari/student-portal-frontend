@@ -162,17 +162,25 @@ export default function ProfileImageAdjust({ imageUrl, onApply, onReset }) {
       <div className="w-full p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-md mb-6">
         <div className={`grid grid-cols-2 sm:grid-cols-5 gap-2 p-4 rounded-[calc(0.75rem-2.5px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
           {adjustments.map((adj) => (
-            <button
-              key={adj.name}
-              onClick={() => setActiveAdjust(adj.name)}
-              className={`px-2 py-2 text-[9px] font-black uppercase tracking-widest rounded-lg border-2 transition-colors ${
-                  activeAdjust === adj.name 
-                      ? (darkMode ? "bg-blue-900/40 border-blue-500/50 text-blue-400" : "bg-blue-100 border-blue-300 text-blue-700") 
-                      : (darkMode ? "bg-[#121213] border-white/10 text-gray-400 hover:text-white hover:border-white/20" : "bg-gray-100 border-transparent text-gray-600 hover:bg-gray-200")
+            <div 
+              key={adj.name} 
+              className={`p-[1.5px] rounded-xl transition-all ${
+                activeAdjust === adj.name 
+                  ? 'bg-gradient-to-tr from-blue-500 to-purple-500 shadow-md scale-[1.02]' 
+                  : 'bg-transparent hover:bg-gradient-to-tr hover:from-blue-500/50 hover:to-purple-500/50 hover:scale-[1.02]'
               }`}
             >
-              {adj.name}
-            </button>
+              <button
+                onClick={() => setActiveAdjust(adj.name)}
+                className={`w-full h-full px-2 py-2 text-[9px] font-black uppercase tracking-widest rounded-[calc(0.75rem-1.5px)] transition-colors ${
+                  activeAdjust === adj.name
+                    ? (darkMode ? "bg-blue-900/40 text-blue-400" : "bg-blue-100 text-blue-700")
+                    : (darkMode ? "bg-[#121213] text-gray-400 hover:text-white" : "bg-gray-100 text-gray-600 hover:text-black")
+                }`}
+              >
+                {adj.name}
+              </button>
+            </div>
           ))}
         </div>
       </div>

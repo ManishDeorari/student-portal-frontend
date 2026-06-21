@@ -63,6 +63,7 @@ export default function ProfileBanner({ image, focus, onUpload, userId, isPublic
         <BannerEditorModal
           userId={userId}
           currentImage={bannerImg}
+          currentFocus={focus}
           onClose={() => setShowEditor(false)}
           onUploaded={() => {
             setShowEditor(false);

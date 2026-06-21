@@ -72,6 +72,7 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
         <ProfileEditorModal
           userId={userId}
           currentImage={profileImg}
+          currentFocus={user?.profileImageFocus}
           onClose={() => setShowEditor(false)}
           onUploaded={() => {
             setShowEditor(false);

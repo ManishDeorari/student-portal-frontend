@@ -11,13 +11,14 @@ import ProfileImageFilters from "./ProfileImageFilters";
 import ProfileImageAdjust from "./ProfileImageAdjust";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
 
-export default function ProfileEditorModal({ onClose, onUploaded, userId, currentImage }) {
+export default function ProfileEditorModal({ onClose, onUploaded, userId, currentImage, currentFocus }) {
   const { darkMode } = useTheme();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(currentImage || "/default-profile.jpg");
   const [uploading, setUploading] = useState(false);
   const [croppedImage, setCroppedImage] = useState(null);
-  const [profileImageFocus, setProfileImageFocus] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
+  const [profileImageFocus, setProfileImageFocus] = useState(currentFocus || null);
   const adjustOriginalRef = useRef({ url: null, file: null });
   const [adjustKey, setAdjustKey] = useState(0); // force remount after reset
   const [mounted, setMounted] = useState(false);
@@ -238,10 +239,11 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
           <div className="p-[3.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-full shadow-[0_10px_30px_rgba(37,99,235,0.4)] flex-shrink-0">
             <div className="relative w-40 h-40 rounded-full overflow-hidden">
               <Image
-                src={previewUrl || "/default-profile.jpg"}
+                src={previewUrl || currentImage || "/default-profile.jpg"}
                 alt="Preview"
                 fill
                 className={`object-cover border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'} rounded-full`}
+                style={profileImageFocus ? { objectPosition: `${profileImageFocus.x}% ${profileImageFocus.y}%` } : {}}
               />
             </div>
           </div>
