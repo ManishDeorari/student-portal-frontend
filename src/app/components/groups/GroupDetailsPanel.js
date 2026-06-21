@@ -53,7 +53,7 @@ export default function GroupDetailsPanel({
                         <div className="relative w-32 h-32 rounded-[2.5rem] overflow-hidden border-4 border-blue-500/20 shadow-2xl mb-6 group">
                              <GroupAvatar 
                                  group={group} 
-                                 size={128} 
+                                 size="100%" 
                                  className="w-full h-full rounded-[2.5rem] transition-transform duration-500 group-hover:scale-110" 
                              />
                         </div>
