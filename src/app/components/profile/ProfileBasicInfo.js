@@ -259,9 +259,11 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                         </p>
                                         <div className="flex flex-wrap gap-2">
                                             {missingFields.map((field, idx) => (
-                                                <span key={idx} className={`text-[10px] font-black tracking-widest px-2.5 py-1 rounded-md border ${darkMode ? 'bg-slate-800/50 text-gray-300 border-white/10' : 'bg-white text-gray-700 border-gray-200'}`}>
-                                                    {field}
-                                                </span>
+                                                <div key={idx} className="p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-md shadow-sm">
+                                                    <span className={`block text-[10px] font-black tracking-widest px-2.5 py-1 rounded-[calc(0.375rem-1.5px)] ${darkMode ? 'bg-slate-800 text-white' : 'bg-white text-black'}`}>
+                                                        {field}
+                                                    </span>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>

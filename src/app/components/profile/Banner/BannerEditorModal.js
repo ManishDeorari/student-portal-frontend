@@ -246,35 +246,34 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
           </div>
         </div>
 
-        {/* Tools */}
         <div className="flex flex-wrap justify-center gap-3 mb-6 items-center border-b border-dashed border-gray-200 dark:border-white/10 pb-6 shadow-sm">
-          <div className={`p-[1.5px] bg-gradient-to-tr ${activeTab === 'crop' ? 'from-blue-500 to-purple-500' : (darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400')} rounded-xl shadow-sm transition-all`}>
+          <div className={`p-[2.5px] bg-gradient-to-tr ${activeTab === 'crop' ? 'from-blue-600 to-purple-600' : 'from-gray-400 to-gray-500'} rounded-xl shadow-lg transition transform hover:-translate-y-0.5 active:scale-95`}>
             <button
               onClick={() => setActiveTab(activeTab === "crop" ? null : "crop")}
-              className={`px-6 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${
+              className={`px-6 py-2.5 rounded-[calc(0.75rem-2.5px)] text-[10px] font-black uppercase tracking-widest w-full h-full ${
                   activeTab === "crop" 
-                      ? (darkMode ? "bg-blue-900/40 text-blue-400" : "bg-blue-50 text-blue-700") 
-                      : (darkMode ? "bg-[#121213] text-gray-400 hover:text-white" : "bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50")
+                      ? (darkMode ? "bg-black text-blue-400" : "bg-white text-blue-600") 
+                      : (darkMode ? "bg-black text-gray-400 hover:bg-slate-900" : "bg-white text-gray-600 hover:bg-gray-50")
               }`}
             >
               Focus
             </button>
           </div>
 
-          <div className={`p-[1.5px] bg-gradient-to-tr ${darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400'} rounded-xl shadow-sm transition-all`}>
+          <div className="p-[2.5px] bg-gradient-to-tr from-gray-400 to-gray-500 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 active:scale-95">
             <button
               onClick={() => handleRotate(-90)}
-              className={`px-4 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${darkMode ? "bg-[#121213] text-gray-300 hover:text-white hover:bg-slate-800" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+              className={`px-4 py-2.5 rounded-[calc(0.75rem-2.5px)] text-[10px] font-black uppercase tracking-widest w-full h-full ${darkMode ? "bg-black text-gray-400 hover:bg-slate-900" : "bg-white text-gray-600 hover:bg-gray-50"}`}
               title="Rotate Left"
             >
               Rotate Left
             </button>
           </div>
 
-          <div className={`p-[1.5px] bg-gradient-to-tr ${darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400'} rounded-xl shadow-sm transition-all`}>
+          <div className="p-[2.5px] bg-gradient-to-tr from-gray-400 to-gray-500 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 active:scale-95">
             <button
               onClick={() => handleRotate(90)}
-              className={`px-4 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${darkMode ? "bg-[#121213] text-gray-300 hover:text-white hover:bg-slate-800" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+              className={`px-4 py-2.5 rounded-[calc(0.75rem-2.5px)] text-[10px] font-black uppercase tracking-widest w-full h-full ${darkMode ? "bg-black text-gray-400 hover:bg-slate-900" : "bg-white text-gray-600 hover:bg-gray-50"}`}
               title="Rotate Right"
             >
               Rotate Right
@@ -283,7 +282,7 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
 
           {/* Reset Button */}
           {(selectedFile || bannerImageFocus) && (
-            <div className="p-[1.5px] bg-gradient-to-tr from-orange-500 to-red-500 rounded-xl shadow-sm transition-all">
+            <div className="p-[2.5px] bg-gradient-to-tr from-orange-500 to-red-500 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 active:scale-95">
               <button
                 onClick={() => {
                   setPreviewUrl(currentImage || "/default_banner.jpg");
@@ -291,10 +290,9 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
                   setBannerImageFocus(currentFocus || null);
                   setActiveTab("crop");
                 }}
-                className={`px-6 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest ${
-                    darkMode ? "bg-[#121213] text-orange-400 hover:text-orange-300 hover:bg-orange-950/30" : "bg-white text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+                className={`px-6 py-2.5 rounded-[calc(0.75rem-2.5px)] text-[10px] font-black uppercase tracking-widest w-full h-full ${
+                    darkMode ? "bg-black text-orange-400 hover:bg-slate-900 hover:text-orange-300" : "bg-white text-orange-600 hover:bg-orange-50 hover:text-orange-700"
                 }`}
-                title="Reset to original"
               >
                 Reset
               </button>
