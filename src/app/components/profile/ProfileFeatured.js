@@ -32,7 +32,7 @@ export default function ProfileFeatured({ user, isPublicView, onUpdate }) {
       });
       if (res.ok) {
         const updatedUser = await res.json();
-        onUpdate(updatedUser);
+        onUpdate(prev => ({ ...prev, ...updatedUser }));
       }
     } catch (e) {
       console.error("Failed to update featured items", e);
@@ -54,7 +54,7 @@ export default function ProfileFeatured({ user, isPublicView, onUpdate }) {
       });
       if (res.ok) {
         const updatedUser = await res.json();
-        onUpdate(updatedUser);
+        onUpdate(prev => ({ ...prev, ...updatedUser }));
       }
     } catch (e) {
       console.error("Failed to delete featured item", e);
