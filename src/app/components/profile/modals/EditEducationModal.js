@@ -259,11 +259,13 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
 
                 <div className={`p-4 md:p-6 space-y-8 overflow-y-auto custom-scrollbar flex-grow ${darkMode ? 'bg-[#121213]' : 'bg-gray-50/30'}`}>
                     {/* Guide Text */}
-                    <div className={`p-4 rounded-xl border flex items-start gap-3 ${darkMode ? 'bg-purple-500/10 border-purple-500/20 text-purple-300' : 'bg-purple-50 border-purple-100 text-purple-800'}`}>
-                        <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm leading-relaxed">
-                            <p className="font-bold mb-0.5">Education Guidelines</p>
-                            <p>Adding your detailed educational background helps recruiters understand your academic journey and makes your profile stand out.</p>
+                    <div className="p-[2px] bg-gradient-to-tr from-purple-500 via-pink-500 to-red-500 rounded-xl mb-6">
+                        <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-purple-300' : 'bg-purple-50 text-purple-800'}`}>
+                            <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                            <div className="text-sm leading-relaxed">
+                                <p className="font-bold mb-0.5">Education Guidelines</p>
+                                <p>You must fill out at least the 4 mandatory levels (High School, Intermediate, Undergrad, Postgrad) if applicable. For each level, ensure you provide the School/College, Degree, Course, and Dates.</p>
+                            </div>
                         </div>
                     </div>
                     

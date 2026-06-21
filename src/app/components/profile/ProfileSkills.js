@@ -33,7 +33,7 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "x-auth-token": token,
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({ skillName }),
             });

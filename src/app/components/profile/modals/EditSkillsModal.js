@@ -48,7 +48,7 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "x-auth-token": token,
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({ profileSkills: skills }),
             });
@@ -68,9 +68,8 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={!loading ? onClose : undefined} />
-            <div className={`relative w-full max-w-lg p-[2.5px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-600 rounded-[calc(1.5rem+2.5px)] shadow-2xl overflow-hidden transform transition-all duration-300 scale-100`}>
+        <div className="fixed inset-0 h-[100dvh] w-full z-50 flex justify-center items-center p-4 bg-black/60 backdrop-blur-sm" onClick={!loading ? onClose : undefined}>
+            <div className={`relative w-full max-w-lg p-[2.5px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-600 rounded-[calc(1.5rem+2.5px)] shadow-2xl overflow-hidden transform transition-all duration-300 scale-100`} onClick={e => e.stopPropagation()}>
                 <div className={`relative w-full h-full rounded-[1.5rem] p-6 flex flex-col max-h-[85vh] ${darkMode ? 'bg-slate-900 text-white' : 'bg-white text-gray-900'}`}>
                     
                     <div className="flex items-center justify-between mb-6 flex-shrink-0">
@@ -88,11 +87,13 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
 
                     <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6">
                         {/* Guide Text */}
-                        <div className={`p-4 rounded-xl border flex items-start gap-3 ${darkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-300' : 'bg-blue-50 border-blue-100 text-blue-800'}`}>
-                            <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                            <div className="text-sm leading-relaxed">
-                                <p className="font-bold mb-0.5">Earn Points for Skills!</p>
-                                <p>You automatically earn <span className="font-bold">+1 point</span> for every skill you add, up to a maximum of <span className="font-bold">10 points</span>. Points are added to your Engagement score.</p>
+                        <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 rounded-xl">
+                            <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
+                                <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                                <div className="text-sm leading-relaxed">
+                                    <p className="font-bold mb-0.5">Earn Points for Skills!</p>
+                                    <p>You automatically earn <span className="font-bold">+1 point</span> for every skill you add, up to a maximum of <span className="font-bold">10 points</span>. Points are added to your Engagement score.</p>
+                                </div>
                             </div>
                         </div>
 
