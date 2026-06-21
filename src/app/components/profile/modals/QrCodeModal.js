@@ -64,15 +64,17 @@ export default function QrCodeModal({ isOpen, onClose, publicId, name }) {
         <div className="flex flex-col items-center justify-center space-y-6">
           <div 
             ref={qrRef}
-            className="p-4 bg-white rounded-xl shadow-inner border border-gray-100"
+            className="p-[3px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 rounded-[1rem] shadow-lg"
           >
-            <QRCode
-              value={profileUrl}
-              size={200}
-              level="H"
-              fgColor="#000000"
-              bgColor="#ffffff"
-            />
+            <div className="bg-white rounded-[calc(1rem-3px)] p-4 flex items-center justify-center">
+              <QRCode
+                value={profileUrl}
+                size={200}
+                level="H"
+                fgColor="#000000"
+                bgColor="#ffffff"
+              />
+            </div>
           </div>
           
           <p className={`text-center text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>

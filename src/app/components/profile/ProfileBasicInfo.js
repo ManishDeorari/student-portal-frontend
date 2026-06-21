@@ -169,23 +169,27 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     {/* Action Icons - Top Right */}
                     <div className="absolute top-[8.5rem] sm:top-20 right-2 sm:right-4 z-20 flex items-center gap-2">
                         {/* QR Code Button - Available to everyone */}
-                        <button
-                            onClick={() => setShowQrModal(true)}
-                            className={`p-3 sm:p-2 shadow-md border rounded-full transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50'}`}
-                            title="Show QR Code"
-                        >
-                            <QrCode className="w-5 h-5 sm:w-5 sm:h-5" />
-                        </button>
+                        <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg">
+                            <button
+                                onClick={() => setShowQrModal(true)}
+                                className={`p-3 sm:p-2 rounded-[calc(9999px-2px)] transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-white text-gray-900 hover:bg-gray-50'}`}
+                                title="Show QR Code"
+                            >
+                                <QrCode className="w-5 h-5 sm:w-5 sm:h-5" />
+                            </button>
+                        </div>
                         
                         {/* Edit Profile Icon - Only for owner */}
                         {!isPublicView && (
-                            <button
-                                onClick={() => setShowEditModal(true)}
-                                className={`p-3 sm:p-2 shadow-md border rounded-full transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50'}`}
-                                title="Edit Profile"
-                            >
-                                <Pencil className="w-5 h-5 sm:w-5 sm:h-5" />
-                            </button>
+                            <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg">
+                                <button
+                                    onClick={() => setShowEditModal(true)}
+                                    className={`p-3 sm:p-2 rounded-[calc(9999px-2px)] transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-white text-gray-900 hover:bg-gray-50'}`}
+                                    title="Edit Profile"
+                                >
+                                    <Pencil className="w-5 h-5 sm:w-5 sm:h-5" />
+                                </button>
+                            </div>
                         )}
                     </div>
 
