@@ -4,8 +4,10 @@ import ProfileEditorModal from "./Avatar/ProfileEditorModal";
 import ImageViewerModal from "./ImageViewerModal";
 import UserAvatar from "../ui/UserAvatar";
 import { getOptimizedImageUrl, getFocalImageUrl } from "../../utils/cloudinaryHelper";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function ProfileAvatar({ user, image, onUpload, userId, isPublicView }) {
+  const { darkMode } = useTheme();
   const [showEditor, setShowEditor] = useState(false);
   const [showViewer, setShowViewer] = useState(false);
 
@@ -64,10 +66,10 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
         >
           <button
             onClick={() => setShowEditor(true)}
-            className="w-full h-full bg-white dark:bg-slate-900 rounded-[calc(9999px-2px)] flex items-center justify-center cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+            className={`w-full h-full rounded-[calc(9999px-2px)] flex items-center justify-center cursor-pointer transition-colors ${darkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-white text-gray-900 hover:bg-gray-50'}`}
             title="Edit photo"
           >
-            <Camera style={{ width: '60%', height: '60%' }} className="text-gray-700 dark:text-gray-300" />
+            <Camera style={{ width: '50%', height: '50%' }} className="text-current" />
           </button>
         </div>
       )}
