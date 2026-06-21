@@ -11,6 +11,7 @@ import ProfileActivity from "../components/profile/ProfileActivity";
 import ProfileEventParticipation from "../components/profile/ProfileEventParticipation";
 import ProfileResumeAndLinks from "../components/profile/ProfileResumeAndLinks";
 import ProfileBasicInfo from "../components/profile/ProfileBasicInfo";
+import ProfileFeatured from "../components/profile/ProfileFeatured";
 
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -169,6 +170,11 @@ function ProfileContent() {
             setProfile={setProfile}
             onRefresh={fetchProfile}
             isPublicView={isPublicView}
+          />
+          <ProfileFeatured 
+            user={profile} 
+            isPublicView={isPublicView} 
+            onUpdate={setProfile} 
           />
         </div>
       </div>
