@@ -182,13 +182,11 @@ html, body {
 /* Smooth scrolling for PWA feel */
 html {
   scroll-behavior: smooth;
-}
-
-/* Prevent iOS zoom on input focus */
-input,
-textarea,
-select {
-  font-size: 16px;
+  /* Fluid typography: 1rem dynamically scales from 13px on mobile to 16px on desktop. 
+     This automatically makes all text sizes and div dimensions (paddings, margins, widths) 
+     that use Tailwind's default rem scaling device-independent! 
+     Tuned so 100% browser zoom matches the preferred "90% zoom" density. */
+  font-size: clamp(13px, 0.8vw + 10px, 16px);
 }
 
 /* Hide scrollbar but keep functionality for a cleaner mobile look */
