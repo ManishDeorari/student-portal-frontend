@@ -91,21 +91,17 @@ export default function ProfileStats({ profile: initialProfile, isPublicView }) 
                     </Link>
                 </div>
 
-                {/* Total Visitors - PRIVATE */}
-                {!isPublicView && (
-                    <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
-                        <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${darkMode ? 'text-gray-400' : 'text-black'}`}>Total Visitors</p>
-                        <p className={`text-3xl font-normal ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>{stats.totalVisits}</p>
-                    </div>
-                )}
+                {/* Total Visitors */}
+                <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
+                    <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Total Visitors</p>
+                    <p className={`text-3xl font-normal ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>{stats.totalVisits}</p>
+                </div>
 
-                {/* Today's Visits - PRIVATE */}
-                {!isPublicView && (
-                    <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
-                        <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${darkMode ? 'text-gray-400' : 'text-black'}`}>Today's Visits</p>
-                        <p className={`text-3xl font-normal ${darkMode ? 'text-green-400' : 'text-green-600'}`}>{stats.todayVisits}</p>
-                    </div>
-                )}
+                {/* Today's Visits */}
+                <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
+                    <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Today's Visits</p>
+                    <p className={`text-3xl font-normal ${darkMode ? 'text-green-400' : 'text-green-600'}`}>{stats.todayVisits}</p>
+                </div>
 
                 {/* My Points (Student Only) */}
                 {initialProfile.role === "student" && (

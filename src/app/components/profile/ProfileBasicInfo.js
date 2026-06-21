@@ -451,34 +451,30 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         {/* Mutual Connections Block */}
                         {isPublicView && profile.mutualConnections?.length > 0 && (
                             <div className="w-full px-6 mb-4">
-                                <div className={`p-4 rounded-xl flex items-center justify-between ${darkMode ? 'bg-slate-800/50 border border-slate-700' : 'bg-blue-50 border border-blue-100'}`}>
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex -space-x-3">
-                                            {profile.mutualConnections.slice(0, 3).map((conn, idx) => (
-                                                <div key={conn._id} className={`w-10 h-10 rounded-full border-2 ${darkMode ? 'border-[#121213] bg-slate-700' : 'border-white bg-gray-200'} overflow-hidden relative z-[${3 - idx}]`}>
-                                                    {conn.profilePicture ? (
-                                                        <img src={conn.profilePicture} alt={conn.name} className="w-full h-full object-cover" />
-                                                    ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-sm font-bold text-gray-500">
-                                                            {conn.name?.charAt(0) || '?'}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))}
-                                            {profile.mutualConnections.length > 3 && (
-                                                <div className={`w-10 h-10 rounded-full border-2 ${darkMode ? 'border-[#121213] bg-slate-700 text-gray-300' : 'border-white bg-gray-200 text-gray-600'} flex items-center justify-center text-xs font-bold z-0`}>
-                                                    +{profile.mutualConnections.length - 3}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div>
-                                            <p className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {profile.mutualConnections.length} Mutual Connection{profile.mutualConnections.length > 1 ? 's' : ''}
-                                            </p>
-                                            <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                                You both know {profile.mutualConnections.slice(0, 2).map(c => c.name?.split(' ')[0]).join(' and ')}
-                                                {profile.mutualConnections.length > 2 ? ' and others' : ''}
-                                            </p>
+                                <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-md hover:scale-[1.02] hover:shadow-lg transition-all duration-300">
+                                    <div className={`p-4 rounded-[calc(0.75rem-2.5px)] flex items-center justify-between ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                                        <div className="flex items-center gap-4">
+                                            <div className="flex -space-x-3">
+                                                {profile.mutualConnections.slice(0, 3).map((conn, idx) => (
+                                                    <div key={conn._id} className={`w-10 h-10 rounded-full border-2 ${darkMode ? 'border-[#121213] bg-slate-700' : 'border-[#FAFAFA] bg-gray-200'} overflow-hidden relative z-[${3 - idx}]`}>
+                                                        <img src={conn.profilePicture || "/default-profile.jpg"} alt={conn.name} className="w-full h-full object-cover" />
+                                                    </div>
+                                                ))}
+                                                {profile.mutualConnections.length > 3 && (
+                                                    <div className={`w-10 h-10 rounded-full border-2 ${darkMode ? 'border-[#121213] bg-slate-700 text-white' : 'border-[#FAFAFA] bg-gray-200 text-black'} flex items-center justify-center text-xs font-bold z-0`}>
+                                                        +{profile.mutualConnections.length - 3}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <p className={`font-semibold ${darkMode ? 'text-white' : 'text-black'}`}>
+                                                    {profile.mutualConnections.length} Mutual Connection{profile.mutualConnections.length > 1 ? 's' : ''}
+                                                </p>
+                                                <p className={`text-xs ${darkMode ? 'text-white' : 'text-black'}`}>
+                                                    You both know {profile.mutualConnections.slice(0, 2).map(c => c.name?.split(' ')[0]).join(' and ')}
+                                                    {profile.mutualConnections.length > 2 ? ' and others' : ''}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
