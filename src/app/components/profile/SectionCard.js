@@ -58,7 +58,7 @@ const SectionCard = ({ title, children, onEdit, isPublicView, hasData }) => {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
+              className="overflow-hidden -mx-4 px-4 -mb-4 pb-4"
             >
               <div className={`text-sm space-y-1 transition-colors pt-2 ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                 {children}
