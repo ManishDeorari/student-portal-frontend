@@ -82,10 +82,10 @@ export default function ProfileStats({ profile: initialProfile, isPublicView }) 
         <div className="p-[2px] bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 rounded-2xl shadow-xl overflow-hidden mt-4">
             <div className={`flex flex-wrap justify-between items-center w-full px-6 py-6 gap-6 rounded-[calc(1rem-1px)] transition-colors duration-500 ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
                 {/* Connections */}
-                <div className="flex flex-col items-center text-center flex-1 min-w-[120px]">
+                <div className="flex flex-col items-center text-center flex-1 min-w-[120px] group cursor-pointer">
                     <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${darkMode ? 'text-gray-400' : 'text-black'}`}>Connections</p>
                     <Link href={connectionsLink}>
-                        <button className={`text-3xl font-normal transition-all active:scale-95 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}>
+                        <button className={`text-3xl font-normal transition-transform group-hover:scale-110 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}>
                             {stats.connections}
                         </button>
                     </Link>
