@@ -104,18 +104,6 @@ export default function ProfileEventParticipation({ profile, setProfile, isPubli
 
     const handleViewEvent = (event) => {
         if (event.type === "EventRepost" || event.isEventRepostPost) {
-            const originalEvent = event.eventRepostDetails?.originalEventId;
-            if (originalEvent) {
-                const formattedEvent = {
-                    ...originalEvent,
-                    type: "Event",
-                    content: originalEvent.description,
-                    user: typeof originalEvent.createdBy === "object" ? originalEvent.createdBy : { _id: originalEvent.createdBy, name: "Admin" }
-                };
-                setSelectedPost(formattedEvent);
-                setShowPostModal(true);
-                return;
-            }
             setSelectedPost(event);
             setShowPostModal(true);
             return;
