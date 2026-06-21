@@ -79,7 +79,7 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         <button 
                             onClick={onClose}
                             disabled={loading}
-                            className={`p-1.5 rounded-full border transition-all ${darkMode ? 'border-white/30 text-white hover:bg-white/10' : 'border-black/30 text-black hover:bg-black/10'}`}
+                            className={`p-2 rounded-full transition-colors ${darkMode ? 'hover:bg-slate-800' : 'hover:bg-gray-100'}`}
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -98,16 +98,14 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         </div>
 
                         {/* Add Skill Form */}
-                        <form onSubmit={handleAddSkill} className="flex gap-2 relative z-10">
-                            <div className="flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-blue-600 to-purple-600">
-                                <input
-                                    type="text"
-                                    value={newSkill}
-                                    onChange={(e) => setNewSkill(e.target.value)}
-                                    placeholder="E.g., React.js, Public Speaking, Python"
-                                    className={`w-full h-full px-4 py-3 rounded-[calc(0.75rem-1.5px)] ${darkMode ? 'bg-slate-900 text-white' : 'bg-white text-gray-900'} outline-none`}
-                                />
-                            </div>
+                        <form onSubmit={handleAddSkill} className="flex gap-2">
+                            <div className="flex-1 p-[2px] rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600"><input
+                                type="text"
+                                value={newSkill}
+                                onChange={(e) => setNewSkill(e.target.value)}
+                                placeholder="E.g., React.js, Public Speaking, Python"
+                                className={`w-full h-full px-4 py-3 rounded-[calc(0.75rem-2px)] font-bold ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} outline-none transition-colors`}
+                            /></div>
                             <button
                                 type="submit"
                                 disabled={!newSkill.trim()}
@@ -118,9 +116,9 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         </form>
 
                         {/* Skills List */}
-                        <div className="flex flex-wrap gap-3 relative z-20">
+                        <div className="flex flex-wrap gap-3">
                             {skills.map((skill, idx) => (
-                                <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md relative z-10 hover:z-20">
+                                <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md relative z-10">
                                     <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(9999px-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                                         <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{skill.name}</span>
                                         <button
@@ -143,7 +141,7 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         <button
                             type="button"
                             onClick={onClose}
-                            className={`px-5 py-2.5 rounded-xl border font-black transition-all active:scale-95 ${darkMode ? 'border-white/30 text-white hover:bg-white/10' : 'border-black/30 text-black hover:bg-black/10'}`}
+                            className={`px-5 py-2.5 rounded-xl border-[2px] font-bold transition-all active:scale-95 ${darkMode ? 'border-white text-white hover:bg-white/10' : 'border-black text-black hover:bg-gray-100'}`}
                             disabled={loading}
                         >
                             Cancel

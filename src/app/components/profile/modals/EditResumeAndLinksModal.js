@@ -116,11 +116,11 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
 
   return (
     <div className="fixed inset-0 h-[100dvh] w-full z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="relative p-[2px] bg-gradient-to-tr from-pink-500 via-purple-500 to-indigo-500 rounded-[1.5rem] shadow-2xl w-full max-w-lg">
-        <div className={`relative w-full h-full rounded-[calc(1.5rem-2px)] flex flex-col max-h-[85vh] ${darkMode ? 'bg-[#1a1a1b] text-white' : 'bg-white text-gray-900'}`}>
+      <div className="relative p-[2px] bg-gradient-to-tr from-pink-500 via-purple-500 to-indigo-500 rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col">
+        <div className={`relative w-full h-full overflow-y-auto overflow-x-hidden rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#1a1a1b] text-white' : 'bg-white text-gray-900'}`}>
         
         {/* Header */}
-        <div className={`p-4 flex items-center justify-between border-b flex-shrink-0 ${darkMode ? 'border-white/10' : 'border-gray-100'}`}>
+        <div className={`p-4 flex items-center justify-between border-b ${darkMode ? 'border-white/10' : 'border-gray-100'}`}>
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600 text-white shadow-lg`}>
               <FileText className="w-5 h-5" />
@@ -134,14 +134,14 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
           </div>
           <button 
             onClick={onClose}
-            className={`p-1.5 rounded-full border transition-all ${darkMode ? 'border-white/30 text-white hover:bg-white/10' : 'border-black/30 text-black hover:bg-black/10'}`}
+            className={`p-2 rounded-full transition-colors ${darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'}`}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1 pr-2">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Guide Text */}
           <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 rounded-xl mb-6">
               <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
@@ -253,11 +253,11 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-500/20 flex-shrink-0">
+          <div className="flex justify-end gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}
-              className={`px-5 py-2.5 rounded-xl border font-black transition-all active:scale-95 ${darkMode ? 'border-white/30 text-white hover:bg-white/10' : 'border-black/30 text-black hover:bg-black/10'}`}
+              className={`px-5 py-2.5 rounded-xl font-bold transition-all ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
               disabled={isSaving}
             >
               Cancel
