@@ -227,8 +227,8 @@ export function TubesBackground({
       if (!mounted) return;
 
       try {
-        const module = await import(/* webpackIgnore: true */ "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js");
-        const TubesCursor = module.default;
+        const tubesModule = await import(/* webpackIgnore: true */ "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js");
+        const TubesCursor = tubesModule.default;
         if (!mounted) return;
 
         const effectiveDarkMode = alwaysDark || darkMode;

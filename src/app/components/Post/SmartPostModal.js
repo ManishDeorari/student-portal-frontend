@@ -82,11 +82,8 @@ export default function SmartPostModal({
     }
   }, [posts, setShowModal, onPostUpdate]);
 
-  // If modal is closed or post is deleted, don't render hooks that depend on post._id
-  if (!showModal || !post) return null;
-
   // 🔌 Socket typing updates
-  usePostSocket(post._id, currentUser, setSomeoneTyping, setPosts);
+  usePostSocket(post?._id, currentUser, setSomeoneTyping, setPosts);
 
   // 📦 Centralize all effects
   usePostEffects({
@@ -144,6 +141,9 @@ export default function SmartPostModal({
     token,
     setShowCommentEmoji
   });
+
+  // If modal is closed or post is deleted, don't render
+  if (!showModal || !post) return null;
 
   const getReactionCount = (emoji) => {
     const users = post.reactions?.[emoji];

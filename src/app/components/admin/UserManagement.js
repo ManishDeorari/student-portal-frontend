@@ -767,7 +767,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                 </h3>
                                 
                                 <p className={`text-sm sm:text-base font-bold mb-10 leading-relaxed relative z-10 ${darkMode ? 'text-gray-400' : 'text-slate-500'}`}>
-                                    Are you sure you want to <span className={semesterConfirmModal === "increase" ? "text-emerald-500 font-black" : "text-orange-500 font-black"}>{semesterConfirmModal.toUpperCase()}</span> all students' semester by 1?
+                                    Are you sure you want to <span className={semesterConfirmModal === "increase" ? "text-emerald-500 font-black" : "text-orange-500 font-black"}>{semesterConfirmModal.toUpperCase()}</span> all students&apos; semester by 1?
                                     <br />
                                     <span className="text-[10px] opacity-70 mt-2 block">(Range: 1 to 10)</span>
                                 </p>

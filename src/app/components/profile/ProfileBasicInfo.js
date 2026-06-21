@@ -1,18 +1,20 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Copy, Pencil, UserPlus, Check, Award } from "lucide-react";
+import { Copy, Pencil, UserPlus, Check, Award, QrCode } from "lucide-react";
 import toast from "react-hot-toast";
 import ProfileAvatar from "./ProfileAvatar";
 import ProfileBanner from "./ProfileBanner";
 import ProfileStats from "./ProfileStats";
 import EditBasicInfoModal from "./modals/EditBasicInfoModal";
+import QrCodeModal from "./modals/QrCodeModal";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPublicView }) {
     const { darkMode } = useTheme();
     const [copied, setCopied] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [showQrModal, setShowQrModal] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState(null); // null, 'connected', 'pending', 'none'
     const [loading, setLoading] = useState(false);
 
@@ -164,9 +166,19 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         />
                     </div>
 
-                    {/* Edit Profile Icon - Top Right */}
-                    {!isPublicView && (
-                        <div className="absolute top-[8.5rem] sm:top-20 right-2 sm:right-4 z-20">
+                    {/* Action Icons - Top Right */}
+                    <div className="absolute top-[8.5rem] sm:top-20 right-2 sm:right-4 z-20 flex items-center gap-2">
+                        {/* QR Code Button - Available to everyone */}
+                        <button
+                            onClick={() => setShowQrModal(true)}
+                            className={`p-3 sm:p-2 shadow-md border rounded-full transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50'}`}
+                            title="Show QR Code"
+                        >
+                            <QrCode className="w-5 h-5 sm:w-5 sm:h-5" />
+                        </button>
+                        
+                        {/* Edit Profile Icon - Only for owner */}
+                        {!isPublicView && (
                             <button
                                 onClick={() => setShowEditModal(true)}
                                 className={`p-3 sm:p-2 shadow-md border rounded-full transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50'}`}
@@ -174,8 +186,8 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                             >
                                 <Pencil className="w-5 h-5 sm:w-5 sm:h-5" />
                             </button>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
                     {/* Name */}
                     <div className="flex flex-col items-center w-full mt-2 text-center">
@@ -395,8 +407,15 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     currentProfile={profile}
                     onSave={handleProfileUpdate}
                 />
+
+                {/* QR Code Modal */}
+                <QrCodeModal
+                    isOpen={showQrModal}
+                    onClose={() => setShowQrModal(false)}
+                    publicId={profile.publicId}
+                    name={profile.name}
+                />
             </div>
         </div>
     );
 }
-
