@@ -1,59 +1,61 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTheme } from '@/context/ThemeContext';
-import { Flame, ChevronUp, ChevronDown } from 'lucide-react';
+import { Flame, ChevronUp, ChevronDown, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
 
 export default function ProfileActivityHeatmap({ profile }) {
     const [isExpanded, setIsExpanded] = useState(true);
     const { darkMode } = useTheme();
-    const heatmapData = profile.activityHeatmap || {};
+    const heatmapData = profile?.activityHeatmap || {};
 
-    // Generate last 365 days
-    const { days, totalActivity, currentStreak } = useMemo(() => {
-        const resultDays = [];
+    // Generate last 365 days aligned to a Sunday-Saturday grid
+    const { columns, totalActivity, currentStreak } = useMemo(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         
         let total = 0;
         let streak = 0;
-        let maxStreak = 0;
         let isCurrentStreakActive = true;
 
-        for (let i = 364; i >= 0; i--) {
+        const dayOfWeek = today.getDay(); // 0 = Sunday, 6 = Saturday
+        const totalDaysToRender = (52 * 7) + (dayOfWeek + 1);
+
+        const allDays = [];
+
+        for (let i = totalDaysToRender - 1; i >= 0; i--) {
             const date = new Date(today);
             date.setDate(today.getDate() - i);
             const dateString = date.toISOString().split('T')[0];
             const count = heatmapData[dateString] || 0;
             
-            total += count;
-
-            if (count > 0) {
-                streak++;
-                maxStreak = Math.max(maxStreak, streak);
-            } else {
-                if (i > 0 || (i === 0 && count === 0)) { // Break streak if not today
-                    if (i === 0 && count === 0) {
-                        isCurrentStreakActive = false;
-                    } else if (isCurrentStreakActive) {
+            if (i < 365) {
+                total += count;
+                if (count > 0) {
+                    streak++;
+                } else {
+                    if (i > 0 || (i === 0 && count === 0)) { 
                         isCurrentStreakActive = false;
                     }
+                    if (!isCurrentStreakActive) streak = 0;
                 }
-                if (!isCurrentStreakActive) streak = 0;
             }
 
-            resultDays.push({
+            allDays.push({
                 date: dateString,
                 count,
                 level: count === 0 ? 0 : count <= 2 ? 1 : count <= 4 ? 2 : count <= 6 ? 3 : 4
             });
         }
+
+        const resultCols = [];
+        for (let i = 0; i < allDays.length; i += 7) {
+            resultCols.push(allDays.slice(i, i + 7));
+        }
         
         return { 
-            days: resultDays, 
+            columns: resultCols, 
             totalActivity: total, 
-            currentStreak: streak, 
-            longestStreak: maxStreak 
+            currentStreak: streak 
         };
     }, [heatmapData]);
 
@@ -76,11 +78,13 @@ export default function ProfileActivityHeatmap({ profile }) {
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${darkMode ? 'bg-orange-900/30 shadow-none' : 'bg-orange-50 shadow-sm'}`}>
                             <Flame className={`w-6 h-6 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
                         </div>
-                        <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>Activity Map</h3>
+                        <div>
+                            <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>Activity Map</h3>
+                            <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>1 Square = 1 Day</span>
+                        </div>
                     </div>
                     
                     <div className="flex items-center gap-6 text-sm">
-                        {/* Collapse Toggle */}
                         <button 
                             onClick={() => setIsExpanded(!isExpanded)}
                             className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
@@ -108,29 +112,40 @@ export default function ProfileActivityHeatmap({ profile }) {
                             className="overflow-hidden -mx-4 px-4 -mb-4 pb-4"
                         >
                             <div className="flex flex-col gap-2 overflow-x-auto pt-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
-                    <div className="flex gap-1">
-                        {/* Render 53 columns of 7 rows */}
-                        {Array.from({ length: Math.ceil(days.length / 7) }).map((_, colIndex) => (
-                            <div key={colIndex} className="flex flex-col gap-1">
-                                {days.slice(colIndex * 7, (colIndex + 1) * 7).map((day, rowIndex) => (
-                                    <div
-                                        key={day.date}
-                                        className={`w-3.5 h-3.5 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-2 hover:ring-offset-1 dark:hover:ring-offset-[#121213] hover:ring-green-400 cursor-pointer ${getColorClass(day.level)}`}
-                                        title={`${day.count} activities on ${day.date}`}
-                                    />
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                    
-                    <div className={`flex items-center justify-end gap-2 text-[10px] font-bold uppercase tracking-widest mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <span>Less</span>
-                        <div className={`w-3 h-3 rounded-sm ${getColorClass(0)}`}></div>
-                        <div className={`w-3 h-3 rounded-sm ${getColorClass(1)}`}></div>
-                        <div className={`w-3 h-3 rounded-sm ${getColorClass(2)}`}></div>
-                        <div className={`w-3 h-3 rounded-sm ${getColorClass(3)}`}></div>
-                        <div className={`w-3 h-3 rounded-sm ${getColorClass(4)}`}></div>
-                        <span>More</span>
+                                <div className="flex gap-2">
+                                    <div className="flex flex-col gap-1 pr-2 justify-between py-[2px] text-[9px] font-black uppercase tracking-widest text-gray-400">
+                                        <span>Mon</span>
+                                        <span>Wed</span>
+                                        <span>Fri</span>
+                                    </div>
+
+                                    <div className="flex gap-1">
+                                        {columns.map((col, colIndex) => (
+                                            <div key={colIndex} className="flex flex-col gap-1">
+                                                {col.map((day, rowIndex) => (
+                                                    <div
+                                                        key={day.date}
+                                                        className={`w-3.5 h-3.5 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-2 hover:ring-offset-1 dark:hover:ring-offset-[#121213] hover:ring-green-400 cursor-pointer ${getColorClass(day.level)}`}
+                                                        title={`${day.count} activities on ${day.date}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                <div className={`flex items-center justify-end gap-2 text-[10px] font-bold uppercase tracking-widest mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                    <div className="flex items-center gap-1 mr-4 text-gray-400">
+                                        <Info className="w-3 h-3" />
+                                        <span className="normal-case tracking-normal">Tracking logins, posts, events & profile updates</span>
+                                    </div>
+                                    <span>Less Activity</span>
+                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(0)}`}></div>
+                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(1)}`}></div>
+                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(2)}`}></div>
+                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(3)}`}></div>
+                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(4)}`}></div>
+                                    <span>More Activity</span>
                                 </div>
                             </div>
                         </motion.div>
