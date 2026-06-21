@@ -302,9 +302,9 @@ function Table({
                   <div className="w-64 flex items-center gap-3 sm:gap-4 min-w-0">
                     <div className="relative shrink-0">
                       <div className={`absolute -inset-1 rounded-full blur-[2px] opacity-20 bg-purple-500`}></div>
-                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-purple-500/20 text-purple-300" : "bg-purple-100 text-purple-700"} border-2 border-purple-500/30 flex items-center justify-center font-black text-sm sm:text-lg`}>
-                        <img src="/default-profile.jpg" className="w-full h-full rounded-full object-cover" alt="Default" />
-                      </div>
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full relative z-10 ${darkMode ? "bg-purple-500/20 text-purple-300" : "bg-purple-100 text-purple-700"} border-2 border-purple-500/30 flex items-center justify-center font-black text-sm sm:text-lg overflow-hidden`}>
+                          <img src={u.profilePicture || "/default-profile.jpg"} className="w-full h-full rounded-full object-cover" alt="Profile" />
+                        </div>
                     </div>
                     <div className="min-w-0">
                       <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
