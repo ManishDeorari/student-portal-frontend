@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProfileActivityHeatmap({ profile }) {
     const [isExpanded, setIsExpanded] = useState(true);
+    const [tooltip, setTooltip] = useState(null);
     const { darkMode } = useTheme();
     const heatmapData = profile?.activityHeatmap || {};
 
@@ -20,7 +21,8 @@ export default function ProfileActivityHeatmap({ profile }) {
         let isCurrentStreakActive = true;
 
         const dayOfWeek = today.getDay(); // 0 = Sunday, 6 = Saturday
-        const totalDaysToRender = (52 * 7) + (dayOfWeek + 1);
+        // Render 26 weeks (6 months) instead of 52 to avoid horizontal scroll on standard screens
+        const totalDaysToRender = (26 * 7) + (dayOfWeek + 1);
 
         const allDays = [];
 
@@ -72,7 +74,6 @@ export default function ProfileActivityHeatmap({ profile }) {
                     isNewMonth = true;
                     currentMonth = month;
                     
-                    // Add label if it doesn't overlap the previous one too closely
                     if (mLabels.length === 0 || (resultCols.length - mLabels[mLabels.length - 1].colIndex) > 2) {
                         mLabels.push({
                             label: colDays[0].dateObj.toLocaleString('default', { month: 'short' }),
@@ -107,123 +108,151 @@ export default function ProfileActivityHeatmap({ profile }) {
     if (!profile || (profile.role !== 'student' && profile.role !== 'alumni')) return null;
 
     return (
-        <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] group w-full mb-6 transition-all duration-300 hover:scale-[1.02] hover:z-20 relative">
-            <div className={`p-6 rounded-[calc(2.5rem-2.5px)] flex flex-col gap-4 transition duration-300 ${darkMode ? 'bg-[#121213] hover:bg-slate-900' : 'bg-[#FAFAFA] hover:bg-white'}`}>
-                
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${darkMode ? 'bg-orange-900/30 shadow-none' : 'bg-orange-50 shadow-sm'}`}>
-                            <Flame className={`w-6 h-6 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
-                        </div>
-                        <div>
-                            <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>Activity Map</h3>
-                            <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>1 Square = 1 Day</span>
-                        </div>
-                    </div>
+        <>
+            <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] group w-full mb-6 transition-all duration-300 hover:scale-[1.02] hover:z-20 relative">
+                <div className={`p-6 rounded-[calc(2.5rem-2.5px)] flex flex-col gap-4 transition duration-300 ${darkMode ? 'bg-[#121213] hover:bg-slate-900' : 'bg-[#FAFAFA] hover:bg-white'}`}>
                     
-                    <div className="flex items-center gap-6 text-sm">
-                        <button 
-                            onClick={() => setIsExpanded(!isExpanded)}
-                            className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
-                        >
-                            {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                        </button>
-                        <div className="flex flex-col items-end">
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Activity</span>
-                            <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{totalActivity}</span>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${darkMode ? 'bg-orange-900/30 shadow-none' : 'bg-orange-50 shadow-sm'}`}>
+                                <Flame className={`w-6 h-6 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+                            </div>
+                            <div>
+                                <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>Activity Map</h3>
+                                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>1 Square = 1 Day</span>
+                            </div>
                         </div>
-                        <div className="flex flex-col items-end">
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Current Streak</span>
-                            <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{currentStreak} days</span>
+                        
+                        <div className="flex items-center gap-6 text-sm">
+                            <button 
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
+                            >
+                                {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                            </button>
+                            <div className="flex flex-col items-end">
+                                <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Activity (6 Mos)</span>
+                                <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{totalActivity}</span>
+                            </div>
+                            <div className="flex flex-col items-end">
+                                <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Current Streak</span>
+                                <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{currentStreak} days</span>
+                            </div>
                         </div>
                     </div>
+
+                    <AnimatePresence initial={false}>
+                        {isExpanded && (
+                            <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="overflow-hidden -mx-4 px-4 -mb-4 pb-4"
+                            >
+                                <div className="flex flex-col gap-2 overflow-x-auto pt-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+                                    
+                                    <div className="flex gap-2 pr-4 mx-auto w-max">
+                                        {/* Y-Axis Labels (Days of Week) */}
+                                        <div className="flex flex-col gap-1 pr-2 text-[9px] font-black uppercase tracking-widest text-gray-400 mt-[20px]">
+                                            <span className="h-3.5 flex items-center">Sun</span>
+                                            <span className="h-3.5 flex items-center">Mon</span>
+                                            <span className="h-3.5 flex items-center">Tue</span>
+                                            <span className="h-3.5 flex items-center">Wed</span>
+                                            <span className="h-3.5 flex items-center">Thu</span>
+                                            <span className="h-3.5 flex items-center">Fri</span>
+                                            <span className="h-3.5 flex items-center">Sat</span>
+                                        </div>
+
+                                        {/* Grid Area */}
+                                        <div className="flex flex-col relative w-full">
+                                            
+                                            {/* X-Axis Labels (Months) */}
+                                            <div className="relative h-4 text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 w-full">
+                                                {monthLabels.map((m, i) => (
+                                                    <span 
+                                                        key={i} 
+                                                        className="absolute whitespace-nowrap" 
+                                                        style={{ left: `${m.colIndex * 18}px` }}
+                                                    >
+                                                        {m.label}
+                                                    </span>
+                                                ))}
+                                            </div>
+
+                                            <div className="flex gap-1 relative">
+                                                {columns.map((col, colIndex) => (
+                                                    <div 
+                                                        key={colIndex} 
+                                                        className={`flex flex-col gap-1 ${col.isNewMonth ? `border-l-2 ${darkMode ? 'border-gray-800' : 'border-gray-200'} pl-1` : ''}`}
+                                                    >
+                                                        {col.days.map((day, rowIndex) => {
+                                                            const isToday = day.date === todayDateString;
+                                                            return (
+                                                                <div
+                                                                    key={day.date}
+                                                                    onMouseEnter={(e) => {
+                                                                        const rect = e.target.getBoundingClientRect();
+                                                                        setTooltip({
+                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} activities on ${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+                                                                            x: rect.left + rect.width / 2,
+                                                                            y: rect.top - 8
+                                                                        });
+                                                                    }}
+                                                                    onMouseLeave={() => setTooltip(null)}
+                                                                    className={`w-3.5 h-3.5 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(day.level)} ${isToday ? 'ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213] scale-110 z-20 hover:scale-125' : 'hover:scale-125 hover:ring-2 hover:ring-offset-1 dark:hover:ring-offset-[#121213] hover:ring-green-400 hover:z-50'}`}
+                                                                />
+                                                            );
+                                                        })}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Legend */}
+                                    <div className={`flex items-center justify-end gap-2 text-[10px] font-bold uppercase tracking-widest mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        <div className="flex items-center gap-1 mr-auto text-gray-400">
+                                            <Info className="w-3 h-3" />
+                                            <span className="normal-case tracking-normal">Tracking logins, posts, events & profile updates</span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5 mr-4">
+                                            <div className="w-3 h-3 rounded-sm ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213]"></div>
+                                            <span>Today</span>
+                                        </div>
+                                        <span>Less</span>
+                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(0)}`}></div>
+                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(1)}`}></div>
+                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(2)}`}></div>
+                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(3)}`}></div>
+                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(4)}`}></div>
+                                        <span>More</span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                 </div>
-
-                <AnimatePresence initial={false}>
-                    {isExpanded && (
-                        <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className="overflow-hidden -mx-4 px-4 -mb-4 pb-4"
-                        >
-                            <div className="flex flex-col gap-2 overflow-x-auto pt-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
-                                
-                                <div className="flex gap-2">
-                                    {/* Y-Axis Labels (Days of Week) */}
-                                    <div className="flex flex-col gap-1 pr-2 text-[9px] font-black uppercase tracking-widest text-gray-400 mt-[20px]">
-                                        <span className="h-3.5 flex items-center">Sun</span>
-                                        <span className="h-3.5 flex items-center">Mon</span>
-                                        <span className="h-3.5 flex items-center">Tue</span>
-                                        <span className="h-3.5 flex items-center">Wed</span>
-                                        <span className="h-3.5 flex items-center">Thu</span>
-                                        <span className="h-3.5 flex items-center">Fri</span>
-                                        <span className="h-3.5 flex items-center">Sat</span>
-                                    </div>
-
-                                    {/* Grid Area */}
-                                    <div className="flex flex-col relative w-full">
-                                        
-                                        {/* X-Axis Labels (Months) */}
-                                        <div className="relative h-4 text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 w-full">
-                                            {monthLabels.map((m, i) => (
-                                                <span 
-                                                    key={i} 
-                                                    className="absolute whitespace-nowrap" 
-                                                    style={{ left: `${m.colIndex * 18}px` }}
-                                                >
-                                                    {m.label}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        <div className="flex gap-1 relative">
-                                            {columns.map((col, colIndex) => (
-                                                <div 
-                                                    key={colIndex} 
-                                                    className={`flex flex-col gap-1 ${col.isNewMonth ? `border-l-2 ${darkMode ? 'border-gray-800' : 'border-gray-200'} pl-1` : ''}`}
-                                                >
-                                                    {col.days.map((day, rowIndex) => {
-                                                        const isToday = day.date === todayDateString;
-                                                        return (
-                                                            <div
-                                                                key={day.date}
-                                                                className={`w-3.5 h-3.5 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(day.level)} ${isToday ? 'ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213] scale-110 z-10 hover:scale-125' : 'hover:scale-125 hover:ring-2 hover:ring-offset-1 dark:hover:ring-offset-[#121213] hover:ring-green-400 z-10'}`}
-                                                                title={`${isToday ? 'TODAY: ' : ''}${day.count} activities on ${day.date}`}
-                                                            />
-                                                        );
-                                                    })}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                {/* Legend */}
-                                <div className={`flex items-center justify-end gap-2 text-[10px] font-bold uppercase tracking-widest mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                    <div className="flex items-center gap-1 mr-auto text-gray-400">
-                                        <Info className="w-3 h-3" />
-                                        <span className="normal-case tracking-normal">Tracking logins, posts, events & profile updates</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5 mr-4">
-                                        <div className="w-3 h-3 rounded-sm ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213]"></div>
-                                        <span>Today</span>
-                                    </div>
-                                    <span>Less</span>
-                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(0)}`}></div>
-                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(1)}`}></div>
-                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(2)}`}></div>
-                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(3)}`}></div>
-                                    <div className={`w-3 h-3 rounded-sm ${getColorClass(4)}`}></div>
-                                    <span>More</span>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
             </div>
-        </div>
+
+            {/* Custom Tooltip Portal */}
+            <AnimatePresence>
+                {tooltip && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 5, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.15 }}
+                        className="fixed z-[99999] pointer-events-none transform -translate-x-1/2 -translate-y-full p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-lg shadow-2xl"
+                        style={{ left: tooltip.x, top: tooltip.y }}
+                    >
+                        <div className={`px-3 py-1.5 text-xs font-bold rounded-[calc(0.5rem-1.5px)] whitespace-nowrap ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}>
+                            {tooltip.text}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 }
