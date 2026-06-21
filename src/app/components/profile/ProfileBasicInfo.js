@@ -228,27 +228,49 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         )}
                     </div>
 
-                    {/* Missing Fields Alert for Points */}
-                    {missingFields && (
-                        <div className="w-full mt-6 p-[2.5px] bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-2xl shadow-[0_10px_30px_rgba(245,158,11,0.25)]">
-                            <div className={`p-4 rounded-[calc(1rem-2.5px)] ${darkMode ? 'bg-[#121213]/90 text-yellow-100' : 'bg-yellow-50 text-yellow-900'} backdrop-blur-md`}>
-                                <h3 className="text-sm font-black uppercase tracking-wider mb-3 flex items-center justify-between">
-                                    <span className="flex items-center gap-2">
+                    {/* Profile Completion Tracker Bar */}
+                    {(!isPublicView && profile.role === "student" && !profile.profileCompletionAwarded) && (
+                        <div className="w-full mt-6 p-[2.5px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg hover:scale-[1.01] transition-transform duration-300">
+                            <div className={`p-5 rounded-[calc(1rem-2.5px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className={`text-sm font-black uppercase tracking-widest flex items-center gap-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                                         <Award className="w-5 h-5 text-yellow-500" />
-                                        Complete Profile for Points
+                                        Profile Completion
+                                    </h3>
+                                    <span className={`text-sm font-black ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                                        {missingFields ? Math.round(((10 - missingFields.length) / 10) * 100) : 100}%
                                     </span>
-                                    <span className="text-[10px] bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-3 py-1 rounded-full font-black tracking-widest">
-                                        {missingFields.length} Tasks Left
-                                    </span>
-                                </h3>
-                                <ul className="text-sm grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 font-medium">
-                                    {missingFields.map((field, idx) => (
-                                        <li key={idx} className="flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 shrink-0"></span>
-                                            <span className="opacity-90 leading-tight">{field}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                </div>
+                                
+                                {/* Progress Bar */}
+                                <div className={`w-full h-3 rounded-full overflow-hidden mt-3 mb-4 shadow-inner ${darkMode ? 'bg-slate-800' : 'bg-gray-200'}`}>
+                                    <div 
+                                        className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out relative"
+                                        style={{ width: `${missingFields ? Math.round(((10 - missingFields.length) / 10) * 100) : 100}%` }}
+                                    >
+                                        <div className="absolute inset-0 bg-white/20 w-full h-full animate-pulse"></div>
+                                    </div>
+                                </div>
+
+                                {missingFields && missingFields.length > 0 ? (
+                                    <div className="mt-4">
+                                        <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            {missingFields.length} Tasks Remaining for Points:
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {missingFields.map((field, idx) => (
+                                                <span key={idx} className={`text-[10px] font-black tracking-widest px-2.5 py-1 rounded-md border ${darkMode ? 'bg-slate-800/50 text-gray-300 border-white/10' : 'bg-white text-gray-700 border-gray-200'}`}>
+                                                    {field}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="mt-4 flex items-center gap-2 text-green-500">
+                                        <Check className="w-4 h-4" />
+                                        <span className="text-xs font-bold uppercase tracking-widest">Profile 100% Complete!</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
