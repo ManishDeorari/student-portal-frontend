@@ -83,7 +83,9 @@ function ProfileContent() {
         : `${API_URL}/api/user/myposts`;
 
       const activityEndpoint = `${API_URL}/api/user/activity`;
-      const eventsEndpoint = `${API_URL}/api/user/${targetId}/events`;
+      const eventsEndpoint = viewingOther 
+        ? `${API_URL}/api/user/${targetId}/events`
+        : `${API_URL}/api/user/me/events`;
 
       // ⚡ PARALLEL FETCH: Load everything at once instead of one-by-one
       const [resProfile, resPosts, resActivity, resEvents] = await Promise.all([
