@@ -252,12 +252,14 @@ export default function ProfileEventParticipation({ profile, setProfile, isPubli
                     )}
 
                     <div className="pt-2 text-center">
-                        <Link
-                            href={`/profile/${profile.publicId || profile._id}/events`}
-                            className={`inline-flex items-center gap-2 text-sm font-bold transition px-6 py-2.5 rounded-full border hover:shadow-md active:scale-95 ${darkMode ? 'bg-blue-900/20 text-blue-400 border-blue-900/40 hover:bg-blue-900/30' : 'bg-blue-50/50 text-blue-600 border-blue-100 hover:text-blue-800'}`}
-                        >
-                            Show all events
-                        </Link>
+                        <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg inline-block">
+                          <Link
+                              href={`/profile/${profile.publicId || profile._id}/events`}
+                              className={`inline-flex items-center justify-center gap-2 text-sm font-bold transition px-6 py-2.5 rounded-[calc(9999px-2px)] active:scale-95 ${darkMode ? 'bg-[#121213] text-blue-400 hover:bg-slate-800' : 'bg-white text-blue-600 hover:bg-gray-50'}`}
+                          >
+                              Show all events
+                          </Link>
+                        </div>
                     </div>
                 </div>
             </SectionCard>

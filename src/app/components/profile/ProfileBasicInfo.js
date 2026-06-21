@@ -257,7 +257,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     <div className="w-full mt-5 sm:mt-8 space-y-3 sm:space-y-4">
                         {/* Level 1: Basics (Emails) */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="p-[2.5px] bg-gradient-to-tr from-blue-600/40 to-purple-600/40 rounded-2xl shadow-lg">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-blue-500 to-purple-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                 <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                     <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Primary Email</label>
                                     <div className="flex items-center gap-2">
@@ -268,7 +268,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                     </div>
                                 </div>
                             </div>
-                            <div className="p-[2.5px] bg-gradient-to-tr from-cyan-600/40 to-teal-600/40 rounded-2xl shadow-lg">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-cyan-500 to-teal-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                 <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                     <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Secondary Email</label>
                                     <div className="flex items-center gap-2">
@@ -287,13 +287,13 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         {profile.role === 'student' ? (
                             <>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="p-[2.5px] bg-gradient-to-tr from-indigo-600/40 to-blue-600/40 rounded-2xl shadow-lg">
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                         <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                             <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Enrollment Number</label>
                                             <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.enrollmentNumber || "N/A"}</span>
                                         </div>
                                     </div>
-                                    <div className="p-[2.5px] bg-gradient-to-tr from-purple-600/40 to-fuchsia-600/40 rounded-2xl shadow-lg">
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-purple-500 to-fuchsia-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                         <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                             <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>University Roll Number</label>
                                             <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.universityRollNumber || "Not set"}</span>
@@ -301,7 +301,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                                    <div className="p-[2.5px] bg-gradient-to-tr from-pink-600/40 to-rose-600/40 rounded-2xl shadow-lg">
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-pink-500 to-rose-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                         <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                             <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Course</label>
                                             <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.course || "N/A"}</span>
@@ -313,13 +313,13 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                             <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.branch || "N/A"}</span>
                                         </div>
                                     </div>
-                                    <div className="p-[2.5px] bg-gradient-to-tr from-cyan-600/40 to-blue-600/40 rounded-2xl shadow-lg">
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-cyan-500 to-blue-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                         <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                             <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Semester</label>
                                             <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.semester || "N/A"}</span>
                                         </div>
                                     </div>
-                                    <div className="p-[2.5px] bg-gradient-to-tr from-amber-600/40 to-orange-600/40 rounded-2xl shadow-lg">
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-amber-500 to-orange-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                         <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                             <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Section</label>
                                             <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{profile.section || "N/A"}</span>
@@ -329,7 +329,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                             </>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="p-[2.5px] bg-gradient-to-tr from-violet-600/40 to-purple-600/40 rounded-2xl shadow-lg">
+                                <div className="p-[2.5px] bg-gradient-to-tr from-violet-500 to-purple-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                     <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                         <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Position</label>
                                         <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
@@ -337,7 +337,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                         </span>
                                     </div>
                                 </div>
-                                <div className="p-[2.5px] bg-gradient-to-tr from-fuchsia-600/40 to-pink-600/40 rounded-2xl shadow-lg">
+                                <div className="p-[2.5px] bg-gradient-to-tr from-fuchsia-500 to-pink-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                     <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                         <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Department</label>
                                         <span className={`text-sm font-black ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
@@ -351,7 +351,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         {/* Level 2: Connect Icons (Phone, WhatsApp, LinkedIn) */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             {/* Phone */}
-                            <div className="p-[2.5px] bg-gradient-to-tr from-green-600/40 to-teal-600/40 rounded-2xl shadow-lg">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-green-500 to-teal-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                 <div className={`p-3 sm:p-5 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center transition-all ${darkMode ? 'bg-slate-800 hover:bg-green-900/10' : 'bg-[#FAFAFA] hover:bg-green-50/10'}`}>
                                     <label className={`text-[10px] font-black uppercase tracking-widest mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Phone Number</label>
                                     <div className="flex items-center gap-2">
@@ -366,7 +366,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                             </div>
 
                             {/* WhatsApp */}
-                            <div className="p-[2.5px] bg-gradient-to-tr from-emerald-600/40 to-green-600/40 rounded-2xl shadow-lg">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-emerald-500 to-green-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                 <div className={`p-3 sm:p-5 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center transition-all cursor-pointer ${darkMode ? 'bg-slate-800 hover:bg-emerald-900/10' : 'bg-[#FAFAFA] hover:bg-emerald-50/10'}`}>
                                     <label className={`text-[10px] font-black uppercase tracking-widest mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>WhatsApp Direct</label>
                                     {profile.whatsapp ? (
@@ -376,7 +376,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                             </div>
 
                             {/* LinkedIn */}
-                            <div className="p-[2.5px] bg-gradient-to-tr from-indigo-600/40 to-blue-600/40 rounded-2xl shadow-lg">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                 <div className={`p-3 sm:p-5 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center transition-all cursor-pointer ${darkMode ? 'bg-slate-800 hover:bg-indigo-900/10' : 'bg-[#FAFAFA] hover:bg-indigo-50/10'}`}>
                                     <label className={`text-[10px] font-black uppercase tracking-widest mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Professional LinkedIn</label>
                                     {profile.linkedin ? (
@@ -387,7 +387,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         </div>
                         
                         {/* Level 3: Address */}
-                        <div className="p-[2.5px] bg-gradient-to-tr from-orange-600/40 to-red-600/40 rounded-2xl shadow-lg w-full">
+                        <div className="p-[2.5px] bg-gradient-to-tr from-orange-500 to-red-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300 w-full">
                             <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                 <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Resident Address</label>
                                 <span className={`text-sm font-bold leading-tight ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>{profile.address || "Not set"}</span>
@@ -423,3 +423,4 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
         </div>
     );
 }
+

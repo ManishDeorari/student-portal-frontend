@@ -43,20 +43,24 @@ export default function ProfileActivity({ profile, setProfile, isPublicView }) {
 
                         <div className="flex flex-col items-center justify-center gap-4 pt-6">
                             {myPosts.length > displayLimit ? (
-                                <Link
-                                    href={`/profile/${profile.publicId || profile._id}/posts`}
-                                    className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
-                                >
-                                    Show All Posts
-                                </Link>
+                                <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[calc(0.75rem+2px)] shadow-lg inline-block">
+                                  <Link
+                                      href={`/profile/${profile.publicId || profile._id}/posts`}
+                                      className={`block px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition active:scale-95 ${darkMode ? 'bg-[#121213] hover:bg-slate-800 text-white' : 'bg-white hover:bg-gray-50 text-gray-800'}`}
+                                  >
+                                      Show All Posts
+                                  </Link>
+                                </div>
                             ) : myPosts.length > 3 ? (
                                 <>
-                                    <Link
-                                        href={`/profile/${profile.publicId || profile._id}/posts`}
-                                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-blue-900/30 hover:bg-blue-900/50 border border-blue-500/30 text-blue-400' : 'bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-600'}`}
-                                    >
-                                        Show All Posts
-                                    </Link>
+                                    <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[calc(0.75rem+2px)] shadow-lg inline-block">
+                                      <Link
+                                          href={`/profile/${profile.publicId || profile._id}/posts`}
+                                          className={`block px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition active:scale-95 ${darkMode ? 'bg-[#121213] hover:bg-slate-800 text-white' : 'bg-white hover:bg-gray-50 text-gray-800'}`}
+                                      >
+                                          Show All Posts
+                                      </Link>
+                                    </div>
                                     <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more recent posts to show</p>
                                 </>
                             ) : null}

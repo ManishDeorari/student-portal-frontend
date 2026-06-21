@@ -50,13 +50,15 @@ export default function ProfileBanner({ image, focus, onUpload, userId, isPublic
       </div>
 
       {!isPublicView && (
-        <button
-          onClick={() => setShowEditor(true)}
-          className={`absolute bottom-2 right-2 p-2 rounded-full shadow cursor-pointer z-10 transition-colors ${darkMode ? 'bg-slate-700 text-white hover:bg-slate-600' : 'bg-[#FAFAFA] text-gray-700 hover:bg-gray-50'}`}
-          title="Edit banner"
-        >
-          <Camera size={20} />
-        </button>
+        <div className="absolute bottom-2 right-2 p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg z-10">
+          <button
+            onClick={() => setShowEditor(true)}
+            className={`p-2 rounded-[calc(9999px-2px)] cursor-pointer transition-colors ${darkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-white text-gray-900 hover:bg-gray-50'}`}
+            title="Edit banner"
+          >
+            <Camera size={20} />
+          </button>
+        </div>
       )}
 
       {showEditor && (

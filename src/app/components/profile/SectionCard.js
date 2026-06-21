@@ -19,15 +19,25 @@ const SectionCard = ({ title, children, onEdit, isPublicView, hasData }) => {
           <div className="flex items-center gap-3">
             {!isPublicView && onEdit && (
               hasData ? (
-                <Pencil
-                  className={`h-5 w-5 cursor-pointer transition-colors ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
-                  onClick={(e) => { e.stopPropagation(); onEdit(); }}
-                />
+                <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-md">
+                  <button 
+                    className={`p-1.5 rounded-[calc(9999px-2px)] flex items-center justify-center cursor-pointer transition-colors ${darkMode ? 'bg-[#121213] text-blue-400 hover:bg-slate-800' : 'bg-white text-blue-600 hover:bg-gray-50'}`}
+                    onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                    title="Edit Section"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                </div>
               ) : (
-                <PlusCircle
-                  className={`h-5 w-5 cursor-pointer transition-colors ${darkMode ? 'text-gray-500 hover:text-gray-400' : 'text-gray-400 hover:text-gray-600'}`}
-                  onClick={(e) => { e.stopPropagation(); onEdit(); }}
-                />
+                <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-md">
+                  <button
+                    className={`p-1.5 rounded-[calc(9999px-2px)] flex items-center justify-center cursor-pointer transition-colors ${darkMode ? 'bg-[#121213] text-white hover:bg-slate-800' : 'bg-white text-gray-900 hover:bg-gray-50'}`}
+                    onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                    title="Add Info"
+                  >
+                    <PlusCircle className="h-4 w-4" />
+                  </button>
+                </div>
               )
             )}
             

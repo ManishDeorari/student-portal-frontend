@@ -49,23 +49,27 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
       </div>
 
       {!isPublicView && (
-        <button
-          onClick={() => setShowEditor(true)}
-          className="absolute z-30 bg-white dark:bg-slate-900 border-2 border-white dark:border-slate-800 shadow-md flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-100 transition-colors"
+        <div 
+          className="absolute z-30 p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg flex items-center justify-center"
           style={{ 
             width: '28%', 
             height: '28%', 
-            minWidth: '1.1rem', 
-            minHeight: '1.1rem', 
-            maxWidth: '2.5rem', 
-            maxHeight: '2.5rem', 
+            minWidth: '1.2rem', 
+            minHeight: '1.2rem', 
+            maxWidth: '2.6rem', 
+            maxHeight: '2.6rem', 
             bottom: '2%', 
             left: '2%' 
           }}
-          title="Edit photo"
         >
-          <Camera style={{ width: '60%', height: '60%' }} className="text-gray-700 dark:text-gray-300" />
-        </button>
+          <button
+            onClick={() => setShowEditor(true)}
+            className="w-full h-full bg-white dark:bg-slate-900 rounded-[calc(9999px-2px)] flex items-center justify-center cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+            title="Edit photo"
+          >
+            <Camera style={{ width: '60%', height: '60%' }} className="text-gray-700 dark:text-gray-300" />
+          </button>
+        </div>
       )}
 
       {showEditor && (
