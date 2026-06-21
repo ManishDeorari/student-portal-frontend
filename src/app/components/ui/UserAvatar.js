@@ -18,8 +18,10 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
   const showBadge = isComplete;
 
   const imageSrc = src || user?.profilePicture || "/default-profile.jpg";
-  const finalImageSrc = src ? src : (getFocalImageUrl(imageSrc, width ? width * 2 : 200, height ? height * 2 : 200, user?.profileImageFocus) || getOptimizedImageUrl(imageSrc));
-  const finalUnoptimized = unoptimized !== undefined ? unoptimized : finalImageSrc.includes("default-profile.jpg");
+  const finalImageSrc = user?.profileImageFocus 
+    ? getFocalImageUrl(imageSrc, width ? width * 2 : 200, height ? height * 2 : 200, user?.profileImageFocus)
+    : (src ? src : getOptimizedImageUrl(imageSrc));
+  const finalUnoptimized = unoptimized !== undefined ? unoptimized : (typeof finalImageSrc === 'string' && finalImageSrc.includes("default-profile.jpg"));
 
   return (
     <div
