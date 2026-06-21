@@ -368,6 +368,8 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                     className={`w-full p-2 text-sm rounded-lg outline-none transition ${darkMode ? 'bg-slate-900 border-none text-white' : 'bg-gray-50 border-none text-gray-900'}`}
                                 >
                                     <option value="">Select Country</option>
+                                    <option value="IN" key="IN-top" className="font-bold text-blue-600">India</option>
+                                    <option disabled key="divider">──────────</option>
                                     {Country.getAllCountries().map((c) => (
                                         <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
                                     ))}

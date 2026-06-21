@@ -378,7 +378,9 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                                 className={`w-full p-2 rounded-lg text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                             >
                                                 <option value="">Select Country</option>
-                                                {Country.getAllCountries().map((c) => (
+                                    <option value="IN" key="IN-top" className="font-bold text-blue-600">India</option>
+                                    <option disabled key="divider">──────────</option>
+                                    {Country.getAllCountries().map((c) => (
                                                     <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
                                                 ))}
                                             </select>
