@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, FileText, Github, Globe, Loader2, UploadCloud } from "lucide-react";
+import { X, FileText, Github, Globe, Loader2, UploadCloud, Info } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import toast from "react-hot-toast";
 
@@ -142,6 +142,14 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Guide Text */}
+          <div className={`p-4 rounded-xl border flex items-start gap-3 ${darkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-300' : 'bg-blue-50 border-blue-100 text-blue-800'}`}>
+              <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <div className="text-sm leading-relaxed">
+                  <p className="font-bold mb-0.5">Earn Points for Resumes & Links!</p>
+                  <p>Adding your Resume and Portfolios makes your profile much stronger. Once verified by an Admin, you will be awarded Profile Completion points!</p>
+              </div>
+          </div>
           
           {/* Resume Upload / Link */}
           <div>

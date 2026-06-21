@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, Plus, Save } from "lucide-react";
+import { X, Plus, Save, Info } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import toast from "react-hot-toast";
 
@@ -44,7 +44,7 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
             const token = localStorage.getItem("token");
             if (!token) throw new Error("No token found");
 
-            const res = await fetch("http://localhost:5000/api/user/update", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -87,6 +87,15 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                     </div>
 
                     <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6">
+                        {/* Guide Text */}
+                        <div className={`p-4 rounded-xl border flex items-start gap-3 ${darkMode ? 'bg-blue-500/10 border-blue-500/20 text-blue-300' : 'bg-blue-50 border-blue-100 text-blue-800'}`}>
+                            <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                            <div className="text-sm leading-relaxed">
+                                <p className="font-bold mb-0.5">Earn Points for Skills!</p>
+                                <p>You automatically earn <span className="font-bold">+1 point</span> for every skill you add, up to a maximum of <span className="font-bold">10 points</span>. Points are added to your Engagement score.</p>
+                            </div>
+                        </div>
+
                         {/* Add Skill Form */}
                         <form onSubmit={handleAddSkill} className="flex gap-2">
                             <input
@@ -106,20 +115,19 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         </form>
 
                         {/* Skills List */}
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-3">
                             {skills.map((skill, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-gray-100 border-gray-200'}`}
-                                >
-                                    <span className="text-sm font-bold">{skill.name}</span>
-                                    <button
-                                        onClick={() => handleRemoveSkill(skill.name)}
-                                        className={`p-1 rounded-full ${darkMode ? 'hover:bg-slate-700 text-gray-400 hover:text-red-400' : 'hover:bg-gray-200 text-gray-500 hover:text-red-500'} transition-colors`}
-                                        title="Remove skill"
-                                    >
-                                        <X className="w-3.5 h-3.5" />
-                                    </button>
+                                <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md">
+                                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(9999px-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                        <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{skill.name}</span>
+                                        <button
+                                            onClick={() => handleRemoveSkill(skill.name)}
+                                            className={`p-1 rounded-full ${darkMode ? 'hover:bg-slate-800 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-500'} transition-colors`}
+                                            title="Remove skill"
+                                        >
+                                            <X className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                             {skills.length === 0 && (

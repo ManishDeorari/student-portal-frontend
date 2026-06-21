@@ -29,7 +29,7 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
             const token = localStorage.getItem("token");
             if (!token) return;
 
-            const res = await fetch(`http://localhost:5000/api/user/skills/endorse/${profile._id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/skills/endorse/${profile._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
