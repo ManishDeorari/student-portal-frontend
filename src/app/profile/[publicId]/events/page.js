@@ -188,7 +188,7 @@ function EventsContent() {
         <GooeyGradientBackground className="min-h-screen text-white profile-mobile-scale" darkMode={darkMode}>
             <SidebarComponent />
 
-            <div className="max-w-4xl mx-auto py-12 px-2 sm:px-4 lg:px-8">
+            <div className="max-w-4xl mx-auto py-12 px-4 lg:px-8">
                 <div className="flex flex-col sm:flex-row items-center gap-4 mb-10">
                     <button
                         onClick={() => router.back()}
