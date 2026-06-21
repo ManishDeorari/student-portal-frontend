@@ -447,6 +447,44 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     <div className="w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] -mx-4 sm:-mx-6 mt-4 sm:mt-6 flex flex-col items-center">
                         {/* Gradient Divider */}
                         <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent mb-2"></div>
+                        
+                        {/* Mutual Connections Block */}
+                        {isPublicView && profile.mutualConnections?.length > 0 && (
+                            <div className="w-full px-6 mb-4">
+                                <div className={`p-4 rounded-xl flex items-center justify-between ${darkMode ? 'bg-slate-800/50 border border-slate-700' : 'bg-blue-50 border border-blue-100'}`}>
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex -space-x-3">
+                                            {profile.mutualConnections.slice(0, 3).map((conn, idx) => (
+                                                <div key={conn._id} className={`w-10 h-10 rounded-full border-2 ${darkMode ? 'border-[#121213] bg-slate-700' : 'border-white bg-gray-200'} overflow-hidden relative z-[${3 - idx}]`}>
+                                                    {conn.profilePicture ? (
+                                                        <img src={conn.profilePicture} alt={conn.name} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-sm font-bold text-gray-500">
+                                                            {conn.name?.charAt(0) || '?'}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                            {profile.mutualConnections.length > 3 && (
+                                                <div className={`w-10 h-10 rounded-full border-2 ${darkMode ? 'border-[#121213] bg-slate-700 text-gray-300' : 'border-white bg-gray-200 text-gray-600'} flex items-center justify-center text-xs font-bold z-0`}>
+                                                    +{profile.mutualConnections.length - 3}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                {profile.mutualConnections.length} Mutual Connection{profile.mutualConnections.length > 1 ? 's' : ''}
+                                            </p>
+                                            <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                You both know {profile.mutualConnections.slice(0, 2).map(c => c.name?.split(' ')[0]).join(' and ')}
+                                                {profile.mutualConnections.length > 2 ? ' and others' : ''}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="w-full px-6">
                             <ProfileStats profile={profile} isPublicView={isPublicView} />
                         </div>
