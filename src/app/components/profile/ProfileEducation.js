@@ -43,6 +43,8 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
                                         </h3>
                                         <p className={`text-sm font-black mt-1 ${darkMode ? 'text-slate-100' : 'text-slate-900'}`}>
                                             {edu.degree}
+                                            {edu.course && ` in ${edu.course}`}
+                                            {edu.branch && ` (${edu.branch})`}
                                             {edu.fieldOfStudy && ` · ${edu.fieldOfStudy}`}
                                         </p>
                                     </div>

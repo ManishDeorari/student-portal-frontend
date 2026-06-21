@@ -51,11 +51,20 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
       {!isPublicView && (
         <button
           onClick={() => setShowEditor(true)}
-          className="absolute z-30 bg-[#FAFAFA] p-2 rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition-colors"
-          style={{ bottom: '2%', left: '2%' }}
+          className="absolute z-30 bg-white dark:bg-slate-900 border-2 border-white dark:border-slate-800 shadow-md flex items-center justify-center rounded-full cursor-pointer hover:bg-gray-100 transition-colors"
+          style={{ 
+            width: '28%', 
+            height: '28%', 
+            minWidth: '1.1rem', 
+            minHeight: '1.1rem', 
+            maxWidth: '2.5rem', 
+            maxHeight: '2.5rem', 
+            bottom: '2%', 
+            left: '2%' 
+          }}
           title="Edit photo"
         >
-          <Camera size={18} className="text-gray-700" />
+          <Camera style={{ width: '60%', height: '60%' }} className="text-gray-700 dark:text-gray-300" />
         </button>
       )}
 

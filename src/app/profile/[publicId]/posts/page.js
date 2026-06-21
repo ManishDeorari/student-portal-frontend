@@ -69,7 +69,7 @@ function PostsContent() {
     }
 
     return (
-        <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 ${darkMode ? "bg-[#0A0A0A] text-white" : "bg-[#f8f9fa] text-gray-900"}`}>
+        <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 profile-mobile-scale ${darkMode ? "bg-[#0A0A0A] text-white" : "bg-[#f8f9fa] text-gray-900"}`}>
             <GooeyGradientBackground />
             
 

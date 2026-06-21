@@ -199,6 +199,21 @@ html {
   scrollbar-width: none;
 }
 
+/* Global scrollbar — thin, themed */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(147, 51, 234, 0.3);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(147, 51, 234, 0.5);
+}
+
 /* Chat scrollbar — thin, themed */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
@@ -288,4 +303,11 @@ html {
 .min-h-screen-safe {
   min-height: 100vh;
   min-height: 100dvh;
+}
+
+/* Mobile scale optimization for profile pages */
+@media (pointer: coarse) {
+  .profile-mobile-scale {
+    zoom: 0.9;
+  }
 }

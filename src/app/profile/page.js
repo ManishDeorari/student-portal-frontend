@@ -144,7 +144,7 @@ function ProfileContent() {
   const SidebarComponent = isAdmin ? AdminSidebar : Sidebar;
 
   return (
-    <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
+    <GooeyGradientBackground className="min-h-screen text-white profile-mobile-scale" darkMode={darkMode}>
       <SidebarComponent />
 
       {/* 🔷 Top Profile Section */}

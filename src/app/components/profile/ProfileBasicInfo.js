@@ -153,7 +153,6 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
 
                 {/* 🔷 Profile Info Block */}
                 <div className="relative px-4 sm:px-6 pb-4 sm:pb-6 -mt-12 sm:-mt-16 flex flex-col items-center">
-                    {/* Avatar - Centered */}
                     <div className="relative z-10">
                         <ProfileAvatar
                             user={profile}
@@ -164,19 +163,23 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         />
                     </div>
 
-                    {/* Name + Edit */}
+                    {/* Edit Profile Icon - Top Right */}
+                    {!isPublicView && (
+                        <div className="absolute top-16 sm:top-20 right-2 z-20">
+                            <button
+                                onClick={() => setShowEditModal(true)}
+                                className={`p-2 shadow-md border rounded-full transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50'}`}
+                                title="Edit Profile"
+                            >
+                                <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Name */}
                     <div className="flex flex-col items-center w-full mt-2 text-center">
                         <div className="flex items-center justify-center gap-2 w-full">
                             <h2 className={`text-2xl sm:text-3xl font-black tracking-tight ${darkMode ? 'text-white' : 'text-gray-900'}`}>{profile.name || "Unnamed User"}</h2>
-                            {!isPublicView && (
-                                <button
-                                    onClick={() => setShowEditModal(true)}
-                                    className={`p-1.5 shadow-sm border rounded-full transition-all ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-[#FAFAFA] text-gray-900 border-gray-200 hover:bg-gray-50'}`}
-                                    title="Edit Profile"
-                                >
-                                    <Pencil className="w-4 h-4" />
-                                </button>
-                            )}
                         </div>
 
                         <p className="mt-1 flex items-center justify-center gap-2 w-full">
