@@ -166,7 +166,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
 
                     {/* Edit Profile Icon - Top Right */}
                     {!isPublicView && (
-                        <div className="absolute top-32 sm:top-20 right-2 sm:right-4 z-20">
+                        <div className="absolute top-40 sm:top-20 right-2 sm:right-4 z-20">
                             <button
                                 onClick={() => setShowEditModal(true)}
                                 className={`p-3 sm:p-2 shadow-md border rounded-full transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50'}`}
