@@ -48,47 +48,49 @@ export default function QrCodeModal({ isOpen, onClose, publicId, name }) {
       />
 
       {/* Modal */}
-      <div className={`relative w-full max-w-sm rounded-2xl p-6 shadow-2xl overflow-hidden ${darkMode ? 'bg-slate-900 text-white' : 'bg-white text-gray-900'}`}>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">Connect with {name}</h2>
-          <button 
-            onClick={onClose}
-            className={`p-2 rounded-full transition-colors ${darkMode ? 'hover:bg-slate-800' : 'hover:bg-gray-100'}`}
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* QR Code */}
-        <div className="flex flex-col items-center justify-center space-y-6">
-          <div 
-            ref={qrRef}
-            className="p-[3px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 rounded-[1rem] shadow-lg"
-          >
-            <div className="bg-white rounded-[calc(1rem-3px)] p-4 flex items-center justify-center">
-              <QRCode
-                value={profileUrl}
-                size={200}
-                level="H"
-                fgColor="#000000"
-                bgColor="#ffffff"
-              />
-            </div>
+      <div className="relative w-full max-w-sm p-[2.5px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-600 rounded-[calc(1rem+2.5px)] shadow-2xl overflow-hidden transform transition-all duration-300 scale-100">
+        <div className={`relative w-full h-full rounded-2xl p-6 ${darkMode ? 'bg-slate-900 text-white' : 'bg-white text-gray-900'}`}>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold">Connect with {name}</h2>
+            <button 
+              onClick={onClose}
+              className={`p-2 rounded-full transition-colors ${darkMode ? 'hover:bg-slate-800' : 'hover:bg-gray-100'}`}
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          
-          <p className={`text-center text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-            Scan this code to instantly view and connect on the portal.
-          </p>
 
-          {/* Download Button */}
-          <button
-            onClick={downloadQRCode}
-            className="flex items-center gap-2 px-6 py-3 font-semibold text-white transition-transform rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105"
-          >
-            <Download className="w-5 h-5" />
-            Download QR
-          </button>
+          {/* QR Code */}
+          <div className="flex flex-col items-center justify-center space-y-6">
+            <div 
+              ref={qrRef}
+              className="p-[3px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 rounded-[1rem] shadow-lg"
+            >
+              <div className="bg-white rounded-[calc(1rem-3px)] p-4 flex items-center justify-center">
+                <QRCode
+                  value={profileUrl}
+                  size={200}
+                  level="H"
+                  fgColor="#000000"
+                  bgColor="#ffffff"
+                />
+              </div>
+            </div>
+            
+            <p className={`text-center text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              Scan this code to instantly view and connect on the portal.
+            </p>
+
+            {/* Download Button */}
+            <button
+              onClick={downloadQRCode}
+              className="flex items-center gap-2 px-6 py-3 font-semibold text-white transition-transform rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105"
+            >
+              <Download className="w-5 h-5" />
+              Download QR
+            </button>
+          </div>
         </div>
       </div>
     </div>
