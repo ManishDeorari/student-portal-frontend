@@ -148,7 +148,7 @@ function ProfileContent() {
       <SidebarComponent />
 
       {/* 🔷 Top Profile Section */}
-      <div className="max-w-4xl mx-auto px-4 lg:px-8 pt-6">
+      <div className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-8 pt-6">
         {isPublicView && (
             <div className="flex items-center gap-4 mb-4">
                 <button
@@ -171,7 +171,7 @@ function ProfileContent() {
       </div>
 
       {/* 🔽 Rest Sections */}
-      <div className="max-w-4xl mx-auto px-4 lg:px-8 mt-6 sm:mt-10 mb-20 space-y-8 pb-32">
+      <div className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-8 mt-6 sm:mt-10 mb-20 space-y-8 pb-32">
         <ProfileAbout profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileEducation profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileExperience profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
