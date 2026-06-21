@@ -55,7 +55,7 @@ export default function QrCodeModal({ isOpen, onClose, publicId, name }) {
             <h2 className="text-xl font-bold">Connect with {name}</h2>
             <button 
               onClick={onClose}
-              className={`p-2 rounded-full transition-colors ${darkMode ? 'hover:bg-slate-800' : 'hover:bg-gray-100'}`}
+              className={`p-1.5 rounded-full border transition-all ${darkMode ? 'border-white/30 text-white hover:bg-white/10' : 'border-black/30 text-black hover:bg-black/10'}`}
             >
               <X className="w-5 h-5" />
             </button>

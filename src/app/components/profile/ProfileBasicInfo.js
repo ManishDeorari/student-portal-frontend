@@ -388,7 +388,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         {/* Level 2: Connect Icons (Phone, WhatsApp, LinkedIn) */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             {/* Phone */}
-                            <div className="p-[2.5px] bg-gradient-to-tr from-green-500 to-teal-500 rounded-2xl shadow-lg transition-all duration-300">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-green-500 to-teal-500 rounded-2xl shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl group">
                                 <div className={`p-3 sm:p-5 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center transition-all ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                     <label className={`text-[10px] font-black uppercase tracking-widest mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Phone Number</label>
                                     <div className="flex items-center gap-2">
@@ -409,7 +409,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                             </div>
 
                             {/* WhatsApp */}
-                            <div className="p-[2.5px] bg-gradient-to-tr from-emerald-500 to-green-500 rounded-2xl shadow-lg transition-all duration-300">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-emerald-500 to-green-500 rounded-2xl shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl group">
                                 <div className={`p-3 sm:p-5 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center transition-all ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                     <label className={`text-[10px] font-black uppercase tracking-widest mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>WhatsApp Direct</label>
                                     {shouldHidePrivateFields ? (
@@ -421,7 +421,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                             </div>
 
                             {/* LinkedIn */}
-                            <div className="p-[2.5px] bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-2xl shadow-lg transition-all duration-300">
+                            <div className="p-[2.5px] bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-2xl shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl group">
                                 <div className={`p-3 sm:p-5 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center transition-all ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                     <label className={`text-[10px] font-black uppercase tracking-widest mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>Professional LinkedIn</label>
                                     {profile.linkedin ? (
@@ -432,7 +432,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         </div>
                         
                         {/* Level 3: Address */}
-                        <div className="p-[2.5px] bg-gradient-to-tr from-orange-500 to-red-500 rounded-2xl shadow-lg transition-all duration-300 w-full">
+                        <div className="p-[2.5px] bg-gradient-to-tr from-orange-500 to-red-500 rounded-2xl shadow-lg transition-all duration-300 w-full hover:scale-[1.02] hover:shadow-xl group">
                             <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                 <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Resident Address</label>
                                 {shouldHidePrivateFields ? (
