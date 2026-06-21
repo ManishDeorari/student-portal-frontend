@@ -45,26 +45,14 @@ export const getFocalImageUrl = (url, width, height, focus = null) => {
 
   const parts = cleanUrl.split("/upload/");
   if (parts.length === 2) {
-    let transform = "";
-    
-    // If we have an exact crop box (from zoom), crop it first, then resize
-    if (focus && focus.cropW && focus.cropH && focus.cropX !== undefined && focus.cropY !== undefined) {
-      transform = `c_crop,x_${Math.round(focus.cropX)},y_${Math.round(focus.cropY)},w_${Math.round(focus.cropW)},h_${Math.round(focus.cropH)}/c_fill,q_auto,f_auto`;
-      if (width) transform += `,w_${width}`;
-      if (height) transform += `,h_${height}`;
+    let transform = `c_fill,q_auto,f_auto`;
+    if (width) transform += `,w_${width}`;
+    if (height) transform += `,h_${height}`;
+    if (focus && focus.x !== undefined && focus.y !== undefined) {
+      transform += `,g_xy_center,x_${Math.round(focus.x)},y_${Math.round(focus.y)}`;
     } else {
-      // Standard focal point scaling
-      transform = `c_fill,q_auto,f_auto`;
-      if (width) transform += `,w_${width}`;
-      if (height) transform += `,h_${height}`;
-      
-      if (focus && focus.x !== undefined && focus.y !== undefined) {
-        transform += `,g_xy_center,x_${Math.round(focus.x)},y_${Math.round(focus.y)}`;
-      } else {
-        transform += `,g_auto`; // default focus
-      }
+      transform += `,g_auto`; // default focus
     }
-    
     return `${parts[0]}/upload/${transform}/${parts[1]}`;
   }
   return cleanUrl;

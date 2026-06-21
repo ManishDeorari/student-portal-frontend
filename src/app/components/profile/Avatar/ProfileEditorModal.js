@@ -240,19 +240,13 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
 
         <div className="flex justify-center mb-6">
           <div className="relative w-40 h-40 rounded-full p-[3.5px] bg-gradient-to-tr from-blue-600 to-purple-600 shadow-[0_10px_30px_rgba(37,99,235,0.4)]">
-            <div className={`relative w-full h-full rounded-full overflow-hidden border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'}`}>
-              <Image
-                src={previewUrl || currentImage || "/default-profile.jpg"}
-                alt="Preview"
-                fill
-                className="object-cover"
-                style={profileImageFocus?.pctX ? { 
-                  objectPosition: `${profileImageFocus.pctX}% ${profileImageFocus.pctY}%`,
-                  transformOrigin: `${profileImageFocus.pctX}% ${profileImageFocus.pctY}%`,
-                  transform: profileImageFocus.cropPctW ? `scale(${100 / profileImageFocus.cropPctW})` : "none"
-                } : {}}
-              />
-            </div>
+            <Image
+              src={previewUrl || currentImage || "/default-profile.jpg"}
+              alt="Preview"
+              fill
+              className={`object-cover border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'} rounded-full`}
+              style={profileImageFocus?.pctX ? { objectPosition: `${profileImageFocus.pctX}% ${profileImageFocus.pctY}%` } : {}}
+            />
           </div>
         </div>
 
