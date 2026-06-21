@@ -7,13 +7,7 @@ import dynamic from 'next/dynamic';
 import ProfileAvatar from "./ProfileAvatar";
 import ProfileBanner from "./ProfileBanner";
 import ProfileStats from "./ProfileStats";
-import ResumePDF from "./ResumePDF";
-
-const PDFDownloadLink = dynamic(
-  () => import('@react-pdf/renderer').then(mod => mod.PDFDownloadLink),
-  { ssr: false }
-);
-import ProfileStats from "./ProfileStats";
+import ResumeDownloadBtn from "./ResumeDownloadBtn";
 import EditBasicInfoModal from "./modals/EditBasicInfoModal";
 import QrCodeModal from "./modals/QrCodeModal";
 import { useTheme } from "@/context/ThemeContext";
@@ -190,18 +184,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     {/* Action Icons - Top Right */}
                     <div className="absolute top-[8.5rem] sm:top-20 right-2 sm:right-4 z-20 flex items-center gap-2">
                         {/* Download Resume Button */}
-                        <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg">
-                            <PDFDownloadLink
-                                document={<ResumePDF profile={profile} />}
-                                fileName={`${profile.name?.replace(/\s+/g, '_') || 'User'}_Resume.pdf`}
-                                className={`p-3 sm:p-2 rounded-[calc(9999px-2px)] transition-all hover:scale-105 flex items-center justify-center ${darkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-white text-gray-900 hover:bg-gray-50'}`}
-                                title="Download Resume PDF"
-                            >
-                                {({ blob, url, loading, error }) =>
-                                    loading ? <Download className="w-5 h-5 sm:w-5 sm:h-5 animate-pulse opacity-50" /> : <Download className="w-5 h-5 sm:w-5 sm:h-5" />
-                                }
-                            </PDFDownloadLink>
-                        </div>
+                        <ResumeDownloadBtn profile={profile} darkMode={darkMode} />
 
                         {/* QR Code Button - Available to everyone */}
                         <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg">
