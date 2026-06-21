@@ -43,10 +43,18 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
                                         </h3>
                                         <p className={`text-sm font-black mt-1 ${darkMode ? 'text-slate-100' : 'text-slate-900'}`}>
                                             {edu.degree}
-                                            {edu.course && ` in ${edu.course}`}
-                                            {edu.branch && ` (${edu.branch})`}
-                                            {edu.fieldOfStudy && ` · ${edu.fieldOfStudy}`}
+                                            {edu.fieldOfStudy && ` in ${edu.fieldOfStudy}`}
                                         </p>
+                                        {edu.course && (
+                                            <div className={`text-[11px] font-black mt-1 uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                Course: <span className={`normal-case tracking-normal ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{edu.course}</span>
+                                            </div>
+                                        )}
+                                        {edu.branch && (
+                                            <div className={`text-[11px] font-black mt-0.5 uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                Branch: <span className={`normal-case tracking-normal ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>{edu.branch}</span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>

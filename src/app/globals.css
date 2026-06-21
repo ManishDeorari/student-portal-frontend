@@ -308,6 +308,7 @@ html {
 /* Mobile scale optimization for profile pages */
 @media (pointer: coarse) {
   .profile-mobile-scale {
-    zoom: 0.9;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 }

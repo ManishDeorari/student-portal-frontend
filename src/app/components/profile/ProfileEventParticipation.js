@@ -103,7 +103,7 @@ export default function ProfileEventParticipation({ profile, setProfile, isPubli
     const hasData = participatedEvents.length > 0 || wonEvents.length > 0;
 
     const handleViewEvent = (event) => {
-        if (event.isEventRepostPost) {
+        if (event.type === "EventRepost" || event.isEventRepostPost) {
             const originalEvent = event.eventRepostDetails?.originalEventId;
             if (originalEvent) {
                 const formattedEvent = {
