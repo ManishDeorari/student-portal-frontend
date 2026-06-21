@@ -87,9 +87,9 @@ const ResumePDF = ({ profile }) => {
       <Page size="A4" style={styles.page}>
         
         <View style={styles.header}>
-          <Text style={styles.name}>{profile?.user?.name || "User Name"}</Text>
+          <Text style={styles.name}>{profile?.name || "User Name"}</Text>
           <Text style={styles.contact}>
-            {profile?.user?.email || "email@example.com"} 
+            {profile?.email || "email@example.com"} 
             {profile?.location ? `  |  ${profile.location}` : ""}
             {profile?.website ? `  |  ${profile.website}` : ""}
           </Text>
