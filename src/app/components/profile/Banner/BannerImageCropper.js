@@ -24,7 +24,18 @@ export default function BannerImageCropper({ imageSrc, onComplete, aspectRatio =
       const pctY = croppedAreaPct.y + croppedAreaPct.height / 2;
       
       if (onComplete) {
-        onComplete(null, { x: focalX, y: focalY, pctX, pctY });
+        onComplete(null, { 
+          x: focalX, 
+          y: focalY, 
+          pctX, 
+          pctY,
+          cropX: croppedAreaPixels.x,
+          cropY: croppedAreaPixels.y,
+          cropW: croppedAreaPixels.width,
+          cropH: croppedAreaPixels.height,
+          cropPctW: croppedAreaPct.width,
+          cropPctH: croppedAreaPct.height
+        });
       }
     } catch (e) {
       console.error("Fix position error:", e);

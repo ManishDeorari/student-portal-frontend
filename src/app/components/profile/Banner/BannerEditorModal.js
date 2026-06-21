@@ -236,13 +236,19 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
 
         <div className="flex justify-center mb-6 w-full">
           <div className="relative w-full h-[192px] p-[3.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-[0_10px_30px_rgba(37,99,235,0.4)]">
-            <Image
-              src={previewUrl || currentImage || "/default_banner.jpg"}
-              alt="Preview"
-              fill
-              className={`object-cover rounded-[calc(1rem-3.5px)] border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'} shadow-inner`}
-              style={bannerImageFocus?.pctX ? { objectPosition: `${bannerImageFocus.pctX}% ${bannerImageFocus.pctY}%` } : {}}
-            />
+            <div className={`relative w-full h-full rounded-[calc(1rem-3.5px)] overflow-hidden border-4 ${darkMode ? 'border-[#121213]' : 'border-[#FAFAFA]'} shadow-inner`}>
+              <Image
+                src={previewUrl || currentImage || "/default_banner.jpg"}
+                alt="Preview"
+                fill
+                className="object-cover"
+                style={bannerImageFocus?.pctX ? { 
+                  objectPosition: `${bannerImageFocus.pctX}% ${bannerImageFocus.pctY}%`,
+                  transformOrigin: `${bannerImageFocus.pctX}% ${bannerImageFocus.pctY}%`,
+                  transform: bannerImageFocus.cropPctW ? `scale(${100 / bannerImageFocus.cropPctW})` : "none"
+                } : {}}
+              />
+            </div>
           </div>
         </div>
 
