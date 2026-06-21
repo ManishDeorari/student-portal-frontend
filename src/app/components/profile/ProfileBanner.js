@@ -4,9 +4,9 @@ import BannerEditorModal from "./Banner/BannerEditorModal";
 import ImageViewerModal from "./ImageViewerModal";
 import Image from "next/image";
 import { useTheme } from "@/context/ThemeContext";
-import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
+import { getOptimizedImageUrl, getFocalImageUrl } from "../../utils/cloudinaryHelper";
 
-export default function ProfileBanner({ image, onUpload, userId, isPublicView }) {
+export default function ProfileBanner({ image, focus, onUpload, userId, isPublicView }) {
   const { darkMode } = useTheme();
   const [showEditor, setShowEditor] = useState(false);
   const [showViewer, setShowViewer] = useState(false);
@@ -24,7 +24,7 @@ export default function ProfileBanner({ image, onUpload, userId, isPublicView })
   const isRestricted = isPublicView && !isAdmin;
 
   const bannerImg = image || "/default_banner.jpg";
-  const finalImageSrc = getOptimizedImageUrl(bannerImg);
+  const finalImageSrc = getFocalImageUrl(bannerImg, 1200, 400, focus) || getOptimizedImageUrl(bannerImg);
 
   return (
     <div className="relative w-full h-48 overflow-hidden rounded-lg">

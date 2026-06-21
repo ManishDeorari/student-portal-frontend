@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { useTheme } from "@/context/ThemeContext";
@@ -15,12 +16,22 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(currentImage || "/default-profile.jpg");
   const [uploading, setUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
+  const [profileImageFocus, setProfileImageFocus] = useState(null);
   const adjustOriginalRef = useRef({ url: null, file: null });
   const [adjustKey, setAdjustKey] = useState(0); // force remount after reset
+  const [mounted, setMounted] = useState(false);
 
   const fileInputRef = useRef();
+
+  useEffect(() => {
+    setMounted(true);
+    // Prevent body scroll
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   // When user selects a new file, store it as the ORIGINAL
   const handleFileChange = (e) => {
@@ -44,8 +55,8 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
   };
 
   const handleApplyUpload = async () => {
-    if (!selectedFile || !userId) {
-      toast.error("Please select a photo first.");
+    if (!selectedFile && !profileImageFocus && !userId) {
+      toast.error("Please select a photo or set focus first.");
       return;
     }
 
@@ -65,31 +76,43 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
       const latestProfile = await latestProfileRes.json();
       const latestImage = latestProfile?.profilePicture || null;
 
-      // 1️⃣ Upload to Cloudinary
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append(
-        "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-      );
-      formData.append("folder", "student/profiles/avatars");
+      // 1️⃣ Upload to Cloudinary (ONLY if selectedFile exists)
+      let uploadedUrl = null;
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        formData.append(
+          "upload_preset",
+          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+        );
+        formData.append("folder", "student/profiles/avatars");
 
-      // Force unique filename to avoid caching issues
-      const newPublicId = `profile_${crypto.randomUUID()}_${Date.now()}`;
-      formData.append("public_id", newPublicId);
+        const newPublicId = `profile_${crypto.randomUUID()}_${Date.now()}`;
+        formData.append("public_id", newPublicId);
 
-      const uploadRes = await fetch(
-        process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL,
-        { method: "POST", body: formData }
-      );
+        const uploadRes = await fetch(
+          process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL,
+          { method: "POST", body: formData }
+        );
 
-      const uploadJson = await uploadRes.json();
-      if (!uploadRes.ok || !uploadJson.secure_url) {
-        toast.error("❌ Upload to Cloudinary failed.");
-        return;
+        const uploadJson = await uploadRes.json();
+        if (!uploadRes.ok || !uploadJson.secure_url) {
+          toast.error("❌ Upload to Cloudinary failed.");
+          return;
+        }
+        uploadedUrl = uploadJson.secure_url;
       }
 
       // 2️⃣ Update user profile in backend
+      const updatePayload = {
+        profileImageFocus: profileImageFocus || undefined
+      };
+      
+      if (uploadedUrl) {
+        updatePayload.profileImage = uploadedUrl;
+        updatePayload.oldImageUrl = latestImage && !latestImage.includes("default-profile.jpg") ? latestImage : null;
+      }
+
       const backendRes = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user/update`,
         {
@@ -98,13 +121,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            profileImage: uploadJson.secure_url,
-            oldImageUrl:
-              latestImage && !latestImage.includes("default-profile.jpg")
-                ? latestImage
-                : null,
-          }),
+          body: JSON.stringify(updatePayload),
         }
       );
 
@@ -115,11 +132,11 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
 
       // 3️⃣ Update local user state instantly
       if (typeof onUploaded === "function") {
-        onUploaded(uploadJson.secure_url);
+        onUploaded(uploadedUrl || latestImage);
       }
 
-      // 4️⃣ Delete old image from Cloudinary (if exists)
-      if (latestImage && !latestImage.includes("default-profile.jpg")) {
+      // 4️⃣ Delete old image from Cloudinary (if exists AND new image uploaded)
+      if (uploadedUrl && latestImage && !latestImage.includes("default-profile.jpg")) {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/delete-old-image`, {
           method: "POST",
           headers: {
@@ -199,7 +216,9 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
     }
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <>
     <LoadingOverlay isVisible={uploading} message="Uploading Image..." />
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-start justify-center p-4 pt-[5vh] overflow-y-auto custom-scrollbar">
@@ -230,25 +249,30 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
 
         {/* Tabs + Reset */}
         <div className="flex flex-wrap justify-center gap-3 mb-6 items-center border-b border-dashed border-gray-200 dark:border-white/10 pb-6 shadow-sm">
-          {["crop", "filters", "adjust"].map((tab) => (
-            <div key={tab} className={`p-[1.5px] bg-gradient-to-tr ${activeTab === tab ? 'from-blue-500 to-purple-500' : (darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400')} rounded-xl shadow-sm transition-all`}>
-              <button
-                onClick={() => {
-                  if (!selectedFile) return;
-                  setActiveTab(activeTab === tab ? null : tab);
-                }}
-                disabled={!selectedFile}
-                className={`px-6 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${
-                    activeTab === tab 
-                        ? (darkMode ? "bg-blue-900/40 text-blue-400" : "bg-blue-50 text-blue-700") 
-                        : (darkMode ? "bg-[#121213] text-gray-400 hover:text-white" : "bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50")
-                } ${!selectedFile ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                title={!selectedFile ? "Select a new image first" : `Open ${tab}`}
-              >
-                {tab}
-              </button>
-            </div>
-          ))}
+          {["crop", "filters", "adjust"].map((tab) => {
+            const isCropTab = tab === "crop";
+            const canUseTab = isCropTab ? (!previewUrl.includes("default-profile.jpg")) : !!selectedFile;
+            
+            return (
+              <div key={tab} className={`p-[1.5px] bg-gradient-to-tr ${activeTab === tab ? 'from-blue-500 to-purple-500' : (darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400')} rounded-xl shadow-sm transition-all`}>
+                <button
+                  onClick={() => {
+                    if (!canUseTab) return;
+                    setActiveTab(activeTab === tab ? null : tab);
+                  }}
+                  disabled={!canUseTab}
+                  className={`px-6 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${
+                      activeTab === tab 
+                          ? (darkMode ? "bg-blue-900/40 text-blue-400" : "bg-blue-50 text-blue-700") 
+                          : (darkMode ? "bg-[#121213] text-gray-400 hover:text-white" : "bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50")
+                  } ${!canUseTab ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  title={!canUseTab ? "Select a new image first" : `Open ${tab}`}
+                >
+                  {tab === "crop" ? "Focus" : tab}
+                </button>
+              </div>
+            );
+          })}
 
           {/* Reset Button */}
           {selectedFile && (
@@ -276,19 +300,15 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
         {activeTab && (
           <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl mb-6 shadow-xl relative top-0 z-10 w-full animate-fadeIn">
             <div className={`flex justify-center items-center py-6 px-6 rounded-[calc(1rem-2.5px)] min-h-[160px] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
-            {activeTab === "crop" && selectedFile && (
+            {activeTab === "crop" && !previewUrl.includes("default-profile.jpg") && (
               <ProfileImageCropper
                 imageSrc={previewUrl}
-                onComplete={(croppedImg) => {
-                  setCroppedImage(croppedImg);
-                  setPreviewUrl(croppedImg); // immediately update preview
-                  fetch(croppedImg)
-                    .then((res) => res.blob())
-                    .then((blob) =>
-                      setSelectedFile(
-                        new File([blob], "profile.jpg", { type: blob.type })
-                      )
-                    );
+                onComplete={(croppedImg, focusPoint) => {
+                  if (focusPoint) {
+                    setProfileImageFocus(focusPoint);
+                    toast.success("Focus point set! Click Apply Changes to save.");
+                    setActiveTab(null);
+                  }
                 }}
               />
             )}
@@ -420,6 +440,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
         </div>
       </div>
     </div>
-    </>
+    </>,
+    document.body
   );
 }

@@ -3,7 +3,7 @@ import { useState } from "react";
 import ProfileEditorModal from "./Avatar/ProfileEditorModal";
 import ImageViewerModal from "./ImageViewerModal";
 import UserAvatar from "../ui/UserAvatar";
-import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
+import { getOptimizedImageUrl, getFocalImageUrl } from "../../utils/cloudinaryHelper";
 
 export default function ProfileAvatar({ user, image, onUpload, userId, isPublicView }) {
   const [showEditor, setShowEditor] = useState(false);
@@ -28,7 +28,7 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
       <div className="p-[3px] bg-gradient-to-tr from-blue-600 via-purple-500 to-pink-500 rounded-full shadow-2xl transition-transform duration-300 group-hover:scale-105 flex items-center justify-center aspect-square w-fit h-fit">
         <UserAvatar
           user={user}
-          src={getOptimizedImageUrl(profileImg)}
+          src={getFocalImageUrl(profileImg, 400, 400, user?.profileImageFocus)}
           alt="Profile"
           width={160}
           height={160}

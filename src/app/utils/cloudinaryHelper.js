@@ -28,6 +28,37 @@ export const getOptimizedImageUrl = (url) => {
 };
 
 /**
+ * Formats a Cloudinary image URL to use focal point cropping
+ */
+export const getFocalImageUrl = (url, width, height, focus = null) => {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+
+  // Remove existing transformations
+  let cleanUrl = url;
+  if (url.includes("/upload/")) {
+    const parts = url.split("/upload/");
+    if (parts[1].match(/^[a-z_]+,[a-z_]+(,[a-z0-9_]+)*\//)) {
+      parts[1] = parts[1].substring(parts[1].indexOf('/') + 1);
+    }
+    cleanUrl = `${parts[0]}/upload/${parts[1]}`;
+  }
+
+  const parts = cleanUrl.split("/upload/");
+  if (parts.length === 2) {
+    let transform = `c_fill,q_auto,f_auto`;
+    if (width) transform += `,w_${width}`;
+    if (height) transform += `,h_${height}`;
+    if (focus && focus.x !== undefined && focus.y !== undefined) {
+      transform += `,g_xy_center,x_${Math.round(focus.x)},y_${Math.round(focus.y)}`;
+    } else {
+      transform += `,g_auto`; // default focus
+    }
+    return `${parts[0]}/upload/${transform}/${parts[1]}`;
+  }
+  return cleanUrl;
+};
+
+/**
  * Fetches the file and forces a silent download to avoid opening a new tab
  * and hides the raw Cloudinary URL.
  */

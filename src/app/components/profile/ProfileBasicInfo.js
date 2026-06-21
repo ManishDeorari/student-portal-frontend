@@ -145,6 +145,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                 <div className={`relative w-full h-28 sm:h-40 md:h-48 ${darkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
                     <ProfileBanner
                         image={profile.bannerImage}
+                        focus={profile.bannerImageFocus}
                         onUpload={onRefresh}
                         userId={profile._id}
                         isPublicView={isPublicView}
@@ -165,10 +166,10 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
 
                     {/* Edit Profile Icon - Top Right */}
                     {!isPublicView && (
-                        <div className="absolute top-20 sm:top-20 right-2 sm:right-4 z-20">
+                        <div className="absolute top-32 sm:top-20 right-2 sm:right-4 z-20">
                             <button
                                 onClick={() => setShowEditModal(true)}
-                                className={`p-2.5 sm:p-2 shadow-md border rounded-full transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50'}`}
+                                className={`p-3 sm:p-2 shadow-md border rounded-full transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white border-white/10 hover:bg-slate-700' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50'}`}
                                 title="Edit Profile"
                             >
                                 <Pencil className="w-5 h-5 sm:w-5 sm:h-5" />

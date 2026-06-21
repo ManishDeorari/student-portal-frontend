@@ -29,7 +29,16 @@ function PostsContent() {
             if (!token || !publicId) return;
 
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
-            const res = await fetch(`${API_URL}/api/posts?userId=${publicId}&limit=50&type=all`, {
+            const userStr = localStorage.getItem("user");
+            let currentUser = null;
+            if (userStr) currentUser = JSON.parse(userStr);
+
+            const viewingOther = !!(publicId && currentUser && publicId !== currentUser._id && publicId !== currentUser.publicId);
+            const postsEndpoint = viewingOther
+                ? `${API_URL}/api/posts?userId=${publicId}&limit=50&type=all`
+                : `${API_URL}/api/user/myposts`;
+
+            const res = await fetch(postsEndpoint, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
