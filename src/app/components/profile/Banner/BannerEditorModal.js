@@ -7,8 +7,6 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { useTheme } from "@/context/ThemeContext";
 import BannerImageCropper from "./BannerImageCropper";
-import BannerImageFilters from "./BannerImageFilters";
-import BannerImageAdjust from "./BannerImageAdjust";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
 
 export default function BannerEditorModal({ onClose, onUploaded, userId, currentImage, currentFocus }) {
@@ -16,42 +14,99 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(currentImage || "/default_banner.jpg");
   const [uploading, setUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState(null);
+  const [activeTab, setActiveTab] = useState("crop"); // Default to crop
   const [bannerImageFocus, setBannerImageFocus] = useState(currentFocus || null);
-  const adjustOriginalRef = useRef({ url: null, file: null });
-  const [adjustKey, setAdjustKey] = useState(0);
   const [mounted, setMounted] = useState(false);
 
   const fileInputRef = useRef();
 
   useEffect(() => {
     setMounted(true);
-    // Prevent body scroll
     document.body.style.overflow = "hidden";
+    
+    // Fix initial focus if pctX is missing
+    if (currentFocus && currentFocus.x !== undefined && currentFocus.pctX === undefined && currentImage) {
+      const img = new window.Image();
+      img.onload = () => {
+        if (img.width && img.height) {
+          setBannerImageFocus({
+            x: currentFocus.x,
+            y: currentFocus.y,
+            pctX: (currentFocus.x / img.width) * 100,
+            pctY: (currentFocus.y / img.height) * 100
+          });
+        }
+      };
+      if (/^https?:\/\//i.test(currentImage)) img.crossOrigin = "anonymous";
+      img.src = currentImage;
+    }
+
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, []);
+  }, [currentFocus, currentImage]);
 
-  // When user selects a new file, store it as the ORIGINAL
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // 🚫 Block GIFs and animated formats
     if (file.type === "image/gif") {
       toast.error("GIFs or animated images are not allowed for banners.");
-      e.target.value = null; // reset input
+      e.target.value = null;
       return;
     }
 
     const url = URL.createObjectURL(file);
-
     setSelectedFile(file);
     setPreviewUrl(url);
+    setBannerImageFocus(null); // Reset focus for new image
+  };
 
-    // Save original for Reset
-    adjustOriginalRef.current = { url, file };
+  const handleRotate = async (degrees) => {
+    if (!previewUrl || previewUrl.includes("default_banner.jpg")) return;
+    try {
+      setUploading(true);
+      const img = new window.Image();
+      
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        if (/^https?:\/\//i.test(previewUrl)) img.crossOrigin = "anonymous";
+        img.src = previewUrl;
+      });
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      if (degrees === 90 || degrees === 270 || degrees === -90 || degrees === -270) {
+        canvas.width = img.height;
+        canvas.height = img.width;
+      } else {
+        canvas.width = img.width;
+        canvas.height = img.height;
+      }
+
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((degrees * Math.PI) / 180);
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          setUploading(false);
+          return toast.error("Failed to rotate image.");
+        }
+        const newFile = new File([blob], `rotated_${Date.now()}.jpg`, { type: "image/jpeg" });
+        const newUrl = URL.createObjectURL(blob);
+        setSelectedFile(newFile);
+        setPreviewUrl(newUrl);
+        setBannerImageFocus(null); // Focus invalid after rotation
+        setUploading(false);
+      }, "image/jpeg", 0.95);
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to rotate image.");
+      setUploading(false);
+    }
   };
 
   const handleApplyUpload = async () => {
@@ -65,7 +120,6 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
     try {
       const token = localStorage.getItem("token");
 
-      // Fetch latest profile to get current banner
       const latestProfileRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/me`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -73,7 +127,6 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
       const latestProfile = await latestProfileRes.json();
       const latestBanner = latestProfile?.bannerImage || null;
 
-      // 1️⃣ Upload to Cloudinary (ONLY if selectedFile exists)
       let uploadedUrl = null;
       if (selectedFile) {
         const formData = new FormData();
@@ -93,7 +146,6 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
         uploadedUrl = uploadJson.secure_url;
       }
 
-      // 2️⃣ Update backend
       const updatePayload = {
         bannerImageFocus: bannerImageFocus || undefined
       };
@@ -116,7 +168,6 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
 
       if (typeof onUploaded === "function") onUploaded(uploadedUrl || latestBanner);
 
-      // Optional: delete old Cloudinary banner
       if (uploadedUrl && latestBanner && !latestBanner.includes("default_banner.jpg")) {
         fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/delete-old-image`, {
           method: "POST",
@@ -127,7 +178,6 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
 
       toast.success("✅ Banner updated!");
       setSelectedFile(null);
-      setActiveTab(null);
       onClose();
     } catch (err) {
       console.error(err);
@@ -174,7 +224,7 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
 
   return createPortal(
     <>
-    <LoadingOverlay isVisible={uploading} message="Uploading Banner..." />
+    <LoadingOverlay isVisible={uploading} message="Processing..." />
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-start justify-center p-4 pt-[5vh] overflow-y-auto custom-scrollbar">
       <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_20px_60px_rgba(37,99,235,0.4)] w-full max-w-5xl">
         <div className={`rounded-[calc(2.5rem-2.5px)] p-6 relative max-h-[90vh] overflow-y-auto ${darkMode ? 'bg-[#121213] text-white' : 'bg-[#FAFAFA] text-black'}`}>
@@ -196,45 +246,55 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
           </div>
         </div>
 
-        {/* Tabs + Reset */}
+        {/* Tools */}
         <div className="flex flex-wrap justify-center gap-3 mb-6 items-center border-b border-dashed border-gray-200 dark:border-white/10 pb-6 shadow-sm">
-          {["crop", "filters", "adjust"].map((tab) => {
-            const isCropTab = tab === "crop";
-            const canUseTab = isCropTab ? (!previewUrl.includes("default_banner.jpg")) : !!selectedFile;
-            
-            return (
-              <div key={tab} className={`p-[1.5px] bg-gradient-to-tr ${activeTab === tab ? 'from-blue-500 to-purple-500' : (darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400')} rounded-xl shadow-sm transition-all`}>
-                <button
-                  onClick={() => { if (!canUseTab) return; setActiveTab(activeTab === tab ? null : tab); }}
-                  disabled={!canUseTab}
-                  className={`px-6 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${
-                      activeTab === tab 
-                          ? (darkMode ? "bg-blue-900/40 text-blue-400" : "bg-blue-50 text-blue-700") 
-                          : (darkMode ? "bg-[#121213] text-gray-400 hover:text-white" : "bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50")
-                  } ${!canUseTab ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                  title={!canUseTab ? "Select a new banner first" : `Open ${tab}`}
-                >
-                  {tab === "crop" ? "Focus" : tab}
-                </button>
-              </div>
-            );
-          })}
+          <div className={`p-[1.5px] bg-gradient-to-tr ${activeTab === 'crop' ? 'from-blue-500 to-purple-500' : (darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400')} rounded-xl shadow-sm transition-all`}>
+            <button
+              onClick={() => setActiveTab(activeTab === "crop" ? null : "crop")}
+              className={`px-6 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${
+                  activeTab === "crop" 
+                      ? (darkMode ? "bg-blue-900/40 text-blue-400" : "bg-blue-50 text-blue-700") 
+                      : (darkMode ? "bg-[#121213] text-gray-400 hover:text-white" : "bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50")
+              }`}
+            >
+              Focus
+            </button>
+          </div>
+
+          <div className={`p-[1.5px] bg-gradient-to-tr ${darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400'} rounded-xl shadow-sm transition-all`}>
+            <button
+              onClick={() => handleRotate(-90)}
+              className={`px-4 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${darkMode ? "bg-[#121213] text-gray-300 hover:text-white hover:bg-slate-800" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+              title="Rotate Left"
+            >
+              Rotate Left
+            </button>
+          </div>
+
+          <div className={`p-[1.5px] bg-gradient-to-tr ${darkMode ? 'from-slate-700 to-slate-800' : 'from-gray-300 to-gray-400'} rounded-xl shadow-sm transition-all`}>
+            <button
+              onClick={() => handleRotate(90)}
+              className={`px-4 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest transition-colors ${darkMode ? "bg-[#121213] text-gray-300 hover:text-white hover:bg-slate-800" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+              title="Rotate Right"
+            >
+              Rotate Right
+            </button>
+          </div>
 
           {/* Reset Button */}
-          {selectedFile && (
+          {(selectedFile || bannerImageFocus) && (
             <div className="p-[1.5px] bg-gradient-to-tr from-orange-500 to-red-500 rounded-xl shadow-sm transition-all">
               <button
                 onClick={() => {
-                  const { url, file } = adjustOriginalRef.current || {};
-                  if (url) setPreviewUrl(url);
-                  if (file) setSelectedFile(file);
-                  setActiveTab(null);
-                  setAdjustKey((k) => k + 1); // re-render adjust tool cleanly
+                  setPreviewUrl(currentImage || "/default_banner.jpg");
+                  setSelectedFile(null);
+                  setBannerImageFocus(currentFocus || null);
+                  setActiveTab("crop");
                 }}
                 className={`px-6 py-2.5 rounded-[calc(0.75rem-1.5px)] text-[10px] font-black uppercase tracking-widest ${
                     darkMode ? "bg-[#121213] text-orange-400 hover:text-orange-300 hover:bg-orange-950/30" : "bg-white text-orange-600 hover:text-orange-700 hover:bg-orange-50"
                 }`}
-                title="Reset adjustments"
+                title="Reset to original"
               >
                 Reset
               </button>
@@ -242,69 +302,20 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
           )}
         </div>
 
-        {/* Subsection */}
-        {activeTab && (
+        {/* Cropper Section */}
+        {activeTab === "crop" && !previewUrl.includes("default_banner.jpg") && (
           <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl mb-6 shadow-xl relative top-0 z-10 w-full animate-fadeIn">
             <div className={`flex justify-center items-center py-6 px-6 rounded-[calc(1rem-2.5px)] min-h-[160px] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
-            {activeTab === "crop" && !previewUrl.includes("default_banner.jpg") && (
               <BannerImageCropper
                 imageSrc={previewUrl}
                 onComplete={(croppedImg, focusPoint) => {
                   if (focusPoint) {
                     setBannerImageFocus(focusPoint);
                     toast.success("Focus point set! Click Apply Changes to save.");
-                    setActiveTab(null);
                   }
                 }}
                 aspectRatio={16 / 5}
               />
-            )}
-
-            {activeTab === "filters" && selectedFile && (
-              <BannerImageFilters
-                imageSrc={previewUrl}
-                onComplete={(img, css) => {
-                  setPreviewUrl(img);
-                  const canvas = document.createElement("canvas");
-                  const ctx = canvas.getContext("2d");
-                  const image = new Image();
-                  image.src = img;
-                  image.onload = () => {
-                    canvas.width = image.width;
-                    canvas.height = image.height;
-                    ctx.filter = css;
-                    ctx.drawImage(image, 0, 0, image.width, image.height);
-                    canvas.toBlob((blob) => {
-                      if (blob) {
-                        setSelectedFile(
-                          new File([blob], "banner_filtered.jpg", {
-                            type: blob.type,
-                          })
-                        );
-                        setPreviewUrl(URL.createObjectURL(blob));
-                      }
-                    }, "image/jpeg");
-                  };
-                }}
-              />
-            )}
-
-            {activeTab === "adjust" && selectedFile && (
-              <BannerImageAdjust
-                key={adjustKey}
-                imageUrl={previewUrl}
-                onApply={(url, file) => {
-                  setPreviewUrl(url);
-                  setSelectedFile(file);
-                }}
-                onReset={() => {
-                  const { url, file } = adjustOriginalRef.current || {};
-                  if (url) setPreviewUrl(url);
-                  if (file) setSelectedFile(file);
-                  setAdjustKey((k) => k + 1);
-                }}
-              />
-            )}
             </div>
           </div>
         )}
@@ -318,7 +329,6 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
               className={`px-8 py-3 rounded-[calc(0.75rem-2.5px)] text-xs font-black uppercase tracking-widest w-full h-full ${
                   darkMode ? "bg-black text-rose-500 hover:bg-slate-900" : "bg-white text-rose-600 hover:bg-rose-50"
               }`}
-              title="Delete current banner and set default"
             >
               Delete Banner
             </button>
@@ -331,12 +341,11 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
                   onClick={() => {
                     setSelectedFile(null);
                     setPreviewUrl(currentImage || "/default_banner.jpg");
-                    setActiveTab(null);
+                    setBannerImageFocus(currentFocus || null);
                   }}
                   className={`px-8 py-3 rounded-[calc(0.75rem-2.5px)] text-xs font-black uppercase tracking-widest w-full h-full ${
                       darkMode ? "bg-black text-gray-400 hover:bg-slate-900" : "bg-white text-gray-600 hover:bg-gray-50"
                   }`}
-                  title="Cancel changes and keep previous banner"
                 >
                   Cancel
                 </button>
@@ -350,7 +359,6 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
                           ? "bg-[#121213] text-white hover:bg-slate-900/80" 
                           : "bg-[#FAFAFA] text-gray-900 hover:bg-white"
                   }`}
-                  title="Select a new banner to change"
                 >
                   Change Banner
                 </button>
@@ -365,20 +373,13 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
               className={`px-8 py-3 rounded-[calc(0.75rem-2.5px)] text-xs font-black uppercase tracking-widest w-full h-full disabled:opacity-50 ${
                   darkMode ? "bg-black text-white hover:bg-slate-900" : "bg-white text-green-700 hover:bg-green-50"
               }`}
-              title="Apply all changes and update banner"
             >
               {uploading ? "Applying..." : "Apply Changes"}
             </button>
           </div>
         </div>
 
-        <input
-          type="file"
-          ref={fileInputRef}
-          className="hidden"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
+        <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
         </div>
       </div>
     </div>
