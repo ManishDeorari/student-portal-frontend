@@ -101,20 +101,38 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
                   <div className="space-y-1">
                       {results.users.map(user => (
                         <div key={user._id} className="p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl mb-1.5 hover:scale-[1.02] transition-all duration-300 shadow-sm">
-                          <Link href={`/profile/${user.publicId || user._id}`} onClick={onClose} className={`flex items-center gap-3 p-2 rounded-[calc(0.75rem-1.5px)] w-full transition-colors ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                            <div className="w-10 h-10 p-[1.5px] bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full relative shrink-0 flex items-center justify-center">
-                              <div className={`w-full h-full rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-gray-200"}`}>
-                                <UserAvatar user={user} src={user.profilePicture} alt="Profile" width={40} height={40} wrapperClassName="w-full h-full rounded-full" className="object-cover w-full h-full rounded-full" />
+                          <Link href={`/profile/${user.publicId || user._id}`} onClick={onClose} className={`flex items-center justify-between gap-3 p-2 rounded-[calc(0.75rem-1.5px)] w-full transition-colors ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-10 h-10 p-[1.5px] bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full relative shrink-0 flex items-center justify-center">
+                                <div className={`w-full h-full rounded-full overflow-hidden ${darkMode ? "bg-slate-800" : "bg-gray-200"}`}>
+                                  <UserAvatar user={user} src={user.profilePicture} alt="Profile" width={40} height={40} wrapperClassName="w-full h-full rounded-full" className="object-cover w-full h-full rounded-full" />
+                                </div>
+                              </div>
+                              <div className="min-w-0">
+                                <p className={`text-sm font-bold truncate ${darkMode ? "text-white" : "text-black"}`}>{user.name}</p>
+                                {user.role === 'admin' || user.role === 'faculty' ? (
+                                  <p className={`text-[10px] truncate ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                    {user.employeeId || "Staff"}
+                                    {user.department ? ` • ${user.department}` : ""}
+                                    {user.position ? ` • ${user.position}` : ""}
+                                  </p>
+                                ) : (
+                                  <p className={`text-[10px] truncate ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                    {user.enrollmentNumber} 
+                                    {user.course ? ` • ${user.course}` : ""} 
+                                    {user.branch ? ` • ${user.branch}` : ""} 
+                                    {user.semester ? ` • Sem ${user.semester}` : ""}
+                                  </p>
+                                )}
                               </div>
                             </div>
-                            <div>
-                              <p className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>{user.name}</p>
-                              <p className={`text-[10px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                                {user.enrollmentNumber} 
-                                {user.course ? ` • ${user.course}` : ""} 
-                                {user.branch ? ` • ${user.branch}` : ""} 
-                                {user.semester ? ` • Sem ${user.semester}` : ""}
-                              </p>
+                            <div className={`px-2 py-0.5 rounded shrink-0 text-[9px] font-black uppercase tracking-widest ${
+                              user.role === 'admin' ? 'bg-red-500/10 text-red-500' :
+                              user.role === 'faculty' ? 'bg-amber-500/10 text-amber-500' :
+                              user.role === 'alumni' ? 'bg-purple-500/10 text-purple-500' :
+                              'bg-blue-500/10 text-blue-500'
+                            }`}>
+                              {user.role}
                             </div>
                           </Link>
                         </div>
