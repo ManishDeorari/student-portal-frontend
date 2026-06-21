@@ -6,7 +6,6 @@ import { useState } from 'react';
 
 export default function ProfileActivityHeatmap({ profile }) {
     const [isExpanded, setIsExpanded] = useState(true);
-    if (profile.role !== 'student' && profile.role !== 'alumni') return null;
     const { darkMode } = useTheme();
     const heatmapData = profile.activityHeatmap || {};
 
@@ -65,6 +64,8 @@ export default function ProfileActivityHeatmap({ profile }) {
         if (level === 3) return 'bg-green-500 dark:bg-green-500';
         return 'bg-green-600 dark:bg-green-400';
     };
+
+    if (!profile || (profile.role !== 'student' && profile.role !== 'alumni')) return null;
 
     return (
         <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] group w-full mb-6 transition-all duration-300 hover:scale-[1.02] hover:z-20 relative">
