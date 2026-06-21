@@ -11,7 +11,7 @@ export default function ProfileActivityHeatmap({ profile }) {
 
     const todayDateString = new Date().toISOString().split('T')[0];
 
-    // Generate last 365 days aligned to a Sunday-Saturday grid
+    // Generate grid aligned to Full Calendar Months
     const { columns, monthLabels, totalActivity, currentStreak } = useMemo(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -20,9 +20,21 @@ export default function ProfileActivityHeatmap({ profile }) {
         let streak = 0;
         let isCurrentStreakActive = true;
 
-        const dayOfWeek = today.getDay(); // 0 = Sunday, 6 = Saturday
-        // Render 26 weeks (6 months) instead of 52 to avoid horizontal scroll on standard screens
-        const totalDaysToRender = (26 * 7) + (dayOfWeek + 1);
+        // Ensure we render exactly 6 full calendar months, avoiding broken half-months
+        const targetMonths = 6;
+        const startDate = new Date(today.getFullYear(), today.getMonth() - (targetMonths - 1), 1);
+        
+        // Push startDate back to the previous Sunday to ensure grid alignment
+        const startDayOfWeek = startDate.getDay();
+        startDate.setDate(startDate.getDate() - startDayOfWeek);
+
+        // Calculate exact number of days to render safely (avoids DST offset bugs)
+        let totalDaysToRender = 0;
+        let tempDate = new Date(startDate);
+        while (tempDate <= today) {
+            totalDaysToRender++;
+            tempDate.setDate(tempDate.getDate() + 1);
+        }
 
         const allDays = [];
 
@@ -32,16 +44,15 @@ export default function ProfileActivityHeatmap({ profile }) {
             const dateString = date.toISOString().split('T')[0];
             const count = heatmapData[dateString] || 0;
             
-            if (i < 365) {
-                total += count;
-                if (count > 0) {
-                    streak++;
-                } else {
-                    if (i > 0 || (i === 0 && count === 0)) { 
-                        isCurrentStreakActive = false;
-                    }
-                    if (!isCurrentStreakActive) streak = 0;
+            // Stats logic
+            total += count;
+            if (count > 0) {
+                streak++;
+            } else {
+                if (i > 0 || (i === 0 && count === 0)) { 
+                    isCurrentStreakActive = false;
                 }
+                if (!isCurrentStreakActive) streak = 0;
             }
 
             allDays.push({
@@ -58,7 +69,6 @@ export default function ProfileActivityHeatmap({ profile }) {
 
         for (let i = 0; i < allDays.length; i += 7) {
             const colDays = allDays.slice(i, i + 7);
-            
             let isNewMonth = false;
 
             if (colDays[0]) {
@@ -67,19 +77,18 @@ export default function ProfileActivityHeatmap({ profile }) {
                 if (resultCols.length === 0) {
                     currentMonth = month;
                     mLabels.push({
-                        label: colDays[0].dateObj.toLocaleString('default', { month: 'short' }),
+                        label: colDays[0].dateObj.toLocaleString('default', { month: 'long' }),
                         colIndex: 0
                     });
                 } else if (month !== currentMonth) {
                     isNewMonth = true;
                     currentMonth = month;
                     
-                    if (mLabels.length === 0 || (resultCols.length - mLabels[mLabels.length - 1].colIndex) > 2) {
-                        mLabels.push({
-                            label: colDays[0].dateObj.toLocaleString('default', { month: 'short' }),
-                            colIndex: resultCols.length
-                        });
-                    }
+                    // Add month label (Since it's exactly 1 month blocks, they will never overlap)
+                    mLabels.push({
+                        label: colDays[0].dateObj.toLocaleString('default', { month: 'long' }),
+                        colIndex: resultCols.length
+                    });
                 }
             }
 
@@ -106,6 +115,9 @@ export default function ProfileActivityHeatmap({ profile }) {
     };
 
     if (!profile || (profile.role !== 'student' && profile.role !== 'alumni')) return null;
+
+    // Col width calculation for absolute positioning labels: 18px square + 6px gap = 24px per col.
+    // Plus 3px for the border-l-2 whenever a new month occurs. We'll use relative rendering inside cols to be pixel-perfect.
 
     return (
         <>
@@ -150,42 +162,40 @@ export default function ProfileActivityHeatmap({ profile }) {
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
                                 className="overflow-hidden -mx-4 px-4 -mb-4 pb-4"
                             >
-                                <div className="flex flex-col gap-2 overflow-x-auto pt-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+                                <div className="flex flex-col gap-3 overflow-x-auto pt-6 pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
                                     
-                                    <div className="flex gap-2 pr-4 mx-auto w-max">
+                                    <div className="flex gap-2.5 pr-6 mx-auto w-max relative">
                                         {/* Y-Axis Labels (Days of Week) */}
-                                        <div className="flex flex-col gap-1 pr-2 text-[9px] font-black uppercase tracking-widest text-gray-400 mt-[20px]">
-                                            <span className="h-3.5 flex items-center">Sun</span>
-                                            <span className="h-3.5 flex items-center">Mon</span>
-                                            <span className="h-3.5 flex items-center">Tue</span>
-                                            <span className="h-3.5 flex items-center">Wed</span>
-                                            <span className="h-3.5 flex items-center">Thu</span>
-                                            <span className="h-3.5 flex items-center">Fri</span>
-                                            <span className="h-3.5 flex items-center">Sat</span>
+                                        <div className="flex flex-col gap-1.5 pr-3 text-[11px] font-black uppercase tracking-widest text-gray-400 mt-[24px]">
+                                            <span className="h-[18px] flex items-center">Sun</span>
+                                            <span className="h-[18px] flex items-center">Mon</span>
+                                            <span className="h-[18px] flex items-center">Tue</span>
+                                            <span className="h-[18px] flex items-center">Wed</span>
+                                            <span className="h-[18px] flex items-center">Thu</span>
+                                            <span className="h-[18px] flex items-center">Fri</span>
+                                            <span className="h-[18px] flex items-center">Sat</span>
                                         </div>
 
                                         {/* Grid Area */}
-                                        <div className="flex flex-col relative w-full">
-                                            
-                                            {/* X-Axis Labels (Months) */}
-                                            <div className="relative h-4 text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 w-full">
-                                                {monthLabels.map((m, i) => (
-                                                    <span 
-                                                        key={i} 
-                                                        className="absolute whitespace-nowrap" 
-                                                        style={{ left: `${m.colIndex * 18}px` }}
-                                                    >
-                                                        {m.label}
-                                                    </span>
-                                                ))}
-                                            </div>
-
-                                            <div className="flex gap-1 relative">
-                                                {columns.map((col, colIndex) => (
+                                        <div className="flex gap-1.5 relative w-full">
+                                            {columns.map((col, colIndex) => {
+                                                // Find if this column has a label
+                                                const mLabel = monthLabels.find(m => m.colIndex === colIndex);
+                                                
+                                                return (
                                                     <div 
                                                         key={colIndex} 
-                                                        className={`flex flex-col gap-1 ${col.isNewMonth ? `border-l-2 ${darkMode ? 'border-gray-800' : 'border-gray-200'} pl-1` : ''}`}
+                                                        className={`flex flex-col gap-1.5 ${col.isNewMonth ? `border-l-[3px] ${darkMode ? 'border-gray-800' : 'border-gray-200'} pl-1.5` : ''}`}
                                                     >
+                                                        {/* Pixel-perfect X-Axis Labels aligned perfectly to the column start */}
+                                                        <div className="h-[18px] mb-1.5 relative w-full">
+                                                            {mLabel && (
+                                                                <span className="absolute left-0 bottom-0 text-[11px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">
+                                                                    {mLabel.label}
+                                                                </span>
+                                                            )}
+                                                        </div>
+
                                                         {col.days.map((day, rowIndex) => {
                                                             const isToday = day.date === todayDateString;
                                                             return (
@@ -200,32 +210,32 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                                         });
                                                                     }}
                                                                     onMouseLeave={() => setTooltip(null)}
-                                                                    className={`w-3.5 h-3.5 rounded-sm transition-all duration-200 cursor-pointer ${getColorClass(day.level)} ${isToday ? 'ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213] scale-110 z-20 hover:scale-125' : 'hover:scale-125 hover:ring-2 hover:ring-offset-1 dark:hover:ring-offset-[#121213] hover:ring-green-400 hover:z-50'}`}
+                                                                    className={`w-[18px] h-[18px] rounded-[4px] transition-all duration-200 cursor-pointer ${getColorClass(day.level)} ${isToday ? 'ring-2 ring-orange-500 ring-offset-2 dark:ring-offset-[#121213] scale-110 z-20 hover:scale-125' : 'hover:scale-125 hover:ring-2 hover:ring-offset-2 dark:hover:ring-offset-[#121213] hover:ring-green-400 hover:z-50'}`}
                                                                 />
                                                             );
                                                         })}
                                                     </div>
-                                                ))}
-                                            </div>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                     
                                     {/* Legend */}
-                                    <div className={`flex items-center justify-end gap-2 text-[10px] font-bold uppercase tracking-widest mt-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        <div className="flex items-center gap-1 mr-auto text-gray-400">
-                                            <Info className="w-3 h-3" />
+                                    <div className={`flex items-center justify-end gap-2.5 text-[11px] font-bold uppercase tracking-widest mt-4 mx-auto w-full max-w-2xl ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        <div className="flex items-center gap-1.5 mr-auto text-gray-400">
+                                            <Info className="w-3.5 h-3.5" />
                                             <span className="normal-case tracking-normal">Tracking logins, posts, events & profile updates</span>
                                         </div>
-                                        <div className="flex items-center gap-1.5 mr-4">
-                                            <div className="w-3 h-3 rounded-sm ring-2 ring-orange-500 ring-offset-1 dark:ring-offset-[#121213]"></div>
+                                        <div className="flex items-center gap-2 mr-6">
+                                            <div className="w-[14px] h-[14px] rounded-sm ring-2 ring-orange-500 ring-offset-2 dark:ring-offset-[#121213]"></div>
                                             <span>Today</span>
                                         </div>
                                         <span>Less</span>
-                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(0)}`}></div>
-                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(1)}`}></div>
-                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(2)}`}></div>
-                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(3)}`}></div>
-                                        <div className={`w-3 h-3 rounded-sm ${getColorClass(4)}`}></div>
+                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(0)}`}></div>
+                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(1)}`}></div>
+                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(2)}`}></div>
+                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(3)}`}></div>
+                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(4)}`}></div>
                                         <span>More</span>
                                     </div>
                                 </div>
