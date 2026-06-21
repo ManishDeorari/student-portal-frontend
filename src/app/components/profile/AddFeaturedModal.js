@@ -101,22 +101,21 @@ export default function AddFeaturedModal({ onClose, onSave, editItem }) {
                   const Icon = t.icon;
                   const isSelected = type === t.id;
                   return (
-                    <div key={t.id} className={`p-[1.5px] rounded-lg ${isSelected ? "bg-gradient-to-tr from-blue-600 to-purple-600" : "bg-gray-300 dark:bg-slate-700"}`}>
-                      <button
-                        type="button"
-                        onClick={() => setType(t.id)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.5rem-1.5px)] text-sm font-bold transition-all ${
-                          isSelected
-                            ? darkMode ? "bg-purple-600 text-white" : "bg-purple-600 text-white"
-                            : darkMode
-                            ? "bg-[#121213] text-white"
-                            : "bg-white text-black"
-                        }`}
-                      >
-                        <Icon size={16} />
-                        {t.label}
-                      </button>
-                    </div>
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setType(t.id)}
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${
+                        isSelected
+                          ? "bg-purple-600 text-white shadow-lg"
+                          : darkMode
+                          ? "bg-slate-800 text-gray-300 hover:bg-slate-700"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      <Icon size={16} />
+                      {t.label}
+                    </button>
                   );
                 })}
               </div>
