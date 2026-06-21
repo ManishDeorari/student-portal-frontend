@@ -75,16 +75,13 @@ export default function ProfileActivityHeatmap({ profile }) {
                 const month = colDays[0].dateObj.getMonth();
                 
                 if (resultCols.length === 0) {
+                    // Do NOT add a label for the very first column if it's just the leftover days of the previous month.
+                    // This prevents "December" from showing up when we are rendering Jan-Jun.
                     currentMonth = month;
-                    mLabels.push({
-                        label: colDays[0].dateObj.toLocaleString('default', { month: 'long' }),
-                        colIndex: 0
-                    });
                 } else if (month !== currentMonth) {
                     isNewMonth = true;
                     currentMonth = month;
                     
-                    // Add month label (Since it's exactly 1 month blocks, they will never overlap)
                     mLabels.push({
                         label: colDays[0].dateObj.toLocaleString('default', { month: 'long' }),
                         colIndex: resultCols.length
@@ -107,7 +104,7 @@ export default function ProfileActivityHeatmap({ profile }) {
     }, [heatmapData]);
 
     const getColorClass = (level) => {
-        if (level === 0) return darkMode ? 'bg-slate-800/50' : 'bg-gray-100';
+        if (level === 0) return darkMode ? 'bg-slate-700' : 'bg-gray-300';
         if (level === 1) return 'bg-green-300 dark:bg-green-900/60';
         if (level === 2) return 'bg-green-400 dark:bg-green-700/80';
         if (level === 3) return 'bg-green-500 dark:bg-green-500';
@@ -115,9 +112,6 @@ export default function ProfileActivityHeatmap({ profile }) {
     };
 
     if (!profile || (profile.role !== 'student' && profile.role !== 'alumni')) return null;
-
-    // Col width calculation for absolute positioning labels: 18px square + 6px gap = 24px per col.
-    // Plus 3px for the border-l-2 whenever a new month occurs. We'll use relative rendering inside cols to be pixel-perfect.
 
     return (
         <>
@@ -131,7 +125,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                             </div>
                             <div>
                                 <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>Activity Map</h3>
-                                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>1 Square = 1 Day</span>
+                                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>1 Square = 1 Day</span>
                             </div>
                         </div>
                         
@@ -143,7 +137,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                 {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                             </button>
                             <div className="flex flex-col items-end">
-                                <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Activity (6 Mos)</span>
+                                <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Activity (6 Mos)</span>
                                 <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{totalActivity}</span>
                             </div>
                             <div className="flex flex-col items-end">
@@ -166,7 +160,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                     
                                     <div className="flex gap-2.5 pr-6 mx-auto w-max relative">
                                         {/* Y-Axis Labels (Days of Week) */}
-                                        <div className="flex flex-col gap-1.5 pr-3 text-[11px] font-black uppercase tracking-widest text-gray-400 mt-[24px]">
+                                        <div className={`flex flex-col gap-1.5 pr-3 text-[11px] font-black uppercase tracking-widest mt-[24px] ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                             <span className="h-[18px] flex items-center">Sun</span>
                                             <span className="h-[18px] flex items-center">Mon</span>
                                             <span className="h-[18px] flex items-center">Tue</span>
@@ -179,18 +173,17 @@ export default function ProfileActivityHeatmap({ profile }) {
                                         {/* Grid Area */}
                                         <div className="flex gap-1.5 relative w-full">
                                             {columns.map((col, colIndex) => {
-                                                // Find if this column has a label
                                                 const mLabel = monthLabels.find(m => m.colIndex === colIndex);
                                                 
                                                 return (
                                                     <div 
                                                         key={colIndex} 
-                                                        className={`flex flex-col gap-1.5 ${col.isNewMonth ? `border-l-[3px] ${darkMode ? 'border-gray-800' : 'border-gray-200'} pl-1.5` : ''}`}
+                                                        className={`flex flex-col gap-1.5 ${col.isNewMonth ? `border-l-[3px] ${darkMode ? 'border-gray-700' : 'border-gray-400'} pl-1.5` : ''}`}
                                                     >
                                                         {/* Pixel-perfect X-Axis Labels aligned perfectly to the column start */}
                                                         <div className="h-[18px] mb-1.5 relative w-full">
                                                             {mLabel && (
-                                                                <span className="absolute left-0 bottom-0 text-[11px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">
+                                                                <span className={`absolute left-0 bottom-0 text-[11px] font-black uppercase tracking-widest whitespace-nowrap ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                                                     {mLabel.label}
                                                                 </span>
                                                             )}
@@ -221,8 +214,8 @@ export default function ProfileActivityHeatmap({ profile }) {
                                     </div>
                                     
                                     {/* Legend */}
-                                    <div className={`flex items-center justify-end gap-2.5 text-[11px] font-bold uppercase tracking-widest mt-4 mx-auto w-full max-w-2xl ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                        <div className="flex items-center gap-1.5 mr-auto text-gray-400">
+                                    <div className={`flex items-center justify-end gap-2.5 text-[11px] font-bold uppercase tracking-widest mt-4 mx-auto w-full max-w-2xl ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        <div className={`flex items-center gap-1.5 mr-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                             <Info className="w-3.5 h-3.5" />
                                             <span className="normal-case tracking-normal">Tracking logins, posts, events & profile updates</span>
                                         </div>
