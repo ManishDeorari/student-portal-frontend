@@ -560,11 +560,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                 <div className={`p-4 flex justify-end gap-3 border-t flex-shrink-0 transition-all ${darkMode ? 'bg-slate-800 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
                     <button 
                         onClick={onClose} 
-                        className={`px-6 py-2.5 border rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm ${
-                            darkMode 
-                                ? "border-white/10 text-gray-400 hover:text-white hover:border-white/20 hover:bg-white/5" 
-                                : "border-gray-300 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-                        }`}
+                        className={`px-6 py-2.5 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm ${darkMode ? "border-white text-white hover:bg-white/10" : "border-black text-black hover:bg-gray-100"}`}
                     >
                         Cancel
                     </button>

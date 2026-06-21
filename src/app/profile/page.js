@@ -11,6 +11,7 @@ import ProfileActivity from "../components/profile/ProfileActivity";
 import ProfileEventParticipation from "../components/profile/ProfileEventParticipation";
 import ProfileResumeAndLinks from "../components/profile/ProfileResumeAndLinks";
 import ProfileBasicInfo from "../components/profile/ProfileBasicInfo";
+import ProfileActivityHeatmap from "../components/profile/ProfileActivityHeatmap";
 import ProfileFeatured from "../components/profile/ProfileFeatured";
 
 import { useSearchParams, useRouter, useParams } from "next/navigation";
@@ -171,6 +172,11 @@ function ProfileContent() {
             onRefresh={fetchProfile}
             isPublicView={isPublicView}
           />
+
+            {/* Activity Heatmap */}
+            <div className="mt-8">
+              <ProfileActivityHeatmap profile={profile} />
+            </div>
           <ProfileFeatured 
             user={profile} 
             isPublicView={isPublicView} 
