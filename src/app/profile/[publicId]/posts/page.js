@@ -89,7 +89,7 @@ function PostsContent() {
                 <div className="flex-1 flex flex-col h-screen overflow-hidden">
                     {/* Header - Transparent */}
                     <div className="shrink-0 z-20 bg-transparent border-none">
-                        <div className="max-w-4xl mx-auto w-full px-4 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+                        <div className="max-w-4xl mx-auto w-full px-1 sm:px-4 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
 
                             <div className="flex items-center gap-4">
                                 <div>
@@ -104,7 +104,7 @@ function PostsContent() {
 
                     {/* Content Scroll Area */}
                     <div className="flex-1 overflow-y-auto custom-scrollbar pb-20">
-                        <div className="max-w-4xl mx-auto w-full px-4 lg:px-8 mt-2 mb-8 flex flex-col sm:flex-row items-center gap-4">
+                        <div className="max-w-4xl mx-auto w-full px-1 sm:px-4 lg:px-8 mt-2 mb-8 flex flex-col sm:flex-row items-center gap-4">
                             <button
                                 onClick={() => router.back()}
                                 className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-black hover:bg-gray-900 text-white shadow-white/5 border border-gray-800" : "bg-white hover:bg-gray-50 text-black shadow-black/5 border border-gray-200"}`}
@@ -146,7 +146,7 @@ function PostsContent() {
                             </div>
                         </div>
 
-                        <div className="max-w-3xl mx-auto w-full px-4 lg:px-8">
+                        <div className="max-w-3xl mx-auto w-full px-1 sm:px-4 lg:px-8">
                             {filteredPosts.length === 0 ? (
                                 <div className={`py-20 text-center rounded-3xl border-2 border-dashed ${darkMode ? "bg-slate-800/30 border-white/10" : "bg-gray-50/50 border-gray-200"}`}>
                                     <Activity className={`w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 ${darkMode ? "text-gray-600" : "text-gray-300"}`} />
