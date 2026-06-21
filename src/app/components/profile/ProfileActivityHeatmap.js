@@ -1,8 +1,12 @@
 import React, { useMemo } from 'react';
 import { useTheme } from '@/context/ThemeContext';
-import { Flame } from 'lucide-react';
+import { Flame, ChevronUp, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 
 export default function ProfileActivityHeatmap({ profile }) {
+    const [isExpanded, setIsExpanded] = useState(true);
+    if (profile.role !== 'student' && profile.role !== 'alumni') return null;
     const { darkMode } = useTheme();
     const heatmapData = profile.activityHeatmap || {};
 
@@ -75,6 +79,13 @@ export default function ProfileActivityHeatmap({ profile }) {
                     </div>
                     
                     <div className="flex items-center gap-6 text-sm">
+                        {/* Collapse Toggle */}
+                        <button 
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
+                        >
+                            {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                        </button>
                         <div className="flex flex-col items-end">
                             <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Activity</span>
                             <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{totalActivity}</span>
@@ -86,7 +97,16 @@ export default function ProfileActivityHeatmap({ profile }) {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+                <AnimatePresence initial={false}>
+                    {isExpanded && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="overflow-hidden -mx-4 px-4 -mb-4 pb-4"
+                        >
+                            <div className="flex flex-col gap-2 overflow-x-auto pt-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
                     <div className="flex gap-1">
                         {/* Render 53 columns of 7 rows */}
                         {Array.from({ length: Math.ceil(days.length / 7) }).map((_, colIndex) => (
@@ -110,8 +130,11 @@ export default function ProfileActivityHeatmap({ profile }) {
                         <div className={`w-3 h-3 rounded-sm ${getColorClass(3)}`}></div>
                         <div className={`w-3 h-3 rounded-sm ${getColorClass(4)}`}></div>
                         <span>More</span>
-                    </div>
-                </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
             </div>
         </div>
