@@ -130,12 +130,6 @@ export default function ProfileActivityHeatmap({ profile }) {
                         </div>
                         
                         <div className="flex items-center gap-6 text-sm">
-                            <button 
-                                onClick={() => setIsExpanded(!isExpanded)}
-                                className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
-                            >
-                                {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                            </button>
                             <div className="flex flex-col items-end">
                                 <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Activity (6 Mos)</span>
                                 <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{totalActivity}</span>
@@ -144,6 +138,12 @@ export default function ProfileActivityHeatmap({ profile }) {
                                 <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Current Streak</span>
                                 <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{currentStreak} days</span>
                             </div>
+                            <button 
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
+                            >
+                                {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                            </button>
                         </div>
                     </div>
 
