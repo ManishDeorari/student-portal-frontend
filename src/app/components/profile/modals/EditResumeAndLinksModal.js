@@ -215,7 +215,7 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
             <button
               type="button"
               onClick={onClose}
-              className={`px-5 py-2.5 rounded-xl font-bold transition-all ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+              className={`px-6 py-2.5 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm ${darkMode ? "border-white text-white hover:bg-white/10" : "border-black text-black hover:bg-gray-100"}`}
               disabled={isSaving}
             >
               Cancel
