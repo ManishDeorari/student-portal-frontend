@@ -32,6 +32,10 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
     }, []);
 
     const shouldHidePrivateFields = isPublicView && viewerRole === 'student';
+    
+    const isProfileOwnerStudentOrAlumni = profile.role === 'student' || profile.role === 'alumni';
+    const isViewerPrivileged = viewerRole && ['faculty', 'admin', 'main_admin', 'mainadmin', 'superadmin'].includes(viewerRole.toLowerCase());
+    const canViewResume = isProfileOwnerStudentOrAlumni && (!isPublicView || isViewerPrivileged);
 
     const getMissingFields = () => {
         if (!profile || profile.role !== "student" || isPublicView || profile.profileCompletionAwarded) return null;
@@ -181,11 +185,13 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         />
                     </div>
 
+                    {/* Action Icons - Top Left */}
+                    <div className="absolute top-[8.5rem] sm:top-20 left-2 sm:left-4 z-20 flex items-center gap-2">
+                        {canViewResume && <ResumeDownloadBtn profile={profile} darkMode={darkMode} />}
+                    </div>
+
                     {/* Action Icons - Top Right */}
                     <div className="absolute top-[8.5rem] sm:top-20 right-2 sm:right-4 z-20 flex items-center gap-2">
-                        {/* Download Resume Button */}
-                        <ResumeDownloadBtn profile={profile} darkMode={darkMode} />
-
                         {/* QR Code Button - Available to everyone */}
                         <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg">
                             <button
