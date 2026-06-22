@@ -3,34 +3,12 @@
 import React, { useState } from "react";
 import SectionCard from "./SectionCard";
 import EditResumeAndLinksModal from "./modals/EditResumeAndLinksModal";
-import { FileText, Github, Globe, CheckCircle, Clock, XCircle, HandHeart } from "lucide-react";
+import { FileText, Github, Globe, Link as LinkIcon } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
-import toast from "react-hot-toast";
-import { downloadFileSilently } from "../../utils/cloudinaryHelper";
 
 export default function ProfileResumeAndLinks({ profile, setProfile, isPublicView }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [isPdfLoading, setIsPdfLoading] = useState(false);
   const { darkMode } = useTheme();
-
-  const handleDownloadPdf = async () => {
-    if (!profile.resume) return;
-    
-    if (!profile.resume.includes("res.cloudinary.com")) {
-      window.open(profile.resume, "_blank");
-      return;
-    }
-
-    setIsPdfLoading(true);
-    try {
-      await downloadFileSilently(profile.resume, `${profile.name}_Resume.pdf`);
-    } catch (err) {
-      toast.error("Error downloading PDF");
-      console.error(err);
-    } finally {
-      setIsPdfLoading(false);
-    }
-  };
 
   const handleSave = (updatedData) => {
     setProfile((prev) => ({
@@ -39,81 +17,19 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
     }));
   };
 
-  const handleRequestPoints = async (field) => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/points-request`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ field }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to request points");
-
-      toast.success("Points requested successfully!");
-      setProfile((prev) => ({
-        ...prev,
-        [`${field}PointsStatus`]: "pending",
-      }));
-    } catch (err) {
-      toast.error(err.message || "Error requesting points");
-    }
-  };
-
-  const renderStatusAndAction = (field, value, status) => {
-    if (isPublicView) return null;
-    if (!value) return null; // No action if field is not filled
-
-    return (
-      <div className="flex items-center gap-2 mt-1">
-        {status === "pending" && (
-          <span className="flex items-center gap-1 text-xs text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded-full">
-            <Clock className="w-3 h-3" /> Pending Approval
-          </span>
-        )}
-        {status === "approved" && (
-          <span className="flex items-center gap-1 text-xs text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full">
-            <CheckCircle className="w-3 h-3" /> Points Awarded
-          </span>
-        )}
-        {status === "rejected" && (
-          <span className="flex items-center gap-1 text-xs text-red-500 bg-red-500/10 px-2 py-0.5 rounded-full">
-            <XCircle className="w-3 h-3" /> Rejected
-          </span>
-        )}
-        {(status === "none" || status === "rejected") && (
-          <button
-            onClick={() => handleRequestPoints(field)}
-            className="flex items-center gap-1 text-xs text-blue-500 bg-blue-500/10 hover:bg-blue-500/20 px-2 py-0.5 rounded-full transition-colors"
-          >
-            <HandHeart className="w-3 h-3" /> Request 10 Points
-          </button>
-        )}
-      </div>
-    );
-  };
-
-  const hasData = !!profile.resume || !!profile.github || !!profile.portfolio;
+  const hasData = !!profile.resume || !!profile.github || !!profile.portfolio || (profile.customLinks && profile.customLinks.length > 0);
 
   return (
     <>
       <SectionCard
-        title="Resume & Portfolio"
+        title="Resume & Links"
         hasData={hasData}
         onEdit={() => setIsEditing(true)}
         isPublicView={isPublicView}
       >
-        {!isPublicView && (
-          <p className={`text-xs italic mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-            Tip: You can request 10 points each for adding your Resume, GitHub, and Portfolio. Admin approval is required.
-          </p>
-        )}
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          
+          {/* Resume */}
           {profile.resume ? (
             <div className={`p-[2px] rounded-2xl bg-gradient-to-tr from-pink-500 to-rose-500 transition-all hover:scale-[1.02] shadow-sm`}>
               <div className={`h-full flex flex-col justify-between p-4 rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
@@ -122,16 +38,14 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
                     <FileText className={`w-5 h-5 ${darkMode ? 'text-pink-400' : 'text-pink-500'}`} />
                     <span className="font-bold text-sm tracking-widest uppercase">Resume</span>
                   </div>
-                  <button
-                    onClick={handleDownloadPdf}
-                    disabled={isPdfLoading}
-                    className={`text-xs font-bold underline transition-colors text-left disabled:opacity-50 ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
+                  <a
+                    href={profile.resume}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`text-xs font-bold underline truncate transition-colors ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
                   >
-                    {isPdfLoading ? "Downloading..." : (!profile.resume.includes("res.cloudinary.com") ? "View Link" : "Download Resume")}
-                  </button>
-                </div>
-                <div className="mt-4">
-                  {renderStatusAndAction("resume", profile.resume, profile.resumePointsStatus)}
+                    View Resume
+                  </a>
                 </div>
               </div>
             </div>
@@ -141,6 +55,7 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
              </div>
           )}
 
+          {/* GitHub */}
           {profile.github ? (
             <div className={`p-[2px] rounded-2xl bg-gradient-to-tr from-gray-600 to-slate-800 transition-all hover:scale-[1.02] shadow-sm`}>
               <div className={`h-full flex flex-col justify-between p-4 rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
@@ -158,9 +73,6 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
                     {profile.github.replace(/^https?:\/\//, '')}
                   </a>
                 </div>
-                <div className="mt-4">
-                  {renderStatusAndAction("github", profile.github, profile.githubPointsStatus)}
-                </div>
               </div>
             </div>
           ) : (
@@ -169,6 +81,7 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
              </div>
           )}
 
+          {/* Portfolio */}
           {profile.portfolio ? (
             <div className={`p-[2px] rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 transition-all hover:scale-[1.02] shadow-sm`}>
                <div className={`h-full flex flex-col justify-between p-4 rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
@@ -186,9 +99,6 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
                     {profile.portfolio.replace(/^https?:\/\//, '')}
                   </a>
                 </div>
-                <div className="mt-4">
-                  {renderStatusAndAction("portfolio", profile.portfolio, profile.portfolioPointsStatus)}
-                </div>
               </div>
             </div>
           ) : (
@@ -196,6 +106,29 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
                 <p className={`text-xs font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>No Portfolio</p>
              </div>
           )}
+
+          {/* Custom Links */}
+          {profile.customLinks?.map((link, index) => (
+            <div key={index} className={`p-[2px] rounded-2xl bg-gradient-to-tr from-teal-500 to-cyan-500 transition-all hover:scale-[1.02] shadow-sm`}>
+              <div className={`h-full flex flex-col justify-between p-4 rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#121212]' : 'bg-white'}`}>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <LinkIcon className={`w-5 h-5 ${darkMode ? 'text-teal-400' : 'text-teal-500'}`} />
+                    <span className="font-bold text-sm tracking-widest uppercase truncate">{link.title}</span>
+                  </div>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`text-xs font-bold underline truncate transition-colors ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`}
+                  >
+                    {link.url.replace(/^https?:\/\//, '')}
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+
         </div>
       </SectionCard>
 
@@ -206,9 +139,7 @@ export default function ProfileResumeAndLinks({ profile, setProfile, isPublicVie
           resume: profile.resume,
           github: profile.github,
           portfolio: profile.portfolio,
-          resumePointsStatus: profile.resumePointsStatus,
-          githubPointsStatus: profile.githubPointsStatus,
-          portfolioPointsStatus: profile.portfolioPointsStatus,
+          customLinks: profile.customLinks || [],
         }}
         onSave={handleSave}
       />

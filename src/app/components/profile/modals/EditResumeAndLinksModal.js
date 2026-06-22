@@ -1,21 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, FileText, Github, Globe, Loader2, UploadCloud, Info } from "lucide-react";
+import { X, FileText, Github, Globe, Loader2, Info, Link as LinkIcon, Plus, Trash2 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import toast from "react-hot-toast";
 
 export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, onSave }) {
   const { darkMode } = useTheme();
   
-  const isInitialCloudinary = currentData?.resume?.includes("res.cloudinary.com") || !currentData?.resume;
-  const [resumeInputType, setResumeInputType] = useState(isInitialCloudinary ? "file" : "link");
-  const [resumeFile, setResumeFile] = useState(null);
-  const [isDeletedLocally, setIsDeletedLocally] = useState(false);
   const [formData, setFormData] = useState({
-    resumeLink: !isInitialCloudinary ? (currentData?.resume || "") : "",
+    resumeLink: currentData?.resume || "",
     github: currentData?.github || "",
     portfolio: currentData?.portfolio || "",
+    customLinks: currentData?.customLinks || [],
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -25,40 +22,22 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type === "application/pdf") {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("❌ Resume size must be less than 5MB.");
-        e.target.value = "";
-        return;
-      }
-      setResumeFile(file);
-    } else if (file) {
-      toast.error("❌ Only PDF files are allowed.");
-      e.target.value = "";
-    }
+  const handleCustomLinkChange = (index, field, value) => {
+    const updatedLinks = [...formData.customLinks];
+    updatedLinks[index][field] = value;
+    setFormData({ ...formData, customLinks: updatedLinks });
   };
 
-  const uploadResumeToCloudinary = async (file) => {
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-    data.append("folder", "documents/resume");
-
-    const RAW_UPLOAD_URL = process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL?.replace('/image/upload', '/raw/upload') || "https://api.cloudinary.com/v1_1/djw8l0wxn/raw/upload";
-
-    const res = await fetch(RAW_UPLOAD_URL, {
-      method: "POST",
-      body: data,
+  const addCustomLink = () => {
+    setFormData({
+      ...formData,
+      customLinks: [...formData.customLinks, { title: "", url: "" }]
     });
+  };
 
-    if (!res.ok) {
-      throw new Error("Failed to upload to Cloudinary");
-    }
-
-    const json = await res.json();
-    return json.secure_url;
+  const removeCustomLink = (index) => {
+    const updatedLinks = formData.customLinks.filter((_, i) => i !== index);
+    setFormData({ ...formData, customLinks: updatedLinks });
   };
 
   const handleSubmit = async (e) => {
@@ -66,28 +45,12 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
     setIsSaving(true);
 
     try {
-      let uploadedResumeUrl = currentData?.resume || "";
-
-      if (resumeInputType === "file") {
-        if (resumeFile) {
-          uploadedResumeUrl = await uploadResumeToCloudinary(resumeFile);
-        } else if (isDeletedLocally || !isInitialCloudinary) {
-          uploadedResumeUrl = ""; // Switched to file but no file selected or deleted
-        }
-      } else {
-        uploadedResumeUrl = formData.resumeLink;
-      }
-
       const payload = {
-        resume: uploadedResumeUrl,
+        resume: formData.resumeLink,
         github: formData.github,
         portfolio: formData.portfolio,
+        customLinks: formData.customLinks.filter(link => link.title.trim() !== "" && link.url.trim() !== ""),
       };
-
-      // Ensure old file is deleted from Cloudinary if changed or removed
-      if (currentData?.resume?.includes("res.cloudinary.com") && uploadedResumeUrl !== currentData.resume) {
-        payload.oldImageUrl = currentData.resume;
-      }
 
       const token = localStorage.getItem("token");
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
@@ -123,7 +86,7 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
         <div className={`p-4 flex items-center justify-between border-b ${darkMode ? 'border-white/10' : 'border-gray-100'}`}>
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600 text-white shadow-lg`}>
-              <FileText className="w-5 h-5" />
+              <LinkIcon className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-lg font-black tracking-wide">Resume & Links</h2>
@@ -147,76 +110,27 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
               <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
                   <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div className="text-sm leading-relaxed">
-                      <p className="font-bold mb-0.5">Earn Points for Resumes & Links!</p>
-                      <p>Adding your Resume and Portfolios makes your profile much stronger. Once verified by an Admin, you will be awarded Profile Completion points!</p>
+                      <p className="font-bold mb-0.5">Automated Points System Active!</p>
+                      <p>Adding your Resume link and External Portfolios automatically awards you points. Removing them will deduct points instantly.</p>
                   </div>
               </div>
           </div>
           
-          {/* Resume Upload / Link */}
+          {/* Resume Link */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                <UploadCloud className="w-4 h-4" /> Resume
-              </label>
-              <div className={`flex items-center gap-2 p-1 rounded-lg ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
-                <button
-                  type="button"
-                  onClick={() => setResumeInputType("file")}
-                  className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all ${resumeInputType === "file" ? (darkMode ? 'bg-white/20 text-white' : 'bg-white text-gray-900 shadow-sm') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
-                >
-                  Upload PDF
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setResumeInputType("link")}
-                  className={`text-[10px] font-bold px-3 py-1 rounded-md transition-all ${resumeInputType === "link" ? (darkMode ? 'bg-white/20 text-white' : 'bg-white text-gray-900 shadow-sm') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
-                >
-                  Drive Link
-                </button>
-              </div>
+            <label className={`block text-xs font-black uppercase tracking-widest mb-2 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+              <FileText className="w-4 h-4" /> Resume Link
+            </label>
+            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+              <input
+                type="url"
+                name="resumeLink"
+                value={formData.resumeLink}
+                onChange={handleChange}
+                placeholder="https://drive.google.com/..."
+                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+              />
             </div>
-
-            {resumeInputType === "file" ? (
-              <>
-                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
-                  <div className={`flex items-center gap-3 p-2.5 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
-                    <input
-                      type="file"
-                      accept="application/pdf"
-                      onChange={handleFileChange}
-                      className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-                    />
-                  </div>
-                </div>
-                {!isDeletedLocally && isInitialCloudinary && currentData?.resume && !resumeFile && (
-                  <div className={`mt-3 flex items-center justify-between p-2.5 rounded-xl border ${darkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
-                    <span className={`text-xs font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'} flex items-center gap-2`}>
-                      <FileText className="w-4 h-4 text-blue-500" />
-                      Current Uploaded File
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setIsDeletedLocally(true)}
-                      className="text-xs font-bold text-red-500 hover:text-red-600 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
-                    >
-                      <X className="w-3.5 h-3.5" /> Remove
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
-                <input
-                  type="url"
-                  name="resumeLink"
-                  value={formData.resumeLink}
-                  onChange={handleChange}
-                  placeholder="https://drive.google.com/..."
-                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
-                />
-              </div>
-            )}
           </div>
 
           {/* GitHub URL */}
@@ -250,6 +164,50 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
                 placeholder="https://yourportfolio.com"
                 className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
               />
+            </div>
+          </div>
+
+          {/* Custom Links */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-pink-400' : 'text-pink-600'}`}>
+                <LinkIcon className="w-4 h-4" /> Custom Links (LeetCode, Behance, Blogs)
+              </label>
+            </div>
+            
+            <div className="space-y-3">
+              {formData.customLinks.map((link, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={link.title}
+                    onChange={(e) => handleCustomLinkChange(index, "title", e.target.value)}
+                    placeholder="Title (e.g. LeetCode)"
+                    className={`w-1/3 p-2 text-sm rounded-lg border ${darkMode ? 'bg-white/5 border-white/10 text-white placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'} outline-none focus:border-pink-500 transition-colors`}
+                  />
+                  <input
+                    type="url"
+                    value={link.url}
+                    onChange={(e) => handleCustomLinkChange(index, "url", e.target.value)}
+                    placeholder="URL (https://...)"
+                    className={`flex-1 p-2 text-sm rounded-lg border ${darkMode ? 'bg-white/5 border-white/10 text-white placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'} outline-none focus:border-pink-500 transition-colors`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeCustomLink(index)}
+                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addCustomLink}
+                className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg border border-dashed transition-colors ${darkMode ? 'border-gray-600 text-gray-400 hover:text-white hover:border-gray-400' : 'border-gray-300 text-gray-500 hover:text-gray-700 hover:border-gray-400'}`}
+              >
+                <Plus className="w-3.5 h-3.5" /> Add Custom Link
+              </button>
             </div>
           </div>
 
