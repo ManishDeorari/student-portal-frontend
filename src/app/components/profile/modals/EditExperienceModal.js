@@ -806,53 +806,53 @@ export default function EditExperienceModal({
                         </div>
 
                         {/* Row 8: Proof Image */}
-                        <div
-                          className={`p-4 rounded-xl border-2 flex flex-col gap-4 ${darkMode ? "bg-slate-800/50 border-purple-500/30" : "bg-purple-50 border-purple-200"}`}
-                        >
-                          <div className="space-y-2">
-                            <label
-                              className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-pink-400" : "text-pink-600"}`}
-                            >
-                              Proof Image (Offer Letter / Certificate)
-                            </label>
-                            <div className="flex flex-col gap-2">
-                              {exp.proofImage && !exp.proofImageFile && (
-                                <div className="flex flex-wrap items-center gap-3">
-                                  <button
-                                    type="button"
-                                    onClick={() => setSelectedProofImage(exp.proofImage)}
-                                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20" : "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"}`}
-                                  >
-                                    <ExternalLink size={14} />
-                                    View Current Proof Image
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleChange(index, "proofImage", "")}
-                                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"}`}
-                                  >
-                                    <Trash2 size={14} />
-                                    Remove
-                                  </button>
-                                </div>
-                              )}
-                              {exp.proofImageFile && (
-                                <span className="text-xs font-bold text-green-500">
-                                  {exp.proofImageFile.name} (Ready to upload)
-                                </span>
-                              )}
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) =>
-                                  handleChange(
-                                    index,
-                                    "proofImageFile",
-                                    e.target.files[0],
-                                  )
-                                }
-                                className={`text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-pink-100 file:text-pink-700 hover:file:bg-pink-200 transition ${darkMode ? "text-gray-300" : "text-gray-600"}`}
-                              />
+                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm mt-4`}>
+                          <div className={`p-4 rounded-[calc(0.75rem-2px)] flex flex-col gap-4 ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                            <div className="space-y-2">
+                              <label
+                                className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                              >
+                                Proof Image (Offer Letter / Certificate)
+                              </label>
+                              <div className="flex flex-col gap-2">
+                                {exp.proofImage && !exp.proofImageFile && (
+                                  <div className="flex flex-wrap items-center gap-3">
+                                    <button
+                                      type="button"
+                                      onClick={() => setSelectedProofImage(exp.proofImage)}
+                                      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20" : "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"}`}
+                                    >
+                                      <ExternalLink size={14} />
+                                      View Current Proof Image
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleChange(index, "proofImage", "")}
+                                      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"}`}
+                                    >
+                                      <Trash2 size={14} />
+                                      Remove
+                                    </button>
+                                  </div>
+                                )}
+                                {exp.proofImageFile && (
+                                  <span className="text-xs font-bold text-green-500">
+                                    {exp.proofImageFile.name} (Ready to upload)
+                                  </span>
+                                )}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) =>
+                                    handleChange(
+                                      index,
+                                      "proofImageFile",
+                                      e.target.files[0],
+                                    )
+                                  }
+                                  className={`text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 transition outline-none cursor-pointer ${darkMode ? "text-white" : "text-black"}`}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>

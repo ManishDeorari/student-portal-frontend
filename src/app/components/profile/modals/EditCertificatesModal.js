@@ -108,7 +108,6 @@ export default function EditCertificatesModal({
     certificates.forEach((cert, idx) => {
       if (!cert.name) newErrors[`${idx}-name`] = "Certificate Name is required";
       if (!cert.issuer) newErrors[`${idx}-issuer`] = "Issuer is required";
-      if (!cert.credentialUrl) newErrors[`${idx}-credentialUrl`] = "Credential URL is required";
       if (!cert.issueMonth || !cert.issueYear)
         newErrors[`${idx}-issueDate`] = "Issue date is required";
     });
@@ -317,54 +316,56 @@ export default function EditCertificatesModal({
                           </div>
 
                           {/* Date */}
-                          <div className="sm:col-span-2">
-                            <label className={`block text-xs font-bold uppercase tracking-wider mb-2 ${darkMode ? "text-slate-400" : "text-gray-600"}`}>
+                          <div className="sm:col-span-2 space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-issueDate`] ? 'text-red-500' : (darkMode ? 'text-blue-400' : 'text-blue-600')}`}>
                               Issue Date *
                             </label>
-                            <div className="flex gap-3">
-                              <select
-                                value={cert.issueMonth}
-                                onChange={(e) =>
-                                  handleChange(
-                                    index,
-                                    "issueMonth",
-                                    e.target.value,
-                                  )
-                                }
-                                className={`flex-1 w-full pl-4 pr-10 py-3.5 rounded-xl border ${darkMode ? "bg-[#1A1A1B] border-white/10 text-white focus:bg-[#121213]" : "bg-white border-gray-200 text-gray-900"} focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-medium text-sm`}
-                              >
-                                <option value="" disabled>
-                                  Month
-                                </option>
-                                {MONTHS.map((m) => (
-                                  <option key={m} value={m}>
-                                    {m}
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-issueDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                                <select
+                                  value={cert.issueMonth}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      index,
+                                      "issueMonth",
+                                      e.target.value,
+                                    )
+                                  }
+                                  className={`w-full p-2 rounded-lg text-sm outline-none bg-transparent ${darkMode ? "text-white border-none" : "text-gray-900 border-none"}`}
+                                >
+                                  <option value="" disabled>
+                                    Month
                                   </option>
-                                ))}
-                              </select>
-                              <select
-                                value={cert.issueYear}
-                                onChange={(e) =>
-                                  handleChange(
-                                    index,
-                                    "issueYear",
-                                    e.target.value,
-                                  )
-                                }
-                                className={`flex-1 w-full pl-4 pr-10 py-3.5 rounded-xl border ${darkMode ? "bg-[#1A1A1B] border-white/10 text-white focus:bg-[#121213]" : "bg-white border-gray-200 text-gray-900"} focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-medium text-sm`}
-                              >
-                                <option value="" disabled>
-                                  Year
-                                </option>
-                                {YEARS.map((y) => (
-                                  <option key={y} value={y}>
-                                    {y}
+                                  {MONTHS.map((m) => (
+                                    <option key={m} value={m}>
+                                      {m}
+                                    </option>
+                                  ))}
+                                </select>
+                                <select
+                                  value={cert.issueYear}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      index,
+                                      "issueYear",
+                                      e.target.value,
+                                    )
+                                  }
+                                  className={`w-full p-2 rounded-lg text-sm outline-none bg-transparent ${darkMode ? "text-white border-none" : "text-gray-900 border-none"}`}
+                                >
+                                  <option value="" disabled>
+                                    Year
                                   </option>
-                                ))}
-                              </select>
+                                  {YEARS.map((y) => (
+                                    <option key={y} value={y}>
+                                      {y}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
                             </div>
                             {errors[`${index}-issueDate`] && (
-                              <p className="text-red-500 text-xs mt-1">
+                              <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">
                                 {errors[`${index}-issueDate`]}
                               </p>
                             )}
@@ -390,39 +391,41 @@ export default function EditCertificatesModal({
                           </div>
 
                           {/* Proof Image Section */}
-                          <div className="sm:col-span-2 mt-4 p-4 rounded-xl border border-dashed border-gray-300 dark:border-white/10 bg-gray-50/50 dark:bg-black/20">
-                            <label className="block text-sm font-bold mb-3 text-gray-700 dark:text-gray-300">
-                              Proof Image (Certificate Image / Screenshot)
-                            </label>
-                            
-                            {cert.proofImage ? (
-                              <div className="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 max-w-sm">
-                                <img src={cert.proofImage} alt="Proof Preview" className="w-full h-auto object-cover max-h-48" />
-                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                                  <label className="cursor-pointer px-4 py-2 bg-white text-gray-900 rounded-lg text-sm font-bold shadow-lg hover:scale-105 transition-transform">
-                                    Change Image
-                                    <input
-                                      type="file"
-                                      accept="image/*"
-                                      onChange={(e) => handleImageChange(index, e)}
-                                      className="hidden"
-                                    />
-                                  </label>
-                                </div>
-                              </div>
-                            ) : (
-                              <label className="cursor-pointer w-full max-w-sm flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 dark:border-white/20 rounded-xl hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-500/10 transition-colors">
-                                <Plus className="w-8 h-8 text-gray-400 mb-2" />
-                                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Click to upload proof</span>
-                                <span className="text-xs text-gray-400 mt-1">PNG, JPG, up to 2MB</span>
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  onChange={(e) => handleImageChange(index, e)}
-                                  className="hidden"
-                                />
+                          <div className={`sm:col-span-2 mt-4 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                            <div className={`p-4 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                              <label className={`block text-xs font-black uppercase tracking-widest mb-3 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                                Proof Image (Certificate Image / Screenshot)
                               </label>
-                            )}
+                              
+                              {cert.proofImage ? (
+                                <div className="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 max-w-sm">
+                                  <img src={cert.proofImage} alt="Proof Preview" className="w-full h-auto object-cover max-h-48" />
+                                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                                    <label className="cursor-pointer px-4 py-2 bg-white text-gray-900 rounded-lg text-sm font-bold shadow-lg hover:scale-105 transition-transform">
+                                      Change Image
+                                      <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => handleImageChange(index, e)}
+                                        className="hidden"
+                                      />
+                                    </label>
+                                  </div>
+                                </div>
+                              ) : (
+                                <label className={`cursor-pointer w-full max-w-sm flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-colors ${darkMode ? "border-white/20 hover:border-blue-500 hover:bg-blue-500/10" : "border-gray-300 hover:border-blue-500 hover:bg-blue-50/50"}`}>
+                                  <Plus className="w-8 h-8 text-gray-400 mb-2" />
+                                  <span className={`text-sm font-medium ${darkMode ? "text-white" : "text-black"}`}>Click to upload proof</span>
+                                  <span className={`text-xs mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>PNG, JPG, up to 2MB</span>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleImageChange(index, e)}
+                                    className="hidden"
+                                  />
+                                </label>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
