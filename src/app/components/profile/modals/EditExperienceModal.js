@@ -12,6 +12,7 @@ import {
   Briefcase,
   Calendar,
   MapPin,
+  ExternalLink,
 } from "lucide-react";
 import { Country, State, City } from "country-state-city";
 import { useTheme } from "@/context/ThemeContext";
@@ -803,20 +804,21 @@ export default function EditExperienceModal({
                             </label>
                             <div className="flex flex-col gap-2">
                               {exp.proofImage && !exp.proofImageFile && (
-                                <div className="flex items-center gap-3">
+                                <div className="flex flex-wrap items-center gap-3">
                                   <button
                                     type="button"
                                     onClick={() => setSelectedProofImage(exp.proofImage)}
-                                    className="text-xs font-bold text-blue-500 hover:underline cursor-pointer"
+                                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20" : "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"}`}
                                   >
+                                    <ExternalLink size={14} />
                                     View Current Proof Image
                                   </button>
                                   <button
-                                    onClick={() =>
-                                      handleChange(index, "proofImage", "")
-                                    }
-                                    className="text-red-500 text-xs font-bold hover:underline"
+                                    type="button"
+                                    onClick={() => handleChange(index, "proofImage", "")}
+                                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"}`}
                                   >
+                                    <Trash2 size={14} />
                                     Remove
                                   </button>
                                 </div>

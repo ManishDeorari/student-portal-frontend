@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function LoadingOverlay({ isVisible, message = "Processing...", type = "overlay" }) {
+export default function LoadingOverlay({ isVisible, message = "Processing...", subtitle = "Please wait...", type = "overlay" }) {
     const { darkMode } = useTheme();
 
     const outerBg = type === "page" 
@@ -51,7 +51,7 @@ export default function LoadingOverlay({ isVisible, message = "Processing...", t
                                 {message.split(" ")[0]} <span className="text-blue-500">{message.split(" ").slice(1).join(" ")}</span>
                             </motion.h2>
                             <p className={`text-[10px] font-bold uppercase tracking-widest opacity-40`}>
-                                Synchronizing Experience
+                                {subtitle}
                             </p>
                         </div>
                         </div>
