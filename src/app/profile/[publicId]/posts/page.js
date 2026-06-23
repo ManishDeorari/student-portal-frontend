@@ -129,7 +129,7 @@ function PostsContent() {
                         </div>
                     </div>
 
-                    <div className="mb-8">
+                    <div className="mb-8 max-w-3xl mx-auto w-full">
                         <div className="p-[1.5px] rounded-[2.5rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl w-full mx-auto max-w-full">
                             <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-2 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
                                 {[

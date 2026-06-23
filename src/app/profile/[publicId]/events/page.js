@@ -259,7 +259,7 @@ function EventsContent() {
                         ) : (
                             <div className="relative p-[2px] bg-gradient-to-tr from-blue-400/60 to-purple-500/60 rounded-[1.5rem]">
                                 <div className={`p-5 rounded-[calc(1.5rem-2px)] ${darkMode ? "bg-[#121212]" : "bg-gray-50"}`}>
-                                    <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="grid gap-4 grid-cols-1">
                                         {participatedEvents.slice(0, displayLimit).map((ev, idx) => (
                                             <div key={idx} className="relative p-[1.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl transition-transform hover:scale-[1.01]">
                                                 <div className={`p-5 rounded-[calc(1rem-1.5px)] h-full flex justify-between items-center gap-4 ${darkMode ? "bg-[#1A1A1B]" : "bg-white"}`}>
@@ -322,7 +322,7 @@ function EventsContent() {
                         ) : (
                             <div className="relative p-[2px] bg-gradient-to-tr from-yellow-400/60 to-amber-500/60 rounded-[1.5rem]">
                                 <div className={`p-5 rounded-[calc(1.5rem-2px)] ${darkMode ? "bg-[#121212]" : "bg-gray-50"}`}>
-                                    <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="grid gap-4 grid-cols-1">
                                         {wonEvents.slice(0, displayLimit).map((post, idx) => {
                                             const eventName = post.announcementDetails?.eventName || "Event";
                                             const targetPublicId = publicId === "me" ? currentUser?.publicId : publicId;
