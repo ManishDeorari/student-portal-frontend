@@ -174,6 +174,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                 }
                 if (!edu.startMonth || !edu.startYear) newErrors[`${idx}-startDate`] = "Start date required";
                 if (!edu.endMonth || !edu.endYear) newErrors[`${idx}-endDate`] = "End date required";
+                if (!edu.grade || edu.grade.trim() === "") newErrors[`${idx}-grade`] = "Grade/Percentage is required";
             }
         });
         setErrors(newErrors);
@@ -488,11 +489,11 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
 
                                     {/* Grade */}
                                     <div className="space-y-1.5 md:w-1/2">
-                                        <label className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-grade`] ? 'text-red-500' : darkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
                                             <Award className="w-3.5 h-3.5" />
-                                            {edu.degree?.includes("High School") || edu.degree?.includes("Intermediate") ? "Percentage" : "CGPA / Grade"}
+                                            {edu.degree?.includes("High School") || edu.degree?.includes("Intermediate") ? "Percentage" : "CGPA / Grade"} <span className="text-red-500 font-bold">*</span>
                                         </label>
-                                        <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-grade`] ? 'from-red-500 to-red-600' : ''}`}>
                                             <input
                                                 type="text"
                                                 className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white placeholder-slate-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
@@ -501,6 +502,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                                 placeholder={edu.degree?.includes("High School") || edu.degree?.includes("Intermediate") ? "Ex: 95%" : "Ex: 9.0 CGPA"}
                                             />
                                         </div>
+                                        {errors[`${index}-grade`] && <p className="text-red-500 text-[10px] font-bold uppercase ml-1 mt-1">{errors[`${index}-grade`]}</p>}
                                     </div>
 
                                     {/* Activities */}

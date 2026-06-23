@@ -42,6 +42,8 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
     const [experiences, setExperiences] = useState([]);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
+    const [collapsedCards, setCollapsedCards] = useState({});
+    const toggleCollapse = (index) => setCollapsedCards(prev => ({...prev, [index]: !prev[index]}));
 
     useEffect(() => {
         if (currentExperience && isOpen) {
@@ -142,6 +144,7 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
             if (!exp.company) newErrors[`${idx}-company`] = "Company is required";
             if (!exp.startMonth || !exp.startYear) newErrors[`${idx}-startDate`] = "Start date required";
             if (!exp.isCurrent && (!exp.endMonth || !exp.endYear)) newErrors[`${idx}-endDate`] = "End date required";
+            if (!exp.description || exp.description.trim().length === 0) newErrors[`${idx}-description`] = "Description is required";
         });
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -267,6 +270,19 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
 
                     {experiences.map((exp, index) => (
                         <div key={index} className={`p-6 border rounded-2xl relative shadow-sm hover:shadow-md transition-all ${darkMode ? 'bg-slate-800 border-white/10' : 'bg-[#FAFAFA] border-gray-200'}`}>
+                            <div className="absolute top-4 right-14 flex items-center">
+                                <button
+                                    onClick={() => toggleCollapse(index)}
+                                    className={`p-2 rounded-full transition ${darkMode ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-500 hover:text-black hover:bg-black/5'}`}
+                                    title={collapsedCards[index] ? "Expand" : "Collapse"}
+                                >
+                                    {collapsedCards[index] ? (
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    ) : (
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
+                                    )}
+                                </button>
+                            </div>
                             <button
                                 onClick={() => removeExperience(index)}
                                 className={`absolute top-4 right-4 p-2 rounded-full transition ${darkMode ? 'text-red-400 hover:text-red-300 hover:bg-red-900/20' : 'text-red-400 hover:text-red-600 hover:bg-red-50'}`}
@@ -275,18 +291,18 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                 <Trash2 className="w-5 h-5" />
                             </button>
 
-                            <div className="space-y-6">
+                            {!collapsedCards[index] && (<div className="space-y-6 mt-4 pt-4 border-t border-gray-200 dark:border-white/10">
                                 {/* Row 1: Title and Employment Type */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-1.5">
                                         <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-title`] ? 'text-red-500' : darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                                             Title <span className="text-red-500">*</span>
                                         </label>
-                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-title`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <div>
                                             <input
                                                 type="text"
                                                 list="job-titles"
-                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
+                                                className={`w-full p-2.5 rounded-xl border-2 dark:border-white/20 border-gray-300 focus:border-blue-500 text-white dark:text-white text-gray-900 dark:bg-slate-900 text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
                                                 value={exp.title || ""}
                                                 onChange={(e) => handleChange(index, "title", e.target.value)}
                                                 placeholder="Ex: Retail Sales Manager"
@@ -296,9 +312,9 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>Employment type</label>
-                                        <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
+                                        <div>
                                             <select
-                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                                className={`w-full p-2.5 rounded-xl border-2 dark:border-white/20 border-gray-300 focus:border-blue-500 text-white dark:text-white text-gray-900 dark:bg-slate-900 text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                                 value={exp.employmentType || ""}
                                                 onChange={(e) => handleChange(index, "employmentType", e.target.value)}
                                             >
@@ -314,11 +330,11 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                     <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-company`] ? 'text-red-500' : darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
                                         Company or organization <span className="text-red-500">*</span>
                                     </label>
-                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-company`] ? 'from-red-500 to-red-600' : ''}`}>
+                                    <div>
                                         <input
                                             type="text"
                                             list="companies"
-                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
+                                            className={`w-full p-2.5 rounded-xl border-2 dark:border-white/20 border-gray-300 focus:border-blue-500 text-white dark:text-white text-gray-900 dark:bg-slate-900 text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
                                             value={exp.company || ""}
                                             onChange={(e) => handleChange(index, "company", e.target.value)}
                                             placeholder="Ex: Microsoft"
@@ -348,8 +364,8 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                     <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-startDate`] ? 'text-red-500' : darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                                         Start date <span className="text-red-500">*</span>
                                     </label>
-                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-startDate`] ? 'from-red-500 to-red-600' : ''}`}>
-                                        <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                    <div>
+                                        <div className={`grid grid-cols-2 gap-2 p-1 rounded-xl border-2 dark:border-white/20 border-gray-300 focus:border-blue-500 text-white dark:text-white text-gray-900 dark:bg-slate-900 ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                                             <select
                                                 className={`w-full p-2 rounded-lg text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                                 value={exp.startMonth || ""}
@@ -377,8 +393,8 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                         <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-endDate`] ? 'text-red-500' : darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>
                                             End date <span className="text-red-500">*</span>
                                         </label>
-                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-endDate`] ? 'from-red-500 to-red-600' : ''}`}>
-                                            <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                        <div>
+                                            <div className={`grid grid-cols-2 gap-2 p-1 rounded-xl border-2 dark:border-white/20 border-gray-300 focus:border-blue-500 text-white dark:text-white text-gray-900 dark:bg-slate-900 ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                                                 <select
                                                     className={`w-full p-2 rounded-lg text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                                     value={exp.endMonth || ""}
@@ -406,8 +422,8 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                     <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-red-400' : 'text-red-600'}`}>
                                         Location <MapPin className="w-3.5 h-3.5" />
                                     </label>
-                                    <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-sm">
-                                        <div className={`grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 rounded-[calc(1rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                    <div>
+                                        <div className={`grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 rounded-2xl border-2 dark:border-white/20 border-gray-300 ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                                             <select
                                                 value={exp.selectedCountry}
                                                 onChange={(e) => {
@@ -418,7 +434,9 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                                 className={`w-full p-2 rounded-lg text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                             >
                                                 <option value="">Select Country</option>
-                                                {Country.getAllCountries().map(c => <option key={c.isoCode} value={c.isoCode}>{c.name}</option>)}
+                                                <option value="IN">India</option>
+                                                <option disabled>──────────</option>
+                                                {Country.getAllCountries().filter(c => c.isoCode !== "IN").map(c => <option key={c.isoCode} value={c.isoCode}>{c.name}</option>)}
                                             </select>
                                             <select
                                                 value={exp.selectedState}
@@ -455,7 +473,7 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                         value={exp.description || ""}
                                         onChange={(e) => handleChange(index, "description", e.target.value)}
                                         rows={4}
-                                        className={`w-full p-3 rounded-xl border-2 text-sm outline-none transition resize-none ${darkMode ? 'bg-slate-900/50 border-white/10 text-white focus:border-blue-500 placeholder-gray-600' : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-blue-500 focus:bg-white placeholder-gray-400'}`}
+                                        className={`w-full p-3 rounded-xl border-2 text-sm outline-none transition resize-none ${darkMode ? 'bg-slate-900 border-white/20 text-white focus:border-blue-500' : 'bg-white border-gray-300 text-black focus:border-blue-500'}`}
                                     />
                                 </div>
 
@@ -469,7 +487,7 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                         placeholder="e.g. React, Node.js, Project Management (Comma separated)"
                                         value={exp.skills || ""}
                                         onChange={(e) => handleChange(index, "skills", e.target.value)}
-                                        className={`w-full p-3 rounded-xl border-2 text-sm outline-none transition ${darkMode ? 'bg-slate-900/50 border-white/10 text-white focus:border-blue-500 placeholder-gray-600' : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-blue-500 focus:bg-white placeholder-gray-400'}`}
+                                        className={`w-full p-3 rounded-xl border-2 text-sm outline-none transition ${darkMode ? 'bg-slate-900 border-white/20 text-white focus:border-blue-500' : 'bg-white border-gray-300 text-black focus:border-blue-500'}`}
                                     />
                                 </div>
 
@@ -495,11 +513,12 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                                 onChange={(e) => handleChange(index, "proofImageFile", e.target.files[0])}
                                                 className={`text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-pink-100 file:text-pink-700 hover:file:bg-pink-200 transition ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
                                             />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                )}
                             </div>
-                        </div>
                         ))}
 
                         <button

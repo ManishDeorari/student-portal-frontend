@@ -62,7 +62,7 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
                                         {edu.startDate} - {edu.endDate}
                                     </div>
 
-                                    {edu.grade && (
+                                    {edu.grade && (!isPublicView || (typeof window !== "undefined" && ["admin", "faculty", "main admin"].includes(JSON.parse(localStorage.getItem("user") || "{}")?.role))) && (
                                         <div className={`text-[10px] font-black bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 tracking-widest flex w-fit items-center gap-1.5 px-2 py-1 rounded-md mt-1 uppercase`}>
                                             <Award className="w-3.5 h-3.5" />
                                             {edu.degree?.includes("High School") || edu.degree?.includes("Intermediate") ? "Percentage" : "Grade"}: {edu.grade}
