@@ -31,20 +31,36 @@ function EventsContent() {
 
     const publicId = params?.publicId;
 
+    const [profile, setProfile] = useState(null);
+
     const fetchEvents = useCallback(async () => {
         try {
             const token = localStorage.getItem("token");
             if (!token || !publicId) return;
 
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
-            const res = await fetch(`${API_URL}/api/user/${publicId}/events`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            
+            // Parallel fetch events and profile
+            const targetId = publicId === "me" ? "me" : publicId;
+            const [resEvents, resProfile] = await Promise.all([
+                fetch(`${API_URL}/api/user/${publicId}/events`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }),
+                fetch(`${API_URL}/api/user/${targetId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+            ]);
 
-            if (!res.ok) throw new Error("Failed to fetch events");
+            if (!resEvents.ok) throw new Error("Failed to fetch events");
 
-            const data = await res.json();
+            const data = await resEvents.json();
             setEventsData(data);
+            
+            if (resProfile.ok) {
+                const profileData = await resProfile.json();
+                setProfile(profileData);
+            }
+            
             setLoading(false);
         } catch (error) {
             console.error("❌ Error fetching user events:", error.message);
@@ -185,14 +201,27 @@ function EventsContent() {
                     >
                         <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
+                    
+                    {profile && (
+                        <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-xl shrink-0 w-full sm:w-auto overflow-hidden">
+                            <div className={`px-5 py-3 rounded-[calc(1.5rem-2px)] flex items-center gap-4 h-full ${darkMode ? 'bg-slate-950' : 'bg-[#FAFAFA]'}`}>
+                                <img src={profile.profilePicture || "/default-profile.jpg"} className="w-12 h-12 rounded-full object-cover border-2 border-white/10 shadow-sm" alt="Profile" />
+                                <div className="flex flex-col pr-2">
+                                    <span className={`text-base font-black leading-tight truncate max-w-[150px] sm:max-w-[200px] ${darkMode ? 'text-white' : 'text-slate-900'}`}>{profile.name}</span>
+                                    <span className={`text-[10px] font-bold uppercase tracking-widest truncate max-w-[150px] sm:max-w-[200px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{profile.universityRollNumber || profile.role}</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-xl overflow-hidden flex-1 w-full">
-                    <div className={`px-8 py-6 rounded-[calc(1.5rem-1px)] ${darkMode ? 'bg-slate-950' : 'bg-[#FAFAFA]'}`}>
-                        <div className="flex items-center gap-4">
-                            <div className="h-10 w-2 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
-                            <h1 className={`text-3xl font-black tracking-tight uppercase ${darkMode ? 'text-white' : 'text-slate-900'}`}>Event Participation</h1>
+                        <div className={`px-6 sm:px-8 py-4 sm:py-6 rounded-[calc(1.5rem-1px)] h-full flex items-center ${darkMode ? 'bg-slate-950' : 'bg-[#FAFAFA]'}`}>
+                            <div className="flex items-center gap-4">
+                                <div className="h-8 sm:h-10 w-2 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
+                                <h1 className={`text-xl sm:text-2xl lg:text-3xl font-black tracking-tight uppercase truncate ${darkMode ? 'text-white' : 'text-slate-900'}`}>Event Participation</h1>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
 
                 {/* Tabs */}

@@ -23,6 +23,8 @@ function PostsContent() {
 
     const publicId = params?.publicId;
 
+    const [profile, setProfile] = useState(null);
+
     const fetchPosts = useCallback(async () => {
         try {
             const token = localStorage.getItem("token");
@@ -37,15 +39,28 @@ function PostsContent() {
             const postsEndpoint = viewingOther
                 ? `${API_URL}/api/posts?userId=${publicId}&limit=50&type=all`
                 : `${API_URL}/api/user/myposts`;
+                
+            const targetId = publicId === "me" ? "me" : publicId;
 
-            const res = await fetch(postsEndpoint, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const [res, resProfile] = await Promise.all([
+                fetch(postsEndpoint, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }),
+                fetch(`${API_URL}/api/user/${targetId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+            ]);
 
             if (!res.ok) throw new Error("Failed to fetch posts");
 
             const data = await res.json();
             setPosts(data.posts || data || []);
+            
+            if (resProfile.ok) {
+                const profileData = await resProfile.json();
+                setProfile(profileData);
+            }
+            
             setLoading(false);
         } catch (error) {
             console.error("❌ Error fetching user posts:", error.message);
@@ -87,23 +102,8 @@ function PostsContent() {
                 {isAdmin ? <AdminSidebar /> : <Sidebar />}
 
                 <div className="flex-1 flex flex-col h-screen overflow-hidden">
-                    {/* Header - Transparent */}
-                    <div className="shrink-0 z-20 bg-transparent border-none">
-                        <div className="max-w-4xl mx-auto w-full px-1 sm:px-4 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-
-                            <div className="flex items-center gap-4">
-                                <div>
-                                    <h1 className="text-xl sm:text-2xl font-black tracking-tight">User Posts</h1>
-                                    <p className={`text-xs sm:text-sm font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                                        All posts by this user
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     {/* Content Scroll Area */}
-                    <div className="flex-1 overflow-y-auto custom-scrollbar pb-20">
+                    <div className="flex-1 overflow-y-auto custom-scrollbar pb-20 pt-10">
                         <div className="max-w-4xl mx-auto w-full px-1 sm:px-4 lg:px-8 mt-2 mb-8 flex flex-col sm:flex-row items-center gap-4">
                             <button
                                 onClick={() => router.back()}
@@ -112,6 +112,30 @@ function PostsContent() {
                             >
                                 <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                             </button>
+
+                            {profile && (
+                                <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-xl shrink-0 w-full sm:w-auto overflow-hidden">
+                                    <div className={`px-5 py-3 rounded-[calc(1.5rem-2px)] flex items-center gap-4 h-full ${darkMode ? 'bg-slate-950' : 'bg-[#FAFAFA]'}`}>
+                                        <img src={profile.profilePicture || "/default-profile.jpg"} className="w-12 h-12 rounded-full object-cover border-2 border-white/10 shadow-sm" alt="Profile" />
+                                        <div className="flex flex-col pr-2">
+                                            <span className={`text-base font-black leading-tight truncate max-w-[150px] sm:max-w-[200px] ${darkMode ? 'text-white' : 'text-slate-900'}`}>{profile.name}</span>
+                                            <span className={`text-[10px] font-bold uppercase tracking-widest truncate max-w-[150px] sm:max-w-[200px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{profile.universityRollNumber || profile.role}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-xl overflow-hidden flex-1 w-full">
+                                <div className={`px-6 sm:px-8 py-4 sm:py-6 rounded-[calc(1.5rem-1px)] h-full flex items-center ${darkMode ? 'bg-slate-950' : 'bg-[#FAFAFA]'}`}>
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-8 sm:h-10 w-2 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
+                                        <h1 className={`text-xl sm:text-2xl lg:text-3xl font-black tracking-tight uppercase truncate ${darkMode ? 'text-white' : 'text-slate-900'}`}>User Posts</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="max-w-4xl mx-auto w-full px-1 sm:px-4 lg:px-8 mt-2 mb-8">
                             <div className="flex-1 p-[1.5px] rounded-[2.5rem] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl w-full mx-auto max-w-full">
                                 <div className={`p-1.5 rounded-[calc(2.5rem-1.5px)] flex flex-wrap justify-center gap-2 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
                                     {[
