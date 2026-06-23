@@ -38,7 +38,7 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
     return (
         <>
             <SectionCard
-                title="Experience"
+                title="Experience / Internship"
                 hasData={profile.experience?.length > 0}
                 onEdit={() => setIsEditing(true)}
                 isPublicView={isPublicView}
@@ -60,8 +60,13 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                                     {/* Content */}
                                     <div className="flex-grow space-y-2.5">
                                         <div className="flex flex-col">
-                                            <h3 className={`text-base font-black leading-tight ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600'}`}>
+                                            <h3 className={`text-base font-black leading-tight flex items-center gap-2 ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600'}`}>
                                                 {exp.title}
+                                                {exp.isInternship && (
+                                                    <span className={`text-[9px] px-2 py-0.5 rounded-full border ${darkMode ? 'border-purple-400/30 text-purple-400 bg-purple-400/10' : 'border-purple-200 text-purple-600 bg-purple-50'}`}>
+                                                        Internship
+                                                    </span>
+                                                )}
                                             </h3>
                                             <p className={`text-sm font-black mt-1 ${darkMode ? 'text-slate-100' : 'text-slate-900'}`}>
                                                 {exp.company}
@@ -103,6 +108,22 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                                                         {skill}
                                                     </span>
                                                 ))}
+                                            </div>
+                                        )}
+
+                                        {/* Proof Image visible to owner or admin/faculty */}
+                                        {exp.proofImage && (
+                                            <div className="mt-3 pt-2">
+                                                {(!isPublicView || (typeof window !== "undefined" && ["admin", "faculty"].includes(JSON.parse(localStorage.getItem("user") || "{}")?.role))) ? (
+                                                    <a 
+                                                        href={exp.proofImage} 
+                                                        target="_blank" 
+                                                        rel="noopener noreferrer" 
+                                                        className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg transition-colors border ${darkMode ? 'text-pink-400 border-pink-400/30 hover:bg-pink-400/10' : 'text-pink-600 border-pink-200 hover:bg-pink-50'}`}
+                                                    >
+                                                        <ExternalLink className="w-3 h-3" /> View Proof Image
+                                                    </a>
+                                                ) : null}
                                             </div>
                                         )}
                                     </div>

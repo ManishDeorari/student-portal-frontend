@@ -73,6 +73,7 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                 return {
                     ...exp,
                     startMonth: sMonth || "",
+
                     startYear: sYear || "",
                     isCurrent,
                     endMonth: eMonth || "",
@@ -80,7 +81,10 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                     selectedCountry: country,
                     selectedState: state,
                     selectedCity: city,
-                    skills: Array.isArray(exp.skills) ? exp.skills.join(", ") : (exp.skills || "")
+                    skills: Array.isArray(exp.skills) ? exp.skills.join(", ") : (exp.skills || ""),
+                    isInternship: exp.isInternship || false,
+                    proofImage: exp.proofImage || "",
+                    proofImageFile: null, // For new uploads
                 };
             });
             setExperiences(transformed);
@@ -119,7 +123,10 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                 endMonth: "",
                 endYear: "",
                 description: "",
-                skills: ""
+                skills: "",
+                isInternship: false,
+                proofImage: "",
+                proofImageFile: null
             },
         ]);
     };
@@ -149,7 +156,36 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
 
         setLoading(true);
         try {
-            const finalData = experiences.map(exp => {
+            // Upload proof images to Cloudinary first
+            const uploadedExperiences = await Promise.all(experiences.map(async (exp) => {
+                let proofImageUrl = exp.proofImage;
+                
+                if (exp.proofImageFile) {
+                    const formData = new FormData();
+                    formData.append("file", exp.proofImageFile);
+                    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+                    formData.append("folder", "internships_and_experience");
+                    
+                    try {
+                        const uploadRes = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, {
+                            method: "POST",
+                            body: formData
+                        });
+                        if (uploadRes.ok) {
+                            const data = await uploadRes.json();
+                            proofImageUrl = data.secure_url;
+                        } else {
+                            toast.error(`Failed to upload proof image for ${exp.title}`);
+                        }
+                    } catch (err) {
+                        console.error("Cloudinary upload error:", err);
+                    }
+                }
+                
+                return { ...exp, proofImage: proofImageUrl };
+            }));
+
+            const finalData = uploadedExperiences.map(exp => {
                 // Construct date strings
                 const startDate = `${exp.startMonth} ${exp.startYear}`;
                 const endDate = exp.isCurrent ? "Present" : `${exp.endMonth} ${exp.endYear}`;
@@ -171,7 +207,9 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                     startDate,
                     endDate,
                     description: exp.description,
-                    skills: typeof exp.skills === 'string' ? exp.skills.split(",").map(s => s.trim()).filter(s => s !== "") : []
+                    skills: typeof exp.skills === 'string' ? exp.skills.split(",").map(s => s.trim()).filter(s => s !== "") : [],
+                    isInternship: exp.isInternship,
+                    proofImage: exp.proofImage
                 };
             });
 
@@ -289,18 +327,32 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                     {errors[`${index}-company`] && <p className="text-red-500 text-[10px] font-bold uppercase ml-1 mt-1.5">{errors[`${index}-company`]}</p>}
                                 </div>
 
-                                {/* Checkbox: Currently working */}
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        id={`current-${index}`}
-                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
-                                        checked={exp.isCurrent}
-                                        onChange={(e) => handleChange(index, "isCurrent", e.target.checked)}
-                                    />
-                                    <label htmlFor={`current-${index}`} className={`text-sm font-medium cursor-pointer ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                        I am currently working in this role
-                                    </label>
+                                {/* Checkbox: Currently working and Internship */}
+                                <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            id={`current-${index}`}
+                                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                                            checked={exp.isCurrent}
+                                            onChange={(e) => handleChange(index, "isCurrent", e.target.checked)}
+                                        />
+                                        <label htmlFor={`current-${index}`} className={`text-sm font-medium cursor-pointer ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            I am currently working in this role
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            id={`internship-${index}`}
+                                            className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer"
+                                            checked={exp.isInternship}
+                                            onChange={(e) => handleChange(index, "isInternship", e.target.checked)}
+                                        />
+                                        <label htmlFor={`internship-${index}`} className={`text-sm font-medium cursor-pointer ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
+                                            This is an Internship
+                                        </label>
+                                    </div>
                                 </div>
 
                                 {/* Row 3: Start Date */}
@@ -378,94 +430,120 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                                 className={`w-full p-2 rounded-lg text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                             >
                                                 <option value="">Select Country</option>
-                                    <option value="IN" key="IN-top" className="font-bold text-orange-500">India</option>
-                                    <option disabled key="divider">──────────</option>
-                                    {Country.getAllCountries().map((c) => (
-                                                    <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
-                                                ))}
+                                                {Country.getAllCountries().map(c => <option key={c.isoCode} value={c.isoCode}>{c.name}</option>)}
                                             </select>
-
                                             <select
                                                 value={exp.selectedState}
-                                                disabled={!exp.selectedCountry}
                                                 onChange={(e) => {
                                                     handleChange(index, "selectedState", e.target.value);
                                                     handleChange(index, "selectedCity", "");
                                                 }}
+                                                disabled={!exp.selectedCountry}
                                                 className={`w-full p-2 rounded-lg text-sm outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                             >
                                                 <option value="">Select State</option>
-                                                {exp.selectedCountry && State.getStatesOfCountry(exp.selectedCountry).map((s) => (
-                                                    <option key={s.isoCode} value={s.isoCode}>{s.name}</option>
-                                                ))}
+                                                {exp.selectedCountry && State.getStatesOfCountry(exp.selectedCountry).map(s => <option key={s.isoCode} value={s.isoCode}>{s.name}</option>)}
                                             </select>
-
                                             <select
                                                 value={exp.selectedCity}
-                                                disabled={!exp.selectedState}
                                                 onChange={(e) => handleChange(index, "selectedCity", e.target.value)}
+                                                disabled={!exp.selectedState}
                                                 className={`w-full p-2 rounded-lg text-sm outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                             >
                                                 <option value="">Select City</option>
-                                                {exp.selectedState && City.getCitiesOfState(exp.selectedCountry, exp.selectedState).map((city) => (
-                                                    <option key={city.name} value={city.name}>{city.name}</option>
-                                                ))}
+                                                {exp.selectedState && City.getCitiesOfState(exp.selectedCountry, exp.selectedState).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Row 6: Location Type */}
-                                <div className="space-y-1.5 md:w-1/2">
-                                    <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-slate-400' : 'text-gray-600'}`}>Location type</label>
-                                    <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                                        <select
-                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
-                                            value={exp.locationType || ""}
-                                            onChange={(e) => handleChange(index, "locationType", e.target.value)}
-                                        >
-                                            <option value="">Please select</option>
-                                            {LOCATION_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
-                                        </select>
-                                    </div>
+                                {/* Row 6: Description */}
+                                <div className="space-y-2">
+                                    <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        Description / Responsibilities
+                                    </label>
+                                    <textarea
+                                        placeholder="Describe what you did..."
+                                        value={exp.description || ""}
+                                        onChange={(e) => handleChange(index, "description", e.target.value)}
+                                        rows={4}
+                                        className={`w-full p-3 rounded-xl border-2 text-sm outline-none transition resize-none ${darkMode ? 'bg-slate-900/50 border-white/10 text-white focus:border-blue-500 placeholder-gray-600' : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-blue-500 focus:bg-white placeholder-gray-400'}`}
+                                    />
                                 </div>
 
-                                {/* Row 7: Description */}
-                                <div className="space-y-1.5">
-                                    <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-slate-400' : 'text-gray-600'}`}>Description</label>
-                                    <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-sm">
-                                        <textarea
-                                            className={`w-full p-4 rounded-[calc(1rem-2px)] h-32 outline-none transition custom-scrollbar ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-800 placeholder-gray-400'}`}
-                                            value={exp.description || ""}
-                                            onChange={(e) => handleChange(index, "description", e.target.value)}
-                                            placeholder="Describe your achievements..."
-                                        />
-                                    </div>
+                                {/* Row 7: Skills */}
+                                <div className="space-y-2">
+                                    <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                                        Skills Used
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. React, Node.js, Project Management (Comma separated)"
+                                        value={exp.skills || ""}
+                                        onChange={(e) => handleChange(index, "skills", e.target.value)}
+                                        className={`w-full p-3 rounded-xl border-2 text-sm outline-none transition ${darkMode ? 'bg-slate-900/50 border-white/10 text-white focus:border-blue-500 placeholder-gray-600' : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-blue-500 focus:bg-white placeholder-gray-400'}`}
+                                    />
                                 </div>
 
-                                {/* Row 8: Skills */}
-                                <div className="space-y-1.5">
-                                    <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-slate-400' : 'text-gray-600'}`}>Skills (Optional)</label>
-                                    <div className="p-[2px] bg-gradient-to-tr from-blue-600/50 to-purple-600/50 rounded-xl shadow-sm focus-within:from-blue-600 focus-within:to-purple-600 transition-all">
-                                        <input
-                                            type="text"
-                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
-                                            value={exp.skills || ""}
-                                            onChange={(e) => handleChange(index, "skills", e.target.value)}
-                                            placeholder="Agile, React, Management (comma separated)"
-                                        />
+                                {/* Row 8: Internship & Proof Image */}
+                                <div className={`p-4 rounded-xl border-2 flex flex-col gap-4 ${darkMode ? 'bg-slate-800/50 border-purple-500/30' : 'bg-purple-50 border-purple-200'}`}>
+                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                        <div className="relative flex items-center justify-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={exp.isInternship || false}
+                                                onChange={(e) => handleChange(index, "isInternship", e.target.checked)}
+                                                className="w-5 h-5 cursor-pointer opacity-0 absolute z-10"
+                                            />
+                                            <div className={`w-5 h-5 rounded border-2 transition-all flex items-center justify-center ${exp.isInternship ? 'bg-purple-500 border-purple-500' : darkMode ? 'border-gray-500' : 'border-gray-300 group-hover:border-purple-400'}`}>
+                                                {exp.isInternship && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
+                                            </div>
+                                        </div>
+                                        <span className={`text-sm font-bold uppercase tracking-widest ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
+                                            Is this an Internship?
+                                        </span>
+                                    </label>
+
+                                    <div className="space-y-2 pl-8 border-l-2 border-purple-200 ml-2">
+                                        <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-pink-400' : 'text-pink-600'}`}>
+                                            Proof Image (Offer Letter / Certificate)
+                                        </label>
+                                        <div className="flex flex-col gap-2">
+                                            {exp.proofImage && !exp.proofImageFile && (
+                                                <div className="flex items-center gap-3">
+                                                    <a href={exp.proofImage} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-blue-500 hover:underline">View Current Proof Image</a>
+                                                    <button onClick={() => handleChange(index, "proofImage", "")} className="text-red-500 text-xs font-bold hover:underline">Remove</button>
+                                                </div>
+                                            )}
+                                            {exp.proofImageFile && (
+                                                <span className="text-xs font-bold text-green-500">{exp.proofImageFile.name} (Ready to upload)</span>
+                                            )}
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleChange(index, "proofImageFile", e.target.files[0])}
+                                                className={`text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-pink-100 file:text-pink-700 hover:file:bg-pink-200 transition ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                        ))}
 
-                    <button
-                        onClick={addExperience}
-                        className={`w-full py-6 border-2 border-dashed rounded-2xl transition flex items-center justify-center gap-2 group font-bold tracking-wide ${darkMode ? 'border-white/10 text-blue-400 hover:border-blue-500 hover:bg-blue-900/10' : 'border-gray-200 text-blue-600 hover:border-blue-400 hover:bg-blue-50'}`}
-                    >
-                        <Plus className="w-5 h-5 group-hover:scale-110 transition" /> CLICK TO ADD NEW EXPERIENCE
-                    </button>
+                        <button
+                            onClick={() => {
+                                setExperiences([...experiences, {
+                                    title: "", company: "", employmentType: "", location: "", locationType: "",
+                                    startDate: "", endDate: "", startMonth: "", startYear: "", isCurrent: false, endMonth: "", endYear: "",
+                                    description: "", skills: "", selectedCountry: "", selectedState: "", selectedCity: "",
+                                    isInternship: false, proofImage: "", proofImageFile: null
+                                }]);
+                            }}
+                            className={`w-full py-6 border-2 border-dashed rounded-2xl transition flex items-center justify-center gap-2 group font-bold tracking-wide ${darkMode ? 'border-white/10 text-blue-400 hover:border-blue-500 hover:bg-blue-900/10' : 'border-gray-200 text-blue-600 hover:border-blue-400 hover:bg-blue-50'}`}
+                        >
+                            <Plus className="w-5 h-5 group-hover:scale-110 transition" /> CLICK TO ADD NEW EXPERIENCE
+                        </button>
                 </div>
 
                 <div className={`p-4 flex justify-end gap-3 border-t flex-shrink-0 transition-all ${darkMode ? 'bg-slate-800 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
@@ -500,7 +578,7 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                     background: ${darkMode ? '#475569' : '#9ca3af'};
                 }
             `}</style>
-            </div>
+        </div>
         </div>
         </>
     );

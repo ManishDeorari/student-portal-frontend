@@ -15,7 +15,7 @@ const CATEGORY_GROUPS = [
         id: "profileCompletion",
         label: "Profile Completion",
         icon: "👤",
-        description: "Earn points by completing your Basic Info, Education, Experience, Skills, and uploading your Resume, Portfolios, and Custom Links."
+        description: "Earn points by completing your Basic Info, Education, Experience/Internships (with proof image), Skills, and uploading your Resume, Portfolios, and Custom Links."
     },
     {
         id: "studentEngagement",
