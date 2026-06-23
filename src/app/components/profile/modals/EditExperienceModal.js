@@ -16,6 +16,7 @@ import {
 import { Country, State, City } from "country-state-city";
 import { useTheme } from "@/context/ThemeContext";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
+import ImageViewerModal from "../ImageViewerModal";
 
 const EMPLOYMENT_TYPES = [
   "Full-time",
@@ -98,6 +99,7 @@ export default function EditExperienceModal({
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [collapsedCards, setCollapsedCards] = useState({});
+  const [selectedProofImage, setSelectedProofImage] = useState(null);
   const toggleCollapse = (index) =>
     setCollapsedCards((prev) => ({ ...prev, [index]: !prev[index] }));
 
@@ -802,14 +804,13 @@ export default function EditExperienceModal({
                             <div className="flex flex-col gap-2">
                               {exp.proofImage && !exp.proofImageFile && (
                                 <div className="flex items-center gap-3">
-                                  <a
-                                    href={exp.proofImage}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-xs font-bold text-blue-500 hover:underline"
+                                  <button
+                                    type="button"
+                                    onClick={() => setSelectedProofImage(exp.proofImage)}
+                                    className="text-xs font-bold text-blue-500 hover:underline cursor-pointer"
                                   >
                                     View Current Proof Image
-                                  </a>
+                                  </button>
                                   <button
                                     onClick={() =>
                                       handleChange(index, "proofImage", "")
@@ -917,6 +918,14 @@ export default function EditExperienceModal({
           `}</style>
         </div>
       </div>
+
+      {selectedProofImage && (
+        <ImageViewerModal
+          imageUrl={selectedProofImage}
+          onClose={() => setSelectedProofImage(null)}
+          isRestricted={false}
+        />
+      )}
     </>
   );
 }

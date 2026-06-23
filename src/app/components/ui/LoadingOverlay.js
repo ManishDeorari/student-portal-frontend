@@ -18,15 +18,16 @@ export default function LoadingOverlay({ isVisible, message = "Processing...", t
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className={`fixed inset-0 ${outerBg} flex justify-center items-center z-[9999]`}
+                    className={`fixed inset-0 w-[100vw] h-[100dvh] ${outerBg} flex justify-center items-center z-[9999]`}
                 >
                     <motion.div 
                         initial={{ scale: 0.9, opacity: 0, y: 10 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.9, opacity: 0, y: -10 }}
                         transition={{ delay: 0.1, duration: 0.3 }}
-                        className={`relative overflow-hidden flex flex-col items-center gap-6 ${darkMode ? 'bg-[#0f172a]/90 text-white' : 'bg-[#FAFAFA]/90 text-gray-900'} backdrop-blur-2xl p-12 rounded-[2.5rem] shadow-2xl border ${darkMode ? 'border-white/10' : 'border-gray-200'}`}
+                        className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_20px_60px_rgba(37,99,235,0.4)]"
                     >
+                        <div className={`relative overflow-hidden flex flex-col items-center gap-6 ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-gray-900'} p-12 rounded-[calc(2.5rem-2.5px)]`}>
                         {/* ✅ Animated Accent Line */}
                         <motion.div 
                             initial={{ x: "-100%" }}
@@ -52,6 +53,7 @@ export default function LoadingOverlay({ isVisible, message = "Processing...", t
                             <p className={`text-[10px] font-bold uppercase tracking-widest opacity-40`}>
                                 Synchronizing Experience
                             </p>
+                        </div>
                         </div>
                     </motion.div>
                 </motion.div>

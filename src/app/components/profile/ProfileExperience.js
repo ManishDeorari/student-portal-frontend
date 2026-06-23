@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import SectionCard from "./SectionCard";
 import EditExperienceModal from "./modals/EditExperienceModal";
+import ImageViewerModal from "./ImageViewerModal";
 import { Briefcase, MapPin, Calendar, ExternalLink, Building2 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function ProfileExperience({ profile, setProfile, isPublicView }) {
     const { darkMode } = useTheme();
     const [isEditing, setIsEditing] = useState(false);
+    const [selectedProofImage, setSelectedProofImage] = useState(null);
 
     const handleSave = (updatedUser) => {
         setProfile((prev) => ({
@@ -115,14 +117,12 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                                         {exp.proofImage && (
                                             <div className="mt-3 pt-2">
                                                 {(!isPublicView || (typeof window !== "undefined" && ["admin", "faculty"].includes(JSON.parse(localStorage.getItem("user") || "{}")?.role))) ? (
-                                                    <a 
-                                                        href={exp.proofImage} 
-                                                        target="_blank" 
-                                                        rel="noopener noreferrer" 
+                                                    <button 
+                                                        onClick={() => setSelectedProofImage(exp.proofImage)}
                                                         className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg transition-colors border ${darkMode ? 'text-pink-400 border-pink-400/30 hover:bg-pink-400/10' : 'text-pink-600 border-pink-200 hover:bg-pink-50'}`}
                                                     >
                                                         <ExternalLink className="w-3 h-3" /> View Proof Image
-                                                    </a>
+                                                    </button>
                                                 ) : null}
                                             </div>
                                         )}
@@ -147,6 +147,15 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                 currentExperience={profile.experience || []}
                 onSave={handleSave}
             />
+
+            {/* ImageViewerModal for Proof Image */}
+            {selectedProofImage && (
+                <ImageViewerModal
+                    imageUrl={selectedProofImage}
+                    onClose={() => setSelectedProofImage(null)}
+                    isRestricted={false}
+                />
+            )}
         </>
     );
 }
