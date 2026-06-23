@@ -341,18 +341,6 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                             I am currently working in this role
                                         </label>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            id={`internship-${index}`}
-                                            className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer"
-                                            checked={exp.isInternship}
-                                            onChange={(e) => handleChange(index, "isInternship", e.target.checked)}
-                                        />
-                                        <label htmlFor={`internship-${index}`} className={`text-sm font-medium cursor-pointer ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                                            This is an Internship
-                                        </label>
-                                    </div>
                                 </div>
 
                                 {/* Row 3: Start Date */}
@@ -485,26 +473,9 @@ export default function EditExperienceModal({ isOpen, onClose, currentExperience
                                     />
                                 </div>
 
-                                {/* Row 8: Internship & Proof Image */}
+                                {/* Row 8: Proof Image */}
                                 <div className={`p-4 rounded-xl border-2 flex flex-col gap-4 ${darkMode ? 'bg-slate-800/50 border-purple-500/30' : 'bg-purple-50 border-purple-200'}`}>
-                                    <label className="flex items-center gap-3 cursor-pointer group">
-                                        <div className="relative flex items-center justify-center">
-                                            <input
-                                                type="checkbox"
-                                                checked={exp.isInternship || false}
-                                                onChange={(e) => handleChange(index, "isInternship", e.target.checked)}
-                                                className="w-5 h-5 cursor-pointer opacity-0 absolute z-10"
-                                            />
-                                            <div className={`w-5 h-5 rounded border-2 transition-all flex items-center justify-center ${exp.isInternship ? 'bg-purple-500 border-purple-500' : darkMode ? 'border-gray-500' : 'border-gray-300 group-hover:border-purple-400'}`}>
-                                                {exp.isInternship && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-                                            </div>
-                                        </div>
-                                        <span className={`text-sm font-bold uppercase tracking-widest ${darkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-                                            Is this an Internship?
-                                        </span>
-                                    </label>
-
-                                    <div className="space-y-2 pl-8 border-l-2 border-purple-200 ml-2">
+                                    <div className="space-y-2">
                                         <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-pink-400' : 'text-pink-600'}`}>
                                             Proof Image (Offer Letter / Certificate)
                                         </label>
