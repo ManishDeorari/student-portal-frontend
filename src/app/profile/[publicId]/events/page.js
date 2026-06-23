@@ -213,7 +213,7 @@ function EventsContent() {
                                     <img src={profile.profilePicture || "/default-profile.jpg"} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-[1.5px] border-blue-500/50 shadow-sm" alt="Profile" />
                                     <div className="flex flex-col">
                                         <span className={`text-sm sm:text-base font-black leading-tight truncate max-w-[200px] sm:max-w-[300px] ${darkMode ? 'text-white' : 'text-slate-900'}`}>{profile.name}</span>
-                                        <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-widest truncate max-w-[200px] sm:max-w-[300px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{profile.universityRollNumber || profile.role}</span>
+                                        <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-widest truncate max-w-[200px] sm:max-w-[300px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{profile.enrollmentNumber || profile.universityRollNumber || profile.role}</span>
                                     </div>
                                 </div>
                             )}
