@@ -13,6 +13,8 @@ import {
   Calendar,
   MapPin,
   ExternalLink,
+  Award,
+  Info
 } from "lucide-react";
 import { Country, State, City } from "country-state-city";
 import { useTheme } from "@/context/ThemeContext";
@@ -370,6 +372,17 @@ export default function EditExperienceModal({
             <div
               className={`p-4 md:p-6 space-y-8 overflow-y-auto custom-scrollbar flex-grow transition-colors ${darkMode ? "bg-[#121213]" : "bg-gray-50/30"}`}
             >
+              {/* Guide Text */}
+              <div className="p-[2px] bg-gradient-to-tr from-purple-500 via-pink-500 to-red-500 rounded-xl mb-6">
+                <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-purple-300' : 'bg-purple-50 text-purple-800'}`}>
+                  <Award className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm leading-relaxed">
+                    <p className="font-bold mb-0.5">Earn Points!</p>
+                    <p>Add a valid Proof Image (Offer Letter, Experience Certificate, etc.) to earn Activity Points for your professional experience once approved by an administrator!</p>
+                  </div>
+                </div>
+              </div>
+
               {/* Datalists for Suggestions */}
               <datalist id="job-titles">
                 {JOB_TITLE_SUGGESTIONS.map((t) => (
