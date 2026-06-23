@@ -16,7 +16,6 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
             experience: updatedUser.experience,
         }));
     };
-
     const calculateDuration = (startDate, endDate) => {
         if (!startDate) return "";
         const start = new Date(startDate);
@@ -31,8 +30,8 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
         const remainingMonths = months % 12;
 
         let result = "";
-        if (years > 0) result += `${years} yr${years > 1 ? "s" : ""} `;
-        if (remainingMonths > 0) result += `${remainingMonths} mo${remainingMonths > 1 ? "s" : ""}`;
+        if (years > 0) result += `${years} year${years > 1 ? "s" : ""} `;
+        if (remainingMonths > 0) result += `${remainingMonths} month${remainingMonths > 1 ? "s" : ""}`;
 
         return result.trim();
     };
@@ -154,6 +153,7 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                     imageUrl={selectedProofImage}
                     onClose={() => setSelectedProofImage(null)}
                     isRestricted={false}
+                    downloadName={`${profile?.name?.replace(/\s+/g, '_') || "User"}_Experience_Proof.jpg`}
                 />
             )}
         </>
