@@ -108,6 +108,7 @@ export default function EditCertificatesModal({
     certificates.forEach((cert, idx) => {
       if (!cert.name) newErrors[`${idx}-name`] = "Certificate Name is required";
       if (!cert.issuer) newErrors[`${idx}-issuer`] = "Issuer is required";
+      if (!cert.credentialUrl) newErrors[`${idx}-credentialUrl`] = "Credential URL is required";
       if (!cert.issueMonth || !cert.issueYear)
         newErrors[`${idx}-issueDate`] = "Issue date is required";
     });
@@ -277,30 +278,42 @@ export default function EditCertificatesModal({
                     {!collapsedCards[index] && (
                       <div className="p-5 sm:p-8 space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          <div className="sm:col-span-2">
-                            <HybridInput
-                              label="Certificate Name *"
-                              value={cert.name}
-                              onChange={(e) =>
-                                handleChange(index, "name", e.target.value)
-                              }
-                              placeholder="e.g. AWS Certified Solutions Architect"
-                              icon={ShieldCheck}
-                              error={errors[`${index}-name`]}
-                            />
+                          <div className="sm:col-span-2 space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-name`] ? 'text-red-500' : (darkMode ? 'text-blue-400' : 'text-blue-600')}`}>
+                              Certificate Name <span className="text-red-500 font-bold">*</span>
+                            </label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-name`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <div className={`flex items-center p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                                <ShieldCheck className={`w-5 h-5 ml-2 ${darkMode ? "text-slate-400" : "text-gray-400"}`} />
+                                <input
+                                  type="text"
+                                  className={`w-full p-2 text-sm outline-none bg-transparent ${darkMode ? "text-white placeholder-slate-500" : "text-black placeholder-gray-400"}`}
+                                  value={cert.name}
+                                  onChange={(e) => handleChange(index, "name", e.target.value)}
+                                  placeholder="e.g. AWS Certified Solutions Architect"
+                                />
+                              </div>
+                            </div>
+                            {errors[`${index}-name`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-name`]}</p>}
                           </div>
 
-                          <div className="sm:col-span-2">
-                            <HybridInput
-                              label="Issuing Organization *"
-                              value={cert.issuer}
-                              onChange={(e) =>
-                                handleChange(index, "issuer", e.target.value)
-                              }
-                              placeholder="e.g. Amazon Web Services"
-                              icon={Award}
-                              error={errors[`${index}-issuer`]}
-                            />
+                          <div className="sm:col-span-2 space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-issuer`] ? 'text-red-500' : (darkMode ? 'text-blue-400' : 'text-blue-600')}`}>
+                              Issuing Organization <span className="text-red-500 font-bold">*</span>
+                            </label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-issuer`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <div className={`flex items-center p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                                <Award className={`w-5 h-5 ml-2 ${darkMode ? "text-slate-400" : "text-gray-400"}`} />
+                                <input
+                                  type="text"
+                                  className={`w-full p-2 text-sm outline-none bg-transparent ${darkMode ? "text-white placeholder-slate-500" : "text-black placeholder-gray-400"}`}
+                                  value={cert.issuer}
+                                  onChange={(e) => handleChange(index, "issuer", e.target.value)}
+                                  placeholder="e.g. Amazon Web Services"
+                                />
+                              </div>
+                            </div>
+                            {errors[`${index}-issuer`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-issuer`]}</p>}
                           </div>
 
                           {/* Date */}
@@ -357,16 +370,23 @@ export default function EditCertificatesModal({
                             )}
                           </div>
 
-                          <div className="sm:col-span-2">
-                            <HybridInput
-                              label="Credential URL (Optional)"
-                              value={cert.credentialUrl}
-                              onChange={(e) =>
-                                handleChange(index, "credentialUrl", e.target.value)
-                              }
-                              placeholder="e.g. https://www.credly.com/badges/..."
-                              icon={LinkIcon}
-                            />
+                          <div className="sm:col-span-2 space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-credentialUrl`] ? 'text-red-500' : (darkMode ? 'text-blue-400' : 'text-blue-600')}`}>
+                              Credential URL <span className="text-red-500 font-bold">*</span>
+                            </label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-credentialUrl`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <div className={`flex items-center p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                                <LinkIcon className={`w-5 h-5 ml-2 ${darkMode ? "text-slate-400" : "text-gray-400"}`} />
+                                <input
+                                  type="text"
+                                  className={`w-full p-2 text-sm outline-none bg-transparent ${darkMode ? "text-white placeholder-slate-500" : "text-black placeholder-gray-400"}`}
+                                  value={cert.credentialUrl}
+                                  onChange={(e) => handleChange(index, "credentialUrl", e.target.value)}
+                                  placeholder="e.g. https://www.credly.com/badges/..."
+                                />
+                              </div>
+                            </div>
+                            {errors[`${index}-credentialUrl`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-credentialUrl`]}</p>}
                           </div>
 
                           {/* Proof Image Section */}
