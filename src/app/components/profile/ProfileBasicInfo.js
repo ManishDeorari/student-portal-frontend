@@ -355,7 +355,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                             <span className={`text-sm font-black ${darkMode ? 'text-white' : 'text-black'}`}>{profile.course || "N/A"}</span>
                                         </div>
                                     </div>
-                                    <div className="p-[2.5px] bg-gradient-to-tr from-rose-500/40 to-orange-500/40 rounded-2xl shadow-lg">
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-rose-500/40 to-orange-500/40 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
                                         <div className={`p-4 rounded-[calc(1rem-2.5px)] h-full flex flex-col items-center text-center ${darkMode ? 'bg-slate-800' : 'bg-[#FAFAFA]'}`}>
                                             <label className={`text-[10px] font-black uppercase tracking-widest mb-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>Branch</label>
                                             <span className={`text-sm font-black ${darkMode ? 'text-white' : 'text-black'}`}>{profile.branch || "N/A"}</span>

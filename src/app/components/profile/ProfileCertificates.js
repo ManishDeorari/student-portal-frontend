@@ -51,6 +51,12 @@ export default function ProfileCertificates({ profile, setProfile, isPublicView 
                                         <div className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
                                             <Calendar className="w-3.5 h-3.5" />
                                             Issued: {cert.issueDate}
+                                            {cert.duration && (
+                                                <>
+                                                    <span className={`mx-1 ${darkMode ? 'text-slate-600' : 'text-slate-400'}`}>•</span>
+                                                    Duration: {cert.duration}
+                                                </>
+                                            )}
                                         </div>
 
                                         {/* Optional Credential URL */}
