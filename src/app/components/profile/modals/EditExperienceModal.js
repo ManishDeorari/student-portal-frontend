@@ -300,8 +300,9 @@ export default function EditExperienceModal({
           startDate,
           endDate,
           description: exp.description,
-          skills:
-            typeof exp.skills === "string"
+          skills: Array.isArray(exp.skills)
+            ? exp.skills.filter((s) => s !== "")
+            : typeof exp.skills === "string"
               ? exp.skills
                   .split(",")
                   .map((s) => s.trim())
