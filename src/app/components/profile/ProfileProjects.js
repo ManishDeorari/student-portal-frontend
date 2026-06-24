@@ -80,7 +80,7 @@ export default function ProfileProjects({ profile, setProfile, isPublicView }) {
                                         </div>
 
                                         {/* Description */}
-                                        <p className={`text-sm leading-relaxed font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                        <p className={`text-sm leading-relaxed font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                                             {project.description}
                                         </p>
 

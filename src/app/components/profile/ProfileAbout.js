@@ -25,7 +25,7 @@ export default function ProfileAbout({ profile, setProfile, isPublicView }) {
         onEdit={() => setIsEditing(true)}
         isPublicView={isPublicView}
       >
-        <p className={`text-sm font-medium whitespace-pre-wrap leading-relaxed ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+        <p className={`text-sm font-semibold whitespace-pre-wrap leading-relaxed ${darkMode ? 'text-white' : 'text-gray-900'}`}>
           {profile.bio || "No bio available."}
         </p>
       </SectionCard>

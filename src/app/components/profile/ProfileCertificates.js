@@ -67,7 +67,7 @@ export default function ProfileCertificates({ profile, setProfile, isPublicView 
                                         </div>
 
                                         {cert.description && (
-                                            <p className={`text-sm leading-relaxed font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                            <p className={`text-sm leading-relaxed font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                                                 {cert.description}
                                             </p>
                                         )}
