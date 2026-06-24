@@ -195,19 +195,22 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
                   <button
                     type="button"
                     onClick={() => removeCustomLink(index)}
-                    className="p-2.5 mr-1 text-red-200 hover:text-white hover:bg-red-500/50 rounded-lg transition-colors"
+                    className="flex items-center gap-1 px-2.5 py-2 mr-1 bg-red-500 hover:bg-red-600 text-white font-black rounded-lg transition-all hover:scale-105 active:scale-95 shadow-sm"
+                    title="Remove link"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               ))}
-              <button
-                type="button"
-                onClick={addCustomLink}
-                className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg border border-dashed transition-colors ${darkMode ? 'border-gray-600 text-gray-400 hover:text-white hover:border-gray-400' : 'border-gray-300 text-gray-500 hover:text-gray-700 hover:border-gray-400'}`}
-              >
-                <Plus className="w-3.5 h-3.5" /> Add Custom Link
-              </button>
+              <div className="p-[2px] bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500 rounded-xl shadow-md w-max mt-1">
+                <button
+                  type="button"
+                  onClick={addCustomLink}
+                  className={`flex items-center gap-2 text-xs font-black px-4 py-2 rounded-[calc(0.75rem-2px)] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                >
+                  <Plus className="w-4 h-4" /> Add Custom Link
+                </button>
+              </div>
             </div>
           </div>
 
