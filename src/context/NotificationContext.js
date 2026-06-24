@@ -359,7 +359,7 @@ export const NotificationProvider = ({ children }) => {
                     <div className="flex-shrink-0 pt-0.5">
                       <div className={`p-[2.5px] rounded-2xl bg-gradient-to-br ${theme.gradient} shadow-lg`}>
                         {notification.type === "academic_update" || notification.type === "admin_notice" || notification.type === "points_earned" ? (
-                          <div className={`h-11 w-11 rounded-[0.9rem] flex items-center justify-center ${darkMode ? 'bg-black' : 'bg-white'}`}>
+                          <div className={`h-11 w-11 rounded-[0.9rem] flex items-center justify-center ${darkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
                             {theme.icon}
                           </div>
                         ) : (
@@ -375,7 +375,7 @@ export const NotificationProvider = ({ children }) => {
                     </div>
                     <div className="ml-4 flex-1 pr-6">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <div className={`${darkMode ? theme.bgAccent : "bg-gray-100"} p-1.5 rounded-xl`}>
+                        <div className={`${darkMode ? theme.bgAccent : "bg-gray-100 text-black"} p-1.5 rounded-xl`}>
                           {theme.icon}
                         </div>
                         <p className={`text-[10px] font-black ${darkMode ? theme.accent : "text-slate-600"} uppercase tracking-[0.25em]`}>

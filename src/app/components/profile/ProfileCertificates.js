@@ -66,6 +66,12 @@ export default function ProfileCertificates({ profile, setProfile, isPublicView 
                                             )}
                                         </div>
 
+                                        {cert.description && (
+                                            <p className={`text-sm leading-relaxed font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                {cert.description}
+                                            </p>
+                                        )}
+
                                         {/* Optional Credential URL */}
                                         {cert.credentialUrl && (
                                             <div className="pt-1">

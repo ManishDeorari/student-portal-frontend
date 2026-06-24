@@ -37,6 +37,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
         const end = parseDate(p.endDate);
         return {
           title: p.title || "",
+          domain: p.domain || "",
           goal: p.goal || "",
           description: p.description || "",
           startMonth: start.month,
@@ -69,7 +70,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
 
   const addProject = () => {
     setProjects([...projects, {
-      title: "", goal: "", description: "",
+      title: "", domain: "", goal: "", description: "",
       startMonth: "", startYear: "",
       endMonth: "", endYear: "",
       isOngoing: false,
@@ -88,6 +89,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
     const newErrors = {};
     projects.forEach((p, idx) => {
       if (!p.title.trim()) newErrors[`${idx}-title`] = "Project title is required";
+      if (!p.domain?.trim()) newErrors[`${idx}-domain`] = "Domain is required";
       if (!p.goal.trim()) newErrors[`${idx}-goal`] = "Project goal is required";
       if (!p.description.trim()) newErrors[`${idx}-description`] = "Description is required";
       if (!p.startMonth || !p.startYear) newErrors[`${idx}-startDate`] = "Start date is required";
@@ -108,6 +110,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
     try {
       const finalData = projects.map((p) => ({
         title: p.title.trim(),
+        domain: p.domain.trim(),
         goal: p.goal.trim(),
         description: p.description.trim(),
         startDate: `${p.startMonth} ${p.startYear}`,
@@ -224,21 +227,39 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                     {!collapsedCards[index] && (
                       <div className="p-5 sm:p-8 space-y-6">
 
-                        {/* Title */}
-                        <div className="space-y-1.5">
-                          <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-title`] ? 'text-red-500' : darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                            <FolderGit2 className="w-3.5 h-3.5" /> Project Title <span className="text-red-500">*</span>
-                          </label>
-                          <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl ${errors[`${index}-title`] ? 'from-red-500 to-red-600' : ''}`}>
-                            <input
-                              type="text"
-                              value={project.title}
-                              onChange={(e) => handleChange(index, "title", e.target.value)}
-                              placeholder="e.g. Campus Connect Portal"
-                              className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
-                            />
+                        {/* Title & Domain Row */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          <div className="space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-title`] ? 'text-red-500' : darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                              <FolderGit2 className="w-3.5 h-3.5" /> Project Title <span className="text-red-500">*</span>
+                            </label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl ${errors[`${index}-title`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <input
+                                type="text"
+                                value={project.title}
+                                onChange={(e) => handleChange(index, "title", e.target.value)}
+                                placeholder="e.g. Campus Connect Portal"
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
+                              />
+                            </div>
+                            {errors[`${index}-title`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1 ml-1">{errors[`${index}-title`]}</p>}
                           </div>
-                          {errors[`${index}-title`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1 ml-1">{errors[`${index}-title`]}</p>}
+
+                          <div className="space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-domain`] ? 'text-red-500' : darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>
+                              Domain / Type <span className="text-red-500">*</span>
+                            </label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-xl ${errors[`${index}-domain`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <input
+                                type="text"
+                                value={project.domain || ""}
+                                onChange={(e) => handleChange(index, "domain", e.target.value)}
+                                placeholder="e.g. Web Dev, Machine Learning"
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
+                              />
+                            </div>
+                            {errors[`${index}-domain`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1 ml-1">{errors[`${index}-domain`]}</p>}
+                          </div>
                         </div>
 
                         {/* Project Goal */}

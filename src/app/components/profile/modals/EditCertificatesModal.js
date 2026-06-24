@@ -59,6 +59,7 @@ export default function EditCertificatesModal({
         return {
           name: cert.name || "",
           issuer: cert.issuer || "",
+          description: cert.description || "",
           issueMonth: cMonth || "",
           issueYear: cYear || "",
           duration: cert.duration || "",
@@ -91,6 +92,7 @@ export default function EditCertificatesModal({
       {
         name: "",
         issuer: "",
+        description: "",
         issueMonth: "",
         issueYear: "",
         duration: "",
@@ -177,6 +179,7 @@ export default function EditCertificatesModal({
       const finalData = uploadedCertificates.map((cert) => ({
         name: cert.name,
         issuer: cert.issuer,
+        description: cert.description,
         issueDate: `${cert.issueMonth} ${cert.issueYear}`,
         duration: cert.duration,
         credentialUrl: cert.credentialUrl,
@@ -322,6 +325,22 @@ export default function EditCertificatesModal({
                               />
                             </div>
                             {errors[`${index}-issuer`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-issuer`]}</p>}
+                          </div>
+
+                          {/* Description */}
+                          <div className="sm:col-span-2 space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+                              Description <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-300" : "text-gray-600"}`}>(Optional)</span>
+                            </label>
+                            <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
+                              <textarea
+                                rows={3}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition resize-none ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
+                                value={cert.description || ""}
+                                onChange={(e) => handleChange(index, "description", e.target.value)}
+                                placeholder="What did you learn? Any key takeaways?"
+                              />
+                            </div>
                           </div>
 
                           {/* Issue Date */}

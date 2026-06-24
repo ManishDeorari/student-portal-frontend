@@ -22,11 +22,7 @@ export default function ProfileProjects({ profile, setProfile, isPublicView }) {
 
     const canSeePrivateLink = !isPublicView || viewerRole === "admin" || viewerRole === "faculty";
 
-    const sortedProjects = (profile.projects || []).slice().sort((a, b) => {
-        const dateA = a.startDate ? new Date(a.startDate) : new Date(0);
-        const dateB = b.startDate ? new Date(b.startDate) : new Date(0);
-        return dateB - dateA;
-    });
+    const sortedProjects = profile.projects || [];
 
     return (
         <>
@@ -53,15 +49,24 @@ export default function ProfileProjects({ profile, setProfile, isPublicView }) {
 
                                     {/* Content */}
                                     <div className="flex-grow space-y-3">
-                                        {/* Title + Date */}
-                                        <div className="flex flex-wrap items-start justify-between gap-2">
-                                            <h3 className={`text-base font-black leading-tight ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600'}`}>
-                                                {project.title}
-                                            </h3>
-                                            <span className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-                                                <Calendar className="w-3 h-3" />
-                                                {project.startDate} — {project.isOngoing ? <span className="text-green-500 font-black">Ongoing</span> : project.endDate}
-                                            </span>
+                                        {/* Title + Domain + Date */}
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                                <div className="flex items-center gap-3">
+                                                    <h3 className={`text-base font-black leading-tight ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600'}`}>
+                                                        {project.title}
+                                                    </h3>
+                                                    {project.domain && (
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border ${darkMode ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200'}`}>
+                                                            {project.domain}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <span className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                                                    <Calendar className="w-3 h-3" />
+                                                    {project.startDate} — {project.isOngoing ? <span className="text-green-500 font-black">Ongoing</span> : project.endDate}
+                                                </span>
+                                            </div>
                                         </div>
 
                                         {/* Project Goal */}
@@ -75,7 +80,7 @@ export default function ProfileProjects({ profile, setProfile, isPublicView }) {
                                         </div>
 
                                         {/* Description */}
-                                        <p className={`text-sm leading-relaxed ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                                        <p className={`text-sm leading-relaxed font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                                             {project.description}
                                         </p>
 
