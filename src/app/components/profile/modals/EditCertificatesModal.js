@@ -6,7 +6,11 @@ import {
   Plus,
   Save,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  ShieldCheck,
+  Calendar,
+  Award,
+  Link as LinkIcon
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
@@ -316,80 +320,72 @@ export default function EditCertificatesModal({
                             {errors[`${index}-issuer`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-issuer`]}</p>}
                           </div>
 
-                        </div>
+                          {/* Issue Date */}
+                          <div className="sm:col-span-2 space-y-1.5 mt-4">
+                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-issueDate`] ? "text-red-500" : darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                              Issue Date <span className="text-red-500 font-bold">*</span>
+                            </label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-issueDate`] ? "from-red-500 to-red-600" : ""}`}>
+                              <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                                <select
+                                  className={`w-full p-2 rounded-lg text-sm outline-none ${darkMode ? "bg-[#121213] text-white border-none" : "bg-white text-gray-900 border-none"}`}
+                                  value={cert.issueMonth || ""}
+                                  onChange={(e) => handleChange(index, "issueMonth", e.target.value)}
+                                >
+                                  <option value="">Month</option>
+                                  {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
+                                </select>
+                                <select
+                                  className={`w-full p-2 rounded-lg text-sm outline-none ${darkMode ? "bg-[#121213] text-white border-none" : "bg-white text-gray-900 border-none"}`}
+                                  value={cert.issueYear || ""}
+                                  onChange={(e) => handleChange(index, "issueYear", e.target.value)}
+                                >
+                                  <option value="">Year</option>
+                                  {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
+                                </select>
+                              </div>
+                            </div>
+                            {errors[`${index}-issueDate`] && <p className="text-red-500 text-[10px] font-bold uppercase ml-1 mt-1.5">{errors[`${index}-issueDate`]}</p>}
+                          </div>
 
-                        {/* Issue Date — Full row */}
-                        <div className="space-y-1.5">
-                          <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-issueDate`] ? "text-red-500" : darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                            Issue Date <span className="text-red-500 font-bold">*</span>
-                          </label>
-                          <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-issueDate`] ? "from-red-500 to-red-600" : ""}`}>
-                            <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                              <select
-                                className={`w-full p-2 rounded-lg text-sm outline-none ${darkMode ? "bg-[#121213] text-white border-none" : "bg-white text-gray-900 border-none"}`}
-                                value={cert.issueMonth || ""}
-                                onChange={(e) => handleChange(index, "issueMonth", e.target.value)}
-                              >
-                                <option value="">Month</option>
-                                {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
-                              </select>
-                              <select
-                                className={`w-full p-2 rounded-lg text-sm outline-none ${darkMode ? "bg-[#121213] text-white border-none" : "bg-white text-gray-900 border-none"}`}
-                                value={cert.issueYear || ""}
-                                onChange={(e) => handleChange(index, "issueYear", e.target.value)}
-                              >
-                                <option value="">Year</option>
-                                {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
-                              </select>
+                          {/* Duration */}
+                          <div className="sm:col-span-2 space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                              Duration <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-300" : "text-gray-600"}`}>(Optional — for courses)</span>
+                            </label>
+                            <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
+                              <input
+                                type="text"
+                                placeholder="e.g. 3 Months, 40 Hours"
+                                value={cert.duration || ""}
+                                onChange={(e) => handleChange(index, "duration", e.target.value)}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
+                              />
                             </div>
                           </div>
-                          {errors[`${index}-issueDate`] && <p className="text-red-500 text-[10px] font-bold uppercase ml-1 mt-1.5">{errors[`${index}-issueDate`]}</p>}
-                        </div>
 
-                        {/* Duration — Full row */}
-                        <div className="space-y-1.5">
-                          <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                            Duration
-                            <span className={`text-[11px] font-bold normal-case px-1.5 py-0.5 rounded-md ${darkMode ? "bg-slate-700 text-slate-200" : "bg-gray-200 text-gray-700"}`}>
-                              Optional — for courses
-                            </span>
-                          </label>
-                          <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                            <input
-                              type="text"
-                              placeholder="e.g. 3 Months, 40 Hours"
-                              value={cert.duration || ""}
-                              onChange={(e) => handleChange(index, "duration", e.target.value)}
-                              className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Credential URL — Full row */}
-                        <div className="space-y-1.5">
-                          <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                            Credential URL
-                            <span className={`text-[11px] font-bold normal-case px-1.5 py-0.5 rounded-md ${darkMode ? "bg-slate-700 text-slate-200" : "bg-gray-200 text-gray-700"}`}>
-                              Optional — verify online
-                            </span>
-                          </label>
-                          <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                            <input
-                              type="url"
-                              placeholder="https://www.credly.com/badges/..."
-                              value={cert.credentialUrl || ""}
-                              onChange={(e) => handleChange(index, "credentialUrl", e.target.value)}
-                              className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Proof Image Section */}
-                        <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                          <div className={`p-4 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-3 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                              Proof Image (Certificate Image / Screenshot)
+                          {/* Credential URL */}
+                          <div className="sm:col-span-2 space-y-1.5">
+                            <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                              Credential URL <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-300" : "text-gray-600"}`}>(Optional — verify certificate online)</span>
                             </label>
+                            <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
+                              <input
+                                type="url"
+                                placeholder="https://www.credly.com/badges/..."
+                                value={cert.credentialUrl || ""}
+                                onChange={(e) => handleChange(index, "credentialUrl", e.target.value)}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Proof Image Section */}
+                          <div className={`sm:col-span-2 mt-4 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                            <div className={`p-4 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                              <label className={`block text-xs font-black uppercase tracking-widest mb-3 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                                Proof Image (Certificate Image / Screenshot)
+                              </label>
                               
                               {cert.proofImage ? (
                                 <div className="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 max-w-sm">
@@ -418,7 +414,8 @@ export default function EditCertificatesModal({
                                     className="hidden"
                                   />
                                 </label>
-                             )}
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
