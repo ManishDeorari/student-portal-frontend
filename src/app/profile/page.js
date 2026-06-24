@@ -193,7 +193,7 @@ function ProfileContent() {
         <ProfileExperience profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileCertificates profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileSkills profile={profile} setProfile={setProfile} isPublicView={isPublicView} currentUserId={user?._id} />
-        {profile.role === "student" && (
+        {(profile.role === "student" || profile.role === "alumni") && (
           <ProfileResumeAndLinks profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         )}
         <ProfileActivity profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
@@ -223,4 +223,3 @@ export default function ProfilePage() {
     </AuthGuard>
   );
 }
-
