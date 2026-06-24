@@ -9,7 +9,8 @@ export default function ProfileActivityHeatmap({ profile }) {
     const { darkMode } = useTheme();
     const heatmapData = profile?.activityHeatmap || {};
 
-    const todayDateString = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const todayDateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     // Generate grid aligned to Full Calendar Months
     const { columns, monthLabels, totalActivity, currentStreak } = useMemo(() => {
@@ -41,7 +42,7 @@ export default function ProfileActivityHeatmap({ profile }) {
         for (let i = totalDaysToRender - 1; i >= 0; i--) {
             const date = new Date(today);
             date.setDate(today.getDate() - i);
-            const dateString = date.toISOString().split('T')[0];
+            const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
             const count = heatmapData[dateString] || 0;
             
             // Stats logic
@@ -125,13 +126,13 @@ export default function ProfileActivityHeatmap({ profile }) {
                             </div>
                             <div>
                                 <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>Activity Map</h3>
-                                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>1 Square = 1 Day</span>
+                                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-white' : 'text-black'}`}>1 Square = 1 Day</span>
                             </div>
                         </div>
                         
                         <div className="flex items-center gap-6 text-sm">
                             <div className="flex flex-col items-end">
-                                <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Activity (6 Mos)</span>
+                                <span className={`text-[10px] font-black uppercase tracking-widest text-orange-500`}>Total Activity (6 Months)</span>
                                 <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{totalActivity}</span>
                             </div>
                             <div className="flex flex-col items-end">
@@ -160,7 +161,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                     
                                     <div className="flex gap-2.5 pr-6 mx-auto w-max relative">
                                         {/* Y-Axis Labels (Days of Week) */}
-                                        <div className={`flex flex-col gap-1.5 pr-3 text-[11px] font-black uppercase tracking-widest mt-[24px] ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        <div className={`flex flex-col gap-1.5 pr-3 text-[11px] font-black uppercase tracking-widest mt-[24px] text-orange-500`}>
                                             <span className="h-[18px] flex items-center">Sun</span>
                                             <span className="h-[18px] flex items-center">Mon</span>
                                             <span className="h-[18px] flex items-center">Tue</span>
@@ -178,12 +179,12 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                 return (
                                                     <div 
                                                         key={colIndex} 
-                                                        className={`flex flex-col gap-1.5 ${col.isNewMonth ? `border-l-[3px] ${darkMode ? 'border-gray-700' : 'border-gray-400'} pl-1.5` : ''}`}
+                                                        className={`flex flex-col gap-1.5 ${col.isNewMonth ? `border-l-[3px] border-orange-500 pl-1.5` : ''}`}
                                                     >
                                                         {/* Pixel-perfect X-Axis Labels aligned perfectly to the column start */}
                                                         <div className="h-[18px] mb-1.5 relative w-full">
                                                             {mLabel && (
-                                                                <span className={`absolute left-0 bottom-0 text-[11px] font-black uppercase tracking-widest whitespace-nowrap ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                                <span className={`absolute left-0 bottom-0 text-[11px] font-black tracking-widest whitespace-nowrap text-orange-500`}>
                                                                     {mLabel.label}
                                                                 </span>
                                                             )}
@@ -214,14 +215,14 @@ export default function ProfileActivityHeatmap({ profile }) {
                                     </div>
                                     
                                     {/* Legend */}
-                                    <div className={`flex items-center justify-end gap-2.5 text-[11px] font-bold uppercase tracking-widest mt-4 mx-auto w-full max-w-2xl ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                        <div className={`flex items-center gap-1.5 mr-auto ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    <div className={`flex items-center justify-end gap-2.5 text-[11px] font-bold uppercase tracking-widest mt-4 mx-auto w-full max-w-2xl ${darkMode ? 'text-white' : 'text-black'}`}>
+                                        <div className={`flex items-center gap-1.5 mr-auto ${darkMode ? 'text-white' : 'text-black'}`}>
                                             <Info className="w-3.5 h-3.5" />
                                             <span className="normal-case tracking-normal">Tracking logins, posts, events & profile updates</span>
                                         </div>
                                         <div className="flex items-center gap-2 mr-6">
                                             <div className="w-[14px] h-[14px] rounded-sm ring-2 ring-orange-500 ring-offset-2 dark:ring-offset-[#121213]"></div>
-                                            <span>Today</span>
+                                            <span className="text-orange-500">Today</span>
                                         </div>
                                         <span>Less</span>
                                         <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(0)}`}></div>

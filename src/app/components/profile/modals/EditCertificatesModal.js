@@ -243,7 +243,7 @@ export default function EditCertificatesModal({
                   <Award className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div className="text-sm leading-relaxed">
                     <p className="font-bold mb-0.5">Earn Points!</p>
-                    <p>Add a valid Proof Image for your Certificates to earn Activity Points once approved by an administrator!</p>
+                    <p>Add up to 5 Certificates with a valid Proof Image to earn 2 points each (Maximum 10 points total).</p>
                   </div>
                 </div>
               </div>

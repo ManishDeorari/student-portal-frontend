@@ -177,25 +177,25 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
             
             <div className="space-y-3">
               {formData.customLinks.map((link, index) => (
-                <div key={index} className="flex items-center gap-2">
+                <div key={index} className={`flex items-center gap-2 p-[2px] bg-gradient-to-tr from-pink-500 to-rose-600 rounded-xl shadow-sm`}>
                   <input
                     type="text"
                     value={link.title}
                     onChange={(e) => handleCustomLinkChange(index, "title", e.target.value)}
                     placeholder="Title (e.g. LeetCode)"
-                    className={`w-1/3 p-2 text-sm rounded-lg border ${darkMode ? 'bg-white/5 border-white/10 text-white placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'} outline-none focus:border-pink-500 transition-colors`}
+                    className={`w-1/3 p-2.5 text-sm rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                   />
                   <input
                     type="url"
                     value={link.url}
                     onChange={(e) => handleCustomLinkChange(index, "url", e.target.value)}
                     placeholder="URL (https://...)"
-                    className={`flex-1 p-2 text-sm rounded-lg border ${darkMode ? 'bg-white/5 border-white/10 text-white placeholder-gray-500' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'} outline-none focus:border-pink-500 transition-colors`}
+                    className={`flex-1 p-2.5 text-sm rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                   />
                   <button
                     type="button"
                     onClick={() => removeCustomLink(index)}
-                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                    className="p-2.5 mr-1 text-red-200 hover:text-white hover:bg-red-500/50 rounded-lg transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

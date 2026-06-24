@@ -379,7 +379,7 @@ export default function EditExperienceModal({
                   <Award className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div className="text-sm leading-relaxed">
                     <p className="font-bold mb-0.5">Earn Points!</p>
-                    <p>Add a valid Proof Image (Offer Letter, Experience Certificate, etc.) to earn Activity Points for your professional experience once approved by an administrator!</p>
+                    <p>Add at least 1 Experience/Internship with a valid Proof Image to earn a flat 10 points! (Maximum 10 points total for Experience)</p>
                   </div>
                 </div>
               </div>

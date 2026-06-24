@@ -203,23 +203,6 @@ export default function EditJobInfoModal({ isOpen, onClose, currentProfile, onSa
                                     />
                                 </div>
                             </div>
-                            <div className="md:col-span-2">
-                                <label className={`block text-[10px] font-black mb-1.5 uppercase tracking-widest ${darkMode ? 'text-slate-400' : 'text-gray-500'}`}>
-                                    Resume Link
-                                </label>
-                                <div className="p-[2px] bg-gradient-to-tr from-blue-600/50 to-purple-600/50 rounded-xl shadow-sm focus-within:from-blue-600 focus-within:to-purple-600 transition-all">
-                                    <div className="relative">
-                                        <FileText className={`absolute left-3 top-2.5 w-4 h-4 ${darkMode ? 'text-slate-500' : 'text-gray-400'}`} />
-                                        <input
-                                            type="text"
-                                            className={`w-full pl-9 p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white placeholder-slate-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
-                                            value={jobPreferences.resumeLink || ""}
-                                            onChange={(e) => handleJobChange("resumeLink", e.target.value)}
-                                            placeholder="https://drive.google.com/..."
-                                        />
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
