@@ -10,10 +10,12 @@ import {
   ShieldCheck,
   Calendar,
   Award,
-  Link as LinkIcon
+  Link as LinkIcon,
+  ExternalLink
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
+import ImageViewerModal from "../ImageViewerModal";
 import HybridInput from "../../ui/HybridInput";
 
 const MONTHS = [
@@ -37,6 +39,7 @@ export default function EditCertificatesModal({
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [collapsedCards, setCollapsedCards] = useState({});
+  const [selectedProofImage, setSelectedProofImage] = useState(null);
 
   const toggleCollapse = (index) =>
     setCollapsedCards((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -381,40 +384,54 @@ export default function EditCertificatesModal({
                           </div>
 
                           {/* Proof Image Section */}
-                          <div className={`sm:col-span-2 mt-4 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
-                            <div className={`p-4 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                              <label className={`block text-xs font-black uppercase tracking-widest mb-3 flex items-center gap-1.5 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                                Proof Image (Certificate Image / Screenshot) <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-400" : "text-gray-400"}`}>(Optional to save, required for points)</span>
-                              </label>
-                              
-                              {cert.proofImage ? (
-                                <div className="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 max-w-sm">
-                                  <img src={cert.proofImage} alt="Proof Preview" className="w-full h-auto object-cover max-h-48" />
-                                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                                    <label className="cursor-pointer px-4 py-2 bg-white text-gray-900 rounded-lg text-sm font-bold shadow-lg hover:scale-105 transition-transform">
-                                      Change Image
-                                      <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => handleImageChange(index, e)}
-                                        className="hidden"
-                                      />
-                                    </label>
-                                  </div>
-                                </div>
-                              ) : (
-                                <label className={`cursor-pointer w-full max-w-sm flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-colors ${darkMode ? "border-white/20 hover:border-blue-500 hover:bg-blue-500/10" : "border-gray-300 hover:border-blue-500 hover:bg-blue-50/50"}`}>
-                                  <Plus className="w-8 h-8 text-gray-400 mb-2" />
-                                  <span className={`text-sm font-medium ${darkMode ? "text-white" : "text-black"}`}>Click to upload proof</span>
-                                  <span className={`text-xs mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>PNG, JPG, up to 2MB</span>
+                          <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm mt-4 sm:col-span-2`}>
+                            <div className={`p-4 rounded-[calc(0.75rem-2px)] flex flex-col gap-4 ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                              <div className="space-y-2">
+                                <label
+                                  className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                                >
+                                  Proof Image (Certificate Image / Screenshot) <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-400" : "text-gray-400"}`}>(Optional to save, required for points)</span>
+                                </label>
+                                <div className="flex flex-col gap-2">
+                                  {cert.proofImage && !cert.proofImageFile && (
+                                    <div className="flex flex-wrap items-center gap-3">
+                                      <button
+                                        type="button"
+                                        onClick={() => setSelectedProofImage(cert.proofImage)}
+                                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20" : "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"}`}
+                                      >
+                                        <ExternalLink size={14} />
+                                        View Current Proof Image
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleChange(index, "proofImage", "")}
+                                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"}`}
+                                      >
+                                        <Trash2 size={14} />
+                                        Remove
+                                      </button>
+                                    </div>
+                                  )}
+                                  {cert.proofImageFile && (
+                                    <span className="text-xs font-bold text-green-500">
+                                      {cert.proofImageFile.name} (Ready to upload)
+                                    </span>
+                                  )}
                                   <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => handleImageChange(index, e)}
-                                    className="hidden"
+                                    onChange={(e) =>
+                                      handleChange(
+                                        index,
+                                        "proofImageFile",
+                                        e.target.files[0],
+                                      )
+                                    }
+                                    className={`text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 transition outline-none cursor-pointer ${darkMode ? "text-white" : "text-black"}`}
                                   />
-                                </label>
-                              )}
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -465,6 +482,14 @@ export default function EditCertificatesModal({
           </div>
         </div>
       </div>
+
+      {selectedProofImage && (
+        <ImageViewerModal
+          imageUrl={selectedProofImage}
+          onClose={() => setSelectedProofImage(null)}
+          isRestricted={false}
+        />
+      )}
     </>
   );
 }
