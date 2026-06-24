@@ -456,11 +456,11 @@ export default function EditExperienceModal({
                             >
                               Title <span className="text-red-500">*</span>
                             </label>
-                            <div>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600/50 to-purple-600/50 rounded-xl shadow-sm focus-within:from-blue-600 focus-within:to-purple-600 transition-all ${errors[`${index}-title`] ? "from-red-500 to-red-600" : ""}`}>
                               <input
                                 type="text"
                                 list="job-titles"
-                                className={`w-full p-2.5 rounded-xl border-2 dark:border-white/20 border-gray-300 focus:border-blue-500 text-white dark:text-white text-gray-900 dark:bg-slate-900 text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-gray-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none bg-transparent transition ${darkMode ? "text-white placeholder-slate-500 bg-[#121213]" : "text-black placeholder-gray-400 bg-white"}`}
                                 value={exp.title || ""}
                                 onChange={(e) =>
                                   handleChange(index, "title", e.target.value)
