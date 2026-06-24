@@ -293,16 +293,13 @@ export default function EditCertificatesModal({
                               Certificate Name <span className="text-red-500 font-bold">*</span>
                             </label>
                             <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-name`] ? 'from-red-500 to-red-600' : ''}`}>
-                              <div className={`flex items-center p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                                <ShieldCheck className={`w-5 h-5 ml-2 ${darkMode ? "text-slate-400" : "text-gray-400"}`} />
-                                <input
-                                  type="text"
-                                  className={`w-full p-2 text-sm outline-none bg-transparent ${darkMode ? "text-white placeholder-slate-500" : "text-black placeholder-gray-400"}`}
-                                  value={cert.name}
-                                  onChange={(e) => handleChange(index, "name", e.target.value)}
-                                  placeholder="e.g. AWS Certified Solutions Architect"
-                                />
-                              </div>
+                              <input
+                                type="text"
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
+                                value={cert.name}
+                                onChange={(e) => handleChange(index, "name", e.target.value)}
+                                placeholder="e.g. AWS Certified Solutions Architect"
+                              />
                             </div>
                             {errors[`${index}-name`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-name`]}</p>}
                           </div>
@@ -312,16 +309,13 @@ export default function EditCertificatesModal({
                               Issuing Organization <span className="text-red-500 font-bold">*</span>
                             </label>
                             <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-issuer`] ? 'from-red-500 to-red-600' : ''}`}>
-                              <div className={`flex items-center p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                                <Award className={`w-5 h-5 ml-2 ${darkMode ? "text-slate-400" : "text-gray-400"}`} />
-                                <input
-                                  type="text"
-                                  className={`w-full p-2 text-sm outline-none bg-transparent ${darkMode ? "text-white placeholder-slate-500" : "text-black placeholder-gray-400"}`}
-                                  value={cert.issuer}
-                                  onChange={(e) => handleChange(index, "issuer", e.target.value)}
-                                  placeholder="e.g. Amazon Web Services"
-                                />
-                              </div>
+                              <input
+                                type="text"
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
+                                value={cert.issuer}
+                                onChange={(e) => handleChange(index, "issuer", e.target.value)}
+                                placeholder="e.g. Amazon Web Services"
+                              />
                             </div>
                             {errors[`${index}-issuer`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-issuer`]}</p>}
                           </div>
@@ -332,46 +326,40 @@ export default function EditCertificatesModal({
                               <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-issueDate`] ? "text-red-500" : darkMode ? "text-blue-400" : "text-blue-600"}`}>
                                 Issue Date <span className="text-red-500 font-bold">*</span>
                               </label>
-                              <div className={`p-[2px] bg-gradient-to-tr from-blue-600/50 to-purple-600/50 rounded-xl shadow-sm focus-within:from-blue-600 focus-within:to-purple-600 transition-all ${errors[`${index}-issueDate`] ? "from-red-500 to-red-600" : ""}`}>
+                              <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-issueDate`] ? "from-red-500 to-red-600" : ""}`}>
                                 <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
                                   <select
-                                    className={`w-full p-2 rounded-lg text-sm outline-none bg-transparent transition ${darkMode ? "text-white border-none" : "text-black border-none"}`}
+                                    className={`w-full p-2 rounded-lg text-sm outline-none ${darkMode ? "bg-[#121213] text-white border-none" : "bg-white text-gray-900 border-none"}`}
                                     value={cert.issueMonth || ""}
                                     onChange={(e) => handleChange(index, "issueMonth", e.target.value)}
                                   >
                                     <option value="">Month</option>
-                                    {MONTHS.map((m) => (
-                                      <option key={m} value={m}>{m}</option>
-                                    ))}
+                                    {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
                                   </select>
                                   <select
-                                    className={`w-full p-2 rounded-lg text-sm outline-none bg-transparent transition ${darkMode ? "text-white border-none" : "text-black border-none"}`}
+                                    className={`w-full p-2 rounded-lg text-sm outline-none ${darkMode ? "bg-[#121213] text-white border-none" : "bg-white text-gray-900 border-none"}`}
                                     value={cert.issueYear || ""}
                                     onChange={(e) => handleChange(index, "issueYear", e.target.value)}
                                   >
                                     <option value="">Year</option>
-                                    {YEARS.map((y) => (
-                                      <option key={y} value={y}>{y}</option>
-                                    ))}
+                                    {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
                                   </select>
                                 </div>
                               </div>
-                              {errors[`${index}-issueDate`] && (
-                                <p className="text-red-500 text-[10px] font-bold uppercase ml-1 mt-1.5">{errors[`${index}-issueDate`]}</p>
-                              )}
+                              {errors[`${index}-issueDate`] && <p className="text-red-500 text-[10px] font-bold uppercase ml-1 mt-1.5">{errors[`${index}-issueDate`]}</p>}
                             </div>
 
                             <div className="space-y-1.5">
                               <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
                                 Duration (Optional)
                               </label>
-                              <div className="p-[2px] bg-gradient-to-tr from-blue-600/50 to-purple-600/50 rounded-xl shadow-sm focus-within:from-blue-600 focus-within:to-purple-600 transition-all">
+                              <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
                                 <input
                                   type="text"
                                   placeholder="e.g. 3 Months, 40 Hours"
                                   value={cert.duration || ""}
                                   onChange={(e) => handleChange(index, "duration", e.target.value)}
-                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none bg-transparent transition ${darkMode ? "text-white placeholder-slate-500 bg-[#121213]" : "text-black placeholder-gray-400 bg-white"}`}
+                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
                                 />
                               </div>
                             </div>
@@ -380,13 +368,13 @@ export default function EditCertificatesModal({
                               <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
                                 Credential URL (Optional)
                               </label>
-                              <div className="p-[2px] bg-gradient-to-tr from-blue-600/50 to-purple-600/50 rounded-xl shadow-sm focus-within:from-blue-600 focus-within:to-purple-600 transition-all">
+                              <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
                                 <input
                                   type="url"
                                   placeholder="https://..."
                                   value={cert.credentialUrl || ""}
                                   onChange={(e) => handleChange(index, "credentialUrl", e.target.value)}
-                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none bg-transparent transition ${darkMode ? "text-white placeholder-slate-500 bg-[#121213]" : "text-black placeholder-gray-400 bg-white"}`}
+                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
                                 />
                               </div>
                             </div>
