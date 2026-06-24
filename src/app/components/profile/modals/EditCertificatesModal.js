@@ -121,6 +121,7 @@ export default function EditCertificatesModal({
       if (!cert.issuer) newErrors[`${idx}-issuer`] = "Issuer is required";
       if (!cert.issueMonth || !cert.issueYear)
         newErrors[`${idx}-issueDate`] = "Issue date is required";
+      if (!cert.proofImage && !cert.proofImageFile) newErrors[`${idx}-proofImage`] = "Proof image is required";
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -381,10 +382,10 @@ export default function EditCertificatesModal({
                           </div>
 
                           {/* Proof Image Section */}
-                          <div className={`sm:col-span-2 mt-4 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                          <div className={`sm:col-span-2 mt-4 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-proofImage`] ? "from-red-500 to-red-600" : ""}`}>
                             <div className={`p-4 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                              <label className={`block text-xs font-black uppercase tracking-widest mb-3 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                                Proof Image (Certificate Image / Screenshot)
+                              <label className={`block text-xs font-black uppercase tracking-widest mb-3 flex items-center gap-1.5 ${errors[`${index}-proofImage`] ? "text-red-500" : darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                                Proof Image (Certificate Image / Screenshot) <span className="text-red-500 font-bold">*</span>
                               </label>
                               
                               {cert.proofImage ? (
@@ -403,8 +404,8 @@ export default function EditCertificatesModal({
                                   </div>
                                 </div>
                               ) : (
-                                <label className={`cursor-pointer w-full max-w-sm flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-colors ${darkMode ? "border-white/20 hover:border-blue-500 hover:bg-blue-500/10" : "border-gray-300 hover:border-blue-500 hover:bg-blue-50/50"}`}>
-                                  <Plus className="w-8 h-8 text-gray-400 mb-2" />
+                                <label className={`cursor-pointer w-full max-w-sm flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-colors ${darkMode ? "border-white/20 hover:border-blue-500 hover:bg-blue-500/10" : "border-gray-300 hover:border-blue-500 hover:bg-blue-50/50"} ${errors[`${index}-proofImage`] ? "border-red-500/50 bg-red-50/50 dark:bg-red-500/10" : ""}`}>
+                                  <Plus className={`w-8 h-8 mb-2 ${errors[`${index}-proofImage`] ? "text-red-400" : "text-gray-400"}`} />
                                   <span className={`text-sm font-medium ${darkMode ? "text-white" : "text-black"}`}>Click to upload proof</span>
                                   <span className={`text-xs mt-1 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>PNG, JPG, up to 2MB</span>
                                   <input
@@ -415,6 +416,7 @@ export default function EditCertificatesModal({
                                   />
                                 </label>
                               )}
+                              {errors[`${index}-proofImage`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-3">{errors[`${index}-proofImage`]}</p>}
                             </div>
                           </div>
                         </div>
