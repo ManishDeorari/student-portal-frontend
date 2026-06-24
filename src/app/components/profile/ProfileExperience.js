@@ -45,12 +45,85 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                 isPublicView={isPublicView}
             >
                 <div className="space-y-8">
-                    {profile.experience?.map((exp, idx) => {
+                    {(() => {
+                        const sortedExperience = profile.experience?.slice().sort((a, b) => {
+                            if (a.endDate === "Present" && b.endDate !== "Present") return -1;
+                            if (a.endDate !== "Present" && b.endDate === "Present") return 1;
+                            
+                            const dateA = new Date(a.startDate);
+                            const dateB = new Date(b.startDate);
+                            return dateB - dateA; // Newest first
+                        }) || [];
+
+                        return sortedExperience.map((exp, idx) => {
                         const duration = calculateDuration(exp.startDate, exp.endDate);
 
                         return (
                             <div key={idx} className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] group w-full mb-6 transition-all duration-300 hover:scale-[1.02] hover:z-20 relative">
                                 <div className={`p-5 rounded-[calc(2.5rem-2.5px)] flex gap-4 transition duration-300 ${darkMode ? 'bg-[#121213] hover:bg-slate-900' : 'bg-[#FAFAFA] hover:bg-white'}`}>
+                                    {/* Logo Placeholder */}
+                                    <div className="flex-shrink-0">
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${darkMode ? 'bg-blue-900/30 shadow-none' : 'bg-blue-50 shadow-sm'}`}>
+                                            <Building2 className={`w-6 h-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                                        </div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="flex-grow space-y-2.5">
+                                        <div className="flex flex-col">
+                                            <h3 className={`text-base font-black leading-tight flex items-center gap-2 ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600'}`}>
+                                                {exp.title}
+                                                {exp.isInternship && (
+                                                    <span className={`text-[9px] px-2 py-0.5 rounded-full border ${darkMode ? 'border-purple-400/30 text-purple-400 bg-purple-400/10' : 'border-purple-200 text-purple-600 bg-purple-50'}`}>
+                                                        Internship
+                                                    </span>
+                                                )}
+                                            </h3>
+                                            <p className={`text-sm font-black mt-1 ${darkMode ? 'text-slate-100' : 'text-slate-900'}`}>
+                                                {exp.company}
+                                                {exp.employmentType && ` · ${exp.employmentType}`}
+                                            </p>
+                                        </div>
+
+                                        <div className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
+                                            <Calendar className="w-3.5 h-3.5" />
+                                            {exp.startDate} - {exp.endDate}
+                                            {duration && <span className={darkMode ? 'text-blue-400' : 'text-blue-600'}> · {duration}</span>}
+                                        </div>
+
+                                        {(exp.location || exp.locationType) && (
+                                            <div className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
+                                                <MapPin className="w-3.5 h-3.5" />
+                                                {exp.location}
+                                                {exp.location && exp.locationType && " · "}
+                                                {exp.locationType}
+                                            </div>
+                                        )}
+
+                                        {exp.description && (
+                                            <div className="pt-1">
+                                                <p className={`text-sm font-semibold whitespace-pre-wrap leading-relaxed ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                                                    {exp.description}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {exp.skills && exp.skills.length > 0 && (
+                                            <div className="flex flex-wrap items-center gap-2 mt-3 pt-2">
+                                                <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-blue-300' : 'text-blue-600'}`}>Skills:</span>
+                                                {exp.skills.map((skill, sIdx) => (
+                                                    <span
+                                                        key={sIdx}
+                                                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${darkMode ? 'bg-slate-800 text-gray-300 border-white/10' : 'bg-gray-100 text-gray-600 border-gray-200'}`}
+                                                    >
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {/* Proof Image visible to owner or admin/faculty */}
+                                        {exp.proofImage && (
                                     {/* Logo Placeholder */}
                                     <div className="flex-shrink-0">
                                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${darkMode ? 'bg-blue-900/30 shadow-none' : 'bg-blue-50 shadow-sm'}`}>
@@ -129,7 +202,7 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                                 </div>
                             </div>
                         );
-                    })}
+                    })})()}
                 </div>
 
                 {(!profile.experience || profile.experience.length === 0) && (
