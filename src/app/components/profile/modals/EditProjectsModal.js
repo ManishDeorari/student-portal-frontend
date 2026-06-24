@@ -145,7 +145,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
 
   // Count how many current projects have valid links (for hints)
   const projectsWithLinks = projects.filter(p => p.link && p.link.trim().length > 0).length;
-  const pointsEarning = Math.min(projectsWithLinks, 2) * 5;
+  const pointsEarning = Math.min(projectsWithLinks, 3) * 10;
 
   return (
     <>
@@ -172,12 +172,12 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                   <FolderGit2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div className="text-sm leading-relaxed space-y-1">
                     <p className="font-black uppercase tracking-wide">Earn Points for Projects!</p>
-                    <p>Add up to <span className="font-black">2 projects with valid links</span> to earn <span className="font-black">5 points each</span> (maximum <span className="font-black">10 points</span> total).</p>
+                    <p>Add up to <span className="font-black">3 projects with valid links</span> to earn <span className="font-black">10 points each</span> (maximum <span className="font-black">30 points</span> total).</p>
                     <div className={`mt-2 flex items-center gap-2 text-xs font-black uppercase tracking-widest rounded-lg px-3 py-1.5 w-max ${darkMode ? 'bg-violet-500/20 text-violet-300' : 'bg-violet-100 text-violet-700'}`}>
                       <span>
-                        {projectsWithLinks >= 2
-                          ? `✅ ${pointsEarning}/10 pts — Maximum reached!`
-                          : `${projectsWithLinks}/2 projects with links — Currently earning ${pointsEarning}/10 pts`}
+                        {projectsWithLinks >= 3
+                          ? `✅ ${pointsEarning}/30 pts — Maximum reached!`
+                          : `${projectsWithLinks}/3 projects with links — Currently earning ${pointsEarning}/30 pts`}
                       </span>
                     </div>
                     <p className={`text-[10px] font-medium mt-1 ${darkMode ? 'text-slate-400' : 'text-gray-500'}`}>
