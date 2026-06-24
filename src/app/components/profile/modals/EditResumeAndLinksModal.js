@@ -202,11 +202,11 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
                   </button>
                 </div>
               ))}
-              <div className="p-[2px] bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500 rounded-xl shadow-md w-max mt-1">
+              <div className="p-[2px] bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500 rounded-xl shadow-md w-max mt-1 transition-all hover:shadow-lg">
                 <button
                   type="button"
                   onClick={addCustomLink}
-                  className={`flex items-center gap-2 text-xs font-black px-4 py-2 rounded-[calc(0.75rem-2px)] uppercase tracking-widest transition-all hover:scale-105 active:scale-95 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                  className={`flex items-center gap-2 text-xs font-black px-4 py-2 rounded-[calc(0.75rem-2px)] uppercase tracking-widest transition-colors ${darkMode ? 'bg-[#121213] text-white hover:bg-[#1a1a1b]' : 'bg-white text-gray-900 hover:bg-gray-50'}`}
                 >
                   <Plus className="w-4 h-4" /> Add Custom Link
                 </button>
