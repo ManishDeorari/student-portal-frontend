@@ -161,7 +161,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                     
                                     <div className="flex gap-2.5 pr-6 mx-auto w-max relative">
                                         {/* Y-Axis Labels (Days of Week) */}
-                                        <div className={`flex flex-col gap-1.5 pr-3 text-[11px] font-black uppercase tracking-widest mt-[24px] text-orange-500`}>
+                                        <div className={`flex flex-col gap-1.5 pr-3 text-[11px] font-black uppercase tracking-widest mt-[24px] ${darkMode ? 'text-white' : 'text-black'}`}>
                                             <span className="h-[18px] flex items-center">Sun</span>
                                             <span className="h-[18px] flex items-center">Mon</span>
                                             <span className="h-[18px] flex items-center">Tue</span>
@@ -184,7 +184,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                         {/* Pixel-perfect X-Axis Labels aligned perfectly to the column start */}
                                                         <div className="h-[18px] mb-1.5 relative w-full">
                                                             {mLabel && (
-                                                                <span className={`absolute left-0 bottom-0 text-[11px] font-black tracking-widest whitespace-nowrap text-orange-500`}>
+                                                                <span className={`absolute left-0 bottom-0 text-[11px] font-black tracking-widest whitespace-nowrap ${darkMode ? 'text-white' : 'text-black'}`}>
                                                                     {mLabel.label}
                                                                 </span>
                                                             )}

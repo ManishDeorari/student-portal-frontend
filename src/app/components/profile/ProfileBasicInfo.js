@@ -38,7 +38,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
     const canViewResume = isProfileOwnerStudentOrAlumni && (!isPublicView || isViewerPrivileged);
 
     const getMissingFields = () => {
-        if (!profile || profile.role !== "student" || isPublicView || profile.profileCompletionAwarded) return null;
+        if (!profile || (profile.role !== "student" && profile.role !== "alumni") || isPublicView || profile.profileCompletionAwarded) return null;
         
         const missing = [];
         if (!profile.profilePicture || profile.profilePicture.includes("default-profile.jpg")) missing.push("Profile Picture");
@@ -253,7 +253,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     </div>
 
                     {/* Profile Completion Tracker Bar */}
-                    {(!isPublicView && profile.role === "student" && !profile.profileCompletionAwarded) && (
+                    {(!isPublicView && (profile.role === "student" || profile.role === "alumni") && !profile.profileCompletionAwarded) && (
                         <div className="w-full mt-6 p-[2.5px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg hover:scale-[1.01] transition-transform duration-300">
                             <div className={`p-5 rounded-[calc(1rem-2.5px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
                                 <div className="flex items-center justify-between mb-2">
@@ -278,7 +278,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
 
                                 {missingFields && missingFields.length > 0 ? (
                                     <div className="mt-4">
-                                        <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>
                                             {missingFields.length} Tasks Remaining for Points:
                                         </p>
                                         <div className="flex flex-wrap gap-2">
@@ -332,7 +332,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         </div>
                         
                         {/* New Level: Role Specific Info */}
-                        {profile.role === 'student' ? (
+                        {profile.role === 'student' || profile.role === 'alumni' ? (
                             <>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="p-[2.5px] bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-2xl shadow-lg hover:scale-[1.02] hover:shadow-xl transition-all duration-300">
