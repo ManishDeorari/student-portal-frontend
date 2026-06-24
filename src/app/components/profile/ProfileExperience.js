@@ -102,7 +102,7 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
 
                                         {exp.description && (
                                             <div className="pt-1">
-                                                <p className={`text-sm font-semibold whitespace-pre-wrap leading-relaxed ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                                                <p className={`text-sm font-semibold whitespace-pre-wrap leading-relaxed ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                                                     {exp.description}
                                                 </p>
                                             </div>

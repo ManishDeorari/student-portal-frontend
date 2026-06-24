@@ -52,12 +52,12 @@ export default function ProfileProjects({ profile, setProfile, isPublicView }) {
                                         {/* Title + Domain + Date */}
                                         <div className="flex flex-col gap-2">
                                             <div className="flex flex-wrap items-center justify-between gap-2">
-                                                <div className="flex items-center gap-3">
+                                                <div className="flex flex-col items-start gap-1">
                                                     <h3 className={`text-base font-black leading-tight ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600'}`}>
                                                         {project.title}
                                                     </h3>
                                                     {project.domain && (
-                                                        <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border ${darkMode ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200'}`}>
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md border ${darkMode ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200'}`}>
                                                             {project.domain}
                                                         </span>
                                                     )}
