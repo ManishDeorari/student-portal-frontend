@@ -6,6 +6,7 @@ import AdminSidebar from "../components/AdminSidebar";
 import ProfileAbout from "../components/profile/ProfileAbout";
 import ProfileExperience from "../components/profile/ProfileExperience";
 import ProfileCertificates from "../components/profile/ProfileCertificates";
+import ProfileProjects from "../components/profile/ProfileProjects";
 import ProfileSkills from "../components/profile/ProfileSkills";
 import ProfileEducation from "../components/profile/ProfileEducation";
 import ProfileActivity from "../components/profile/ProfileActivity";
@@ -192,6 +193,7 @@ function ProfileContent() {
         <ProfileEducation profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileExperience profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileCertificates profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
+        <ProfileProjects profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileSkills profile={profile} setProfile={setProfile} isPublicView={isPublicView} currentUserId={user?._id} />
         {(profile.role === "student" || profile.role === "alumni") && (
           <ProfileResumeAndLinks profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
