@@ -50,22 +50,22 @@ export default function ProfileProjects({ profile, setProfile, isPublicView }) {
                                     {/* Content */}
                                     <div className="flex-grow space-y-3">
                                         {/* Title + Domain + Date */}
-                                        <div className="flex flex-col gap-2">
-                                            <div className="flex flex-wrap items-center justify-between gap-2">
-                                                <div className="flex flex-col items-start gap-1">
-                                                    <h3 className={`text-base font-black leading-tight ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600'}`}>
-                                                        {project.title}
-                                                    </h3>
-                                                    {project.domain && (
-                                                        <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md border ${darkMode ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200'}`}>
-                                                            {project.domain}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <span className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                                                    <Calendar className="w-3 h-3" />
-                                                    {project.startDate} — {project.isOngoing ? <span className="text-green-500 font-black">Ongoing</span> : project.endDate}
-                                                </span>
+                                        <div className="flex flex-col gap-2.5">
+                                            <div className="flex flex-col items-start gap-1">
+                                                <h3 className={`text-base font-black leading-tight ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600'}`}>
+                                                    {project.title}
+                                                </h3>
+                                                {project.domain && (
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md border ${darkMode ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200'}`}>
+                                                        {project.domain}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            
+                                            {/* Date Row */}
+                                            <div className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                                                <Calendar className="w-3.5 h-3.5" />
+                                                {project.startDate} — {project.isOngoing ? <span className="text-green-500 font-black">Ongoing</span> : project.endDate}
                                             </div>
                                         </div>
 
