@@ -178,6 +178,7 @@ export default function EditCertificatesModal({
         name: cert.name,
         issuer: cert.issuer,
         issueDate: `${cert.issueMonth} ${cert.issueYear}`,
+        duration: cert.duration,
         credentialUrl: cert.credentialUrl,
         proofImage: cert.proofImage,
       }));
@@ -388,9 +389,9 @@ export default function EditCertificatesModal({
                             <div className={`p-4 rounded-[calc(0.75rem-2px)] flex flex-col gap-4 ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
                               <div className="space-y-2">
                                 <label
-                                  className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                                  className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
                                 >
-                                  Proof Image (Certificate Image / Screenshot) <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-400" : "text-gray-400"}`}>(Optional to save, required for points)</span>
+                                  Proof Image (Certificate Image / Screenshot)
                                 </label>
                                 <div className="flex flex-col gap-2">
                                   {cert.proofImage && !cert.proofImageFile && (
