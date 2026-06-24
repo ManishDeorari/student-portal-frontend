@@ -10,6 +10,13 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
     const [isEditing, setIsEditing] = useState(false);
     const [skills, setSkills] = useState(profile?.profileSkills || []);
 
+    // Sync local state when profile prop updates (e.g. after data fetch finishes)
+    React.useEffect(() => {
+        if (profile?.profileSkills) {
+            setSkills(profile.profileSkills);
+        }
+    }, [profile?.profileSkills]);
+
     const hasSkills = skills && skills.length > 0;
 
     const handleSave = (updatedProfile) => {
