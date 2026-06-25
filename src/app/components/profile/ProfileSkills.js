@@ -70,10 +70,13 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
                 {hasSkills ? (
                     <div className="flex flex-col gap-6 mt-2">
                         {Array.from(new Set(skills.map(s => s.category || "Other"))).map(category => (
-                            <div key={category} className="space-y-3">
-                                <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'} border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'} pb-1`}>
-                                    {category}
-                                </h4>
+                            <div key={category} className={`p-5 rounded-2xl border ${darkMode ? 'bg-slate-800/40 border-gray-700' : 'bg-gray-50 border-gray-200'} space-y-4`}>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-sm"></div>
+                                    <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                        {category}
+                                    </h4>
+                                </div>
                                 <div className="flex flex-wrap gap-3">
                                     {skills.filter(s => (s.category || "Other") === category).map((skill, idx) => {
                                         const endorsementCount = skill.endorsements?.length || 0;

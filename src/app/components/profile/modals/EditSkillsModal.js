@@ -147,10 +147,13 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                             )}
                             
                             {Array.from(new Set(skills.map(s => s.category || "Other"))).map(category => (
-                                <div key={category} className="space-y-3">
-                                    <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'} border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'} pb-1`}>
-                                        {category}
-                                    </h4>
+                                <div key={category} className={`p-4 rounded-2xl border ${darkMode ? 'bg-slate-800/40 border-gray-700' : 'bg-gray-50 border-gray-200'} space-y-3`}>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-sm"></div>
+                                        <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                            {category}
+                                        </h4>
+                                    </div>
                                     <div className="flex flex-wrap gap-3">
                                         {skills.filter(s => (s.category || "Other") === category).map((skill, idx) => (
                                             <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md relative z-10">
