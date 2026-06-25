@@ -397,12 +397,12 @@ function LoginContent() {
 
                   <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3 sm:space-y-5 flex flex-col justify-center">
                     <div className="space-y-1.5">
-                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email or Enrollment No.</label>
+                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
                       <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                         <input
                           type="text"
                           name="identifier"
-                          placeholder="example@gehu.ac.in or PV-H209001"
+                          placeholder="example@gehu.ac.in"
                           value={form.identifier}
                           onChange={handleChange}
                           className={`w-full px-4 sm:px-6 py-2.5 sm:py-3 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
