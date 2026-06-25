@@ -70,7 +70,8 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
                 {hasSkills ? (
                     <div className="flex flex-col gap-6 mt-2">
                         {Array.from(new Set(skills.map(s => s.category || "Other"))).map(category => (
-                            <div key={category} className={`p-5 rounded-2xl border ${darkMode ? 'bg-slate-800/40 border-gray-700' : 'bg-gray-50 border-gray-200'} space-y-4`}>
+                            <div key={category} className="p-[2px] rounded-2xl bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 shadow-sm">
+                                <div className={`p-5 rounded-[calc(1rem-2px)] space-y-4 ${darkMode ? 'bg-slate-800/90' : 'bg-gray-50'}`}>
                                 <div className="flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-sm"></div>
                                     <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -112,6 +113,7 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
                                             </div>
                                         );
                                     })}
+                                </div>
                                 </div>
                             </div>
                         ))}

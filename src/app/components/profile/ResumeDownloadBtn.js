@@ -17,11 +17,11 @@ export default function ResumeDownloadBtn({ profile, darkMode }) {
 
     return (
         <div className="w-full mt-6 mb-2 flex justify-center">
-            <div className="w-full sm:w-2/3 transition-all duration-300 transform hover:scale-[1.02]">
+            <div className="w-full sm:w-2/3 p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]">
                 <PDFDownloadLink
                     document={<ResumePDF profile={profile} />}
                     fileName={`${profile.name?.replace(/\s+/g, '_') || 'User'}_Resume.pdf`}
-                    className={`flex items-center justify-center gap-4 px-6 py-4 rounded-2xl w-full h-full ${darkMode ? 'bg-slate-900 hover:bg-slate-800' : 'bg-white hover:bg-gray-50'} shadow-xl hover:shadow-2xl`}
+                    className={`flex items-center justify-center gap-4 px-6 py-4 rounded-[calc(1rem-2px)] w-full h-full ${darkMode ? 'bg-slate-900 hover:bg-slate-800' : 'bg-white hover:bg-gray-50'}`}
                 >
                     {({ blob, url, loading, error }) => (
                         <>
@@ -35,8 +35,11 @@ export default function ResumeDownloadBtn({ profile, darkMode }) {
                                 </div>
                             </div>
                             <div className="text-left">
-                                <h3 className={`text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 ${loading ? 'animate-pulse' : ''}`}>
-                                    {loading ? 'Generating PDF...' : '🪄 Auto-Generate PDF Resume'}
+                                <h3 className={`text-lg font-black ${loading ? 'animate-pulse' : ''}`}>
+                                    <span>🪄 </span>
+                                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+                                        {loading ? 'Generating PDF...' : 'Auto-Generate PDF Resume'}
+                                    </span>
                                 </h3>
                                 <p className={`text-xs sm:text-sm font-medium ${darkMode ? 'text-white' : 'text-black'}`}>
                                     Instantly builds a beautiful 1-page resume from your profile
