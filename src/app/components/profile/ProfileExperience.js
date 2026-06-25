@@ -126,7 +126,7 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                                             <div className="mt-3 pt-2">
                                                 {(!isPublicView || (typeof window !== "undefined" && ["admin", "faculty"].includes(JSON.parse(localStorage.getItem("user") || "{}")?.role))) ? (
                                                     <button 
-                                                        onClick={() => setSelectedProofImage(exp.proofImage)}
+                                                        onClick={() => setSelectedProofImage({ url: exp.proofImage, title: exp.company || exp.title })}
                                                         className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg transition-colors border ${darkMode ? 'text-pink-400 border-pink-400/30 hover:bg-pink-400/10' : 'text-pink-600 border-pink-200 hover:bg-pink-50'}`}
                                                     >
                                                         <ExternalLink className="w-3 h-3" /> View Proof Image
@@ -159,10 +159,10 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
             {/* ImageViewerModal for Proof Image */}
             {selectedProofImage && (
                 <ImageViewerModal
-                    imageUrl={selectedProofImage}
+                    imageUrl={selectedProofImage.url}
                     onClose={() => setSelectedProofImage(null)}
                     isRestricted={false}
-                    downloadName={`${profile?.name?.replace(/\s+/g, '_') || "User"}_Experience_Proof.jpg`}
+                    downloadName={`${selectedProofImage.title} - Proof.jpg`}
                 />
             )}
         </>

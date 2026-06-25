@@ -477,7 +477,7 @@ export default function EditAchievementsModal({
                                       src={ach.proofImage}
                                       alt="Proof Preview"
                                       className="w-full h-40 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                                      onClick={() => setSelectedProofImage(ach.proofImage)}
+                                      onClick={() => setSelectedProofImage({ url: ach.proofImage, title: ach.title })}
                                     />
                                     <button
                                       onClick={() => removeProofImage(index)}
@@ -558,7 +558,8 @@ export default function EditAchievementsModal({
 
       {selectedProofImage && (
         <ImageViewerModal
-          imageUrl={selectedProofImage}
+          imageUrl={selectedProofImage.url}
+          downloadName={`${selectedProofImage.title} - Proof`}
           onClose={() => setSelectedProofImage(null)}
         />
       )}

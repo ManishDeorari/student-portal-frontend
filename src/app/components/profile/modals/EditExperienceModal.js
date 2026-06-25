@@ -705,7 +705,7 @@ export default function EditExperienceModal({
                                   <div className="flex flex-wrap items-center gap-3">
                                     <button
                                       type="button"
-                                      onClick={() => setSelectedProofImage(exp.proofImage)}
+                                      onClick={() => setSelectedProofImage({ url: exp.proofImage, title: exp.company || exp.title })}
                                       className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20" : "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"}`}
                                     >
                                       <ExternalLink size={14} />
@@ -822,7 +822,8 @@ export default function EditExperienceModal({
 
       {selectedProofImage && (
         <ImageViewerModal
-          imageUrl={selectedProofImage}
+          imageUrl={selectedProofImage.url}
+          downloadName={`${selectedProofImage.title} - Proof.jpg`}
           onClose={() => setSelectedProofImage(null)}
           isRestricted={false}
         />

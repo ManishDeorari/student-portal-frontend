@@ -38,7 +38,7 @@ export default function ProfileAchievements({ profile, setProfile, isPublicView 
                                     {/* Icon / Image */}
                                     <div className="flex-shrink-0">
                                         {showImage ? (
-                                            <div className="relative group/img cursor-pointer" onClick={() => setSelectedProofImage(ach.proofImage)}>
+                                            <div className="relative group/img cursor-pointer" onClick={() => setSelectedProofImage({ url: ach.proofImage, title: ach.title })}>
                                                 <img 
                                                     src={ach.proofImage} 
                                                     alt={ach.title}
@@ -133,7 +133,8 @@ export default function ProfileAchievements({ profile, setProfile, isPublicView 
 
             {selectedProofImage && (
                 <ImageViewerModal
-                    imageUrl={selectedProofImage}
+                    imageUrl={selectedProofImage.url}
+                    downloadName={`${selectedProofImage.title} - Proof`}
                     onClose={() => setSelectedProofImage(null)}
                 />
             )}
