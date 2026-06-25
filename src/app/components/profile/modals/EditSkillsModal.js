@@ -91,7 +91,7 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         </button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6">
+                    <div className="flex-1 overflow-y-auto pr-2 pb-10 custom-scrollbar space-y-6">
                         {/* Guide Text */}
                         <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 rounded-xl">
                             <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>

@@ -289,7 +289,7 @@ export default function ResumePDF({ profile }) {
 
         {/* ── HEADER ── */}
         <View style={styles.headerTop}>
-          {profile.profilePicture && (
+          {profile.profilePicture && !profile.profilePicture.includes('default') && (
             <Image src={profile.profilePicture} style={styles.profilePic} />
           )}
           <View style={styles.headerTextGroup}>
