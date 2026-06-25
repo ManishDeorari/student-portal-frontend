@@ -185,10 +185,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         />
                     </div>
 
-                    {/* Action Icons - Top Left */}
-                    <div className="absolute top-[8.5rem] sm:top-20 left-2 sm:left-4 z-20 flex items-center gap-2">
-                        {canViewResume && <ResumeDownloadBtn profile={profile} darkMode={darkMode} />}
-                    </div>
+
 
                     {/* Action Icons - Top Right */}
                     <div className="absolute top-[8.5rem] sm:top-20 right-2 sm:right-4 z-20 flex items-center gap-2">
@@ -495,6 +492,13 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         <div className="w-full px-6">
                             <ProfileStats profile={profile} isPublicView={isPublicView} />
                         </div>
+                        
+                        {/* Auto-Generate Resume Button */}
+                        {canViewResume && (
+                            <div className="w-full px-6 mt-2 mb-4">
+                                <ResumeDownloadBtn profile={profile} darkMode={darkMode} />
+                            </div>
+                        )}
                     </div>
                 </div>
 

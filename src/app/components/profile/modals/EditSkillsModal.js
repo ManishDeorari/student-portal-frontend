@@ -7,7 +7,11 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
     const { darkMode } = useTheme();
     const [skills, setSkills] = useState([]);
     const [newSkill, setNewSkill] = useState("");
+    const [newCategory, setNewCategory] = useState("");
     const [loading, setLoading] = useState(false);
+
+    // Predefined suggestions for autocomplete
+    const categorySuggestions = ["Languages", "Developer Tools", "Frameworks", "Databases", "Coursework", "Areas of Interest", "Soft Skills", "Core Competencies", "Other"];
 
     useEffect(() => {
         if (isOpen) {
@@ -30,8 +34,10 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
             return;
         }
 
-        setSkills([...skills, { name: trimmed, endorsements: [] }]);
+        const catTrimmed = newCategory.trim() || "Other";
+        setSkills([...skills, { name: trimmed, category: catTrimmed, endorsements: [] }]);
         setNewSkill("");
+        // Intentionally keep category same to allow fast entry of multiple skills in one category
     };
 
     const handleRemoveSkill = (skillName) => {
@@ -98,42 +104,71 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         </div>
 
                         {/* Add Skill Form */}
-                        <form onSubmit={handleAddSkill} className="flex gap-2">
-                            <div className="flex-1 p-[2px] rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600"><input
-                                type="text"
-                                value={newSkill}
-                                onChange={(e) => setNewSkill(e.target.value)}
-                                placeholder="E.g., React.js, Public Speaking, Python"
-                                className={`w-full h-full px-4 py-3 rounded-[calc(0.75rem-2px)] font-bold ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} outline-none transition-colors`}
-                            /></div>
-                            <button
-                                type="submit"
-                                disabled={!newSkill.trim()}
-                                className="px-4 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 transition-all disabled:opacity-50"
-                            >
-                                <Plus className="w-5 h-5" />
-                            </button>
+                        <form onSubmit={handleAddSkill} className="flex flex-col gap-3">
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <div className="flex-1 p-[2px] rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600">
+                                    <input
+                                        type="text"
+                                        value={newSkill}
+                                        onChange={(e) => setNewSkill(e.target.value)}
+                                        placeholder="Skill Name (e.g. React.js, Public Speaking)"
+                                        className={`w-full h-full px-4 py-3 rounded-[calc(0.75rem-2px)] font-bold ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} outline-none transition-colors`}
+                                    />
+                                </div>
+                                <div className="flex-1 p-[2px] rounded-xl bg-gradient-to-tr from-purple-600 to-pink-600">
+                                    <input
+                                        type="text"
+                                        value={newCategory}
+                                        onChange={(e) => setNewCategory(e.target.value)}
+                                        list="category-suggestions"
+                                        placeholder="Category (e.g. Frameworks)"
+                                        className={`w-full h-full px-4 py-3 rounded-[calc(0.75rem-2px)] font-bold ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} outline-none transition-colors`}
+                                    />
+                                    <datalist id="category-suggestions">
+                                        {categorySuggestions.map(cat => (
+                                            <option key={cat} value={cat} />
+                                        ))}
+                                    </datalist>
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={!newSkill.trim()}
+                                    className="px-6 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-500 hover:to-pink-500 transition-all disabled:opacity-50 flex justify-center items-center"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                </button>
+                            </div>
                         </form>
 
-                        {/* Skills List */}
-                        <div className="flex flex-wrap gap-3">
-                            {skills.map((skill, idx) => (
-                                <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md relative z-10">
-                                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(9999px-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
-                                        <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{skill.name}</span>
-                                        <button
-                                            onClick={() => handleRemoveSkill(skill.name)}
-                                            className={`p-1 rounded-full ${darkMode ? 'hover:bg-slate-800 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-500'} transition-colors`}
-                                            title="Remove skill"
-                                        >
-                                            <X className="w-3.5 h-3.5" />
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                        {/* Skills List Grouped by Category */}
+                        <div className="space-y-6">
                             {skills.length === 0 && (
                                 <p className={`text-sm italic ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>No skills added yet.</p>
                             )}
+                            
+                            {Array.from(new Set(skills.map(s => s.category || "Other"))).map(category => (
+                                <div key={category} className="space-y-3">
+                                    <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'} border-b ${darkMode ? 'border-gray-800' : 'border-gray-200'} pb-1`}>
+                                        {category}
+                                    </h4>
+                                    <div className="flex flex-wrap gap-3">
+                                        {skills.filter(s => (s.category || "Other") === category).map((skill, idx) => (
+                                            <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md relative z-10">
+                                                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(9999px-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                                    <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{skill.name}</span>
+                                                    <button
+                                                        onClick={() => handleRemoveSkill(skill.name)}
+                                                        className={`p-1 rounded-full ${darkMode ? 'hover:bg-slate-800 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-500'} transition-colors`}
+                                                        title="Remove skill"
+                                                    >
+                                                        <X className="w-3.5 h-3.5" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
