@@ -350,7 +350,7 @@ export default function EditAchievementsModal({
                         {/* Date - Full Row with Dropdowns */}
                         <div className="space-y-1.5">
                           <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-date`] ? "text-red-500" : darkMode ? "text-teal-400" : "text-teal-600"}`}>
-                            <Calendar className="w-3.5 h-3.5" /> Date / Year <span className="text-red-500">*</span>
+                            <Calendar className="w-3.5 h-3.5" /> Date (Month & Year) <span className="text-red-500">*</span>
                           </label>
                           <div className="flex gap-4">
                             <div className={`flex-1 p-[2px] bg-gradient-to-tr from-teal-500 to-emerald-500 rounded-xl ${errors[`${index}-date`] ? "from-red-500 to-red-600" : ""}`}>
@@ -365,7 +365,7 @@ export default function EditAchievementsModal({
                                 ))}
                               </select>
                             </div>
-                            <div className={`w-32 p-[2px] bg-gradient-to-tr from-teal-500 to-emerald-500 rounded-xl ${errors[`${index}-date`] ? "from-red-500 to-red-600" : ""}`}>
+                            <div className={`flex-1 p-[2px] bg-gradient-to-tr from-teal-500 to-emerald-500 rounded-xl ${errors[`${index}-date`] ? "from-red-500 to-red-600" : ""}`}>
                               <select
                                 value={ach.year}
                                 onChange={(e) => handleChange(index, "year", e.target.value)}
