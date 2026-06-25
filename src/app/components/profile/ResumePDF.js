@@ -28,9 +28,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profilePic: {
-    width: 64,
-    height: 64,
+    width: 70,
+    height: 70,
     borderRadius: 4,
+    borderWidth: 1.5,
+    borderColor: NAVY,
+    objectFit: 'cover',
   },
   headerTextGroup: {
     flex: 1,
@@ -204,17 +207,45 @@ const renderBullets = (text) => {
 export default function ResumePDF({ profile }) {
   if (!profile) return null;
 
+  // ── Course full-form expansion ──
+  const COURSE_FULLFORM = {
+    'BCA': 'Bachelor of Computer Applications',
+    'MCA': 'Master of Computer Applications',
+    'B.TECH': 'Bachelor of Technology',
+    'M.TECH': 'Master of Technology',
+    'MBA': 'Master of Business Administration',
+    'BBA': 'Bachelor of Business Administration',
+    'BSC': 'Bachelor of Science',
+    'MSC': 'Master of Science',
+    'PHD': 'Doctor of Philosophy',
+    'B.SC': 'Bachelor of Science',
+    'M.SC': 'Master of Science',
+    'BE': 'Bachelor of Engineering',
+    'ME': 'Master of Engineering',
+  };
+  const expandCourse = (course) => {
+    if (!course) return '';
+    const upper = course.trim().toUpperCase();
+    return COURSE_FULLFORM[upper] || course;
+  };
+
   // ── Education header extraction ──
-  const mainEdu = profile.education && profile.education.length > 0 ? profile.education[0] : null;
+  // Filter out school/secondary entries, pick the most relevant (university) one
+  const HIGH_SCHOOL_KEYWORDS = ['school', 'high school', 'secondary', 'class 10', 'class 12', 'sr. sec', 'sec.', 'inter', 'intermediate'];
+  const universityEdu = (profile.education || []).find(
+    edu => !HIGH_SCHOOL_KEYWORDS.some(kw => (edu.institution || '').toLowerCase().includes(kw))
+  );
+
   let degreeLine = '';
-  let universityLine = '';
-  if (mainEdu) {
-    const parts = [mainEdu.degree, mainEdu.course ? `in ${mainEdu.course}` : '', mainEdu.branch ? `(${mainEdu.branch})` : ''].filter(Boolean);
+  const DEFAULT_UNIVERSITY = 'Graphic Era Hill University, Haldwani';
+  const universityLine = DEFAULT_UNIVERSITY;
+
+  if (universityEdu) {
+    const fullCourse = expandCourse(universityEdu.course || universityEdu.degree);
+    const parts = [fullCourse, universityEdu.branch ? `(${universityEdu.branch})` : ''].filter(Boolean);
     degreeLine = parts.join(' ');
-    universityLine = mainEdu.institution || '';
   } else if (profile.course || profile.branch) {
-    degreeLine = [profile.course, profile.branch ? `(${profile.branch})` : ''].filter(Boolean).join(' ');
-    universityLine = 'Graphic Era Hill University, Dehradun';
+    degreeLine = [expandCourse(profile.course), profile.branch ? `(${profile.branch})` : ''].filter(Boolean).join(' ');
   }
 
   // ── Group skills by category ──
@@ -224,6 +255,7 @@ export default function ResumePDF({ profile }) {
     acc[cat].push(skill.name);
     return acc;
   }, {});
+
 
   return (
     <Document>
@@ -273,14 +305,20 @@ export default function ResumePDF({ profile }) {
                 <Link src={profile.portfolio} style={styles.contactText}>Portfolio</Link>
               </View>
             )}
+            {(profile.customLinks || []).map((cl, idx) => (
+              <View key={idx} style={styles.contactRow}>
+                <IconGlobe />
+                <Link src={cl.url} style={styles.contactText}>{cl.label || 'Link'}</Link>
+              </View>
+            ))}
           </View>
         </View>
 
         {/* ── ABOUT / CAREER OBJECTIVE ── */}
-        {profile.description && (
+        {profile.bio && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Career Objective</Text>
-            <Text style={styles.bodyText}>{profile.description}</Text>
+            <Text style={styles.bodyText}>{profile.bio}</Text>
           </View>
         )}
 
@@ -404,7 +442,7 @@ export default function ResumePDF({ profile }) {
 
         {/* ── TECHNICAL SKILLS & INTERESTS ── */}
         {(Object.keys(skillsByCategory).length > 0 || (profile.languages && profile.languages.length > 0)) && (
-          <View style={styles.section}>
+          <View style={styles.section} wrap={false}>
             <Text style={styles.sectionTitle}>Technical Skills & Interests</Text>
             {Object.entries(skillsByCategory).map(([category, skillsList], idx) => (
               <View key={idx} style={styles.skillCategory}>
@@ -414,7 +452,7 @@ export default function ResumePDF({ profile }) {
             ))}
             {profile.languages && profile.languages.length > 0 && (
               <View style={styles.skillCategory}>
-                <Text style={styles.skillLabel}>Languages:</Text>
+                <Text style={styles.skillLabel}>Spoken Languages:</Text>
                 <Text style={styles.skillText}>{profile.languages.join(', ')}</Text>
               </View>
             )}
