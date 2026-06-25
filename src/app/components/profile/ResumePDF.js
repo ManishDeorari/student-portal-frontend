@@ -21,12 +21,12 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   profilePic: {
-    width: 68,
-    height: 68,
-    borderRadius: 4,
+    width: 80,
+    height: 80,
+    borderRadius: 5,
     borderWidth: 1.5,
     borderColor: NAVY,
-    marginRight: 12,
+    marginRight: 14,
     flexShrink: 0,
   },
   headerTextGroup: {
@@ -34,16 +34,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   name: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'Helvetica-Bold',
     color: NAVY,
-    marginBottom: 2,
+    marginBottom: 5,
   },
   subtitleDegree: {
     fontSize: 10,
     fontFamily: 'Helvetica-Oblique',
     color: MID_GRAY,
-    marginBottom: 1,
+    marginBottom: 2,
   },
   subtitleUniversity: {
     fontSize: 9.5,
@@ -54,25 +54,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 8,
     marginBottom: 4,
-    gap: 4,
+    gap: 0,
   },
   contactChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
-    paddingRight: 8,
+    marginRight: 6,
+  },
+  iconWrap: {
+    width: 10,
+    height: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 3,
   },
   contactSep: {
     color: LIGHT_GRAY,
-    fontSize: 9,
-    marginRight: 4,
+    fontSize: 8.5,
+    marginLeft: 6,
+    marginRight: 6,
   },
   contactText: {
     fontSize: 8.5,
     color: DARK_GRAY,
     textDecoration: 'none',
+  },
+  // Header bottom divider
+  headerDivider: {
+    borderBottomWidth: 1.5,
+    borderBottomColor: NAVY,
+    marginBottom: 8,
+    marginTop: 2,
   },
   // ─── SECTIONS ───
   section: {
@@ -93,6 +107,9 @@ const styles = StyleSheet.create({
   // ─── ITEMS ───
   itemBlock: {
     marginBottom: 7,
+    // Keep the entire item together — never split title from description across pages
+    // Note: In @react-pdf/renderer, wrap=false must be set on the View component itself,
+    // not in StyleSheet. So we set it in JSX. This comment is for reference.
   },
   rowBetween: {
     flexDirection: 'row',
@@ -165,30 +182,36 @@ const styles = StyleSheet.create({
   },
 });
 
-// ─── SVG ICONS ───
+// ─── SVG ICONS ─── (wrapped in fixed-height container for alignment)
 const IconPhone = () => (
-  <Svg width="9" height="9" viewBox="0 0 24 24">
-    <Path
-      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.13 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.04 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"
-      fill={NAVY}
-    />
-  </Svg>
+  <View style={styles.iconWrap}>
+    <Svg width="9" height="9" viewBox="0 0 24 24">
+      <Path
+        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.13 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.04 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"
+        fill={NAVY}
+      />
+    </Svg>
+  </View>
 );
 const IconEmail = () => (
-  <Svg width="9" height="9" viewBox="0 0 24 24">
-    <Path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill={NAVY} />
-    <Path d="M22 6l-10 7L2 6" fill="white" />
-  </Svg>
+  <View style={styles.iconWrap}>
+    <Svg width="9" height="9" viewBox="0 0 24 24">
+      <Path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill={NAVY} />
+      <Path d="M22 6l-10 7L2 6" fill="white" />
+    </Svg>
+  </View>
 );
 const IconGlobe = () => (
-  <Svg width="9" height="9" viewBox="0 0 24 24">
-    <Path
-      d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-      fill="none"
-      stroke={NAVY}
-      strokeWidth="2"
-    />
-  </Svg>
+  <View style={styles.iconWrap}>
+    <Svg width="9" height="9" viewBox="0 0 24 24">
+      <Path
+        d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+        fill="none"
+        stroke={NAVY}
+        strokeWidth="2"
+      />
+    </Svg>
+  </View>
 );
 
 // ─── BULLET RENDERER ───
@@ -321,6 +344,8 @@ export default function ResumePDF({ profile }) {
             </View>
           </View>
         </View>
+        {/* Header bottom divider */}
+        <View style={styles.headerDivider} />
 
         {/* ── ABOUT / CAREER OBJECTIVE ── */}
         {profile.bio && (
@@ -333,18 +358,20 @@ export default function ResumePDF({ profile }) {
         {/* ── EDUCATION ── */}
         {profile.education && profile.education.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
             {profile.education.map((edu, idx) => (
-              <View key={idx} style={styles.itemBlock}>
-                <View style={styles.rowBetween}>
-                  <Text style={styles.itemTitle}>• {edu.institution}</Text>
-                  <Text style={styles.itemDate}>{edu.startDate}{edu.endDate ? ` – ${edu.endDate}` : ' – Present'}</Text>
-                </View>
-                <View style={styles.rowBetween}>
-                  <Text style={styles.itemSubtitle}>
-                    {[edu.degree, edu.course ? `in ${edu.course}` : '', edu.branch ? `(${edu.branch})` : ''].filter(Boolean).join(' ')}
-                  </Text>
-                  {edu.grade ? <Text style={styles.itemDate}>CGPA/Percentage: {edu.grade}</Text> : null}
+              <View key={idx} wrap={false}>
+                {idx === 0 && <Text style={styles.sectionTitle}>Education</Text>}
+                <View style={styles.itemBlock}>
+                  <View style={styles.rowBetween}>
+                    <Text style={styles.itemTitle}>• {edu.institution}</Text>
+                    <Text style={styles.itemDate}>{edu.startDate}{edu.endDate ? ` – ${edu.endDate}` : ' – Present'}</Text>
+                  </View>
+                  <View style={styles.rowBetween}>
+                    <Text style={styles.itemSubtitle}>
+                      {[edu.degree, edu.course ? `in ${edu.course}` : '', edu.branch ? `(${edu.branch})` : ''].filter(Boolean).join(' ')}
+                    </Text>
+                    {edu.grade ? <Text style={styles.itemDate}>CGPA/Percentage: {edu.grade}</Text> : null}
+                  </View>
                 </View>
               </View>
             ))}
@@ -354,24 +381,26 @@ export default function ResumePDF({ profile }) {
         {/* ── RESEARCH PAPERS ── */}
         {profile.researchPapers && profile.researchPapers.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Research Papers</Text>
             {profile.researchPapers.map((paper, idx) => (
-              <View key={idx} style={styles.itemBlock}>
-                <View style={styles.rowBetween}>
-                  <Text style={styles.itemTitle}>• {paper.title}</Text>
-                  {paper.publishDate && (
-                    <Text style={styles.itemDate}>{paper.publishDate}</Text>
+              <View key={idx} wrap={false}>
+                {idx === 0 && <Text style={styles.sectionTitle}>Research Papers</Text>}
+                <View style={styles.itemBlock}>
+                  <View style={styles.rowBetween}>
+                    <Text style={styles.itemTitle}>• {paper.title}</Text>
+                    {paper.publishDate && (
+                      <Text style={styles.itemDate}>{paper.publishDate}</Text>
+                    )}
+                  </View>
+                  {paper.publisher && (
+                    <Text style={styles.itemSubtitle}>Published in: {paper.publisher}</Text>
+                  )}
+                  {paper.type && (
+                    <Text style={[styles.itemSubtitle, { fontFamily: 'Helvetica' }]}>Type: {paper.type}</Text>
+                  )}
+                  {paper.description && (
+                    <Text style={styles.bodyText}>{paper.description}</Text>
                   )}
                 </View>
-                {paper.publisher && (
-                  <Text style={styles.itemSubtitle}>Published in: {paper.publisher}</Text>
-                )}
-                {paper.type && (
-                  <Text style={[styles.itemSubtitle, { fontFamily: 'Helvetica' }]}>Type: {paper.type}</Text>
-                )}
-                {paper.description && (
-                  <Text style={styles.bodyText}>{paper.description}</Text>
-                )}
               </View>
             ))}
           </View>
@@ -380,49 +409,51 @@ export default function ResumePDF({ profile }) {
         {/* ── PROJECTS ── */}
         {profile.projects && profile.projects.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Projects</Text>
             {profile.projects.map((proj, idx) => {
               const descLines = proj.description ? proj.description.split('\n').map(l => l.trim()).filter(l => l.length > 0) : [];
               const summaryLine = descLines[0] || null;
               const bulletLines = descLines.slice(1);
               return (
-                <View key={idx} style={styles.itemBlock}>
-                  <View style={styles.rowBetween}>
-                    <View style={{ flexDirection: 'row', alignItems: 'baseline', flex: 1 }}>
-                      <Text style={styles.itemTitle}>• {proj.title}</Text>
-                      {proj.link && (
-                        <Text style={{ fontSize: 9, marginLeft: 6 }}>
-                          | <Link src={proj.link} style={{ color: NAVY, textDecoration: 'none' }}>Link</Link>
+                <View key={idx} wrap={false}>
+                  {idx === 0 && <Text style={styles.sectionTitle}>Projects</Text>}
+                  <View style={styles.itemBlock}>
+                    <View style={styles.rowBetween}>
+                      <View style={{ flexDirection: 'row', alignItems: 'baseline', flex: 1 }}>
+                        <Text style={styles.itemTitle}>• {proj.title}</Text>
+                        {proj.link && (
+                          <Text style={{ fontSize: 9, marginLeft: 6 }}>
+                            | <Link src={proj.link} style={{ color: NAVY, textDecoration: 'none' }}>Link</Link>
+                          </Text>
+                        )}
+                      </View>
+                      <Text style={styles.itemDate}>{proj.startDate}{proj.endDate ? ` – ${proj.endDate}` : ' – Present'}</Text>
+                    </View>
+
+                    {summaryLine && (
+                      <Text style={styles.itemSubtitle}>{summaryLine}</Text>
+                    )}
+
+                    {proj.toolsUsed && proj.toolsUsed.length > 0 && (
+                      <View style={[styles.bulletItem, { marginTop: 2, marginLeft: 8 }]}>
+                        <Text style={styles.bulletPoint}>–</Text>
+                        <Text style={styles.bulletText}>
+                          <Text style={{ fontFamily: 'Helvetica-Bold' }}>Tools & technologies: </Text>
+                          {proj.toolsUsed.join(', ')}
                         </Text>
-                      )}
-                    </View>
-                    <Text style={styles.itemDate}>{proj.startDate}{proj.endDate ? ` – ${proj.endDate}` : ' – Present'}</Text>
+                      </View>
+                    )}
+
+                    {bulletLines.length > 0 && (
+                      <View style={styles.bulletList}>
+                        {bulletLines.map((line, i) => (
+                          <View key={i} style={styles.bulletItem}>
+                            <Text style={styles.bulletPoint}>–</Text>
+                            <Text style={styles.bulletText}>{line.replace(/^[-•–]\s*/, '')}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
                   </View>
-
-                  {summaryLine && (
-                    <Text style={styles.itemSubtitle}>{summaryLine}</Text>
-                  )}
-
-                  {proj.toolsUsed && proj.toolsUsed.length > 0 && (
-                    <View style={[styles.bulletItem, { marginTop: 2, marginLeft: 8 }]}>
-                      <Text style={styles.bulletPoint}>–</Text>
-                      <Text style={styles.bulletText}>
-                        <Text style={{ fontFamily: 'Helvetica-Bold' }}>Tools & technologies: </Text>
-                        {proj.toolsUsed.join(', ')}
-                      </Text>
-                    </View>
-                  )}
-
-                  {bulletLines.length > 0 && (
-                    <View style={styles.bulletList}>
-                      {bulletLines.map((line, i) => (
-                        <View key={i} style={styles.bulletItem}>
-                          <Text style={styles.bulletPoint}>–</Text>
-                          <Text style={styles.bulletText}>{line.replace(/^[-•–]\s*/, '')}</Text>
-                        </View>
-                      ))}
-                    </View>
-                  )}
                 </View>
               );
             })}
@@ -432,17 +463,19 @@ export default function ResumePDF({ profile }) {
         {/* ── EXPERIENCE & RESPONSIBILITIES ── */}
         {profile.experience && profile.experience.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Experience & Positions of Responsibility</Text>
             {profile.experience.map((exp, idx) => (
-              <View key={idx} style={styles.itemBlock}>
-                <View style={styles.rowBetween}>
-                  <Text style={styles.itemTitle}>• {exp.title}</Text>
-                  <Text style={styles.itemDate}>{exp.startDate}{exp.endDate ? ` – ${exp.endDate}` : ' – Present'}</Text>
+              <View key={idx} wrap={false}>
+                {idx === 0 && <Text style={styles.sectionTitle}>Experience & Positions of Responsibility</Text>}
+                <View style={styles.itemBlock}>
+                  <View style={styles.rowBetween}>
+                    <Text style={styles.itemTitle}>• {exp.title}</Text>
+                    <Text style={styles.itemDate}>{exp.startDate}{exp.endDate ? ` – ${exp.endDate}` : ' – Present'}</Text>
+                  </View>
+                  <Text style={styles.itemSubtitle}>
+                    {exp.company}{exp.location ? `, ${exp.location}` : ''}
+                  </Text>
+                  {renderBullets(exp.description)}
                 </View>
-                <Text style={styles.itemSubtitle}>
-                  {exp.company}{exp.location ? `, ${exp.location}` : ''}
-                </Text>
-                {renderBullets(exp.description)}
               </View>
             ))}
           </View>
