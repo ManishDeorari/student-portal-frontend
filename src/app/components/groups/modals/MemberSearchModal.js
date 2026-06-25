@@ -6,8 +6,8 @@ import { useTheme } from "@/context/ThemeContext";
 import HybridInput from "../../ui/HybridInput";
 
 const COURSE_OPTIONS = ["B.Tech", "M.Tech", "MBA", "BCA", "MCA"];
-const currentYearForDropdown = new Date().getFullYear();
-const YEAR_OPTIONS = Array.from({ length: currentYearForDropdown + 5 - 2000 + 1 }, (_, i) => String(2000 + i));
+const SEMESTER_OPTIONS = ["1", "2", "3", "4", "5", "6", "7", "8"];
+const BRANCH_OPTIONS = ["CSE", "IT", "ECE", "ME", "CE", "EE", "Data Science", "AI & ML"];
 
 export default function MemberSearchModal({
     isOpen,
@@ -21,7 +21,11 @@ export default function MemberSearchModal({
     const { darkMode } = useTheme();
     const [searchTerm, setSearchTerm] = useState("");
     const [course, setCourse] = useState("");
-    const [year, setYear] = useState("");
+    const [semester, setSemester] = useState("");
+    const [branch, setBranch] = useState("");
+    const [section, setSection] = useState("");
+    const [department, setDepartment] = useState("");
+    const [position, setPosition] = useState("");
     const [roleFilter, setRoleFilter] = useState("ALL");
     const [users, setUsers] = useState([]);
     const [selectedIds, setSelectedIds] = useState(initialSelected || []);
@@ -37,7 +41,11 @@ export default function MemberSearchModal({
             // Use connect/search to get the same filtering power as Network page
             let url = `${API_URL}/api/connect/search?query=${searchTerm}`;
             if (course) url += `&course=${course}`;
-            if (course && year) url += `&year=${year}`;
+            if (course && semester) url += `&semester=${semester}`;
+            if (course && branch) url += `&branch=${branch}`;
+            if (course && section) url += `&section=${section}`;
+            if (department) url += `&department=${department}`;
+            if (position) url += `&position=${position}`;
 
             const res = await fetch(url, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -70,7 +78,7 @@ export default function MemberSearchModal({
         } finally {
             setLoading(false);
         }
-    }, [searchTerm, course, year, roleFilter, API_URL]);
+    }, [searchTerm, course, semester, branch, section, department, position, roleFilter, API_URL]);
 
     useEffect(() => {
         if (isOpen) {
@@ -88,9 +96,13 @@ export default function MemberSearchModal({
         }
     }, [isOpen, initialSelected]); 
 
-    // Clear year if course is cleared
+    // Clear dependent filters if course is cleared
     useEffect(() => {
-        if (!course) setYear("");
+        if (!course) {
+            setSemester("");
+            setBranch("");
+            setSection("");
+        }
     }, [course]);
 
     const handleSelectRole = (roleKey) => {
@@ -223,32 +235,80 @@ export default function MemberSearchModal({
                                 </div>
                             </div>
 
-                            {/* Custom Filters (Course, Year) */}
-                            <div className="grid grid-cols-2 gap-2 sm:gap-4">
-                                <div className="p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-500/50 to-purple-500/50">
-                                    <HybridInput
-                                        value={course}
-                                        onChange={(val) => setCourse(val)}
-                                        options={COURSE_OPTIONS}
-                                        placeholder="Course (e.g. B.Tech)"
-                                        uppercase={true}
-                                        className={`w-full px-2 sm:px-4 py-1.5 sm:py-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] font-black text-[9px] sm:text-[11px] uppercase tracking-tighter sm:tracking-[0.1em] outline-none transition-all ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
-                                    />
-                                </div>
+                            {/* Dynamic Custom Filters */}
+                            {(roleFilter === "ALL" || roleFilter === "STUDENT") && (
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+                                    <div className="p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-500/50 to-purple-500/50">
+                                        <HybridInput
+                                            value={course}
+                                            onChange={(val) => setCourse(val)}
+                                            options={COURSE_OPTIONS}
+                                            placeholder="Course (e.g. B.Tech)"
+                                            uppercase={true}
+                                            className={`w-full px-2 sm:px-4 py-1.5 sm:py-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] font-black text-[9px] sm:text-[11px] uppercase tracking-tighter sm:tracking-[0.1em] outline-none transition-all ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
+                                        />
+                                    </div>
 
-                                <div className="relative p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-500/50 to-pink-500/50">
-                                    <select
-                                        value={year}
-                                        disabled={!course}
-                                        onChange={(e) => setYear(e.target.value)}
-                                        className={`w-full px-2 sm:px-4 py-1.5 sm:py-[11px] rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] appearance-none font-black text-[9px] sm:text-[11px] uppercase tracking-tighter sm:tracking-[0.1em] outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${darkMode ? "bg-black text-white focus:bg-slate-900" : "bg-white text-slate-900 focus:bg-slate-50"}`}
-                                    >
-                                        <option value="">{course ? "Passing Year" : "Select Course First"}</option>
-                                        {YEAR_OPTIONS.map(y => <option key={y} value={y}>{y}</option>)}
-                                    </select>
-                                    <FaChevronDown className="w-3 h-3 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50 text-pink-500" />
+                                    <div className="p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-500/50 to-pink-500/50">
+                                        <HybridInput
+                                            value={branch}
+                                            onChange={(val) => setBranch(val)}
+                                            options={BRANCH_OPTIONS}
+                                            disabled={!course}
+                                            placeholder={course ? "Branch (e.g. CSE)" : "Select Course"}
+                                            uppercase={true}
+                                            className={`w-full px-2 sm:px-4 py-1.5 sm:py-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] font-black text-[9px] sm:text-[11px] uppercase tracking-tighter sm:tracking-[0.1em] outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
+                                        />
+                                    </div>
+
+                                    <div className="relative p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-pink-500/50 to-red-500/50">
+                                        <select
+                                            value={semester}
+                                            disabled={!course}
+                                            onChange={(e) => setSemester(e.target.value)}
+                                            className={`w-full px-2 sm:px-4 py-1.5 sm:py-[11px] rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] appearance-none font-black text-[9px] sm:text-[11px] uppercase tracking-tighter sm:tracking-[0.1em] outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${darkMode ? "bg-black text-white focus:bg-slate-900" : "bg-white text-slate-900 focus:bg-slate-50"}`}
+                                        >
+                                            <option value="">{course ? "Semester" : "N/A"}</option>
+                                            {SEMESTER_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+                                        </select>
+                                        <FaChevronDown className="w-3 h-3 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-50 text-red-500" />
+                                    </div>
+
+                                    <div className="p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-500/50 to-orange-500/50">
+                                        <input
+                                            type="text"
+                                            value={section}
+                                            disabled={!course}
+                                            onChange={(e) => setSection(e.target.value)}
+                                            placeholder={course ? "Section (e.g. A)" : "N/A"}
+                                            className={`w-full px-2 sm:px-4 py-1.5 sm:py-[11px] rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] font-black text-[9px] sm:text-[11px] uppercase tracking-tighter sm:tracking-[0.1em] outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+
+                            {roleFilter === "FACULTY" && (
+                                <div className="grid grid-cols-2 gap-2 sm:gap-4">
+                                    <div className="p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-teal-500/50 to-emerald-500/50">
+                                        <input
+                                            type="text"
+                                            value={department}
+                                            onChange={(e) => setDepartment(e.target.value)}
+                                            placeholder="Department (e.g. CS)"
+                                            className={`w-full px-2 sm:px-4 py-1.5 sm:py-[11px] rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] font-black text-[9px] sm:text-[11px] uppercase tracking-tighter sm:tracking-[0.1em] outline-none transition-all ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
+                                        />
+                                    </div>
+                                    <div className="p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-500/50 to-green-500/50">
+                                        <input
+                                            type="text"
+                                            value={position}
+                                            onChange={(e) => setPosition(e.target.value)}
+                                            placeholder="Position (e.g. Professor)"
+                                            className={`w-full px-2 sm:px-4 py-1.5 sm:py-[11px] rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(1rem-1.5px)] font-black text-[9px] sm:text-[11px] uppercase tracking-tighter sm:tracking-[0.1em] outline-none transition-all ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex justify-between items-center mt-6 px-1">
