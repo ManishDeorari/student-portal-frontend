@@ -138,11 +138,11 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
     <>
       <LoadingOverlay isVisible={loading} />
       <div className="fixed inset-0 h-[100dvh] w-full bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-2 md:p-4">
-        <div className="p-[2.5px] bg-gradient-to-tr from-emerald-500 to-teal-600 rounded-2xl sm:rounded-[2.5rem] shadow-[0_20px_60px_rgba(16,185,129,0.4)] w-full max-w-3xl">
+        <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl sm:rounded-[2.5rem] shadow-[0_20px_60px_rgba(99,102,241,0.4)] w-full max-w-3xl">
           <div className={`rounded-[calc(1rem-2.5px)] sm:rounded-[calc(2.5rem-2.5px)] w-full shadow-2xl overflow-hidden animate-fadeIn max-h-[95dvh] sm:max-h-[90vh] flex flex-col ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
             
             {/* Header */}
-            <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 flex justify-between items-center text-white flex-shrink-0">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex justify-between items-center text-white flex-shrink-0">
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <BookOpen className="w-5 h-5" /> Edit Publications & Patents
               </h2>
@@ -154,13 +154,13 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
             <div className={`p-4 md:p-6 space-y-6 overflow-y-auto custom-scrollbar flex-grow ${darkMode ? "bg-[#121213]" : "bg-gray-50/30"}`}>
               
               {/* ── Hint Banner ── */}
-              <div className="p-[2px] bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-500 rounded-xl">
-                <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-emerald-300' : 'bg-emerald-50 text-emerald-800'}`}>
+              <div className="p-[2px] bg-gradient-to-tr from-blue-600 via-violet-500 to-purple-600 rounded-xl">
+                <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
                   <BookOpen className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div className="text-sm leading-relaxed space-y-1">
                     <p className="font-black uppercase tracking-wide">Earn Points for Publications!</p>
                     <p>Add up to <span className="font-black">3 research papers or patents</span> with valid links to earn <span className="font-black">20 points each</span> (maximum <span className="font-black">60 points</span> total).</p>
-                    <div className={`mt-2 flex items-center gap-2 text-xs font-black uppercase tracking-widest rounded-lg px-3 py-1.5 w-max ${darkMode ? 'bg-emerald-500/20 text-emerald-300' : 'bg-emerald-100 text-emerald-700'}`}>
+                    <div className={`mt-2 flex items-center gap-2 text-xs font-black uppercase tracking-widest rounded-lg px-3 py-1.5 w-max ${darkMode ? 'bg-blue-500/20 text-blue-300' : 'bg-blue-100 text-blue-700'}`}>
                       <span>
                         {papersWithLinks >= 3
                           ? `✅ ${pointsEarning}/60 pts — Maximum reached!`
@@ -178,21 +178,21 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
               {papers.map((paper, index) => (
                 <div
                   key={index}
-                  className="p-[2.5px] bg-gradient-to-tr from-emerald-500 to-teal-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(16,185,129,0.2)] transition-all duration-300"
+                  className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(99,102,241,0.2)] transition-all duration-300"
                 >
                   <div className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} rounded-[calc(2.5rem-2.5px)] overflow-hidden shadow-2xl`}>
                     
                     {/* Card Header */}
                     <div
                       onClick={() => toggleCollapse(index)}
-                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${!collapsedCards[index] ? (darkMode ? "bg-emerald-600/10" : "bg-emerald-50/50") : ""}`}
+                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${!collapsedCards[index] ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="text-emerald-500">
                           {!collapsedCards[index] ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                         </div>
                         <div>
-                          <h3 className={`font-black uppercase tracking-tight text-sm ${!collapsedCards[index] ? "text-emerald-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}>
+                          <h3 className={`font-black uppercase tracking-tight text-sm ${!collapsedCards[index] ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}>
                             {paper.title || `New Entry ${index + 1}`}
                           </h3>
                           {paper.link && (
@@ -360,9 +360,9 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
               <button
                 type="button"
                 onClick={addPaper}
-                className={`w-full py-5 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all hover:border-solid hover:scale-[1.01] ${darkMode ? "border-emerald-500/30 hover:border-emerald-500 bg-emerald-500/5 text-emerald-400" : "border-emerald-200 hover:border-emerald-500 bg-emerald-50 text-emerald-600"}`}
+                className={`w-full py-5 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all hover:border-solid hover:scale-[1.01] ${darkMode ? "border-blue-500/30 hover:border-blue-500 bg-blue-500/5 text-blue-400" : "border-blue-200 hover:border-blue-500 bg-blue-50 text-blue-600"}`}
               >
-                <div className={`p-2 rounded-full ${darkMode ? "bg-emerald-500/20" : "bg-emerald-100"}`}>
+                <div className={`p-2 rounded-full ${darkMode ? "bg-blue-500/20" : "bg-blue-100"}`}>
                   <Plus className="w-6 h-6" />
                 </div>
                 <span className="font-bold">Add Publication / Patent</span>
@@ -380,7 +380,7 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
               <button
                 onClick={handleSave}
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02] transition-all flex items-center gap-2 disabled:opacity-70"
+                className="px-6 py-2.5 rounded-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-[1.02] transition-all flex items-center gap-2 disabled:opacity-70"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">

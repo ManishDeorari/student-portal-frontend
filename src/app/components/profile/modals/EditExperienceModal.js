@@ -349,6 +349,10 @@ export default function EditExperienceModal({
     }
   };
 
+  // Live points counter for hint banner
+  const expWithProof = experiences.filter(e => e.proofImage && e.proofImage.trim().length > 0).length;
+  const expPointsEarning = Math.min(expWithProof, 3) * 10;
+
   return (
     <>
       <LoadingOverlay isVisible={loading} />
@@ -377,9 +381,19 @@ export default function EditExperienceModal({
               <div className="p-[2px] bg-gradient-to-tr from-purple-500 via-pink-500 to-red-500 rounded-xl mb-6">
                 <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-purple-300' : 'bg-purple-50 text-purple-800'}`}>
                   <Award className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm leading-relaxed">
-                    <p className="font-bold mb-0.5">Earn Points!</p>
-                    <p>Add at least 1 Experience/Internship with a valid Proof Image to earn a flat 10 points! (Maximum 10 points total for Experience)</p>
+                  <div className="text-sm leading-relaxed space-y-1">
+                    <p className="font-black uppercase tracking-wide">Earn Points for Experience!</p>
+                    <p>Add up to <span className="font-black">3 entries with a valid Proof Image</span> to earn <span className="font-black">10 points each</span> (maximum <span className="font-black">30 points</span> total).</p>
+                    <div className={`mt-2 flex items-center gap-2 text-xs font-black uppercase tracking-widest rounded-lg px-3 py-1.5 w-max ${darkMode ? 'bg-purple-500/20 text-purple-300' : 'bg-purple-100 text-purple-700'}`}>
+                      <span>
+                        {expWithProof >= 3
+                          ? `✅ ${expPointsEarning}/30 pts — Maximum reached!`
+                          : `${expWithProof}/3 entries with proof — Currently earning ${expPointsEarning}/30 pts`}
+                      </span>
+                    </div>
+                    <p className={`text-[10px] font-medium mt-1 ${darkMode ? 'text-slate-400' : 'text-gray-500'}`}>
+                      Faculty &amp; Admin can always see the proof image • Toggle visibility per entry.
+                    </p>
                   </div>
                 </div>
               </div>
