@@ -198,12 +198,12 @@ function ProfileContent() {
         <ProfileCertificates profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileProjects profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfilePapers profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
-        <ProfileAchievements profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
-        <ProfileLanguages profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
-        <ProfileSkills profile={profile} setProfile={setProfile} isPublicView={isPublicView} currentUserId={user?._id} />
         {(profile.role === "student" || profile.role === "alumni") && (
           <ProfileResumeAndLinks profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         )}
+        <ProfileSkills profile={profile} setProfile={setProfile} isPublicView={isPublicView} currentUserId={user?._id} />
+        <ProfileAchievements profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
+        <ProfileLanguages profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileActivity profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         {(profile.role === "student" || profile.role === "alumni") && (
           <ProfileEventParticipation profile={profile} setProfile={setProfile} isPublicView={isPublicView} />

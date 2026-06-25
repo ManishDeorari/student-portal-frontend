@@ -25,7 +25,7 @@ export default function ProfileAchievements({ profile, setProfile, isPublicView 
 
     return (
         <>
-            <SectionCard title="Honors & Awards" hasData={hasData} onEdit={() => setIsEditing(true)} isPublicView={isPublicView}>
+            <SectionCard title="Achievements" hasData={hasData} onEdit={() => setIsEditing(true)} isPublicView={isPublicView}>
                 <div className="space-y-6">
                     {hasData && profile.achievements.map((ach, index) => {
                         const showLink = ach.link && (canSeePrivate || ach.isLinkPublic);
@@ -117,8 +117,8 @@ export default function ProfileAchievements({ profile, setProfile, isPublicView 
                     {!hasData && (
                         <div className={`py-6 text-center rounded-lg border-2 border-dashed ${darkMode ? 'bg-slate-800/50 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
                             <Award className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />
-                            <p className={`text-sm font-bold uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>No awards</p>
-                            <p className={`text-xs font-semibold ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>Add honors or awards to your profile.</p>
+                            <p className={`text-sm font-bold uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>No achievements</p>
+                            <p className={`text-xs font-semibold ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>Add achievements or awards to your profile.</p>
                         </div>
                     )}
                 </div>

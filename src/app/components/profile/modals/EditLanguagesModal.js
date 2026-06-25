@@ -1,153 +1,182 @@
 import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
-import { X, Languages, Plus, Trash2, Save } from "lucide-react";
+import { X, Plus, Save, Languages } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import toast from "react-hot-toast";
 
 export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, onSave }) {
-  const { darkMode } = useTheme();
-  const [languages, setLanguages] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [loading, setLoading] = useState(false);
+    const { darkMode } = useTheme();
+    const [languages, setLanguages] = useState([]);
+    const [newLanguage, setNewLanguage] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (currentLanguages && isOpen) {
-      setLanguages([...currentLanguages]);
-      setInputValue("");
-    }
-  }, [currentLanguages, isOpen]);
+    useEffect(() => {
+        if (isOpen) {
+            setLanguages(currentLanguages ? [...currentLanguages] : []);
+            setNewLanguage("");
+        }
+    }, [isOpen, currentLanguages]);
 
-  if (!isOpen) return null;
+    if (!isOpen) return null;
 
-  const handleAddLanguage = (e) => {
-    e?.preventDefault();
-    const val = inputValue.trim();
-    if (!val) return;
+    const handleAddLanguage = (e) => {
+        e.preventDefault();
+        const trimmed = newLanguage.trim();
+        if (!trimmed) return;
+        
+        // Prevent duplicates
+        if (languages.some(l => l.toLowerCase() === trimmed.toLowerCase())) {
+            toast.error("Language already added");
+            return;
+        }
 
-    if (languages.includes(val)) {
-      toast.error("Language already added!");
-      return;
-    }
+        setLanguages([...languages, trimmed]);
+        setNewLanguage("");
+    };
 
-    setLanguages([...languages, val]);
-    setInputValue("");
-  };
+    const handleRemoveLanguage = (langName) => {
+        setLanguages(languages.filter(l => l !== langName));
+    };
 
-  const removeLanguage = (langToRemove) => {
-    setLanguages(languages.filter((lang) => lang !== langToRemove));
-  };
+    const handleSave = async () => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("No token found");
 
-  const handleSave = async () => {
-    if (loading) return;
-    setLoading(true);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ languages }),
+            });
 
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ languages }),
-      });
-
-      if (!res.ok) throw new Error("Failed to update languages");
-
-      const updatedUser = await res.json();
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      onSave(updatedUser);
-      toast.success("Languages updated!");
-      onClose();
-    } catch (error) {
-      console.error(error);
-      toast.error("Error updating languages");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 h-[100dvh] w-full bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 text-gray-900">
-      <div className="p-[2.5px] bg-gradient-to-tr from-cyan-500 to-blue-500 rounded-2xl shadow-[0_20px_60px_rgba(6,182,212,0.4)] w-full max-w-md">
-        <div className={`rounded-[calc(1rem-2.5px)] w-full shadow-2xl overflow-hidden animate-fadeIn flex flex-col transition-colors duration-500 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}>
-          
-          {/* Header */}
-          <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-4 flex justify-between items-center text-white">
-            <h2 className="text-lg font-bold flex items-center gap-2">
-              <Languages className="w-5 h-5" /> Edit Languages
-            </h2>
-            <button
-              onClick={onClose}
-              className="text-white/80 hover:text-white hover:bg-white/20 p-1 rounded-full transition"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className={`p-6 space-y-6 flex-grow transition-colors ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+            if (!res.ok) throw new Error("Failed to save languages");
             
-            <form onSubmit={handleAddLanguage} className="space-y-2">
-              <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-cyan-400" : "text-cyan-600"}`}>
-                Add a Language
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="e.g. English, Hindi, Spanish..."
-                  className={`flex-grow p-2.5 rounded-xl border-2 text-sm outline-none transition focus:border-cyan-500 ${darkMode ? "bg-slate-900 border-slate-700 text-white placeholder-slate-500" : "bg-gray-50 border-gray-200 text-gray-900"}`}
-                />
-                <button
-                  type="submit"
-                  disabled={!inputValue.trim()}
-                  className={`p-2.5 rounded-xl flex items-center justify-center transition-all ${!inputValue.trim() ? "opacity-50 cursor-not-allowed bg-gray-200 text-gray-400" : "bg-cyan-500 hover:bg-cyan-600 text-white shadow-md hover:shadow-cyan-500/30"}`}
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
-              </div>
-            </form>
+            const updatedProfile = await res.json();
+            onSave(updatedProfile);
+            toast.success("Languages updated successfully!");
+            onClose();
+        } catch (error) {
+            console.error("Error saving languages:", error);
+            toast.error("Error updating languages.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-            <div className="flex flex-wrap gap-2 pt-2">
-              {languages.map((lang, idx) => (
-                <div
-                  key={idx}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${darkMode ? "bg-cyan-900/20 border-cyan-500/30 text-cyan-300" : "bg-cyan-50 border-cyan-200 text-cyan-700"}`}
-                >
-                  <span className="text-sm font-bold">{lang}</span>
-                  <button
-                    onClick={() => removeLanguage(lang)}
-                    className="p-0.5 hover:bg-cyan-500/20 rounded-md transition-colors text-cyan-600 dark:text-cyan-400"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
+    return (
+        <div className="fixed inset-0 h-[100dvh] w-full z-50 flex justify-center items-center p-4 bg-black/60 backdrop-blur-sm" onClick={!loading ? onClose : undefined}>
+            <div className={`relative w-full max-w-lg p-[2.5px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-600 rounded-[calc(1.5rem+2.5px)] shadow-2xl overflow-hidden transform transition-all duration-300 scale-100`} onClick={e => e.stopPropagation()}>
+                <div className={`relative w-full h-full rounded-[1.5rem] p-6 flex flex-col max-h-[85vh] ${darkMode ? 'bg-slate-900 text-white' : 'bg-white text-gray-900'}`}>
+                    
+                    <div className="flex items-center justify-between mb-6 flex-shrink-0">
+                        <h2 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 flex items-center gap-2">
+                            <Languages className="w-6 h-6 text-blue-500" /> Edit Languages
+                        </h2>
+                        <button 
+                            onClick={onClose}
+                            disabled={loading}
+                            className={`p-2 rounded-full transition-colors ${darkMode ? 'hover:bg-slate-800' : 'hover:bg-gray-100'}`}
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6">
+                        {/* Add Language Form */}
+                        <form onSubmit={handleAddLanguage} className="space-y-3">
+                            <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                                Add New Language
+                            </label>
+                            <div className="flex gap-3">
+                                <div className="relative flex-grow p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl">
+                                    <input
+                                        type="text"
+                                        value={newLanguage}
+                                        onChange={e => setNewLanguage(e.target.value)}
+                                        placeholder="e.g. English, Spanish, French..."
+                                        className={`w-full p-3 rounded-[calc(0.75rem-2px)] outline-none transition-colors ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
+                                    />
+                                </div>
+                                <button 
+                                    type="submit"
+                                    disabled={!newLanguage.trim()}
+                                    className={`px-4 rounded-xl flex justify-center items-center font-bold text-white shadow-lg transition-all
+                                        ${newLanguage.trim() 
+                                            ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:shadow-blue-500/50 hover:scale-105 active:scale-95' 
+                                            : 'bg-gray-400 cursor-not-allowed opacity-50 shadow-none'
+                                        }
+                                    `}
+                                >
+                                    <Plus className="w-6 h-6" />
+                                </button>
+                            </div>
+                        </form>
+
+                        {/* Language List */}
+                        <div className="space-y-3">
+                            <h3 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                Your Languages ({languages.length})
+                            </h3>
+                            
+                            {languages.length === 0 ? (
+                                <p className={`text-sm italic ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                    No languages added yet.
+                                </p>
+                            ) : (
+                                <div className="flex flex-wrap gap-2.5">
+                                    {languages.map((lang, idx) => (
+                                        <div 
+                                            key={idx}
+                                            className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full group"
+                                        >
+                                            <div className={`flex items-center gap-2 pl-4 pr-2 py-1.5 rounded-[calc(9999px-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                                <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                    {lang}
+                                                </span>
+                                                <button
+                                                    onClick={() => handleRemoveLanguage(lang)}
+                                                    className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-red-500/20 text-red-400' : 'hover:bg-red-50 text-red-500'}`}
+                                                    title="Remove language"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-white/10 flex justify-end flex-shrink-0">
+                        <button
+                            onClick={handleSave}
+                            disabled={loading}
+                            className={`w-full sm:w-auto px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-lg transition-all
+                                ${loading 
+                                    ? 'bg-gray-500 cursor-wait' 
+                                    : 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:shadow-purple-500/50 hover:scale-105 active:scale-95'
+                                }
+                            `}
+                        >
+                            {loading ? (
+                                <span className="flex items-center gap-2">
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    Saving...
+                                </span>
+                            ) : (
+                                <>
+                                    <Save className="w-5 h-5" /> Save Languages
+                                </>
+                            )}
+                        </button>
+                    </div>
+
                 </div>
-              ))}
-              {languages.length === 0 && (
-                <p className={`text-sm italic ${darkMode ? "text-slate-500" : "text-gray-400"}`}>No languages added yet.</p>
-              )}
             </div>
-
-          </div>
-
-          {/* Footer */}
-          <div className={`p-4 border-t flex justify-end gap-3 transition-colors ${darkMode ? "bg-slate-900 border-slate-800" : "bg-gray-50 border-gray-200"}`}>
-            <button
-              onClick={onClose}
-              className={`px-6 py-2 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${darkMode ? "border-slate-600 text-slate-300 hover:bg-slate-800" : "border-gray-300 text-gray-600 hover:bg-gray-100"}`}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={loading}
-              className="px-6 py-2 rounded-xl font-bold bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-105 transition-all flex items-center gap-2 disabled:opacity-70"
-            >
-              {loading ? "Saving..." : <><Save className="w-4 h-4" /> Save</>}
-            </button>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

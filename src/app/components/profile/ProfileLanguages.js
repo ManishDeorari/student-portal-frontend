@@ -17,28 +17,28 @@ export default function ProfileLanguages({ profile, setProfile, isPublicView }) 
 
     return (
         <>
-            <SectionCard title="Languages" hasData={hasData} onEdit={() => setIsEditing(true)} isPublicView={isPublicView}>
-                <div className={`p-5 rounded-2xl border-2 transition-colors ${darkMode ? 'bg-slate-800/30 border-white/5' : 'bg-gray-50 border-gray-100'}`}>
-                    {hasData ? (
-                        <div className="flex flex-wrap gap-2.5">
-                            {profile.languages.map((lang, idx) => (
-                                <div 
-                                    key={idx}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl shadow-sm transition-all hover:scale-105 ${darkMode ? 'bg-cyan-900/20 text-cyan-300 border border-cyan-500/20' : 'bg-white text-cyan-700 border border-cyan-100 shadow-cyan-100'}`}
-                                >
-                                    <Languages className="w-4 h-4 opacity-70" />
-                                    <span className="text-sm font-bold tracking-wide">{lang}</span>
+            <SectionCard title="Languages" hasData={hasData} onEdit={!isPublicView ? () => setIsEditing(true) : undefined} isPublicView={isPublicView}>
+                {hasData ? (
+                    <div className="flex flex-wrap gap-3 mt-2">
+                        {profile.languages.map((lang, idx) => (
+                            <div 
+                                key={idx} 
+                                className={`p-[2px] rounded-full shadow-sm transition-transform duration-300 hover:scale-110 hover:z-20 relative bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500`}
+                            >
+                                <div className={`flex items-center gap-2 px-4 py-2 rounded-[calc(9999px-2px)] h-full w-full ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
+                                    <Languages className={`w-4 h-4 opacity-70 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                                    <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{lang}</span>
                                 </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-4">
-                            <Languages className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />
-                            <p className={`text-sm font-bold uppercase tracking-widest mb-1 ${darkMode ? 'text-cyan-400' : 'text-cyan-600'}`}>No languages</p>
-                            <p className={`text-xs font-semibold ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>Add languages you speak or write.</p>
-                        </div>
-                    )}
-                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className={`py-6 text-center rounded-lg border-2 border-dashed ${darkMode ? 'bg-slate-800/50 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
+                        <Languages className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />
+                        <p className={`text-sm font-bold uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>No languages</p>
+                        <p className={`text-xs font-semibold ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>Add languages you speak or write.</p>
+                    </div>
+                )}
             </SectionCard>
 
             <EditLanguagesModal
