@@ -171,37 +171,7 @@ export default function MemberSearchModal({
                             </button>
                         </div>
 
-                        {/* Quick Role Select Buttons */}
-                        <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-6">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setIsAllFacultyFlag(!isAllFacultyFlag);
-                                    if (!isAllFacultyFlag) setIsAllStudentFlag(false);
-                                }}
-                                className={`py-4 px-4 rounded-2xl border-2 transition-all flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest ${
-                                    isAllFacultyFlag 
-                                    ? "bg-gradient-to-br from-purple-600 to-purple-800 border-purple-400 text-white shadow-lg shadow-purple-500/40" 
-                                    : (darkMode ? "bg-slate-950 border-slate-800 text-white hover:border-purple-500" : "bg-white border-slate-200 text-slate-900 hover:border-purple-500")
-                                }`}
-                            >
-                                <span>Add All Faculty</span>
-                                {isAllFacultyFlag && <div className="w-2 h-2 rounded-full bg-white animate-pulse" />}
-                            </button>
 
-                            <button
-                                type="button"
-                                onClick={() => setIsAllStudentFlag(!isAllStudentFlag)}
-                                className={`py-4 px-4 rounded-2xl border-2 transition-all flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest ${
-                                    isAllStudentFlag 
-                                    ? "bg-gradient-to-br from-blue-600 to-blue-800 border-blue-400 text-white shadow-lg shadow-blue-500/40" 
-                                    : (darkMode ? "bg-slate-950 border-slate-800 text-white hover:border-blue-500" : "bg-white border-slate-200 text-slate-900 hover:border-blue-500")
-                                }`}
-                            >
-                                <span>Add All Student</span>
-                                {isAllStudentFlag && <div className="w-2 h-2 rounded-full bg-white animate-pulse" />}
-                            </button>
-                        </div>
 
                         {/* Advanced Multi-Filter Search Bar */}
                         <div className="space-y-4">
@@ -237,7 +207,7 @@ export default function MemberSearchModal({
 
                             {/* Dynamic Custom Filters */}
                             {(roleFilter === "ALL" || roleFilter === "STUDENT") && (
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+                                <div className="grid grid-cols-2 gap-2 sm:gap-4">
                                     <div className="p-[1.5px] rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-500/50 to-purple-500/50">
                                         <HybridInput
                                             value={course}
@@ -318,8 +288,8 @@ export default function MemberSearchModal({
                         </div>
                     </div>
 
-                    {/* User List - Scrollable */}
-                    <div className="flex-1 overflow-y-auto p-6 pt-2 space-y-3 custom-scrollbar">
+                    {/* Users List */}
+                    <div className="flex-1 overflow-y-auto p-2 sm:p-6 custom-scrollbar min-h-[450px] max-h-[65vh]">
                         {loading && users.length === 0 ? (
                             <div className="py-10 text-center animate-pulse text-blue-500 font-black uppercase text-[10px] tracking-widest flex flex-col items-center gap-3">
                                 <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
