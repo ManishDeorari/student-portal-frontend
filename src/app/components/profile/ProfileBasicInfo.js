@@ -44,7 +44,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
         if (!profile.profilePicture || profile.profilePicture.includes("default-profile.jpg")) missing.push("Profile Picture");
         if (!profile.bannerImage || profile.bannerImage.includes("default_banner.jpg")) missing.push("Banner Image");
         if (!profile.secondaryEmail || profile.secondaryEmail === "") missing.push("Secondary Email");
-        if (!profile.universityRollNumber || profile.universityRollNumber === "") missing.push("University Roll Number");
+        if (profile.role === "student" && (!profile.universityRollNumber || profile.universityRollNumber === "")) missing.push("University Roll Number");
         if (!profile.phone || profile.phone === "Not provided" || profile.phone === "") missing.push("Phone Number");
         if (!profile.address || profile.address === "Not set" || profile.address === "") missing.push("Address");
         if (!profile.whatsapp || profile.whatsapp === "Not linked" || profile.whatsapp === "") missing.push("WhatsApp");
