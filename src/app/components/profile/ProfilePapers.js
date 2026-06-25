@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SectionCard from "./SectionCard";
-import { BookOpen, Calendar, Link as LinkIcon, Building2, Tag } from "lucide-react";
+import { BookOpen, Calendar, ExternalLink, Building2, Tag, Globe, Lock } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import EditPapersModal from "./modals/EditPapersModal";
 
@@ -13,27 +13,30 @@ export default function ProfilePapers({ profile, setProfile, isPublicView }) {
         setIsEditing(false);
     };
 
+    const viewerRole = typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("user") || "{}")?.role
+        : null;
+
+    const canSeePrivateLink = !isPublicView || viewerRole === "admin" || viewerRole === "faculty";
+
     const hasData = profile.researchPapers && profile.researchPapers.length > 0;
 
     return (
         <>
             <SectionCard title="Publications & Patents" hasData={hasData} onEdit={() => setIsEditing(true)} isPublicView={isPublicView}>
-                <div className="space-y-4 sm:space-y-6">
+                <div className="space-y-6">
                     {hasData && profile.researchPapers.map((paper, index) => {
-                        const showLink = paper.link && (!isPublicView || paper.isLinkPublic);
+                        const showLink = paper.link && (canSeePrivateLink || paper.isLinkPublic);
 
                         return (
-                            <div key={index} className="group relative">
-                                {/* Desktop hover effect bg */}
-                                <div className={`absolute -inset-x-4 -inset-y-3 sm:-inset-x-6 sm:-inset-y-4 rounded-2xl sm:rounded-3xl transition-all duration-300 opacity-0 sm:group-hover:opacity-100 ${darkMode ? 'bg-blue-500/5' : 'bg-blue-50'}`} />
-
-                                <div className="relative flex gap-4 sm:gap-6">
-                                    {/* Timeline Line */}
-                                    <div className="absolute left-[19px] sm:left-[23px] top-12 bottom-[-24px] sm:bottom-[-32px] w-[2px] bg-gradient-to-b from-blue-500/30 to-transparent group-last:hidden" />
-
+                            <div key={index} className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] group w-full transition-all duration-300 hover:scale-[1.02] hover:z-20 relative">
+                                <div className={`p-5 rounded-[calc(2.5rem-2.5px)] flex gap-4 transition duration-300 ${darkMode ? 'bg-[#121213] hover:bg-slate-900' : 'bg-[#FAFAFA] hover:bg-white'}`}>
+                                    
                                     {/* Icon */}
-                                    <div className={`relative z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg ${darkMode ? 'bg-gradient-to-br from-blue-600 to-purple-700 shadow-blue-900/50' : 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-blue-200'}`}>
-                                        <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow-md" />
+                                    <div className="flex-shrink-0">
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${darkMode ? 'bg-blue-900/30' : 'bg-blue-50 shadow-sm'}`}>
+                                            <BookOpen className={`w-6 h-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                                        </div>
                                     </div>
 
                                     {/* Content */}
@@ -44,12 +47,11 @@ export default function ProfilePapers({ profile, setProfile, isPublicView }) {
                                                 <h3 className={`text-base font-black leading-tight ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600'}`}>
                                                     {paper.title}
                                                 </h3>
-                                                <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md border flex items-center gap-1 ${darkMode ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200'}`}>
-                                                    <Tag className="w-3 h-3" />
+                                                <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-md border ${darkMode ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200'}`}>
                                                     {paper.type}
                                                 </span>
                                             </div>
-
+                                            
                                             {/* Date Row */}
                                             <div className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                                                 <Calendar className="w-3.5 h-3.5" />
@@ -58,9 +60,13 @@ export default function ProfilePapers({ profile, setProfile, isPublicView }) {
                                         </div>
 
                                         {/* Publisher/Venue */}
-                                        <div className={`text-[11px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>
-                                            <Building2 className="w-3.5 h-3.5 text-orange-500" />
-                                            {paper.publisher}
+                                        <div className={`flex items-start gap-1.5 p-[2px] bg-gradient-to-tr from-orange-500 to-amber-500 rounded-xl`}>
+                                            <div className={`flex items-center gap-2 px-3 py-2 rounded-[calc(0.75rem-2px)] w-full ${darkMode ? 'bg-[#121213]' : 'bg-orange-50'}`}>
+                                                <Building2 className={`w-3.5 h-3.5 flex-shrink-0 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+                                                <p className={`text-xs font-bold leading-snug ${darkMode ? 'text-orange-300' : 'text-orange-700'}`}>
+                                                    <span className="font-black uppercase tracking-widest">Publisher/Venue: </span>{paper.publisher}
+                                                </p>
+                                            </div>
                                         </div>
 
                                         {/* Description */}
@@ -68,19 +74,30 @@ export default function ProfilePapers({ profile, setProfile, isPublicView }) {
                                             {paper.description}
                                         </p>
 
-                                        {/* Link */}
-                                        {showLink && (
-                                            <div className="pt-1 flex">
+                                        {/* Link row */}
+                                        <div className="flex items-center gap-3 pt-1">
+                                            {showLink ? (
                                                 <a
                                                     href={paper.link}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${darkMode ? 'bg-white/10 hover:bg-blue-600 text-white hover:shadow-lg hover:shadow-blue-500/20' : 'bg-gray-100 hover:bg-blue-50 text-gray-700 hover:text-blue-700 border border-transparent hover:border-blue-200'}`}
+                                                    className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all border hover:scale-105 ${darkMode ? 'text-blue-400 border-blue-400/30 hover:bg-blue-400/10' : 'text-blue-600 border-blue-200 hover:bg-blue-50'}`}
                                                 >
-                                                    <LinkIcon className="w-3.5 h-3.5" /> View Publication
+                                                    <ExternalLink className="w-3 h-3" /> View Publication →
                                                 </a>
-                                            </div>
-                                        )}
+                                            ) : paper.link && !paper.isLinkPublic && isPublicView ? (
+                                                <span className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${darkMode ? 'text-slate-500 border-slate-700' : 'text-gray-400 border-gray-200'}`}>
+                                                    <Lock className="w-3 h-3" /> Link Private
+                                                </span>
+                                            ) : null}
+
+                                            {/* Visibility badge — show only to owner */}
+                                            {!isPublicView && paper.link && (
+                                                <span className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 ${paper.isLinkPublic ? (darkMode ? 'text-green-400' : 'text-green-600') : (darkMode ? 'text-slate-500' : 'text-gray-400')}`}>
+                                                    {paper.isLinkPublic ? <><Globe className="w-3 h-3" /> Public</> : <><Lock className="w-3 h-3" /> Private</>}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -89,6 +106,7 @@ export default function ProfilePapers({ profile, setProfile, isPublicView }) {
 
                     {!hasData && (
                         <div className={`py-6 text-center rounded-lg border-2 border-dashed ${darkMode ? 'bg-slate-800/50 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
+                            <BookOpen className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />
                             <p className={`text-sm font-bold uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>No publications</p>
                             <p className={`text-xs font-semibold ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>Add research papers or patents to your profile.</p>
                         </div>
