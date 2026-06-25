@@ -15,32 +15,26 @@ const styles = StyleSheet.create({
     lineHeight: 1.4,
   },
   // ─── HEADER ───
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
-  },
-  headerLeft: {
+  headerTop: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
-    flex: 1,
+    marginBottom: 6,
   },
   profilePic: {
-    width: 70,
-    height: 70,
+    width: 68,
+    height: 68,
     borderRadius: 4,
     borderWidth: 1.5,
     borderColor: NAVY,
-    objectFit: 'cover',
+    marginRight: 12,
+    flexShrink: 0,
   },
   headerTextGroup: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   name: {
-    fontSize: 22,
+    fontSize: 18,
     fontFamily: 'Helvetica-Bold',
     color: NAVY,
     marginBottom: 2,
@@ -52,22 +46,31 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
   subtitleUniversity: {
-    fontSize: 10,
+    fontSize: 9.5,
     color: LIGHT_GRAY,
   },
-  headerRight: {
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    gap: 5,
-    paddingTop: 4,
+  // Contact bar — horizontal strip under the name block
+  contactBar: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 4,
+    gap: 4,
   },
-  contactRow: {
+  contactChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 3,
+    paddingRight: 8,
+  },
+  contactSep: {
+    color: LIGHT_GRAY,
+    fontSize: 9,
+    marginRight: 4,
   },
   contactText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: DARK_GRAY,
     textDecoration: 'none',
   },
@@ -262,55 +265,60 @@ export default function ResumePDF({ profile }) {
       <Page size="A4" style={styles.page}>
 
         {/* ── HEADER ── */}
-        <View style={styles.headerContainer}>
-          <View style={styles.headerLeft}>
-            {profile.profilePicture && (
-              <Image src={profile.profilePicture} style={styles.profilePic} />
-            )}
-            <View style={styles.headerTextGroup}>
-              <Text style={styles.name}>{profile.name}</Text>
-              {degreeLine ? <Text style={styles.subtitleDegree}>{degreeLine}</Text> : null}
-              {universityLine ? <Text style={styles.subtitleUniversity}>{universityLine}</Text> : null}
-            </View>
-          </View>
+        <View style={styles.headerTop}>
+          {profile.profilePicture && (
+            <Image src={profile.profilePicture} style={styles.profilePic} />
+          )}
+          <View style={styles.headerTextGroup}>
+            <Text style={styles.name}>{profile.name}</Text>
+            {degreeLine ? <Text style={styles.subtitleDegree}>{degreeLine}</Text> : null}
+            {universityLine ? <Text style={styles.subtitleUniversity}>{universityLine}</Text> : null}
 
-          <View style={styles.headerRight}>
-            {profile.phone && (
-              <View style={styles.contactRow}>
-                <IconPhone />
-                <Text style={styles.contactText}>{profile.phone}</Text>
-              </View>
-            )}
-            {profile.email && (
-              <View style={styles.contactRow}>
-                <IconEmail />
-                <Text style={styles.contactText}>{profile.email}</Text>
-              </View>
-            )}
-            {profile.linkedin && (
-              <View style={styles.contactRow}>
-                <IconGlobe />
-                <Link src={profile.linkedin} style={styles.contactText}>LinkedIn Profile</Link>
-              </View>
-            )}
-            {profile.github && (
-              <View style={styles.contactRow}>
-                <IconGlobe />
-                <Link src={profile.github} style={styles.contactText}>GitHub</Link>
-              </View>
-            )}
-            {profile.portfolio && (
-              <View style={styles.contactRow}>
-                <IconGlobe />
-                <Link src={profile.portfolio} style={styles.contactText}>Portfolio</Link>
-              </View>
-            )}
-            {(profile.customLinks || []).map((cl, idx) => (
-              <View key={idx} style={styles.contactRow}>
-                <IconGlobe />
-                <Link src={cl.url} style={styles.contactText}>{cl.label || 'Link'}</Link>
-              </View>
-            ))}
+            {/* ── CONTACT BAR (horizontal) ── */}
+            <View style={styles.contactBar}>
+              {profile.phone && (
+                <View style={styles.contactChip}>
+                  <IconPhone />
+                  <Text style={styles.contactText}>{profile.phone}</Text>
+                  <Text style={styles.contactSep}>|</Text>
+                </View>
+              )}
+              {profile.email && (
+                <View style={styles.contactChip}>
+                  <IconEmail />
+                  <Text style={styles.contactText}>{profile.email}</Text>
+                  <Text style={styles.contactSep}>|</Text>
+                </View>
+              )}
+              {profile.linkedin && (
+                <View style={styles.contactChip}>
+                  <IconGlobe />
+                  <Link src={profile.linkedin} style={styles.contactText}>LinkedIn</Link>
+                  <Text style={styles.contactSep}>|</Text>
+                </View>
+              )}
+              {profile.github && (
+                <View style={styles.contactChip}>
+                  <IconGlobe />
+                  <Link src={profile.github} style={styles.contactText}>GitHub</Link>
+                  <Text style={styles.contactSep}>|</Text>
+                </View>
+              )}
+              {profile.portfolio && (
+                <View style={styles.contactChip}>
+                  <IconGlobe />
+                  <Link src={profile.portfolio} style={styles.contactText}>Portfolio</Link>
+                  <Text style={styles.contactSep}>|</Text>
+                </View>
+              )}
+              {(profile.customLinks || []).map((cl, idx) => (
+                <View key={idx} style={styles.contactChip}>
+                  <IconGlobe />
+                  <Link src={cl.url} style={styles.contactText}>{cl.title || 'Link'}</Link>
+                  {idx < (profile.customLinks.length - 1) && <Text style={styles.contactSep}>|</Text>}
+                </View>
+              ))}
+            </View>
           </View>
         </View>
 
@@ -351,15 +359,15 @@ export default function ResumePDF({ profile }) {
               <View key={idx} style={styles.itemBlock}>
                 <View style={styles.rowBetween}>
                   <Text style={styles.itemTitle}>• {paper.title}</Text>
-                  {(paper.publishedDate || paper.date) && (
-                    <Text style={styles.itemDate}>{paper.publishedDate || paper.date}</Text>
+                  {paper.publishDate && (
+                    <Text style={styles.itemDate}>{paper.publishDate}</Text>
                   )}
                 </View>
-                {paper.journal && (
-                  <Text style={styles.itemSubtitle}>Published in: {paper.journal}</Text>
+                {paper.publisher && (
+                  <Text style={styles.itemSubtitle}>Published in: {paper.publisher}</Text>
                 )}
-                {paper.authors && (
-                  <Text style={[styles.itemSubtitle, { fontFamily: 'Helvetica' }]}>Authors: {Array.isArray(paper.authors) ? paper.authors.join(', ') : paper.authors}</Text>
+                {paper.type && (
+                  <Text style={[styles.itemSubtitle, { fontFamily: 'Helvetica' }]}>Type: {paper.type}</Text>
                 )}
                 {paper.description && (
                   <Text style={styles.bodyText}>{paper.description}</Text>
