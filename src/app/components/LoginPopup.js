@@ -125,7 +125,7 @@ const LoginPopup = () => {
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-1.5">
                                 <label className={`text-[9.4px] uppercase tracking-[0.2em] ${darkMode ? "text-gray-400" : "text-slate-500"} ml-4 font-black flex items-center gap-1.5`}>
-                                    <User className="w-3 h-3 text-blue-500" /> Email or ID
+                                    <User className="w-3 h-3 text-blue-500" /> Email Address
                                 </label>
                                 <div className="p-[1.5px] bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 rounded-2xl focus-within:from-blue-500 focus-within:via-purple-500 focus-within:to-pink-500 transition-all">
                                     <input
