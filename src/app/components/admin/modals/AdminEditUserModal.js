@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Save, User as UserIcon, BookOpen, Hash, Briefcase, Building } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -70,18 +71,22 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
         }
     };
 
-    if (!isOpen || !user) return null;
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
 
-    return (
+    if (!mounted) return null;
+
+    return createPortal(
         <AnimatePresence>
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/80 backdrop-blur-md z-[99999] flex items-center justify-center p-4"
-                style={{ zIndex: 999999 }}
-                onClick={onClose}
-            >
+            {isOpen && user && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+                    style={{ zIndex: 999999 }}
+                    onClick={onClose}
+                >
                 <style>{`
                     .custom-gradient-scrollbar::-webkit-scrollbar {
                         width: 6px;
@@ -285,6 +290,8 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                     </div>
                 </motion.div>
             </motion.div>
-        </AnimatePresence>
+            )}
+        </AnimatePresence>,
+        document.body
     );
 }
