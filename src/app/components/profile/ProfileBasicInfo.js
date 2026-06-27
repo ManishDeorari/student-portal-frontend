@@ -170,6 +170,7 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                         onUpload={onRefresh}
                         userId={profile._id}
                         isPublicView={isPublicView}
+                        user={profile}
                     />
                 </div>
 

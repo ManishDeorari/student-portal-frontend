@@ -92,6 +92,7 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
           imageUrl={profileImg}
           onClose={() => setShowViewer(false)}
           isRestricted={isRestricted}
+          downloadName={user?.name ? `${user.name.replace(/\s+/g, '_')}_Profile_Picture.jpg` : "Profile_Picture.jpg"}
         />
       )}
     </div>

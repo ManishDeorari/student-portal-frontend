@@ -168,13 +168,7 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
 
       if (typeof onUploaded === "function") onUploaded(uploadedUrl || latestBanner);
 
-      if (uploadedUrl && latestBanner && !latestBanner.includes("default_banner.jpg")) {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/delete-old-image`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ imageUrl: latestBanner }),
-        }).catch((err) => console.warn("⚠ Failed to delete old banner:", err));
-      }
+
 
       toast.success("✅ Banner updated!");
       setSelectedFile(null);

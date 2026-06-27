@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useTheme } from "@/context/ThemeContext";
 import { getOptimizedImageUrl, getFocalImageUrl } from "../../utils/cloudinaryHelper";
 
-export default function ProfileBanner({ image, focus, onUpload, userId, isPublicView }) {
+export default function ProfileBanner({ image, focus, onUpload, userId, isPublicView, user }) {
   const { darkMode } = useTheme();
   const [showEditor, setShowEditor] = useState(false);
   const [showViewer, setShowViewer] = useState(false);
@@ -79,6 +79,7 @@ export default function ProfileBanner({ image, focus, onUpload, userId, isPublic
           imageUrl={bannerImg}
           onClose={() => setShowViewer(false)}
           isRestricted={isRestricted}
+          downloadName={user?.name ? `${user.name.replace(/\s+/g, '_')}_Banner.jpg` : "Profile_Banner.jpg"}
         />
       )}
     </div>

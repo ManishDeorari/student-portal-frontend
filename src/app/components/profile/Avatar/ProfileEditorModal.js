@@ -125,7 +125,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
         headers: { Authorization: `Bearer ${token}` },
       });
       const latestProfile = await latestProfileRes.json();
-      const latestImage = latestProfile?.profileImage || null;
+      const latestImage = latestProfile?.profilePicture || null;
 
       let uploadedUrl = null;
       if (selectedFile) {
@@ -168,13 +168,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
 
       if (typeof onUploaded === "function") onUploaded(uploadedUrl || latestImage);
 
-      if (uploadedUrl && latestImage && !latestImage.includes("default-profile.jpg")) {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/delete-old-image`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ imageUrl: latestImage }),
-        }).catch((err) => console.warn("⚠ Failed to delete old image:", err));
-      }
+      if (typeof onUploaded === "function") onUploaded(uploadedUrl || latestImage);
 
       toast.success("✅ Profile updated!");
       setSelectedFile(null);
@@ -198,7 +192,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
         headers: { Authorization: `Bearer ${token}` },
       });
       const latestProfile = await latestProfileRes.json();
-      const latestImage = latestProfile?.profileImage || null;
+      const latestImage = latestProfile?.profilePicture || null;
 
       const defaultImageUrl = "/default-profile.jpg";
 
