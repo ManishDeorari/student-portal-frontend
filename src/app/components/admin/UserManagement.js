@@ -423,14 +423,14 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="min-w-0">
-                                                    <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} truncate mb-0.5`}>{u.name}</p>
-                                                    <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white/40" : "text-slate-500"} truncate`}>{u.email}</p>
+                                                <div className="min-w-0 z-10 relative">
+                                                    <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-black"} truncate mb-0.5`}>{u.name}</p>
+                                                    <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white" : "text-black"} truncate`}>{u.email}</p>
                                                 </div>
                                             </div>
 
                                             {/* Academic / Staff Info Column */}
-                                            <div className="flex-1 flex flex-wrap items-center gap-2">
+                                            <div className="flex-1 flex flex-wrap items-center gap-2 z-10 relative">
                                                 <span className={`text-[9px] px-2 py-1 rounded-lg font-black uppercase tracking-widest border ${u.isAdmin
                                                     ? (darkMode ? "bg-purple-500/10 text-purple-400 border-purple-500/20" : "bg-purple-50 text-purple-700 border-purple-100")
                                                     : (darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : "bg-blue-50 text-blue-700 border-blue-100")
@@ -440,7 +440,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                 
                                                 {u.role === "student" ? (
                                                     <>
-                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/20 text-white" : "border-gray-200 text-black"}`}>
                                                             {u.course || "NA"}
                                                         </span>
                                                         <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-orange-500/10 border border-orange-500/20 text-orange-400`}>
@@ -455,7 +455,7 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/10 text-white/60" : "border-gray-200 text-slate-600"}`}>
+                                                        <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-white/5 border ${darkMode ? "border-white/20 text-white" : "border-gray-200 text-black"}`}>
                                                             {u.position || "NA"}
                                                         </span>
                                                         <span className={`text-[9px] px-2 py-1 rounded-lg font-black bg-indigo-500/10 border border-indigo-500/20 text-indigo-400`}>
@@ -464,13 +464,12 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                     </>
                                                 )}
                                             </div>
-
                                             {/* Identity Column */}
-                                            <div className="w-40 md:block hidden shrink-0">
+                                            <div className="w-40 md:block hidden shrink-0 z-10 relative">
                                                 <div className="p-[1.5px] bg-gradient-to-tr from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                                                    <div className={`w-full text-[10px] font-black ${darkMode ? "text-white bg-black" : "text-slate-900 bg-white"} px-4 py-2 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center gap-2`}>
+                                                    <div className={`w-full text-[10px] font-black ${darkMode ? "text-white bg-black" : "text-black bg-white"} px-4 py-2 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center gap-2`}>
                                                         <div className={`w-1.5 h-1.5 rounded-full ${u.role === "student" ? "bg-blue-500" : "bg-purple-500"}`}></div>
-                                                        <span className="truncate">{u.enrollmentNumber || u.employeeId || u.studentId || "—"}</span>
+                                                        <span className="truncate">{u.enrollmentNumber || u.employeeId || u.studentId || "-"}</span>
                                                     </div>
                                                 </div>
                                             </div>
