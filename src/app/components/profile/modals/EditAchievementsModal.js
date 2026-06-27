@@ -40,11 +40,8 @@ export default function EditAchievementsModal({
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [collapsedCards, setCollapsedCards] = useState({});
+  const [expandedIndex, setExpandedIndex] = useState(null);
   const [selectedProofImage, setSelectedProofImage] = useState(null);
-
-  const toggleCollapse = (index) =>
-    setCollapsedCards((prev) => ({ ...prev, [index]: !prev[index] }));
 
   useEffect(() => {
     if (currentAchievements && isOpen) {
@@ -76,7 +73,6 @@ export default function EditAchievementsModal({
         };
       });
       setAchievements(transformed);
-      setCollapsedCards({});
     }
   }, [currentAchievements, isOpen]);
 
@@ -136,7 +132,7 @@ export default function EditAchievementsModal({
         activeTab: 'link'
       },
     ]);
-    setCollapsedCards((prev) => ({ ...prev, [achievements.length]: false }));
+    setExpandedIndex(achievements.length);
   };
 
   const removeAchievement = (index) => {
@@ -290,12 +286,12 @@ export default function EditAchievementsModal({
                   >
                     {/* Card Header */}
                     <div
-                      onClick={() => toggleCollapse(index)}
-                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed transition-colors ${darkMode ? "border-white/10" : "border-gray-200"} ${!collapsedCards[index] ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
+                      onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed transition-colors ${darkMode ? "border-white/10" : "border-gray-200"} ${expandedIndex === index ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="text-blue-500 transition-transform">
-                          {!collapsedCards[index] ? (
+                          {expandedIndex === index ? (
                             <ChevronDown className="w-5 h-5" />
                           ) : (
                             <ChevronRight className="w-5 h-5" />
@@ -303,7 +299,7 @@ export default function EditAchievementsModal({
                         </div>
                         <div>
                           <h3
-                            className={`font-black uppercase tracking-tight text-sm ${!collapsedCards[index] ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}
+                            className={`font-black uppercase tracking-tight text-sm ${expandedIndex === index ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}
                           >
                             {ach.title || `New Achievement ${index + 1}`}
                           </h3>
@@ -328,7 +324,7 @@ export default function EditAchievementsModal({
                     </div>
 
                     {/* Card Form */}
-                    {!collapsedCards[index] && (
+                    {expandedIndex === index && (
                       <div className="p-5 sm:p-8 space-y-6">
                         {/* Title - Full Row */}
                         <div className="space-y-1.5">

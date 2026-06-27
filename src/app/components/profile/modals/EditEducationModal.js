@@ -61,7 +61,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
     const [educations, setEducations] = useState([]);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
-    const [expandedIndex, setExpandedIndex] = useState(0); // Default first one expanded
+    const [expandedIndex, setExpandedIndex] = useState(null); // Default none expanded
 
     const isEduComplete = (edu) => {
         return edu.institution && edu.degree && edu.startMonth && edu.startYear && edu.endMonth && edu.endYear;
@@ -160,6 +160,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                 isMandatory: false
             },
         ]);
+        setExpandedIndex(educations.length); // Auto-expand newly added item
     };
 
     const removeEducation = (index) => {
@@ -407,7 +408,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                                 </div>
 
                                                 <div className="space-y-1.5">
-                                                    <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-slate-400' : 'text-gray-600'}`}>
+                                                    <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-white' : 'text-black'}`}>
                                                         Branch
                                                     </label>
                                                     <div className="p-[2px] bg-gradient-to-tr from-blue-600/50 to-purple-600/50 rounded-xl shadow-sm focus-within:from-blue-600 focus-within:to-purple-600 transition-all">
@@ -424,7 +425,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                             </>
                                         )}
                                         <div className="space-y-1.5">
-                                            <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-slate-400' : 'text-gray-600'}`}>Field of study</label>
+                                            <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-white' : 'text-black'}`}>Field of study</label>
                                             <div className="p-[2px] bg-gradient-to-tr from-blue-600/50 to-purple-600/50 rounded-xl shadow-sm focus-within:from-blue-600 focus-within:to-purple-600 transition-all">
                                                 <input
                                                     type="text"
@@ -450,7 +451,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                                 {edu.isOngoing && <CheckCircle2 className="w-4 h-4 text-white relative z-10" />}
                                             </button>
                                             <span 
-                                                className={`text-sm font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'} cursor-pointer select-none transition-colors hover:text-blue-500`} 
+                                                className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-black'} cursor-pointer select-none transition-colors hover:text-blue-500`} 
                                                 onClick={() => handleChange(index, "isOngoing", !edu.isOngoing)}
                                             >
                                                 I am currently studying here
@@ -487,7 +488,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                         </div>
                                         <div className="space-y-2">
                                             <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-endDate`] ? 'text-red-500' : (darkMode ? 'text-indigo-400' : 'text-indigo-600')}`}>
-                                                {edu.isOngoing ? "Expected Grad Year" : "End date / Year"} <span className="text-red-500 font-bold">*</span>
+                                                {edu.isOngoing ? "Expected Graduation Year" : "End date / Year"} <span className="text-red-500 font-bold">*</span>
                                             </label>
                                             <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-endDate`] ? 'from-red-500 to-red-600' : ''}`}>
                                                 <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>

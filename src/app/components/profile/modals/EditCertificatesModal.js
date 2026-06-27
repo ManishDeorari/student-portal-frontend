@@ -38,11 +38,8 @@ export default function EditCertificatesModal({
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [collapsedCards, setCollapsedCards] = useState({});
+  const [expandedIndex, setExpandedIndex] = useState(null);
   const [selectedProofImage, setSelectedProofImage] = useState(null);
-
-  const toggleCollapse = (index) =>
-    setCollapsedCards((prev) => ({ ...prev, [index]: !prev[index] }));
 
   useEffect(() => {
     if (currentCertificates && isOpen) {
@@ -101,6 +98,7 @@ export default function EditCertificatesModal({
         proofImageFile: null,
       },
     ]);
+    setExpandedIndex(certificates.length);
   };
 
   const removeCertificate = (index) => {
@@ -261,19 +259,19 @@ export default function EditCertificatesModal({
                   >
                     {/* Header Section */}
                     <div
-                      onClick={() => toggleCollapse(index)}
-                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${!collapsedCards[index] ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
+                      onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${expandedIndex === index ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="text-blue-500 transition-transform duration-300">
-                          {!collapsedCards[index] ? (
+                          {expandedIndex === index ? (
                             <ChevronDown className="w-5 h-5" />
                           ) : (
                             <ChevronRight className="w-5 h-5" />
                           )}
                         </div>
                         <h3
-                          className={`font-black uppercase tracking-tight text-sm ${!collapsedCards[index] ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}
+                          className={`font-black uppercase tracking-tight text-sm ${expandedIndex === index ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}
                         >
                           {cert.name || "New Certificate"}
                         </h3>
@@ -292,7 +290,7 @@ export default function EditCertificatesModal({
                     </div>
 
                     {/* Form Section */}
-                    {!collapsedCards[index] && (
+                    {expandedIndex === index && (
                       <div className="p-5 sm:p-8 space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                           <div className="sm:col-span-2 space-y-1.5">

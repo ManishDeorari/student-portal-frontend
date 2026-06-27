@@ -14,7 +14,7 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(currentImage || "/default_banner.jpg");
   const [uploading, setUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState("crop"); // Default to crop
+  const [activeTab, setActiveTab] = useState(null);
   const [bannerImageFocus, setBannerImageFocus] = useState(currentFocus || null);
   const [mounted, setMounted] = useState(false);
 

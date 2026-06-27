@@ -18,10 +18,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [collapsedCards, setCollapsedCards] = useState({});
-
-  const toggleCollapse = (index) =>
-    setCollapsedCards((prev) => ({ ...prev, [index]: !prev[index] }));
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   useEffect(() => {
     if (currentProjects && isOpen) {
@@ -51,7 +48,6 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
         };
       });
       setProjects(transformed);
-      setCollapsedCards({});
     }
   }, [currentProjects, isOpen]);
 
@@ -78,7 +74,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
       link: "",
       isLinkPublic: false,
     }]);
-    setCollapsedCards(prev => ({ ...prev, [projects.length]: false }));
+    setExpandedIndex(projects.length);
   };
 
   const removeProject = (index) => {
@@ -197,15 +193,15 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                     
                     {/* Card Header */}
                     <div
-                      onClick={() => toggleCollapse(index)}
-                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${!collapsedCards[index] ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
+                      onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${expandedIndex === index ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="text-blue-500">
-                          {!collapsedCards[index] ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                          {expandedIndex === index ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                         </div>
                         <div>
-                          <h3 className={`font-black uppercase tracking-tight text-sm ${!collapsedCards[index] ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}>
+                          <h3 className={`font-black uppercase tracking-tight text-sm ${expandedIndex === index ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}>
                             {project.title || `New Project ${index + 1}`}
                           </h3>
                           {project.link && (
@@ -224,7 +220,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                     </div>
 
                     {/* Card Form */}
-                    {!collapsedCards[index] && (
+                    {expandedIndex === index && (
                       <div className="p-5 sm:p-8 space-y-6">
 
                         {/* Title Row */}

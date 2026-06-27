@@ -101,10 +101,8 @@ export default function EditExperienceModal({
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [collapsedCards, setCollapsedCards] = useState({});
+  const [expandedIndex, setExpandedIndex] = useState(null);
   const [selectedProofImage, setSelectedProofImage] = useState(null);
-  const toggleCollapse = (index) =>
-    setCollapsedCards((prev) => ({ ...prev, [index]: !prev[index] }));
 
   const isExpComplete = (exp) =>
     exp.title &&
@@ -210,6 +208,7 @@ export default function EditExperienceModal({
         proofImageFile: null,
       },
     ]);
+    setExpandedIndex(experiences.length);
   };
 
   const removeExperience = (index) => {
@@ -420,19 +419,19 @@ export default function EditExperienceModal({
                   >
                     {/* Header Section */}
                     <div
-                      onClick={() => toggleCollapse(index)}
-                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${!collapsedCards[index] ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
+                      onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${expandedIndex === index ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
                     >
                       <div className="flex items-center gap-3">
                         <div className="text-blue-500 transition-transform duration-300">
-                          {!collapsedCards[index] ? (
+                          {expandedIndex === index ? (
                             <ChevronDown className="w-5 h-5" />
                           ) : (
                             <ChevronRight className="w-5 h-5" />
                           )}
                         </div>
                         <h3
-                          className={`font-black uppercase tracking-tight text-sm ${!collapsedCards[index] ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}
+                          className={`font-black uppercase tracking-tight text-sm ${expandedIndex === index ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}
                         >
                           {exp.employmentType || "New Experience"}
                         </h3>
@@ -459,7 +458,7 @@ export default function EditExperienceModal({
                     </div>
 
                     <div
-                      className={`transition-all duration-300 overflow-hidden ${!collapsedCards[index] ? "max-h-[1500px] opacity-100 p-6" : "max-h-0 opacity-0 overflow-hidden"}`}
+                      className={`transition-all duration-300 overflow-hidden ${expandedIndex === index ? "max-h-[1500px] opacity-100 p-6" : "max-h-0 opacity-0 overflow-hidden"}`}
                     >
                       <div className="space-y-6">
                         {/* Row 1: Title and Employment Type */}

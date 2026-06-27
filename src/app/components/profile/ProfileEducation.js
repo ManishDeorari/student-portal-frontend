@@ -53,12 +53,12 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
                                             {edu.fieldOfStudy && ` in ${edu.fieldOfStudy}`}
                                         </p>
                                         {edu.course && (
-                                            <div className={`text-[11px] font-black mt-1 uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <div className={`text-[11px] font-black mt-1 uppercase tracking-widest ${darkMode ? 'text-white' : 'text-black'}`}>
                                                 Course: <span className={`normal-case tracking-normal ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{edu.course}</span>
                                             </div>
                                         )}
                                         {edu.branch && (
-                                            <div className={`text-[11px] font-black mt-0.5 uppercase tracking-widest ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            <div className={`text-[11px] font-black mt-0.5 uppercase tracking-widest ${darkMode ? 'text-white' : 'text-black'}`}>
                                                 Branch: <span className={`normal-case tracking-normal ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>{edu.branch}</span>
                                             </div>
                                         )}

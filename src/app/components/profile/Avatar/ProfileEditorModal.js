@@ -14,7 +14,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(currentImage || "/default-profile.jpg");
   const [uploading, setUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState("crop"); // default to crop since it's the only tab
+  const [activeTab, setActiveTab] = useState(null); // default to null as requested by user
   const [profileImageFocus, setProfileImageFocus] = useState(currentFocus || null);
   const [mounted, setMounted] = useState(false);
 
