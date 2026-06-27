@@ -18,6 +18,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
         enrollmentNumber: "",
         branch: "",
         employeeId: "",
+        newPassword: "",
     });
     const [isSaving, setIsSaving] = useState(false);
 
@@ -33,6 +34,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                 enrollmentNumber: user.enrollmentNumber || "",
                 branch: user.branch || "",
                 employeeId: user.employeeId || "",
+                newPassword: "",
             });
         }
     }, [user]);
@@ -76,7 +78,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/80 backdrop-blur-md z-[120] flex items-center justify-center p-4"
+                className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4"
                 onClick={onClose}
             >
                 <motion.div
@@ -104,11 +106,11 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                             </button>
                         </div>
 
-                        <div className="space-y-5">
+                        <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
                             {/* Basic Info Row */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Full Name</label>
+                                    <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Full Name</label>
                                     <div className={`p-[1.5px] bg-gradient-to-tr from-blue-500 to-purple-600 rounded-xl`}>
                                         <input
                                             type="text"
@@ -120,7 +122,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                     </div>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Email Address</label>
+                                    <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Email Address</label>
                                     <div className={`p-[1.5px] bg-gradient-to-tr from-blue-500 to-purple-600 rounded-xl`}>
                                         <input
                                             type="email"
@@ -138,7 +140,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                 <>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="space-y-1.5">
-                                            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Course</label>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Course</label>
                                             <div className="p-[1.5px] bg-gradient-to-tr from-pink-500 to-rose-600 rounded-xl">
                                                 <input
                                                     type="text"
@@ -151,7 +153,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                             </div>
                                         </div>
                                         <div className="space-y-1.5">
-                                            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Semester (1-10)</label>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Semester (1-10)</label>
                                             <div className="p-[1.5px] bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-xl">
                                                 <input
                                                     type="number"
@@ -166,7 +168,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                         </div>
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Enrollment Number</label>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Enrollment Number</label>
                                         <div className="p-[1.5px] bg-gradient-to-tr from-amber-500 to-orange-600 rounded-xl">
                                             <input
                                                 type="text"
@@ -178,7 +180,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                         </div>
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Branch</label>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Branch</label>
                                         <div className="p-[1.5px] bg-gradient-to-tr from-orange-500 to-yellow-600 rounded-xl">
                                             <input
                                                 type="text"
@@ -194,7 +196,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                 <>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="space-y-1.5">
-                                            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Position</label>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Position</label>
                                             <div className="p-[1.5px] bg-gradient-to-tr from-violet-500 to-purple-600 rounded-xl">
                                                 <input
                                                     type="text"
@@ -207,7 +209,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                             </div>
                                         </div>
                                         <div className="space-y-1.5">
-                                            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Department</label>
+                                            <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Department</label>
                                             <div className="p-[1.5px] bg-gradient-to-tr from-fuchsia-500 to-pink-600 rounded-xl">
                                                 <input
                                                     type="text"
@@ -221,7 +223,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                         </div>
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white/50" : "text-slate-500"}`}>Employee ID</label>
+                                        <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Employee ID</label>
                                         <div className="p-[1.5px] bg-gradient-to-tr from-amber-500 to-orange-600 rounded-xl">
                                             <input
                                                 type="text"
@@ -234,6 +236,23 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                                     </div>
                                 </>
                             )}
+
+                            <div className="space-y-1.5 mt-6 border-t border-gray-200/20 pt-6">
+                                <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${darkMode ? "text-white" : "text-black"}`}>Set New Password (Optional)</label>
+                                <div className={`p-[1.5px] bg-gradient-to-tr from-red-500 to-pink-600 rounded-xl`}>
+                                    <input
+                                        type="text"
+                                        name="newPassword"
+                                        value={formData.newPassword}
+                                        onChange={handleChange}
+                                        placeholder="Enter new password to reset"
+                                        className={`w-full p-3 rounded-[calc(0.75rem-1.5px)] outline-none text-sm font-bold ${darkMode ? "bg-black text-white" : "bg-white text-slate-900"}`}
+                                    />
+                                </div>
+                                <p className={`text-[10px] ml-1 mt-1 ${darkMode ? "text-white/50" : "text-gray-500"}`}>
+                                    Must be 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special character. Leave blank to keep current password.
+                                </p>
+                            </div>
 
                             <button
                                 onClick={handleSave}
