@@ -78,9 +78,22 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4"
+                className="fixed inset-0 bg-black/80 backdrop-blur-md z-[99999] flex items-center justify-center p-4"
+                style={{ zIndex: 999999 }}
                 onClick={onClose}
             >
+                <style>{`
+                    .custom-gradient-scrollbar::-webkit-scrollbar {
+                        width: 6px;
+                    }
+                    .custom-gradient-scrollbar::-webkit-scrollbar-track {
+                        background: transparent;
+                    }
+                    .custom-gradient-scrollbar::-webkit-scrollbar-thumb {
+                        background: linear-gradient(to bottom, #3b82f6, #a855f7, #ec4899);
+                        border-radius: 10px;
+                    }
+                `}</style>
                 <motion.div
                     initial={{ scale: 0.9, y: 20 }}
                     animate={{ scale: 1, y: 0 }}
@@ -88,7 +101,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                     className="relative p-[2px] bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 rounded-[2.5rem] w-full max-w-xl shadow-2xl overflow-hidden"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className={`relative ${darkMode ? "bg-black" : "bg-white"} rounded-[calc(2.5rem-2px)] p-6 sm:p-10 h-full w-full`}>
+                    <div className={`relative ${darkMode ? "bg-black" : "bg-white"} rounded-[calc(2.5rem-2px)] p-6 sm:p-10 h-full w-full max-h-[85vh] overflow-y-auto custom-gradient-scrollbar`}>
                         <div className="flex items-center justify-between mb-8">
                             <div className="flex items-center gap-4">
                                 <div className="w-14 h-14 bg-blue-500/20 rounded-2xl flex items-center justify-center border border-blue-500/20">
@@ -106,7 +119,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdate, da
                             </button>
                         </div>
 
-                        <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-2" style={{ scrollbarWidth: "thin" }}>
+                        <div className="space-y-5">
                             {/* Basic Info Row */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
