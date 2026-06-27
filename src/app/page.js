@@ -43,7 +43,7 @@ export default function HomePage() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [featuredStory, setFeaturedStory] = useState(null);
-  const [stats, setStats] = useState({ users: 260, events: 15, posts: 120 });
+  const [stats, setStats] = useState(null);
   const autoRef = useRef(null);
 
   // Fetch dynamic testimonial and stats
@@ -178,21 +178,21 @@ export default function HomePage() {
                   <div className="flex justify-center gap-4 sm:gap-8 mb-8">
                     <div className="text-center">
                       <div className="text-2xl sm:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-                        {stats.users.toLocaleString()}+
+                        {stats ? `${stats.users.toLocaleString()}+` : <span className="animate-pulse opacity-50">...</span>}
                       </div>
                       <div className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Students</div>
                     </div>
                     <div className="w-px h-10 bg-white/10" />
                     <div className="text-center">
                       <div className="text-2xl sm:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
-                        {stats.events.toLocaleString()}+
+                        {stats ? `${stats.events.toLocaleString()}+` : <span className="animate-pulse opacity-50">...</span>}
                       </div>
                       <div className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Events</div>
                     </div>
                     <div className="w-px h-10 bg-white/10 hidden sm:block" />
                     <div className="text-center hidden sm:block">
                       <div className="text-2xl sm:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-red-400">
-                        {stats.posts.toLocaleString()}+
+                        {stats ? `${stats.posts.toLocaleString()}+` : <span className="animate-pulse opacity-50">...</span>}
                       </div>
                       <div className="text-[10px] uppercase tracking-widest text-white/50 font-bold">Posts</div>
                     </div>
