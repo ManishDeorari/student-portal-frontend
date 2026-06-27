@@ -43,7 +43,7 @@ export default function HomePage() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [featuredStory, setFeaturedStory] = useState(null);
-  const [stats, setStats] = useState({ users: 10, events: 5, posts: 20 });
+  const [stats, setStats] = useState({ users: 260, events: 15, posts: 120 });
   const autoRef = useRef(null);
 
   // Fetch dynamic testimonial and stats
