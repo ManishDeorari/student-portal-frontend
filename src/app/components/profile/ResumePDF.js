@@ -364,7 +364,7 @@ export default function ResumePDF({ profile }) {
                 <View style={styles.itemBlock}>
                   <View style={styles.rowBetween}>
                     <Text style={styles.itemTitle}>• {edu.institution}</Text>
-                    <Text style={styles.itemDate}>{edu.startDate}{edu.endDate ? ` – ${edu.endDate}` : ' – Present'}</Text>
+                    <Text style={styles.itemDate}>{edu.startDate}{edu.endDate ? (edu.isOngoing ? ` – Present (Expected: ${edu.endDate})` : ` – ${edu.endDate}`) : ' – Present'}</Text>
                   </View>
                   <View style={styles.rowBetween}>
                     <Text style={styles.itemSubtitle}>

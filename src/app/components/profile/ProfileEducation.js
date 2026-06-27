@@ -66,7 +66,7 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
 
                                     <div className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
                                         <Calendar className="w-3.5 h-3.5" />
-                                        {edu.startDate} - {edu.endDate}
+                                        {edu.startDate} - {edu.isOngoing ? `Present (Expected: ${edu.endDate})` : edu.endDate}
                                     </div>
 
                                     {edu.grade && (!isPublicView || (typeof window !== "undefined" && ["admin", "faculty", "main admin"].includes(JSON.parse(localStorage.getItem("user") || "{}")?.role))) && (

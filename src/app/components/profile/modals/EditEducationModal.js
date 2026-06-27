@@ -93,6 +93,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                     institution: edu.institution || "",
                     campus: edu.campus || "",
                     grade: edu.grade || "",
+                    isOngoing: edu.isOngoing || false,
                     activities: edu.activities || "",
                     description: edu.description || "",
                     isMandatory: true,
@@ -113,6 +114,8 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                         startYear: sYear || "",
                         endMonth: eMonth || "",
                         endYear: eYear || "",
+                        grade: edu.grade || "",
+                        isOngoing: edu.isOngoing || false,
                         isMandatory: false
                     });
                 }
@@ -151,6 +154,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                 endMonth: "",
                 endYear: "",
                 grade: "",
+                isOngoing: false,
                 activities: "",
                 description: "",
                 isMandatory: false
@@ -174,7 +178,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                 }
                 if (!edu.startMonth || !edu.startYear) newErrors[`${idx}-startDate`] = "Start date required";
                 if (!edu.endMonth || !edu.endYear) newErrors[`${idx}-endDate`] = "End date required";
-                if (!edu.grade || edu.grade.trim() === "") newErrors[`${idx}-grade`] = "Grade/Percentage is required";
+                if (!edu.isOngoing && (!edu.grade || edu.grade.trim() === "")) newErrors[`${idx}-grade`] = "Grade/Percentage is required";
             }
         });
         setErrors(newErrors);
@@ -209,6 +213,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                     location: "", // Explicitly clearing location
                     startDate,
                     endDate,
+                    isOngoing: edu.isOngoing || false,
                     grade: edu.grade,
                     activities: edu.activities,
                     description: edu.description
@@ -433,6 +438,26 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                         </div>
                                     </div>
 
+                                    {/* Ongoing Checkbox */}
+                                    {!edu.degree?.includes("High School") && !edu.degree?.includes("Intermediate") && (
+                                        <div className="flex items-center gap-3 py-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleChange(index, "isOngoing", !edu.isOngoing)}
+                                                className={`flex items-center justify-center w-5 h-5 rounded-[4px] relative overflow-hidden group border ${edu.isOngoing ? 'border-transparent' : (darkMode ? 'border-gray-500' : 'border-gray-300')}`}
+                                            >
+                                                <div className={`absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 transition-opacity ${edu.isOngoing ? 'opacity-100' : 'opacity-0 group-hover:opacity-20'}`} />
+                                                {edu.isOngoing && <CheckCircle2 className="w-4 h-4 text-white relative z-10" />}
+                                            </button>
+                                            <span 
+                                                className={`text-sm font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'} cursor-pointer select-none transition-colors hover:text-blue-500`} 
+                                                onClick={() => handleChange(index, "isOngoing", !edu.isOngoing)}
+                                            >
+                                                I am currently studying here
+                                            </span>
+                                        </div>
+                                    )}
+
                                     {/* Dates */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
@@ -462,7 +487,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                         </div>
                                         <div className="space-y-2">
                                             <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-endDate`] ? 'text-red-500' : (darkMode ? 'text-indigo-400' : 'text-indigo-600')}`}>
-                                                End date (or expected) <span className="text-red-500 font-bold">*</span>
+                                                {edu.isOngoing ? "Expected Grad Year" : "End date / Year"} <span className="text-red-500 font-bold">*</span>
                                             </label>
                                             <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-endDate`] ? 'from-red-500 to-red-600' : ''}`}>
                                                 <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
@@ -491,7 +516,8 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                     <div className="space-y-1.5 md:w-1/2">
                                         <label className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-grade`] ? 'text-red-500' : darkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>
                                             <Award className="w-3.5 h-3.5" />
-                                            {edu.degree?.includes("High School") || edu.degree?.includes("Intermediate") ? "Percentage" : "CGPA / Grade"} <span className="text-red-500 font-bold">*</span>
+                                            {edu.degree?.includes("High School") || edu.degree?.includes("Intermediate") ? "Percentage" : (edu.isOngoing ? "Current CGPA (Optional)" : "Final CGPA / Grade")} 
+                                            {!edu.isOngoing && <span className="text-red-500 font-bold">*</span>}
                                         </label>
                                         <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-grade`] ? 'from-red-500 to-red-600' : ''}`}>
                                             <input
