@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Trash2, Mail, UserX, Shield, Check, Minus, X, AlertTriangle, Filter, Send, GraduationCap, Plus, Edit2 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
@@ -33,6 +34,9 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
     const [messageText, setMessageText] = useState("");
     const [isSendingMessage, setIsSendingMessage] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
+
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
     const [editUserModal, setEditUserModal] = useState(null); // userData
     const [semesterConfirmModal, setSemesterConfirmModal] = useState(null); // "increase" | "decrease" | null
     const [isBulkProcessing, setIsBulkProcessing] = useState(false);
@@ -353,8 +357,8 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                     <div className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.5rem] shadow-2xl overflow-hidden mb-12">
                         <div className={`${darkMode ? "bg-black" : "bg-white"} rounded-[calc(2.5rem-2px)] overflow-hidden`}>
                             <div className="space-y-4 p-2 sm:p-4">
-                                {/* Header Row — desktop only */}
-                                <div className={`hidden md:flex items-center gap-4 px-8 py-4 ${darkMode ? "text-white/60" : "text-slate-500"} text-[10px] uppercase font-black tracking-[0.3em]`}>
+                                {/* Header Row - desktop only */}
+                                <div className={`hidden md:flex items-center gap-4 px-8 py-4 ${darkMode ? "text-white" : "text-black"} text-[10px] uppercase font-black tracking-[0.3em]`}>
                                     <div className="w-12 flex items-center justify-center">
                                         <div
                                             onClick={handleSelectAll}
@@ -590,9 +594,11 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                 )}
             </AnimatePresence>
 
-            {/* Message Modal */}
-            <AnimatePresence>
-                {messageModal && (
+            {mounted && createPortal(
+                <>
+                    {/* Message Modal */}
+                    <AnimatePresence>
+                        {messageModal && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -790,9 +796,10 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                 </div>
                             </div>
                         </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
+                        </div>
+                    )}
+                </AnimatePresence>
+                </>, document.body)}
             {/* Image Viewer */}
             {viewerImage && (
                 <ImageViewerModal
