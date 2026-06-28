@@ -19,15 +19,14 @@
 
 /* ── Light mode palette ── */
 .gooey-wrapper.gooey-light {
-  --color-bg1: rgb(248, 250, 255);
-  --color-bg2: rgb(250, 248, 255);
-  --color1: 191, 219, 254;
-  --color2: 221, 214, 254;
-  --color3: 186, 230, 253;
-  --color4: 251, 207, 232;
-  --color5: 254, 240, 138;
-  --color-interactive: 196, 181, 253;
-  --blending: multiply;
+  --color-bg1: rgb(180, 140, 255);
+  --color-bg2: rgb(100, 160, 255);
+  --color1: 59, 130, 246;
+  --color2: 168, 85, 247;
+  --color3: 56, 189, 248;
+  --color4: 236, 72, 153;
+  --color5: 234, 179, 8;
+  --color-interactive: 99, 102, 241;
 }
 
 .gooey-wrapper {
