@@ -159,19 +159,7 @@ function ProfileContent() {
 
       {/* 🔷 Top Profile Section */}
       <div className="max-w-4xl mx-auto px-1 sm:px-4 lg:px-8 pt-6">
-        {isPublicView && (
-            <div className="flex items-center gap-4 mb-4">
-                <div className="relative p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full group transition-all duration-300 hover:shadow-lg shrink-0">
-                    <button
-                        onClick={() => router.back()}
-                        className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-[#0f172a] hover:bg-black text-white" : "bg-white hover:bg-gray-50 text-slate-900"}`}
-                        aria-label="Go back"
-                    >
-                        <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-                    </button>
-                </div>
-            </div>
-        )}
+        {/* Back button has been moved into ProfileBasicInfo for public view */}
         <div className="w-full">
           <ProfileBasicInfo
             profile={profile}

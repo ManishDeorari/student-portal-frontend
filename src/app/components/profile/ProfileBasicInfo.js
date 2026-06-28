@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Copy, Pencil, UserPlus, Check, Award, QrCode, Download } from "lucide-react";
+import { Copy, Pencil, UserPlus, Check, Award, QrCode, Download, ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import dynamic from 'next/dynamic';
 import ProfileAvatar from "./ProfileAvatar";
@@ -14,6 +15,7 @@ import QrCodeModal from "./modals/QrCodeModal";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPublicView }) {
+    const router = useRouter();
     const { darkMode } = useTheme();
     const [copied, setCopied] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -165,6 +167,17 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
             <div className={`${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'} rounded-[calc(2.5rem-2.5px)] overflow-hidden h-full`}>
                 {/* 🔷 Banner */}
                 <div className={`relative w-full h-28 sm:h-40 md:h-48 ${darkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
+                    {isPublicView && (
+                        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20">
+                            <button
+                                onClick={() => router.back()}
+                                className={`p-2.5 sm:p-3 rounded-full transition-all active:scale-95 shadow-lg backdrop-blur-md flex items-center justify-center border ${darkMode ? 'bg-black/50 text-white hover:bg-black/70 border-white/20' : 'bg-white/50 text-black hover:bg-white/80 border-black/10'}`}
+                                aria-label="Go back"
+                            >
+                                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </button>
+                        </div>
+                    )}
                     <ProfileBanner
                         image={profile.bannerImage}
                         focus={profile.bannerImageFocus}
