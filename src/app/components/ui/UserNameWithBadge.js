@@ -21,7 +21,7 @@ export default function UserNameWithBadge({ user, className = "", badgeClassName
 
   if (href) {
     return (
-      <Link href={href} onClick={onClick} className={`inline-flex items-center gap-1 min-w-0 max-w-full hover:underline decoration-blue-500/50 underline-offset-4 transition-all ${className}`}>
+      <Link href={href} onClick={onClick} className={`inline-flex items-center gap-1 min-w-0 max-w-full hover:text-blue-500 transition-colors ${className}`}>
         {innerContent}
       </Link>
     );
@@ -29,7 +29,7 @@ export default function UserNameWithBadge({ user, className = "", badgeClassName
 
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={`inline-flex items-center gap-1 min-w-0 max-w-full text-left hover:underline decoration-blue-500/50 underline-offset-4 transition-all ${className}`}>
+      <button type="button" onClick={onClick} className={`inline-flex items-center gap-1 min-w-0 max-w-full text-left hover:text-blue-500 transition-colors ${className}`}>
         {innerContent}
       </button>
     );
