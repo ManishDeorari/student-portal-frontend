@@ -194,13 +194,15 @@ function EventsContent() {
 
             <div className="max-w-4xl mx-auto py-12 px-1 sm:px-4 lg:px-8">
                 <div className="flex flex-col sm:flex-row items-center gap-4 mb-10">
-                    <button
-                        onClick={() => router.back()}
-                        className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-black hover:bg-gray-900 text-white shadow-white/5 border border-gray-800" : "bg-white hover:bg-gray-50 text-black shadow-black/5 border border-gray-200"}`}
-                        aria-label="Go back"
-                    >
-                        <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-                    </button>
+                    <div className="relative p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full group transition-all duration-300 hover:shadow-lg shrink-0">
+                        <button
+                            onClick={() => router.back()}
+                            className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-[#0f172a] hover:bg-black text-white" : "bg-white hover:bg-gray-50 text-slate-900"}`}
+                            aria-label="Go back"
+                        >
+                            <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </button>
+                    </div>
                     <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-xl overflow-hidden flex-1 w-full">
                         <div className={`px-6 sm:px-8 py-4 sm:py-6 rounded-[calc(1.5rem-1px)] h-full flex flex-col justify-center gap-3 ${darkMode ? 'bg-slate-950' : 'bg-[#FAFAFA]'}`}>
                             <div className="flex items-center gap-4">

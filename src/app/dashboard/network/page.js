@@ -258,30 +258,31 @@ const NetworkPage = () => {
                 {student.slice(0, displayLimit).map((user) => (
                   <div key={user._id} className="relative p-[1.5px] bg-gradient-to-br from-blue-500/50 via-purple-500/50 to-pink-500/50 rounded-2xl group transition-all duration-500 hover:from-blue-500 hover:via-purple-500 hover:to-pink-500 shadow-sm hover:shadow-xl">
                     <div className={`rounded-2xl p-3 sm:p-5 flex items-center justify-between gap-3 sm:gap-4 relative overflow-hidden h-full ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-900'} transition-colors`}>
-                      <div className="flex items-center gap-3 sm:gap-4 min-w-0 relative z-10 w-full">
-                        <div className="relative rounded-full shrink-0 shadow-lg flex items-center justify-center aspect-square w-fit h-fit">
+                      <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                        <Link href={`/profile/${user.publicId || user._id}`} className="shrink-0 relative group/avatar">
                           <UserAvatar
                             user={user}
-                            src={user.profilePicture || "/default-profile.jpg"}
-                            alt={user.name || "User"}
-                            width={64}
-                            height={64}
-                            wrapperClassName="w-10 h-10 sm:w-14 sm:h-14 rounded-full"
-                            className={`w-full h-full rounded-full object-cover border-2 ${darkMode ? 'border-slate-800' : 'border-white'}`}
+                            src={user.profilePicture}
+                            width={50}
+                            height={50}
+                            wrapperClassName="w-12 h-12 sm:w-14 sm:h-14 rounded-full"
+                            className={`rounded-full object-cover transition-transform duration-300 group-hover/avatar:scale-110 border-2 ${darkMode ? 'border-slate-700' : 'border-gray-200'}`}
+                            alt={user.name}
                           />
-                        </div>
-                        <div className="min-w-0 flex-1">
+                        </Link>
+                        <div className="min-w-0">
                           <UserNameWithBadge 
                             user={user}
                             href={`/profile/${user.publicId || user._id}`}
-                            className="font-black text-sm sm:text-lg truncate hover:text-blue-500 transition-colors uppercase tracking-tight"
+                            className={`font-black text-sm sm:text-lg truncate uppercase tracking-tight hover:text-blue-500 transition-colors ${darkMode ? 'text-white' : 'text-slate-900'}`}
                           />
-                          {/* Enrollment / Employee ID - Hidden for Main Admin */}
-                          {user.role !== "admin" && (
-                            <p className="text-[10px] font-black uppercase tracking-widest text-blue-500 mt-0.5">
-                              {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
-                            </p>
-                          )}
+                          <div className="flex flex-col gap-0.5 sm:gap-1 mt-0.5 sm:mt-1">
+                            {user.role !== "admin" && (
+                              <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
+                              </span>
+                            )}
+                          </div>
                           <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-white/60' : 'text-slate-500'} mt-1`}>{user.course} {user.year}</p>
                         </div>
                       </div>
@@ -352,27 +353,26 @@ const NetworkPage = () => {
                   <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                     {section.data.slice(0, suggestionLimits[section.id]).map((user) => (
                       <div key={user._id} className="relative p-[1.5px] bg-gradient-to-br from-blue-400/50 via-purple-400/50 to-pink-400/50 rounded-2xl h-full group transition-all duration-500 hover:from-blue-500 hover:to-pink-500 hover:shadow-xl">
-                        <div className={`rounded-2xl flex flex-col items-center text-center p-3 sm:p-6 space-y-2 sm:space-y-4 transition-all relative overflow-hidden h-full ${darkMode ? 'bg-[#0f172a] text-white' : 'bg-white text-slate-900 border'}`}>
-                          <div className="relative rounded-full shrink-0 shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center aspect-square w-fit h-fit">
+                        <div className={`p-4 rounded-[calc(1.5rem-1px)] flex flex-col items-center text-center relative overflow-hidden h-full ${darkMode ? 'bg-[#0f172a] hover:bg-black text-white' : 'bg-white hover:bg-slate-50 text-slate-900'} transition-colors`}>
+                          <Link href={`/profile/${user.publicId || user._id}`} className="relative group/avatar shrink-0 mb-3 block">
                             <UserAvatar
-                               user={user}
-                               src={user.profilePicture || "/default-profile.jpg"}
-                               alt={user.name || "User"}
-                               width={72}
-                               height={72}
-                               wrapperClassName="w-12 h-12 sm:w-16 sm:h-16 rounded-full"
-                               className={`w-full h-full rounded-full object-cover border-2 ${darkMode ? 'border-slate-800' : 'border-white'}`}
+                              user={user}
+                              src={user.profilePicture}
+                              width={60}
+                              height={60}
+                              wrapperClassName="w-14 h-14 sm:w-16 sm:h-16 rounded-full"
+                              className={`rounded-full object-cover transition-transform duration-300 group-hover/avatar:scale-110 border-2 ${darkMode ? 'border-slate-700' : 'border-gray-200'}`}
+                              alt={user.name}
                             />
-                          </div>
-                          <div className="w-full min-w-0">
+                          </Link>
+                          <div className="w-full min-w-0 mb-4 flex-1">
                             <UserNameWithBadge 
                               user={user}
                               href={`/profile/${user.publicId || user._id}`}
-                              className="font-black text-sm truncate hover:text-blue-500 transition-colors px-1 uppercase tracking-tight"
+                              className={`font-black text-sm uppercase tracking-tight truncate hover:text-blue-500 transition-colors ${darkMode ? 'text-white' : 'text-slate-900'}`}
                             />
-                            {/* Enrollment ID */}
                             {user.role !== "admin" && (
-                              <p className="text-[9px] font-black uppercase tracking-widest text-blue-500 mt-1">
+                              <p className={`text-[10px] font-black uppercase tracking-[0.2em] mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                 {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
                               </p>
                             )}

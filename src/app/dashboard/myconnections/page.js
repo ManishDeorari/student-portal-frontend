@@ -103,9 +103,11 @@ const MyConnectionsContent = () => {
                 <div className="relative p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden">
                     <div className={`px-4 sm:px-8 py-4 sm:py-6 rounded-[calc(1.5rem-2.5px)] ${darkMode ? 'bg-black text-white' : 'bg-white text-slate-900'} flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6`}>
                         <div className="flex items-center gap-3 sm:gap-6">
-                            <Link href="/dashboard/network" className={`p-3 rounded-2xl transition-all border ${darkMode ? 'bg-white/5 border-white/10 hover:bg-white/10 hover:scale-105' : 'bg-slate-50 border-gray-200 hover:bg-gray-100 hover:scale-105 text-slate-900 shadow-sm'}`}>
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                            </Link>
+                            <div className="relative p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl group transition-all duration-300 hover:shadow-lg">
+                                <Link href="/dashboard/network" className={`relative flex items-center justify-center p-3 rounded-[calc(1rem-1.5px)] transition-all ${darkMode ? 'bg-[#0f172a] hover:bg-black text-white' : 'bg-white hover:bg-gray-50 text-slate-900'}`}>
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                                </Link>
+                            </div>
                             <div>
                                 <h1 className={`text-2xl sm:text-4xl font-black tracking-tighter ${darkMode ? 'text-white' : 'text-slate-900'}`}>{ownerName} Network</h1>
                                 <p className={`text-xs sm:text-sm font-black uppercase tracking-widest mt-0.5 sm:mt-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{connections.length} Total Connections</p>
@@ -166,28 +168,28 @@ const MyConnectionsContent = () => {
                                                 src={user.profilePicture}
                                                 width={80}
                                                 height={80}
-                                                wrapperClassName="w-14 h-14 sm:w-18 sm:h-18 rounded-full"
-                                                className={`rounded-full object-cover border-2 transition-all w-full h-full ${darkMode ? 'border-slate-800' : 'border-white'}`}
+                                                wrapperClassName="w-14 h-14 sm:w-16 sm:h-16 rounded-full"
+                                                className={`rounded-full object-cover transition-transform duration-300 group-hover:scale-110 border-2 ${darkMode ? 'border-slate-700' : 'border-gray-200'}`}
                                                 alt={user.name || "User"}
                                             />
                                         </Link>
  
                                         {/* Name and ID Section */}
-                                        <div className="w-full min-w-0 space-y-1">
+                                        <div className="w-full min-w-0 space-y-1 mb-2">
                                             <UserNameWithBadge
                                                 user={user}
                                                 href={`/profile/${user.publicId || user._id}`}
-                                                className={`font-black tracking-tight truncate transition-colors text-xs sm:text-base uppercase ${darkMode ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'}`}
+                                                className={`font-black tracking-tight truncate transition-colors text-sm sm:text-base uppercase ${darkMode ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'}`}
                                             />
                                             
                                             {/* Enrollment / Employee ID */}
                                             {user.role !== "admin" && (
-                                                <p className="text-[10px] font-black uppercase tracking-[0.1em] text-blue-500">
+                                                <p className={`text-[10px] font-black uppercase tracking-[0.2em] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                                     {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
                                                 </p>
                                             )}
                                             
-                                            <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-white' : 'text-slate-900'}`}>
+                                            <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-white/60' : 'text-slate-500'}`}>
                                                 {user.course || "Student"} {user.year}
                                             </p>
                                         </div>
