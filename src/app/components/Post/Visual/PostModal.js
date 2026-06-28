@@ -254,7 +254,7 @@ export default function PostModal(props) {
                             <div key={midx} className={`flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-3 gap-2 sm:gap-3 rounded-2xl ${darkMode ? "bg-[#0f172a]/50 border border-slate-800" : "bg-white border border-gray-100 shadow-sm"}`}>
                               <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
                                 <Link href={`/profile/${member.userId?.publicId || member.userId?._id || member.userId?.id || member.userId || ''}`}>
-                                  <div className="flex items-center justify-center aspect-square w-fit h-fit relative p-[2px] bg-gradient-to-tr from-blue-400 to-purple-500 rounded-full cursor-pointer hover:scale-105 transition-transform">
+                                  <div className="flex items-center justify-center aspect-square w-fit h-fit relative p-[1px] bg-gradient-to-tr from-blue-500 to-purple-600 rounded-full cursor-pointer hover:scale-105 transition-transform">
                                     <UserAvatar
                                       user={typeof member.userId === 'object' ? member.userId : null}
                                       src={member.profilePicture || member.userId?.profilePicture}
