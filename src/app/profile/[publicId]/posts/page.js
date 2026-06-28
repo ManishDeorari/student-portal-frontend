@@ -100,33 +100,38 @@ function PostsContent() {
                 {isAdmin ? <AdminSidebar /> : <Sidebar />}
 
                 <div className="max-w-4xl mx-auto py-12 px-1 sm:px-4 lg:px-8">
-                    <div className="flex flex-col sm:flex-row items-center gap-4 mb-10">
-                        <div className="relative p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full group transition-all duration-300 hover:shadow-lg shrink-0">
-                            <button
-                                onClick={() => router.back()}
-                                className={`p-3 rounded-full transition-all active:scale-95 shadow-md flex items-center justify-center shrink-0 ${darkMode ? "bg-[#0f172a] hover:bg-black text-white" : "bg-white hover:bg-gray-50 text-slate-900"}`}
-                                aria-label="Go back"
-                            >
-                                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </button>
-                        </div>
-
-                        <div className="relative p-[2px] bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl shadow-xl overflow-hidden flex-1 w-full">
-                            <div className={`px-6 sm:px-8 py-4 sm:py-6 rounded-[calc(1.5rem-1px)] h-full flex flex-col justify-center gap-3 ${darkMode ? 'bg-slate-950' : 'bg-[#FAFAFA]'}`}>
-                                <div className="flex items-center gap-4">
-                                    <div className="h-8 sm:h-10 w-2 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
-                                    <h1 className={`text-xl sm:text-2xl lg:text-3xl font-black tracking-tight uppercase truncate ${darkMode ? 'text-white' : 'text-slate-900'}`}>User Posts</h1>
-                                </div>
-
-                                {profile && (
-                                    <div className="flex items-center gap-3 mt-1 pl-12 sm:pl-14">
-                                        <img src={profile.profilePicture || "/default-profile.jpg"} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-[1.5px] border-blue-500/50 shadow-sm" alt="Profile" />
-                                        <div className="flex flex-col">
-                                            <span className={`text-sm sm:text-base font-black leading-tight truncate max-w-[200px] sm:max-w-[300px] ${darkMode ? 'text-white' : 'text-slate-900'}`}>{profile.name}</span>
-                                            <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-widest truncate max-w-[200px] sm:max-w-[300px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{profile.enrollmentNumber || profile.universityRollNumber || profile.role}</span>
-                                        </div>
+                    <div className="relative p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl shadow-2xl overflow-hidden mb-10 w-full">
+                        <div className={`px-4 sm:px-8 py-4 sm:py-6 rounded-[calc(1.5rem-2.5px)] h-full flex flex-col justify-center ${darkMode ? 'bg-black text-white' : 'bg-white text-slate-900'}`}>
+                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
+                                <div className="flex items-center gap-3 sm:gap-6 w-full">
+                                    <div className="relative p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl group transition-all duration-300 hover:shadow-lg shrink-0">
+                                        <button
+                                            onClick={() => router.back()}
+                                            className={`relative flex items-center justify-center p-3 rounded-[calc(1rem-1.5px)] transition-all ${darkMode ? 'bg-[#0f172a] hover:bg-black text-white' : 'bg-white hover:bg-gray-50 text-slate-900'}`}
+                                            aria-label="Go back"
+                                        >
+                                            <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                                        </button>
                                     </div>
-                                )}
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-8 sm:h-10 w-2 bg-blue-500 rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)] shrink-0"></div>
+                                            <h1 className={`text-xl sm:text-2xl lg:text-3xl font-black tracking-tight uppercase truncate ${darkMode ? 'text-white' : 'text-slate-900'}`}>User Posts</h1>
+                                        </div>
+                                        
+                                        {profile && (
+                                            <div className="flex items-center gap-3 mt-3 pl-0 sm:pl-2">
+                                                <div className="relative p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg shrink-0">
+                                                    <img src={profile.profilePicture || "/default-profile.jpg"} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-[2.5px] ${darkMode ? 'border-black' : 'border-white'}`} alt="Profile" />
+                                                </div>
+                                                <div className="flex flex-col min-w-0">
+                                                    <span className={`text-sm sm:text-base font-black leading-tight truncate ${darkMode ? 'text-white' : 'text-slate-900'}`}>{profile.name}</span>
+                                                    <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] truncate text-blue-500 mt-0.5">{profile.enrollmentNumber || profile.universityRollNumber || profile.role}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
