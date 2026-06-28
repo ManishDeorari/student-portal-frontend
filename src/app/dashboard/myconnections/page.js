@@ -168,28 +168,28 @@ const MyConnectionsContent = () => {
                                                 src={user.profilePicture}
                                                 width={80}
                                                 height={80}
-                                                wrapperClassName="w-14 h-14 sm:w-16 sm:h-16 rounded-full"
-                                                className={`rounded-full object-cover transition-transform duration-300 group-hover:scale-110 border-2 ${darkMode ? 'border-slate-700' : 'border-gray-200'}`}
+                                                wrapperClassName="w-14 h-14 sm:w-18 sm:h-18 rounded-full"
+                                                className={`rounded-full object-cover border-2 transition-all w-full h-full ${darkMode ? 'border-slate-800' : 'border-white'}`}
                                                 alt={user.name || "User"}
                                             />
                                         </Link>
  
                                         {/* Name and ID Section */}
-                                        <div className="w-full min-w-0 space-y-1 mb-2">
+                                        <div className="w-full min-w-0 space-y-1">
                                             <UserNameWithBadge
                                                 user={user}
                                                 href={`/profile/${user.publicId || user._id}`}
-                                                className={`font-black tracking-tight truncate transition-colors text-sm sm:text-base uppercase ${darkMode ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'}`}
+                                                className={`font-black tracking-tight truncate transition-colors text-xs sm:text-base uppercase ${darkMode ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'}`}
                                             />
                                             
                                             {/* Enrollment / Employee ID */}
                                             {user.role !== "admin" && (
-                                                <p className={`text-[10px] font-black uppercase tracking-[0.2em] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                <p className="text-[10px] font-black uppercase tracking-[0.1em] text-blue-500">
                                                     {user.enrollmentNumber || user.employeeId || (user.role === "faculty" ? "Faculty" : "Student")}
                                                 </p>
                                             )}
                                             
-                                            <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-white/60' : 'text-slate-500'}`}>
+                                            <p className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? 'text-white' : 'text-slate-900'}`}>
                                                 {user.course || "Student"} {user.year}
                                             </p>
                                         </div>
