@@ -9,6 +9,7 @@ import {
 } from "@/api/connect";
 import Link from "next/link";
 import Image from "next/image";
+import UserNameWithBadge from "../ui/UserNameWithBadge";
 import ImageViewerModal from "../profile/ImageViewerModal";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -148,9 +149,12 @@ const RequestsModal = ({ isOpen, onClose, onActionComplete }) => {
                                                 />
                                             </div>
                                             <div className="min-w-0">
-                                                <Link href={`/profile/${user.publicId || user._id}`} onClick={onClose}>
-                                                    <h3 className={`font-black text-sm transition-colors truncate uppercase tracking-tight ${darkMode ? 'text-white hover:text-blue-400' : 'text-slate-900 hover:text-blue-600'}`}>{user.name}</h3>
-                                                </Link>
+                                                <UserNameWithBadge
+                                                    user={user}
+                                                    href={`/profile/${user.publicId || user._id}`}
+                                                    onClick={onClose}
+                                                    className={`font-black text-sm transition-colors truncate uppercase tracking-tight ${darkMode ? 'text-white hover:text-blue-400' : 'text-slate-900 hover:text-blue-600'}`}
+                                                />
                                                 {/* Enrollment ID */}
                                                 {user.role !== "admin" && (
                                                     <p className="text-[9px] font-black uppercase tracking-widest text-blue-500 mt-0.5">

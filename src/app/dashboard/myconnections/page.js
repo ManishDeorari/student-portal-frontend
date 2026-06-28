@@ -7,6 +7,7 @@ import Image from "next/image";
 import { getMyConnections, getUserConnections, sendConnectionRequest } from "@/api/connect";
 import { useTheme } from "@/context/ThemeContext";
 import { useSearchParams } from "next/navigation";
+import UserNameWithBadge from "../../components/ui/UserNameWithBadge";
 import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 
 const MyConnectionsContent = () => {
@@ -171,11 +172,11 @@ const MyConnectionsContent = () => {
  
                                         {/* Name and ID Section */}
                                         <div className="w-full min-w-0 space-y-1">
-                                            <Link href={`/profile/${user.publicId || user._id}`}>
-                                                <h3 className={`font-black tracking-tight truncate transition-colors text-xs sm:text-base uppercase ${darkMode ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'}`}>
-                                                    {user.name}
-                                                </h3>
-                                            </Link>
+                                            <UserNameWithBadge
+                                                user={user}
+                                                href={`/profile/${user.publicId || user._id}`}
+                                                className={`font-black tracking-tight truncate transition-colors text-xs sm:text-base uppercase ${darkMode ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-600'}`}
+                                            />
                                             
                                             {/* Enrollment / Employee ID */}
                                             {user.role !== "admin" && (
