@@ -169,13 +169,15 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                 <div className={`relative w-full h-28 sm:h-40 md:h-48 ${darkMode ? 'bg-slate-800' : 'bg-gray-100'}`}>
                     {isPublicView && (
                         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-20">
-                            <button
-                                onClick={() => router.back()}
-                                className={`p-2.5 sm:p-3 rounded-full transition-all active:scale-95 shadow-lg backdrop-blur-md flex items-center justify-center border ${darkMode ? 'bg-black/50 text-white hover:bg-black/70 border-white/20' : 'bg-white/50 text-black hover:bg-white/80 border-black/10'}`}
-                                aria-label="Go back"
-                            >
-                                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </button>
+                            <div className="relative p-[1.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full group transition-all duration-300 hover:shadow-lg hover:scale-105 shadow-xl cursor-pointer">
+                                <button
+                                    onClick={() => router.back()}
+                                    className={`relative flex items-center justify-center p-2.5 sm:p-3 rounded-[calc(9999px-1.5px)] transition-all active:scale-95 backdrop-blur-md ${darkMode ? 'bg-black/40 text-white hover:bg-black/60' : 'bg-white/40 text-black hover:bg-white/70'}`}
+                                    aria-label="Go back"
+                                >
+                                    <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                                </button>
+                            </div>
                         </div>
                     )}
                     <ProfileBanner
