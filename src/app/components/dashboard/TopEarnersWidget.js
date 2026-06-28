@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import UserAvatar from "../ui/UserAvatar";
 import Link from "next/link";
 import { getGamificationTier } from "@/utils/gamification";
 import ImageViewerModal from "../profile/ImageViewerModal";
@@ -79,10 +79,13 @@ export default function TopEarnersWidget({ darkMode }) {
                       setViewerOwnerId(user._id);
                     }}
                   >
-                    <Image 
+                    <UserAvatar 
+                      user={user}
                       src={user.profilePicture || "/default-profile.jpg"} 
                       alt={user.name} 
-                      fill
+                      width={40}
+                      height={40}
+                      wrapperClassName="w-full h-full"
                       className={`rounded-full object-cover border-2 transition-transform duration-300 group-hover/avatar:scale-110 ${index === 0 ? 'border-yellow-400' : index === 1 ? 'border-gray-300' : index === 2 ? 'border-amber-600' : 'border-transparent'}`}
                     />
                     {index === 0 && (
