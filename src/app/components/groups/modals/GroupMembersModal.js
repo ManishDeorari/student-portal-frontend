@@ -109,7 +109,7 @@ export default function GroupMembersModal({
                                     <div className={`p-4 rounded-[calc(2rem-1.5px)] flex items-center justify-between ${darkMode ? "bg-slate-950" : "bg-white"}`}>
                                         <div className="flex items-center gap-5">
                                             <div 
-                                                className="p-[2px] rounded-full bg-gradient-to-tr from-blue-400 to-pink-500 shadow-md flex items-center justify-center shrink-0 cursor-pointer hover:scale-105 transition-transform"
+                                                className="rounded-full shadow-md flex items-center justify-center shrink-0 cursor-pointer hover:scale-105 transition-transform"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setViewerImage(member.profilePicture || "/default-profile.jpg");

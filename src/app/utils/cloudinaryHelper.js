@@ -32,14 +32,16 @@ export const getOptimizedImageUrl = (url) => {
  * Uses AI Face Detection (g_face) to guarantee the user's face is centered,
  * even if they uploaded a landscape image.
  */
-export const getAvatarImageUrl = (url, width = 150) => {
+export const getAvatarImageUrl = (url, width = 400) => {
   if (!url || !url.includes("res.cloudinary.com")) return url;
   if (url.includes("g_face")) return url; // Already optimized for face
 
+  const size = Math.max(width, 400); // Enforce a minimum of 400px for sharpness
+
   const parts = url.split("/upload/");
   if (parts.length === 2) {
-    // c_thumb (crop to thumbnail), g_face (center on face), w_ and h_ for dimensions
-    return `${parts[0]}/upload/c_thumb,g_face,w_${width},h_${width},q_auto,f_auto/${parts[1]}`;
+    // c_fill (fill area), g_face (center on face), q_auto:best (highest quality)
+    return `${parts[0]}/upload/c_fill,g_face,w_${size},h_${size},q_auto:best,f_auto/${parts[1]}`;
   }
   return url;
 };

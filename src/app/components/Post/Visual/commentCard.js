@@ -152,7 +152,7 @@ export default function CommentCard({
       >
         <div className="flex justify-between items-start">
           <div className="flex gap-3 w-full">
-            <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex-shrink-0 w-8 h-8 shadow-sm relative">
+            <div className="rounded-full flex-shrink-0 w-8 h-8 shadow-sm relative">
               <UserAvatar
                 user={comment.user}
                 src={comment.user?.profilePicture}
@@ -162,7 +162,7 @@ export default function CommentCard({
                 wrapperClassName="w-full h-full"
                 onContextMenu={(e) => isRestricted && e.preventDefault()}
                 onDragStart={(e) => isRestricted && e.preventDefault()}
-                className={`w-full h-full rounded-full border border-white/5 object-cover ${isRestricted ? "select-none pointer-events-none" : ""}`}
+                className={`w-full h-full rounded-full border-2 ${darkMode ? 'border-blue-500/50' : 'border-blue-400/50'} object-cover ${isRestricted ? "select-none pointer-events-none" : ""}`}
               />
               {isRestricted && (
                 <div 

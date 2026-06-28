@@ -78,7 +78,7 @@ export default function AdminSearchEditModal({ isOpen, onClose, users, onEditUse
                                         className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-center justify-between group ${darkMode ? "bg-white/5 border-white/5 hover:border-purple-500/50 hover:bg-white/10" : "bg-gray-50 border-gray-100 hover:border-purple-500/50 hover:bg-purple-50/50"}`}
                                     >
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 p-[1px]">
+                                            <div className="w-10 h-10 rounded-full">
                                                 <img src={u.profilePicture || "/default-profile.jpg"} alt="" className="w-full h-full rounded-full object-cover" />
                                             </div>
                                             <div>

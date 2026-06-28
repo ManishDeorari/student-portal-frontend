@@ -159,7 +159,7 @@ const MyConnectionsContent = () => {
                                         {/* Avatar Section */}
                                         <Link 
                                             href={`/profile/${user.publicId || user._id}`}
-                                            className="relative p-[2px] bg-gradient-to-br from-blue-400/80 to-purple-400/80 rounded-full shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-xl mt-2 mb-4 block"
+                                            className="relative rounded-full shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-xl mt-2 mb-4 block"
                                         >
                                             <UserAvatar
                                                 user={user}

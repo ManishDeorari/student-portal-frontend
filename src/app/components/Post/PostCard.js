@@ -611,7 +611,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                           {(entry.type === 'group' ? entry.members : [entry]).map((member, midx) => (
                             <div key={midx} className={`p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-blue-50/50"}`}>
                               <div className="flex items-center gap-4 flex-1 min-w-0">
-                                <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 shadow-lg flex-shrink-0 relative">
+                                <div className="rounded-full shadow-lg flex-shrink-0 relative">
                                   {(() => {
                                     const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
                                     const isRestricted = !isAdmin;
@@ -624,7 +624,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                           width={40}
                                           height={40}
                                           wrapperClassName="w-10 h-10"
-                                          className={`rounded-full object-cover border-2 border-white/10 ${isRestricted ? "select-none pointer-events-none" : ""}`}
+                                          className={`rounded-full object-cover border-2 ${darkMode ? 'border-blue-500/50' : 'border-blue-400/50'} ${isRestricted ? "select-none pointer-events-none" : ""}`}
                                           onContextMenu={(e) => { if (isRestricted) e.preventDefault(); }}
                                           onDragStart={(e) => { if (isRestricted) e.preventDefault(); }}
                                         />
