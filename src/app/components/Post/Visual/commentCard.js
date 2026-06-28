@@ -99,7 +99,9 @@ export default function CommentCard({
   // ✅ Safety check: early return if basic data is missing
   if (!comment || !currentUser || !comment.user) return null;
 
-  const isOwn = currentUser && (currentUser._id === comment.userId?._id || currentUser.id === comment.userId?._id);
+  const commentOwnerId = comment?.user?._id || comment?.userId?._id || comment?.user || comment?.userId;
+  const currentUserId = currentUser?._id || currentUser?.id;
+  const isOwn = Boolean(currentUserId && commentOwnerId && String(currentUserId) === String(commentOwnerId));
   const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
   const isRestricted = !isOwn && !isAdmin;
 
