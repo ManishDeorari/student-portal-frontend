@@ -94,16 +94,16 @@ export default function MyPostsPage() {
   };
 
   if (initializing) return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-white">
+    <GooeyGradientBackground className={`min-h-screen flex items-center justify-center ${darkMode ? 'text-white' : 'text-slate-900'}`} darkMode={darkMode}>
       <div className="flex flex-col items-center gap-4">
-        <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+        <div className={`w-12 h-12 border-4 ${darkMode ? 'border-white/20 border-t-white' : 'border-blue-500/20 border-t-blue-500'} rounded-full animate-spin`}></div>
         <p className="font-bold tracking-widest text-xs uppercase">Loading your posts...</p>
       </div>
-    </div>
+    </GooeyGradientBackground>
   );
 
   return (
-    <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
+    <GooeyGradientBackground className={`min-h-screen ${darkMode ? 'text-white' : 'text-slate-900'}`} darkMode={darkMode}>
       <Sidebar />
 
       <div className="max-w-4xl mx-auto py-12 px-4">
