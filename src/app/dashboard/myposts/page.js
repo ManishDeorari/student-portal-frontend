@@ -6,7 +6,7 @@ import PostCard from "../../components/Post/PostCard";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
-import { GooeyGradientBackground } from "@/app/components/GooeyGradientBackground";
+import { GooeyGradientBackground } from "../../components/GooeyGradientBackground";
 
 export default function MyPostsPage() {
   const router = useRouter();
@@ -94,7 +94,7 @@ export default function MyPostsPage() {
   };
 
   if (initializing) return (
-    <GooeyGradientBackground className="min-h-screen flex items-center justify-center text-white" darkMode={darkMode}>
+    <GooeyGradientBackground className={`min-h-screen flex items-center justify-center ${darkMode ? 'text-white' : 'text-slate-900'}`} darkMode={darkMode}>
       <div className="flex flex-col items-center gap-4">
         <div className={`w-12 h-12 border-4 ${darkMode ? 'border-white/20 border-t-white' : 'border-blue-500/20 border-t-blue-500'} rounded-full animate-spin`}></div>
         <p className="font-bold tracking-widest text-xs uppercase">Loading your posts...</p>
@@ -103,7 +103,7 @@ export default function MyPostsPage() {
   );
 
   return (
-    <GooeyGradientBackground className="min-h-screen text-white relative" darkMode={darkMode}>
+    <GooeyGradientBackground className={`min-h-screen relative ${darkMode ? 'text-white' : 'text-slate-900'}`} darkMode={darkMode}>
       <Sidebar />
 
       <div className="max-w-4xl mx-auto py-12 px-4">
