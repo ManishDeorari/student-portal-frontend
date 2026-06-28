@@ -5,6 +5,7 @@ import AdminSidebar from "../../components/AdminSidebar";
 import Link from "next/link";
 import Image from "next/image";
 import UserAvatar from "../../components/ui/UserAvatar";
+import UserNameWithBadge from "../../components/ui/UserNameWithBadge";
 import {
   sendConnectionRequest,
   acceptConnectionRequest,
@@ -270,9 +271,11 @@ const NetworkPage = () => {
                           />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <Link href={`/profile/${user.publicId || user._id}`}>
-                            <h3 className="font-black text-sm sm:text-lg truncate hover:text-blue-500 transition-colors uppercase tracking-tight">{user.name}</h3>
-                          </Link>
+                          <UserNameWithBadge 
+                            user={user}
+                            href={`/profile/${user.publicId || user._id}`}
+                            className="font-black text-sm sm:text-lg truncate hover:text-blue-500 transition-colors uppercase tracking-tight"
+                          />
                           {/* Enrollment / Employee ID - Hidden for Main Admin */}
                           {user.role !== "admin" && (
                             <p className="text-[10px] font-black uppercase tracking-widest text-blue-500 mt-0.5">
@@ -362,9 +365,11 @@ const NetworkPage = () => {
                             />
                           </div>
                           <div className="w-full min-w-0">
-                            <Link href={`/profile/${user.publicId || user._id}`}>
-                              <h3 className="font-black text-sm truncate hover:text-blue-500 transition-colors px-1 uppercase tracking-tight">{user.name}</h3>
-                            </Link>
+                            <UserNameWithBadge 
+                              user={user}
+                              href={`/profile/${user.publicId || user._id}`}
+                              className="font-black text-sm truncate hover:text-blue-500 transition-colors px-1 uppercase tracking-tight"
+                            />
                             {/* Enrollment ID */}
                             {user.role !== "admin" && (
                               <p className="text-[9px] font-black uppercase tracking-widest text-blue-500 mt-1">

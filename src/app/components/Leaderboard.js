@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import UserAvatar from "./ui/UserAvatar";
 import Link from "next/link";
+import UserNameWithBadge from "./ui/UserNameWithBadge";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import PointsDistributionModal from "./profile/PointsDistributionModal";
@@ -132,12 +133,11 @@ export default function Leaderboard() {
                         />
                         <div className="flex flex-col md:flex-row md:items-center gap-2 sm:gap-6 min-w-0">
                           <div className="w-48 sm:w-56 shrink-0">
-                             <Link
+                             <UserNameWithBadge 
+                              user={user}
                               href={`/profile/${user.publicId || user._id}`}
                               className={`font-black text-xs sm:text-[15px] ${darkMode ? "text-white" : "text-slate-900"} hover:text-blue-500 transition-colors block truncate`}
-                            >
-                              {user.name}
-                            </Link>
+                             />
                             <p className={`text-[9px] sm:text-[10px] font-black ${darkMode ? "text-white/40" : "text-slate-500"} tracking-widest uppercase truncate`}>
                                 {user.enrollmentNumber || "Student"}
                             </p>

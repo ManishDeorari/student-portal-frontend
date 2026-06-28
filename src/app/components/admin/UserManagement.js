@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Trash2, Mail, UserX, Shield, Check, Minus, X, AlertTriangle, Filter, Send, GraduationCap, Plus, Edit2 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import UserNameWithBadge from "../ui/UserNameWithBadge";
+import { GooeyGradientBackground } from "../GooeyGradientBackground";
 import HybridInput from "../ui/HybridInput";
 import EmojiPickerToggle from "../Post/utils/EmojiPickerToggle";
 import AdminEditUserModal from "./modals/AdminEditUserModal";
@@ -425,9 +427,12 @@ export default function UserManagement({ users, loading, onDelete, onBulkDelete,
                                                             </div>
                                                         )}
                                                     </div>
-                                                    <div className="min-w-0 z-10 relative">
-                                                        <p className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-black"} truncate mb-0.5`}>{u.name}</p>
-                                                        <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white" : "text-black"} truncate`}>{u.email}</p>
+                                                    <div className="min-w-0 z-10 relative flex flex-col">
+                                                        <UserNameWithBadge 
+                                                          user={u}
+                                                          className={`font-black text-sm sm:text-[15px] ${darkMode ? "text-white" : "text-black"} truncate mb-0.5`}
+                                                        />
+                                                        <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider ${darkMode ? "text-white/60" : "text-black/60"} truncate`}>{u.email}</p>
                                                     </div>
                                                 </div>
 

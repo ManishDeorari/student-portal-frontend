@@ -14,6 +14,7 @@ import EventRegistrationModal from "../EventRegistrationModal";
 import AdminRegistrationsModal from "../AdminRegistrationsModal";
 import ConfirmationModal from "./ConfirmationModal";
 import UserAvatar from "../../ui/UserAvatar";
+import UserNameWithBadge from "../../ui/UserNameWithBadge";
 import { Eye } from "lucide-react";
 
 export default function PostModal(props) {
@@ -265,11 +266,16 @@ export default function PostModal(props) {
                                 <div className="flex flex-col min-w-0 w-full mt-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     {member.userId?.publicId ? (
-                                      <Link href={`/profile/${member.userId.publicId}`} className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}>
-                                        {member.userId?.name || member.name || "User"}
-                                      </Link>
+                                      <UserNameWithBadge 
+                                        user={member.userId}
+                                        href={`/profile/${member.userId.publicId}`} 
+                                        className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}
+                                      />
                                     ) : (
-                                      <span className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}>{member.userId?.name || member.name || "User"}</span>
+                                      <UserNameWithBadge 
+                                        user={member.userId || member}
+                                        className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}
+                                      />
                                     )}
                                     {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
                                   </div>

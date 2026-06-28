@@ -1,0 +1,41 @@
+"use client";
+import React from "react";
+import Link from "next/link";
+import { BadgeCheck } from "lucide-react";
+
+export default function UserNameWithBadge({ user, className = "", badgeClassName = "w-[1.1em] h-[1.1em] text-blue-500 shrink-0", onClick, href }) {
+  if (!user) return null;
+
+  const isVerified = user?.profileCompletionAwarded === true;
+  
+  const innerContent = (
+    <>
+      <span className="truncate">{user.name || "Unknown User"}</span>
+      {isVerified && (
+        <BadgeCheck className={badgeClassName} />
+      )}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} onClick={onClick} className={`inline-flex items-center gap-1 min-w-0 max-w-full hover:underline decoration-blue-500/50 underline-offset-4 transition-all ${className}`}>
+        {innerContent}
+      </Link>
+    );
+  }
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={`inline-flex items-center gap-1 min-w-0 max-w-full text-left hover:underline decoration-blue-500/50 underline-offset-4 transition-all ${className}`}>
+        {innerContent}
+      </button>
+    );
+  }
+
+  return (
+    <span className={`inline-flex items-center gap-1 min-w-0 max-w-full ${className}`}>
+      {innerContent}
+    </span>
+  );
+}

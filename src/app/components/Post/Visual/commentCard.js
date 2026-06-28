@@ -11,6 +11,7 @@ import UserAvatar from "../../ui/UserAvatar";
 import { createPortal } from "react-dom";
 import ConfirmationModal from "./ConfirmationModal";
 import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
+import UserNameWithBadge from "../../ui/UserNameWithBadge";
 
 export default function CommentCard({
   comment,
@@ -173,14 +174,13 @@ export default function CommentCard({
             <div className="w-full">
               <div className={`text-sm font-black flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
                 {isOwn ? (
-                  <span>{comment.user?.name || "Unknown"}</span>
+                  <UserNameWithBadge user={comment.user} />
                 ) : (
-                  <Link
+                  <UserNameWithBadge 
+                    user={comment.user}
                     href={`/profile/${comment.user?.publicId || comment.user?._id}`}
                     className={`hover:text-blue-500 transition-colors ${darkMode ? "text-blue-400" : "text-blue-700"}`}
-                  >
-                    {comment.user?.name || "Unknown"}
-                  </Link>
+                  />
                 )}
                 {isOwn && (
                   <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-widest ${darkMode ? "text-blue-300 bg-blue-600/30 border border-blue-500/30" : "text-blue-700 bg-blue-100 border border-blue-200"}`}>

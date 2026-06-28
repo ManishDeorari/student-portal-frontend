@@ -15,7 +15,6 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
   }, []);
 
   const isComplete = user?.profileCompletionAwarded === true;
-  const showBadge = isComplete;
 
   const imageSrc = src || user?.profilePicture || "/default-profile.jpg";
   const finalImageSrc = user?.profileImageFocus 
@@ -38,25 +37,7 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
         unoptimized={finalUnoptimized}
         {...props}
       />
-      {showBadge && !hideBadge && (
-        <span
-          className="absolute z-30 pointer-events-none flex items-center justify-center rounded-full bg-white dark:bg-slate-900 border-2 border-white dark:border-slate-800 shadow-md"
-          title="100% Profile Completed"
-          style={{
-            width: '28%',
-            height: '28%',
-            minWidth: '1.1rem',
-            minHeight: '1.1rem',
-            maxWidth: '2.5rem',
-            maxHeight: '2.5rem',
-            bottom: '2%',
-            right: '2%',
-            overflow: 'visible',
-          }}
-        >
-          <BadgeCheck className="text-green-500" style={{ width: '100%', height: '100%' }} />
-        </span>
-      )}
+
     </div>
   );
 }

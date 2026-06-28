@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import dynamic from 'next/dynamic';
 import ProfileAvatar from "./ProfileAvatar";
 import ProfileBanner from "./ProfileBanner";
+import UserNameWithBadge from "../ui/UserNameWithBadge";
 import ProfileStats from "./ProfileStats";
 import ResumeDownloadBtn from "./ResumeDownloadBtn";
 import EditBasicInfoModal from "./modals/EditBasicInfoModal";
@@ -218,7 +219,11 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     {/* Name */}
                     <div className="flex flex-col items-center w-full mt-2 text-center">
                         <div className="flex items-center justify-center gap-2 w-full">
-                            <h2 className={`text-2xl sm:text-3xl font-black tracking-tight ${darkMode ? 'text-white' : 'text-gray-900'}`}>{profile.name || "Unnamed User"}</h2>
+                            <UserNameWithBadge 
+                                user={{ ...profile, name: profile.name || "Unnamed User" }} 
+                                className={`text-2xl sm:text-3xl font-black tracking-tight ${darkMode ? 'text-white' : 'text-gray-900'}`}
+                                badgeClassName="w-[1em] h-[1em] text-blue-500 shrink-0"
+                            />
                         </div>
 
                         <p className="mt-1 flex items-center justify-center gap-2 w-full">

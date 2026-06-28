@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import UserAvatar from "./ui/UserAvatar";
+import UserNameWithBadge from "./ui/UserNameWithBadge";
 
 export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkMode = false, token }) {
   const [query, setQuery] = useState("");
@@ -109,7 +110,10 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
                                 </div>
                               </div>
                               <div className="min-w-0">
-                                <p className={`text-sm font-bold truncate ${darkMode ? "text-white" : "text-black"}`}>{user.name}</p>
+                                <UserNameWithBadge 
+                                  user={user} 
+                                  className={`text-sm font-bold truncate ${darkMode ? "text-white" : "text-black"}`} 
+                                />
                                 {user.role === 'admin' || user.role === 'faculty' ? (
                                   <p className={`text-[10px] truncate ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
                                     {user.employeeId || "Staff"}
