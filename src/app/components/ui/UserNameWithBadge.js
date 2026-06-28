@@ -12,7 +12,9 @@ export default function UserNameWithBadge({ user, className = "", badgeClassName
     <>
       <span className="truncate">{user.name || "Unknown User"}</span>
       {isVerified && (
-        <BadgeCheck className={badgeClassName} />
+        <div className="relative inline-flex items-center justify-center">
+          <BadgeCheck className={badgeClassName} fill="currentColor" stroke="white" strokeWidth={2} />
+        </div>
       )}
     </>
   );
