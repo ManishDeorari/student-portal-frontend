@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { BadgeCheck } from "lucide-react";
-import { getFocalImageUrl, getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
+import { getFocalImageUrl, getOptimizedImageUrl, getAvatarImageUrl } from "../../utils/cloudinaryHelper";
 
 export default function UserAvatar({ user, src, alt, width, height, className = "", wrapperClassName = "", onClick, unoptimized, hideBadge = false, ...props }) {
   const [currentUser, setCurrentUser] = useState(null);
@@ -19,7 +19,7 @@ export default function UserAvatar({ user, src, alt, width, height, className = 
   const imageSrc = src || user?.profilePicture || "/default-profile.jpg";
   const finalImageSrc = user?.profileImageFocus 
     ? getFocalImageUrl(imageSrc, width ? width * 2 : 200, height ? height * 2 : 200, user?.profileImageFocus)
-    : (src ? src : getOptimizedImageUrl(imageSrc));
+    : (src ? src : getAvatarImageUrl(imageSrc, width ? width * 2 : 150));
   const finalUnoptimized = unoptimized !== undefined ? unoptimized : (typeof finalImageSrc === 'string' && finalImageSrc.includes("default-profile.jpg"));
 
   return (

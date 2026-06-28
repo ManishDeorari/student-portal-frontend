@@ -3,7 +3,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import Sidebar from "../../components/Sidebar";
 import AdminSidebar from "../../components/AdminSidebar";
 import Link from "next/link";
-import Image from "next/image";
+import UserAvatar from "../../components/ui/UserAvatar";
 import { getMyConnections, getUserConnections, sendConnectionRequest } from "@/api/connect";
 import { useTheme } from "@/context/ThemeContext";
 import { useSearchParams } from "next/navigation";
@@ -161,11 +161,13 @@ const MyConnectionsContent = () => {
                                             href={`/profile/${user.publicId || user._id}`}
                                             className="relative p-[2px] bg-gradient-to-br from-blue-400/80 to-purple-400/80 rounded-full shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-xl mt-2 mb-4 block"
                                         >
-                                            <Image
-                                                src={user.profilePicture || "/default-profile.jpg"}
+                                            <UserAvatar
+                                                user={user}
+                                                src={user.profilePicture}
                                                 width={80}
                                                 height={80}
-                                                className={`w-14 h-14 sm:w-18 sm:h-18 rounded-full object-cover border-2 transition-all ${darkMode ? 'border-slate-800' : 'border-white'}`}
+                                                wrapperClassName="w-14 h-14 sm:w-18 sm:h-18 rounded-full"
+                                                className={`rounded-full object-cover border-2 transition-all w-full h-full ${darkMode ? 'border-slate-800' : 'border-white'}`}
                                                 alt={user.name || "User"}
                                             />
                                         </Link>

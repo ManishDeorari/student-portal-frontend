@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import UserNameWithBadge from "../ui/UserNameWithBadge";
+import UserAvatar from "../ui/UserAvatar";
 
 // Subcomponents
 import PostHeader from "./Visual/PostHeader";
@@ -616,11 +617,14 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                     const isRestricted = !isAdmin;
                                     return (
                                       <>
-                                        <img
-                                          src={getOptimizedImageUrl(member.profilePicture || member.userId?.profilePicture || "/default-profile.jpg")}
+                                        <UserAvatar
+                                          user={typeof member.userId === 'object' ? member.userId : member}
+                                          src={member.profilePicture || member.userId?.profilePicture}
                                           alt={member.name}
-                                          className={`w-10 h-10 rounded-full object-cover border-2 border-white/10 ${isRestricted ? "select-none pointer-events-none" : ""}`}
-                                          onError={(e) => { e.target.src = "/default-profile.jpg"; }}
+                                          width={40}
+                                          height={40}
+                                          wrapperClassName="w-10 h-10"
+                                          className={`rounded-full object-cover border-2 border-white/10 ${isRestricted ? "select-none pointer-events-none" : ""}`}
                                           onContextMenu={(e) => { if (isRestricted) e.preventDefault(); }}
                                           onDragStart={(e) => { if (isRestricted) e.preventDefault(); }}
                                         />

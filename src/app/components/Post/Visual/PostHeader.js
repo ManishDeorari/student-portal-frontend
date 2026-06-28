@@ -5,7 +5,7 @@ import UserAvatar from "../../ui/UserAvatar";
 import ImageViewerModal from "../../profile/ImageViewerModal";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
+
 import { GamificationBadge } from "../../../../utils/gamification";
 import UserNameWithBadge from "../../ui/UserNameWithBadge";
 
@@ -37,12 +37,11 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
       <div className="relative w-10 h-10 sm:w-12 sm:h-12">
         <UserAvatar
           user={post.user}
-          src={getOptimizedImageUrl(profileImg)}
+          src={profileImg}
           alt="User profile"
           width={48}
           height={48}
           wrapperClassName="w-full h-full"
-          unoptimized={profileImg === "/default-profile.jpg"}
           onContextMenu={(e) => isRestricted && e.preventDefault()}
           onDragStart={(e) => isRestricted && e.preventDefault()}
           className={`rounded-full border-2 ${darkMode ? "border-blue-500" : "border-black"} object-cover w-full h-full cursor-pointer hover:scale-110 transition-transform ${isRestricted ? 'select-none pointer-events-none' : ''}`}

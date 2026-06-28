@@ -10,7 +10,7 @@ import Image from "next/image";
 import UserAvatar from "../../ui/UserAvatar";
 import { createPortal } from "react-dom";
 import ConfirmationModal from "./ConfirmationModal";
-import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
+
 import UserNameWithBadge from "../../ui/UserNameWithBadge";
 
 export default function CommentCard({
@@ -155,7 +155,7 @@ export default function CommentCard({
             <div className="p-[1px] rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex-shrink-0 w-8 h-8 shadow-sm relative">
               <UserAvatar
                 user={comment.user}
-                src={getOptimizedImageUrl(comment.user?.profilePicture || "/default-profile.jpg")}
+                src={comment.user?.profilePicture}
                 alt="User"
                 width={32}
                 height={32}

@@ -28,6 +28,23 @@ export const getOptimizedImageUrl = (url) => {
 };
 
 /**
+ * Formats a Cloudinary image URL specifically for small profile pictures.
+ * Uses AI Face Detection (g_face) to guarantee the user's face is centered,
+ * even if they uploaded a landscape image.
+ */
+export const getAvatarImageUrl = (url, width = 150) => {
+  if (!url || !url.includes("res.cloudinary.com")) return url;
+  if (url.includes("g_face")) return url; // Already optimized for face
+
+  const parts = url.split("/upload/");
+  if (parts.length === 2) {
+    // c_thumb (crop to thumbnail), g_face (center on face), w_ and h_ for dimensions
+    return `${parts[0]}/upload/c_thumb,g_face,w_${width},h_${width},q_auto,f_auto/${parts[1]}`;
+  }
+  return url;
+};
+
+/**
  * Formats a Cloudinary image URL to use focal point cropping
  */
 export const getFocalImageUrl = (url, width, height, focus = null) => {

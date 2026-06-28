@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
-import Image from "next/image";
+import UserAvatar from "../ui/UserAvatar";
 import { FaPaperPlane, FaSmile, FaInfoCircle, FaUserPlus, FaUsers, FaImage, FaTimes, FaExpand, FaEdit, FaFileAlt, FaDownload } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
 import EmojiPicker from 'emoji-picker-react';
@@ -258,24 +258,17 @@ export default function GroupChatWindow({
                         return (
                             <div key={msg._id || index} className={`flex items-start gap-3 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
                                 {!isMe && (
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-lg sm:rounded-xl overflow-hidden border-2 border-white/20 shadow-sm mt-1 bg-gray-200 relative">
-                                        <Image 
-                                            src={getOptimizedImageUrl(msg.sender?.profilePicture || "/default-profile.jpg")} 
+                                        <UserAvatar
+                                            user={msg.sender}
+                                            src={msg.sender?.profilePicture} 
                                             width={32} 
-                                            height={32} 
-                                            className={`object-cover aspect-square ${isRestricted ? "select-none pointer-events-none" : ""}`} 
+                                            height={32}
+                                            wrapperClassName="w-8 h-8 rounded-lg sm:rounded-xl"
+                                            className={`rounded-lg sm:rounded-xl object-cover border-2 border-white/20 shadow-sm mt-1 bg-gray-200 aspect-square ${isRestricted ? "select-none pointer-events-none" : ""}`} 
                                             alt={msg.sender?.name || "User"} 
-                                            onError={(e) => { e.target.src = "/default-profile.jpg"; }}
                                             onContextMenu={(e) => isRestricted && e.preventDefault()}
                                             onDragStart={(e) => isRestricted && e.preventDefault()}
                                         />
-                                        {isRestricted && (
-                                            <div 
-                                                className="absolute inset-0 z-10 cursor-pointer"
-                                                onContextMenu={(e) => e.preventDefault()}
-                                            />
-                                        )}
-                                    </div>
                                 )}
                                 <div className={`flex flex-col ${isMe ? "items-end" : "items-start"} max-w-[85%] sm:max-w-[75%]`}>
                                     {!isMe && (
