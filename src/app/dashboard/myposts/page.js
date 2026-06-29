@@ -103,7 +103,7 @@ export default function MyPostsPage() {
   );
 
   return (
-    <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
+    <GooeyGradientBackground key={darkMode ? 'dark' : 'light'} className="min-h-screen text-white" darkMode={darkMode}>
       <div className={`min-h-screen ${darkMode ? 'text-white' : 'text-slate-900'}`}>
         <Sidebar />
 
