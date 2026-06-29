@@ -93,9 +93,7 @@ function PostsContent() {
     }
 
     return (
-        <div className={`min-h-screen relative overflow-hidden transition-colors duration-500 profile-mobile-scale ${darkMode ? "bg-[#0A0A0A] text-white" : "bg-[#f8f9fa] text-gray-900"}`}>
-            <GooeyGradientBackground />
-            
+        <GooeyGradientBackground className={`min-h-screen transition-colors duration-500 profile-mobile-scale ${darkMode ? "text-white" : "text-gray-900"}`} darkMode={darkMode}>
             <div className="relative z-10 min-h-screen pb-20">
                 {isAdmin ? <AdminSidebar /> : <Sidebar />}
 
@@ -198,7 +196,7 @@ function PostsContent() {
                     </div>
                 </div>
             </div>
-        </div>
+        </GooeyGradientBackground>
     );
 }
 
