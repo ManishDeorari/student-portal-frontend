@@ -61,7 +61,7 @@ export default function ProfileAvatar({ user, image, onUpload, userId, isPublicV
             maxWidth: '2.6rem', 
             maxHeight: '2.6rem', 
             bottom: '2%', 
-            left: '2%' 
+            right: '2%' 
           }}
         >
           <button

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ResumePDF from './ResumePDF';
-import { Download } from 'lucide-react';
+import { Download, Wand2 } from 'lucide-react';
 
 export default function ResumeDownloadBtn({ profile, darkMode }) {
   const [isClient, setIsClient] = useState(false);
@@ -35,8 +35,8 @@ export default function ResumeDownloadBtn({ profile, darkMode }) {
                                 </div>
                             </div>
                             <div className="text-left">
-                                <h3 className={`text-lg font-black ${loading ? 'animate-pulse' : ''}`}>
-                                    <span>🪄 </span>
+                                <h3 className={`text-lg font-black flex items-center gap-2 ${loading ? 'animate-pulse' : ''}`}>
+                                    <Wand2 className="w-5 h-5 text-blue-500" />
                                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
                                         {loading ? 'Generating PDF...' : 'Auto-Generate PDF Resume'}
                                     </span>

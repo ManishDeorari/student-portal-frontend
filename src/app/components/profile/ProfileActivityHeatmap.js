@@ -157,9 +157,9 @@ export default function ProfileActivityHeatmap({ profile }) {
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
                                 className="overflow-hidden -mx-4 px-4 -mb-4 pb-4"
                             >
-                                <div className="flex flex-col gap-3 overflow-x-auto pt-6 pb-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+                                <div className="flex flex-col gap-3 overflow-x-auto pt-6 pb-4 px-1 sm:px-0 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
                                     
-                                    <div className="flex gap-2.5 pr-6 mx-auto w-max relative">
+                                    <div className="flex gap-2.5 pr-6 sm:mx-auto w-max relative">
                                         {/* Y-Axis Labels (Days of Week) */}
                                         <div className={`flex flex-col gap-1.5 pr-3 text-[11px] font-black uppercase tracking-widest mt-[24px] ${darkMode ? 'text-white' : 'text-black'}`}>
                                             <span className="h-[18px] flex items-center">Sun</span>
@@ -204,6 +204,15 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                                         });
                                                                     }}
                                                                     onMouseLeave={() => setTooltip(null)}
+                                                                    onClick={(e) => {
+                                                                        const rect = e.target.getBoundingClientRect();
+                                                                        setTooltip({
+                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} activities on ${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+                                                                            x: rect.left + rect.width / 2,
+                                                                            y: rect.top - 8
+                                                                        });
+                                                                        setTimeout(() => setTooltip(null), 3000);
+                                                                    }}
                                                                     className={`w-[18px] h-[18px] rounded-[4px] transition-all duration-200 cursor-pointer ${getColorClass(day.level)} ${isToday ? 'ring-2 ring-orange-500 ring-offset-2 dark:ring-offset-[#121213] scale-110 z-20 hover:scale-125' : 'hover:scale-125 hover:ring-2 hover:ring-offset-2 dark:hover:ring-offset-[#121213] hover:ring-green-400 hover:z-50'}`}
                                                                 />
                                                             );
