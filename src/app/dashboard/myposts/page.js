@@ -103,8 +103,9 @@ export default function MyPostsPage() {
   );
 
   return (
-    <GooeyGradientBackground className={`min-h-screen relative ${darkMode ? 'text-white' : 'text-slate-900'}`} darkMode={darkMode}>
-      <Sidebar />
+    <GooeyGradientBackground className="min-h-screen text-white" darkMode={darkMode}>
+      <div className={`min-h-screen ${darkMode ? 'text-white' : 'text-slate-900'}`}>
+        <Sidebar />
 
       <div className="max-w-4xl mx-auto py-12 px-4">
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-10">
@@ -183,6 +184,7 @@ export default function MyPostsPage() {
             <p className="text-white/60 mt-3 font-medium">Your future thoughts and shared experiences will appear here.</p>
           </div>
         )}
+      </div>
       </div>
     </GooeyGradientBackground>
   );
