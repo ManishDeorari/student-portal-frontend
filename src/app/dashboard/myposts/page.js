@@ -94,12 +94,12 @@ export default function MyPostsPage() {
   };
 
   if (initializing) return (
-    <GooeyGradientBackground className={`min-h-screen flex items-center justify-center ${darkMode ? 'text-white' : 'text-slate-900'}`} darkMode={darkMode}>
+    <div className={`min-h-screen flex items-center justify-center ${darkMode ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
       <div className="flex flex-col items-center gap-4">
         <div className={`w-12 h-12 border-4 ${darkMode ? 'border-white/20 border-t-white' : 'border-blue-500/20 border-t-blue-500'} rounded-full animate-spin`}></div>
         <p className="font-bold tracking-widest text-xs uppercase">Loading your posts...</p>
       </div>
-    </GooeyGradientBackground>
+    </div>
   );
 
   return (
