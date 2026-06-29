@@ -119,18 +119,26 @@ export default function ProfileActivityHeatmap({ profile }) {
             <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] group w-full mb-6 transition-all duration-300 hover:scale-[1.02] hover:z-20 relative">
                 <div className={`p-6 rounded-[calc(2.5rem-2.5px)] flex flex-col gap-4 transition duration-300 ${darkMode ? 'bg-[#121213] hover:bg-slate-900' : 'bg-[#FAFAFA] hover:bg-white'}`}>
                     
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${darkMode ? 'bg-orange-900/30 shadow-none' : 'bg-orange-50 shadow-sm'}`}>
-                                <Flame className={`w-6 h-6 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex items-center justify-between w-full sm:w-auto">
+                            <div className="flex items-center gap-3">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${darkMode ? 'bg-orange-900/30 shadow-none' : 'bg-orange-50 shadow-sm'}`}>
+                                    <Flame className={`w-6 h-6 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`} />
+                                </div>
+                                <div>
+                                    <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>Activity Map</h3>
+                                    <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-white' : 'text-black'}`}>1 Square = 1 Day</span>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className={`text-xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>Activity Map</h3>
-                                <span className={`text-[10px] font-bold uppercase tracking-widest ${darkMode ? 'text-white' : 'text-black'}`}>1 Square = 1 Day</span>
-                            </div>
+                            <button 
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className={`sm:hidden p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
+                            >
+                                {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                            </button>
                         </div>
                         
-                        <div className="flex items-center gap-6 text-sm">
+                        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm w-full sm:w-auto justify-between sm:justify-end">
                             <div className="flex flex-col items-end">
                                 <span className={`text-[10px] font-black uppercase tracking-widest text-orange-500`}>Total Activity (6 Months)</span>
                                 <span className={`font-bold ${darkMode ? 'text-white' : 'text-black'}`}>{totalActivity}</span>
@@ -141,7 +149,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                             </div>
                             <button 
                                 onClick={() => setIsExpanded(!isExpanded)}
-                                className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
+                                className={`hidden sm:block p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-gray-800 text-gray-400' : 'hover:bg-gray-200 text-gray-600'}`}
                             >
                                 {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                             </button>
@@ -224,22 +232,28 @@ export default function ProfileActivityHeatmap({ profile }) {
                                     </div>
                                     
                                     {/* Legend */}
-                                    <div className={`flex items-center justify-end gap-2.5 text-[11px] font-bold uppercase tracking-widest mt-4 mx-auto w-full max-w-2xl ${darkMode ? 'text-white' : 'text-black'}`}>
-                                        <div className={`flex items-center gap-1.5 mr-auto ${darkMode ? 'text-white' : 'text-black'}`}>
-                                            <Info className="w-3.5 h-3.5" />
-                                            <span className="normal-case tracking-normal">Tracking logins, posts, events & profile updates</span>
+                                    <div className={`flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-3 sm:gap-2.5 text-[11px] font-bold uppercase tracking-widest mt-4 mx-auto w-full max-w-2xl ${darkMode ? 'text-white' : 'text-black'}`}>
+                                        <div className={`flex items-center gap-1.5 w-full sm:w-auto sm:mr-auto mb-2 sm:mb-0 justify-center sm:justify-start ${darkMode ? 'text-white' : 'text-black'}`}>
+                                            <Info className="w-3.5 h-3.5 shrink-0" />
+                                            <span className="normal-case tracking-normal text-center sm:text-left">Tracking logins, posts, events & profile updates</span>
                                         </div>
-                                        <div className="flex items-center gap-2 mr-6">
-                                            <div className="w-[14px] h-[14px] rounded-sm ring-2 ring-orange-500 ring-offset-2 dark:ring-offset-[#121213]"></div>
-                                            <span className="text-orange-500">Today</span>
+                                        
+                                        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-2">
+                                            <div className="flex items-center gap-2 mr-0 sm:mr-6">
+                                                <div className="w-[14px] h-[14px] rounded-sm ring-2 ring-orange-500 ring-offset-2 dark:ring-offset-[#121213]"></div>
+                                                <span className="text-orange-500">Today</span>
+                                            </div>
+                                            
+                                            <div className="flex items-center gap-1.5">
+                                                <span>Less</span>
+                                                <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(0)}`}></div>
+                                                <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(1)}`}></div>
+                                                <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(2)}`}></div>
+                                                <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(3)}`}></div>
+                                                <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(4)}`}></div>
+                                                <span>More</span>
+                                            </div>
                                         </div>
-                                        <span>Less</span>
-                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(0)}`}></div>
-                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(1)}`}></div>
-                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(2)}`}></div>
-                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(3)}`}></div>
-                                        <div className={`w-[14px] h-[14px] rounded-sm ${getColorClass(4)}`}></div>
-                                        <span>More</span>
                                     </div>
                                 </div>
                             </motion.div>
