@@ -891,12 +891,22 @@ function LoginContent() {
                             <input
                               type="text"
                               name="department"
+                              list="departmentList"
                               placeholder="Ex: CS"
-                              value={signupForm.department}
+                              value={signupForm.department || ""}
                               onChange={handleSignupChange}
                               className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               required
                             />
+                            <datalist id="departmentList">
+                              <option value="CS" />
+                              <option value="IT" />
+                              <option value="ME" />
+                              <option value="CE" />
+                              <option value="EE" />
+                              <option value="ECE" />
+                              <option value="MBA" />
+                            </datalist>
                             <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBuilding size={14} /></div>
                           </div>
                         </div>
@@ -910,12 +920,22 @@ function LoginContent() {
                               <input
                                 type="text"
                                 name="course"
-                                placeholder="Ex: BTECH"
+                                list="courseList"
+                                placeholder="Ex: B.Tech"
                                 value={signupForm.course}
                                 onChange={handleSignupChange}
                                 className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                                 required
                               />
+                              <datalist id="courseList">
+                                <option value="B.Tech" />
+                                <option value="BCA" />
+                                <option value="MCA" />
+                                <option value="MBA" />
+                                <option value="BBA" />
+                                <option value="BCOM" />
+                                <option value="BHM" />
+                              </datalist>
                               <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBook size={14} /></div>
                             </div>
                           </div>
@@ -969,24 +989,24 @@ function LoginContent() {
                           <div className="space-y-1">
                             <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Branch</label>
                             <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
-                              <input
-                                type="text"
-                                name="branch"
-                                list="branchList"
-                                placeholder="Ex: Web Dev"
-                                value={signupForm.branch}
-                                onChange={handleSignupChange}
-                                className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
-                              />
-                              <datalist id="branchList">
-                                <option value="Computer Science (CSE)" />
-                                <option value="Electronics (ECE)" />
-                                <option value="Mechanical (ME)" />
-                                <option value="Civil (CE)" />
-                                <option value="Information Technology (IT)" />
-                                <option value="Electrical (EE)" />
-                                <option value="Web Dev" />
-                              </datalist>
+                                <input
+                                  type="text"
+                                  name="branch"
+                                  list="branchList"
+                                  placeholder="Ex: CS"
+                                  value={signupForm.branch}
+                                  onChange={handleSignupChange}
+                                  className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                                />
+                                <datalist id="branchList">
+                                  <option value="CS" />
+                                  <option value="IT" />
+                                  <option value="ME" />
+                                  <option value="CE" />
+                                  <option value="EE" />
+                                  <option value="ECE" />
+                                  <option value="AIML" />
+                                </datalist>
                               <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBuilding size={14} /></div>
                             </div>
                           </div>
