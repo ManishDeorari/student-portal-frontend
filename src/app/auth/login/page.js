@@ -389,7 +389,7 @@ function LoginContent() {
                     <p className={`text-xs sm:text-sm ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>Enter your credentials to access your account</p>
                   </div>
 
-                  {error && (
+                  {error && view !== "SIGNUP" && (
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -714,6 +714,311 @@ function LoginContent() {
       {/* SIGNUP MODAL */}
       <AnimatePresence>
         {view === "SIGNUP" && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+               onClick={() => setView("LOGIN")}
+            />
+            <motion.div
+               initial={{ opacity: 0, scale: 0.95, y: 20 }}
+               animate={{ opacity: 1, scale: 1, y: 0 }}
+               exit={{ opacity: 0, scale: 0.95, y: 20 }}
+               transition={{ type: "spring", duration: 0.5, bounce: 0 }}
+               className={`relative w-full max-w-2xl ${darkMode ? "bg-black/80 border-white/10" : "bg-white border-gray-200"} border-2 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}
+            >
+               <button
+                  type="button"
+                  onClick={() => setView("LOGIN")}
+                  className={`absolute top-4 right-4 z-10 p-2 rounded-full border-2 border-gray-500 ${darkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-black hover:bg-gray-100"} transition-colors`}
+               >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+               </button>
+
+               <div className="p-6 sm:p-8 flex flex-col h-full overflow-hidden">
+                 <div className="space-y-1 sm:space-y-2 text-center shrink-0 mb-6">
+                   <h2 className={`text-3xl sm:text-4xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Complete Profile</h2>
+                   <p className={`text-sm sm:text-base ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>Join the largest student network at GEHU</p>
+                 </div>
+
+                 {error && (
+                   <motion.div
+                     initial={{ opacity: 0, y: -10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     className={`mb-4 ${darkMode ? "bg-red-500/10 border-red-500/20 text-red-500" : "bg-red-50 border-red-100 text-red-600"} border text-xs py-3 px-4 rounded-xl text-center font-black`}
+                   >
+                     {error}
+                   </motion.div>
+                 )}
+
+                 <div className="flex-1 overflow-y-auto drawer-scrollbar pr-2 sm:pr-4 min-h-0 flex flex-col">
+                  <div className="space-y-4 sm:space-y-6 flex-1">
+                    <div className="flex justify-center mb-2">
+                      <div className={`inline-flex p-1 rounded-2xl ${darkMode ? "bg-white/5" : "bg-gray-100"}`}>
+                        <button
+                          type="button"
+                          onClick={() => handleSignupChange({ target: { name: 'role', value: 'student' }})}
+                          className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${signupForm.role === 'student' ? 'bg-blue-500 text-white shadow-lg' : darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-black'}`}
+                        >
+                          Student
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleSignupChange({ target: { name: 'role', value: 'faculty' }})}
+                          className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${signupForm.role === 'faculty' ? 'bg-purple-500 text-white shadow-lg' : darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-black'}`}
+                        >
+                          Faculty
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                      <div className="space-y-1">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address <span className="text-red-500 ml-1">*</span></label>
+                        <div className={`p-[1.5px] ${error?.toLowerCase().includes("email") ? "bg-red-500" : "bg-gradient-to-r from-blue-500 to-purple-600"} rounded-2xl shadow-sm relative`}>
+                          <input
+                            type="email"
+                            name="email"
+                            placeholder="example@gehu.ac.in"
+                            value={signupForm.email}
+                            onChange={handleSignupChange}
+                            className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaEnvelope size={14} /></div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password <span className="text-red-500 ml-1">*</span></label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="••••••••"
+                            value={signupForm.password}
+                            onChange={handleSignupChange}
+                            className={`w-full pl-10 pr-12 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaLock size={14} /></div>
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors ${darkMode ? "text-white/40 hover:text-white" : "text-slate-400 hover:text-slate-600"}`}
+                          >
+                            {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                          </button>
+                        </div>
+                        <div className="flex justify-between items-center px-2 mt-1">
+                          <p className={`text-[10px] ${darkMode ? "text-white" : "text-black"} font-black`}>
+                            Requires: 8+ chars, 1 uppercase, 1 number, 1 symbol.
+                          </p>
+                          <span className={`text-[9px] font-black uppercase tracking-wider ${
+                            signupForm.password.length === 0 ? "text-gray-400" :
+                            (signupForm.password.length >= 8 && /[A-Z]/.test(signupForm.password) && /[0-9]/.test(signupForm.password) && /[^A-Za-z0-9]/.test(signupForm.password)) ? "text-green-500" : "text-yellow-500"
+                          }`}>
+                            {signupForm.password.length === 0 ? "" : 
+                            (signupForm.password.length >= 8 && /[A-Z]/.test(signupForm.password) && /[0-9]/.test(signupForm.password) && /[^A-Za-z0-9]/.test(signupForm.password) ? "Strong" : "Weak")}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name <span className="text-red-500 ml-1">*</span></label>
+                      <div className={`p-[1.5px] ${error?.toLowerCase().includes("name") ? "bg-red-500" : "bg-gradient-to-r from-blue-500 to-purple-600"} rounded-2xl shadow-sm relative`}>
+                        <input
+                          type="text"
+                          name="name"
+                          placeholder="Manish Deorari"
+                          value={signupForm.name}
+                          onChange={handleSignupChange}
+                          className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          required
+                        />
+                        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaUser size={14} /></div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5 ml-4">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} font-black`}>
+                          {signupForm.role === "faculty" ? "Employee ID" : "Enrollment No."} <span className="text-red-500 ml-1">*</span>
+                        </label>
+                        <div className="group/tooltip relative flex items-center">
+                          <FaQuestionCircle className="text-gray-400 cursor-help transition-colors hover:text-blue-400" size={10} />
+                          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 hidden group-hover/tooltip:block bg-gray-800 text-white text-[10px] p-2 rounded-lg min-w-[140px] text-center z-50 shadow-xl border border-gray-700 whitespace-nowrap font-bold tracking-wide">
+                            Found on your ERP Account
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`p-[1.5px] ${error?.toLowerCase().includes("enrollment number") || error?.toLowerCase().includes("employee id") || error?.toLowerCase().includes("pv-h") ? "bg-red-500" : "bg-gradient-to-r from-blue-500 to-purple-600"} rounded-2xl shadow-sm relative`}>
+                        <input
+                          type="text"
+                          name="enrollmentNumber"
+                          placeholder={signupForm.role === "faculty" ? "Ex: Emp-123" : "Ex: PV-H209001"}
+                          value={signupForm.enrollmentNumber}
+                          onChange={handleSignupChange}
+                          className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          required
+                        />
+                        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaIdCard size={14} /></div>
+                      </div>
+                    </div>
+
+                    {signupForm.role === "faculty" ? (
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Position</label>
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                            <input
+                              type="text"
+                              name="position"
+                              placeholder="Ex: Assistant Professor"
+                              value={signupForm.position}
+                              onChange={handleSignupChange}
+                              className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            />
+                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaUserTie size={14} /></div>
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Department</label>
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                            <input
+                              type="text"
+                              name="department"
+                              placeholder="Ex: CS"
+                              value={signupForm.department}
+                              onChange={handleSignupChange}
+                              className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            />
+                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaBuilding size={14} /></div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course <span className="text-red-500 ml-1">*</span></label>
+                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                              <input
+                                type="text"
+                                name="course"
+                                placeholder="Ex: BTECH"
+                                value={signupForm.course}
+                                onChange={handleSignupChange}
+                                className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                                required
+                              />
+                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaBook size={14} /></div>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Semester <span className="text-red-500 ml-1">*</span></label>
+                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                              <input
+                                type="number"
+                                name="semester"
+                                placeholder="1-8"
+                                value={signupForm.semester}
+                                onChange={handleSignupChange}
+                                className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                                required
+                              />
+                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaBook size={14} /></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>University Roll Number <span className="text-red-500 ml-1">*</span></label>
+                          <div className={`p-[1.5px] ${error?.toLowerCase().includes("university roll") ? "bg-red-500" : "bg-gradient-to-r from-blue-500 to-purple-600"} rounded-2xl shadow-sm relative`}>
+                            <input
+                              type="text"
+                              name="universityRollNumber"
+                              placeholder="Ex: 20112345"
+                              value={signupForm.universityRollNumber}
+                              onChange={handleSignupChange}
+                              className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              required
+                            />
+                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaIdCard size={14} /></div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Branch</label>
+                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                              <input
+                                type="text"
+                                name="branch"
+                                placeholder="Ex: Web Dev"
+                                value={signupForm.branch}
+                                onChange={handleSignupChange}
+                                className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              />
+                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaBuilding size={14} /></div>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section</label>
+                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                              <input
+                                type="text"
+                                name="section"
+                                placeholder="Ex: A"
+                                value={signupForm.section}
+                                onChange={handleSignupChange}
+                                className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              />
+                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaUserTie size={14} /></div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3 sm:gap-4 mt-6 shrink-0 pt-2">
+                     <button
+                       type="button"
+                       onClick={() => setView("LOGIN")}
+                       className={`flex-1 py-3 sm:py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all border-2 border-gray-500 ${darkMode ? "bg-transparent hover:bg-white/10 text-white" : "bg-transparent hover:bg-gray-100 text-gray-800"}`}
+                     >
+                       Back
+                     </button>
+                     <button
+                       type="button"
+                       onClick={handleSignupSubmit}
+                       disabled={loading}
+                       className="flex-[2] relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95 disabled:opacity-50"
+                     >
+                       <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-3 sm:py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
+                         <span className="text-white font-black text-sm uppercase tracking-widest leading-none">
+                           {loading ? "Creating..." : "Create Account"}
+                         </span>
+                       </div>
+                     </button>
+                  </div>
+                 </div>
+               </div>
+            </motion.div>
+          </div>
+        )}
+
+      </AnimatePresence>
+
+      {/* SIGNUP MODAL */}
+      <AnimatePresence>
+        {view === "SIGNUP" && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
             <motion.div
               initial={{ opacity: 0 }}
@@ -744,7 +1049,7 @@ function LoginContent() {
                     <p className={`text-center text-sm font-bold opacity-70 mt-1 ${darkMode ? "text-white" : "text-black"}`}>Tell us a bit more about yourself</p>
                   </div>
                   
-                  {error && (
+                  {error && view !== "SIGNUP" && (
                     <motion.div 
                       initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
                       className={`mb-4 ${darkMode ? "bg-red-500/10 border-red-500/20 text-red-500" : "bg-red-50 border-red-100 text-red-600"} border text-xs py-3 px-4 rounded-xl text-center font-black shrink-0`}
