@@ -60,6 +60,12 @@ function LoginContent() {
   const [showSignupSuccess, setShowSignupSuccess] = useState(false);
   const handleSignupChange = (e) => {
     let { name, value } = e.target;
+    
+    // Restrict specific fields to only alphabets, spaces, hyphens, and periods
+    if (["course", "branch", "section", "position", "department"].includes(name)) {
+      value = value.replace(/[^a-zA-Z \-\.]/g, "");
+    }
+    
     if (name === "course" || name === "section") {
       value = value?.toUpperCase() || "";
     }
