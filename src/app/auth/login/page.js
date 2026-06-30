@@ -72,6 +72,8 @@ function LoginContent() {
       if (!value.startsWith("PV-H")) {
         value = "PV-H" + value.replace(/^PV-?H?/i, "");
       }
+      const digits = value.slice(4).replace(/\D/g, "");
+      value = "PV-H" + digits;
     }
     setSignupForm({ ...signupForm, [name]: value });
   };
@@ -732,7 +734,7 @@ function LoginContent() {
                animate={{ opacity: 1, scale: 1, y: 0 }}
                exit={{ opacity: 0, scale: 0.95, y: 20 }}
                transition={{ type: "spring", duration: 0.5, bounce: 0 }}
-               className={`relative w-full max-w-2xl ${darkMode ? "bg-black/80 border-white/10" : "bg-white border-gray-200"} border-2 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}
+               className={`relative w-full max-w-2xl ${darkMode ? "bg-[#0f172a] border-white/10" : "bg-white border-gray-200"} border-2 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}
             >
                <button
                   type="button"
@@ -915,12 +917,25 @@ function LoginContent() {
                               <input
                                 type="number"
                                 name="semester"
-                                placeholder="1-8"
+                                list="semesterList"
+                                placeholder="1-10"
                                 value={signupForm.semester}
                                 onChange={handleSignupChange}
                                 className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                                 required
                               />
+                              <datalist id="semesterList">
+                                <option value="1" />
+                                <option value="2" />
+                                <option value="3" />
+                                <option value="4" />
+                                <option value="5" />
+                                <option value="6" />
+                                <option value="7" />
+                                <option value="8" />
+                                <option value="9" />
+                                <option value="10" />
+                              </datalist>
                               <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBook size={14} /></div>
                             </div>
                           </div>
@@ -949,11 +964,21 @@ function LoginContent() {
                               <input
                                 type="text"
                                 name="branch"
+                                list="branchList"
                                 placeholder="Ex: Web Dev"
                                 value={signupForm.branch}
                                 onChange={handleSignupChange}
                                 className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               />
+                              <datalist id="branchList">
+                                <option value="Computer Science (CSE)" />
+                                <option value="Electronics (ECE)" />
+                                <option value="Mechanical (ME)" />
+                                <option value="Civil (CE)" />
+                                <option value="Information Technology (IT)" />
+                                <option value="Electrical (EE)" />
+                                <option value="Web Dev" />
+                              </datalist>
                               <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBuilding size={14} /></div>
                             </div>
                           </div>
