@@ -211,6 +211,24 @@ function LoginContent() {
     setError("");
     setLoading(true);
 
+    if (!signupForm.name || !signupForm.email || !signupForm.password || !signupForm.enrollmentNumber) {
+      setError("Please fill all mandatory fields.");
+      setLoading(false);
+      return;
+    }
+
+    if (signupForm.role === "faculty" && (!signupForm.position || !signupForm.department)) {
+      setError("Please provide Position and Department.");
+      setLoading(false);
+      return;
+    }
+
+    if (signupForm.role === "student" && (!signupForm.course || !signupForm.semester || !signupForm.universityRollNumber)) {
+      setError("Please fill all mandatory student fields (Course, Semester, University Roll No).");
+      setLoading(false);
+      return;
+    }
+
     // Client-side enrollment number format check (student only)
     if (signupForm.role === "student") {
       const enRegex = /^PV-H\d+$/;
@@ -381,7 +399,7 @@ function LoginContent() {
           className="w-full lg:w-1/2 max-w-[310px] sm:max-w-[420px] lg:max-w-[420px] lg:ml-12 mt-6 sm:mt-12 lg:mt-0 mb-8 mx-auto lg:mx-0"
         >
           <div className="p-[2px] sm:p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl relative">
-            <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:py-6 sm:px-8 relative overflow-hidden transition-all duration-500 h-[480px] sm:h-[520px] flex flex-col`}>
+            <div className={`${darkMode ? "bg-[#0f172a] text-white" : "bg-[#FAFAFA] text-gray-900"}  rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:py-6 sm:px-8 relative overflow-hidden transition-all duration-500 h-[480px] sm:h-[520px] flex flex-col`}>
               {(view === "LOGIN" || view === "SIGNUP") && (
                 <form onSubmit={handleSubmit} className="flex-1 flex flex-col h-full min-h-0">
                   <div className="space-y-1 sm:space-y-2 text-center shrink-0 mb-2">
@@ -400,20 +418,7 @@ function LoginContent() {
                   )}
 
                   <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-2 sm:space-y-5 flex flex-col justify-center">
-                    <div className="space-y-1">
-                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address <span className="text-red-500 ml-1">*</span></label>
-                      <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
-                        <input
-                          type="text"
-                          name="identifier"
-                          placeholder="example@gehu.ac.in"
-                          value={form.identifier}
-                          onChange={handleChange}
-                          className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
-                          required
-                        />
-                      </div>
-                    </div>
+                    
 
                     <div className="space-y-1">
                       <div className="flex justify-between items-center ml-4 mr-2">
@@ -789,47 +794,29 @@ function LoginContent() {
                             className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             required
                           />
-                          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaEnvelope size={14} /></div>
+                          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaEnvelope size={14} /></div>
                         </div>
                       </div>
 
-                      <div className="space-y-1">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password <span className="text-red-500 ml-1">*</span></label>
-                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            placeholder="••••••••"
-                            value={signupForm.password}
-                            onChange={handleSignupChange}
-                            className={`w-full pl-10 pr-12 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
-                            required
-                          />
-                          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaLock size={14} /></div>
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors ${darkMode ? "text-white/40 hover:text-white" : "text-slate-400 hover:text-slate-600"}`}
-                          >
-                            {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
-                          </button>
-                        </div>
-                        <div className="flex justify-between items-center px-2 mt-1">
-                          <p className={`text-[10px] ${darkMode ? "text-white" : "text-black"} font-black`}>
-                            Requires: 8+ chars, 1 uppercase, 1 number, 1 symbol.
-                          </p>
-                          <span className={`text-[9px] font-black uppercase tracking-wider ${
-                            signupForm.password.length === 0 ? "text-gray-400" :
-                            (signupForm.password.length >= 8 && /[A-Z]/.test(signupForm.password) && /[0-9]/.test(signupForm.password) && /[^A-Za-z0-9]/.test(signupForm.password)) ? "text-green-500" : "text-yellow-500"
-                          }`}>
-                            {signupForm.password.length === 0 ? "" : 
-                            (signupForm.password.length >= 8 && /[A-Z]/.test(signupForm.password) && /[0-9]/.test(signupForm.password) && /[^A-Za-z0-9]/.test(signupForm.password) ? "Strong" : "Weak")}
-                          </span>
-                        </div>
-                      </div>
+                      
                     </div>
 
                     <div className="space-y-1">
+                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address <span className="text-red-500 ml-1">*</span></label>
+                      <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                        <input
+                          type="text"
+                          name="identifier"
+                          placeholder="example@gehu.ac.in"
+                          value={form.identifier}
+                          onChange={handleChange}
+                          className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          required
+                        />
+                      </div>
+                    </div>
+
+<div className="space-y-1">
                       <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name <span className="text-red-500 ml-1">*</span></label>
                       <div className={`p-[1.5px] ${error?.toLowerCase().includes("name") ? "bg-red-500" : "bg-gradient-to-r from-blue-500 to-purple-600"} rounded-2xl shadow-sm relative`}>
                         <input
@@ -841,7 +828,7 @@ function LoginContent() {
                           className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           required
                         />
-                        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaUser size={14} /></div>
+                        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaUser size={14} /></div>
                       </div>
                     </div>
 
@@ -867,7 +854,7 @@ function LoginContent() {
                           className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           required
                         />
-                        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaIdCard size={14} /></div>
+                        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaIdCard size={14} /></div>
                       </div>
                     </div>
 
@@ -885,7 +872,7 @@ function LoginContent() {
                               className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               required
                             />
-                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaUserTie size={14} /></div>
+                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaUserTie size={14} /></div>
                           </div>
                         </div>
                         <div className="space-y-1">
@@ -900,7 +887,7 @@ function LoginContent() {
                               className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               required
                             />
-                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaBuilding size={14} /></div>
+                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBuilding size={14} /></div>
                           </div>
                         </div>
                       </div>
@@ -919,7 +906,7 @@ function LoginContent() {
                                 className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                                 required
                               />
-                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaBook size={14} /></div>
+                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBook size={14} /></div>
                             </div>
                           </div>
                           <div className="space-y-1">
@@ -934,7 +921,7 @@ function LoginContent() {
                                 className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                                 required
                               />
-                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaBook size={14} /></div>
+                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBook size={14} /></div>
                             </div>
                           </div>
                         </div>
@@ -951,7 +938,7 @@ function LoginContent() {
                               className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               required
                             />
-                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaIdCard size={14} /></div>
+                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaIdCard size={14} /></div>
                           </div>
                         </div>
 
@@ -967,7 +954,7 @@ function LoginContent() {
                                 onChange={handleSignupChange}
                                 className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               />
-                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaBuilding size={14} /></div>
+                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBuilding size={14} /></div>
                             </div>
                           </div>
                           <div className="space-y-1">
@@ -981,7 +968,7 @@ function LoginContent() {
                                 onChange={handleSignupChange}
                                 className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               />
-                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none"><FaUserTie size={14} /></div>
+                              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaUserTie size={14} /></div>
                             </div>
                           </div>
                         </div>
@@ -989,7 +976,42 @@ function LoginContent() {
                     )}
                   </div>
 
-                  <div className="flex gap-3 sm:gap-4 mt-6 shrink-0 pt-2">
+                  <div className="space-y-1">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password <span className="text-red-500 ml-1">*</span></label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="••••••••"
+                            value={signupForm.password}
+                            onChange={handleSignupChange}
+                            className={`w-full pl-10 pr-12 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaLock size={14} /></div>
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors ${darkMode ? "text-white/40 hover:text-white" : "text-slate-400 hover:text-slate-600"}`}
+                          >
+                            {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                          </button>
+                        </div>
+                        <div className="flex justify-between items-center px-2 mt-1">
+                          <p className={`text-[10px] ${darkMode ? "text-white" : "text-black"} font-black`}>
+                            Requires: 8+ chars, 1 uppercase, 1 number, 1 symbol.
+                          </p>
+                          <span className={`text-[9px] font-black uppercase tracking-wider ${
+                            signupForm.password.length === 0 ? "text-gray-400" :
+                            (signupForm.password.length >= 8 && /[A-Z]/.test(signupForm.password) && /[0-9]/.test(signupForm.password) && /[^A-Za-z0-9]/.test(signupForm.password)) ? "text-green-500" : "text-yellow-500"
+                          }`}>
+                            {signupForm.password.length === 0 ? "" : 
+                            (signupForm.password.length >= 8 && /[A-Z]/.test(signupForm.password) && /[0-9]/.test(signupForm.password) && /[^A-Za-z0-9]/.test(signupForm.password) ? "Strong" : "Weak")}
+                          </span>
+                        </div>
+                      </div>
+
+<div className="flex gap-3 sm:gap-4 mt-6 shrink-0 pt-2">
                      <button
                        type="button"
                        onClick={() => setView("LOGIN")}
