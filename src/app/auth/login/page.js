@@ -22,7 +22,7 @@ export default function LoginPage() {
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialView = searchParams.get("view") === "SIGNUP" ? "SIGNUP" : "LOGIN";
+  const initialView = "LOGIN";
   const [view, setView] = useState(initialView); // LOGIN | FORGOT_EMAIL | FORGOT_OTP | SIGNUP
   const [form, setForm] = useState({ identifier: "", password: "" });
 
@@ -974,6 +974,22 @@ function LoginContent() {
                       </div>
                     ) : (
                       <>
+                        <div className="space-y-1">
+                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>University Roll Number <span className="text-red-500 ml-1">*</span></label>
+                          <div className={`p-[1.5px] ${missingFields.includes("universityRollNumber") ? "bg-red-500" : "bg-gradient-to-r from-blue-500 to-purple-600"} rounded-2xl shadow-sm relative`}>
+                            <input
+                              type="text"
+                              name="universityRollNumber"
+                              placeholder="Ex: 20112345"
+                              value={signupForm.universityRollNumber}
+                              onChange={handleSignupChange}
+                              className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              required
+                            />
+                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaIdCard size={14} /></div>
+                          </div>
+                        </div>
+
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
                             <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course <span className="text-red-500 ml-1">*</span></label>
@@ -1027,22 +1043,6 @@ function LoginContent() {
                               </datalist>
                               <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaBook size={14} /></div>
                             </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-1">
-                          <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>University Roll Number <span className="text-red-500 ml-1">*</span></label>
-                          <div className={`p-[1.5px] ${missingFields.includes("universityRollNumber") ? "bg-red-500" : "bg-gradient-to-r from-blue-500 to-purple-600"} rounded-2xl shadow-sm relative`}>
-                            <input
-                              type="text"
-                              name="universityRollNumber"
-                              placeholder="Ex: 20112345"
-                              value={signupForm.universityRollNumber}
-                              onChange={handleSignupChange}
-                              className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
-                              required
-                            />
-                            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaIdCard size={14} /></div>
                           </div>
                         </div>
 
