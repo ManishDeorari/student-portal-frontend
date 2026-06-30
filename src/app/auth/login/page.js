@@ -510,7 +510,7 @@ function LoginContent() {
                     </div>
                   </div>
 
-                  <div className="shrink-0 space-y-2 pt-2">
+                  <div className="shrink-0 space-y-1.5 pt-2">
                     <button
                       type="submit"
                       disabled={loading}
@@ -528,7 +528,7 @@ function LoginContent() {
                       </div>
                     </button>
                     
-                    <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-col gap-1.5 mt-0.5">
                       <div className="relative flex items-center">
                         <div className={`flex-grow border-t ${darkMode ? "border-white/10" : "border-gray-300"}`}></div>
                         <span className={`flex-shrink-0 mx-4 text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} font-black`}>Or</span>
