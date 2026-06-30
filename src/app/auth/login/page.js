@@ -381,7 +381,7 @@ function LoginContent() {
         >
           <div className="p-[2px] sm:p-[2.5px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl relative">
             <div className={`${darkMode ? "bg-[#0f172a]/95 text-white" : "bg-[#FAFAFA] text-gray-900"} backdrop-blur-2xl rounded-[calc(2rem-2px)] sm:rounded-[calc(2.5rem-2.5px)] py-4 px-5 sm:py-6 sm:px-8 relative overflow-hidden transition-all duration-500 h-[480px] sm:h-[520px] flex flex-col`}>
-              {view === "LOGIN" && (
+              {(view === "LOGIN" || view === "SIGNUP") && (
                 <form onSubmit={handleSubmit} className="flex-1 flex flex-col h-full min-h-0">
                   <div className="space-y-1 sm:space-y-2 text-center shrink-0 mb-2">
                     <h2 className={`text-2xl sm:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Welcome Back</h2>
@@ -469,118 +469,6 @@ function LoginContent() {
               )}
 
               
-              {view === "SIGNUP" && (
-                <div className="flex flex-col h-full flex-1 min-h-0">
-                <div className="space-y-0.5 text-center mb-2 shrink-0">
-                  <h2 className={`text-2xl sm:text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Join Global Network</h2>
-                  <p className={`text-xs sm:text-sm ${darkMode ? "text-white font-bold" : "text-black font-bold"} opacity-70`}>Create account to connect</p>
-                </div>
-                
-                {/* Role Selector */}
-                <div className="flex justify-center gap-8 py-0.5 mb-2 shrink-0">
-                  {["student", "faculty"].map((r) => (
-                    <label key={r} className="flex items-center gap-3 cursor-pointer group">
-                      <div className="relative">
-                        <input
-                          type="radio"
-                          name="role"
-                          value={r}
-                          checked={signupForm.role === r}
-                          onChange={handleSignupChange}
-                          className="peer hidden"
-                        />
-                        <div className={`w-5 h-5 rounded-full border-2 transition-all ${darkMode ? "border-white/20 peer-checked:border-blue-500" : "border-gray-300 peer-checked:border-blue-600"}`}></div>
-                        <div className={`absolute inset-1 rounded-full scale-0 peer-checked:scale-100 transition-transform ${darkMode ? "bg-blue-500" : "bg-blue-600"}`}></div>
-                      </div>
-                      <span className={`text-[9px] uppercase tracking-widest font-black transition-colors ${signupForm.role === r ? (darkMode ? "text-blue-400" : "text-blue-600") : (darkMode ? "text-white" : "text-black")}`}>
-                        {r === "student" ? "Student" : r}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-
-                <form onSubmit={handleSignupSubmit} className="flex-1 flex flex-col min-h-0 space-y-3">
-                  {error && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className={`${darkMode ? "bg-red-500/10 border-red-500/20 text-red-500" : "bg-red-50 border-red-100 text-red-600"} border text-[10px] py-2 px-4 rounded-xl text-center font-black shrink-0`}
-                    >
-                      {error}
-                    </motion.div>
-                  )}
-
-                  <div className="flex-1 relative overflow-hidden">
-                    <div className="absolute inset-0 flex flex-col space-y-3 overflow-y-auto custom-scrollbar pr-2 pb-2">
-                      <div className="space-y-0.5">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
-                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
-                          <input
-                            type="email"
-                            name="email"
-                            placeholder="john@gehu.ac.in"
-                            value={signupForm.email}
-                            onChange={handleSignupChange}
-                            className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-0.5">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password</label>
-                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            placeholder="••••••••"
-                            value={signupForm.password}
-                            onChange={handleSignupChange}
-                            className={`w-full px-4 sm:px-6 pr-12 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
-                            required
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors ${darkMode ? "text-white/40 hover:text-white" : "text-slate-400 hover:text-slate-600"}`}
-                          >
-                            {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="shrink-0 space-y-2 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!signupForm.email || !signupForm.password) {
-                          setError("Please fill all fields before proceeding.");
-                          return;
-                        }
-                        setError("");
-                        setSignupStep(2);
-                      }}
-                      className="w-full relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95"
-                    >
-                      <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-3 sm:py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
-                        <span className="text-white font-black text-xs uppercase tracking-widest leading-none">
-                          Next: Add Details
-                        </span>
-                      </div>
-                    </button>
-
-                    <p className={`text-sm text-center ${darkMode ? "text-white font-bold" : "text-black font-bold"}`}>
-                      Already a member?{" "}
-                      <button type="button" onClick={() => setView("LOGIN")} className="text-blue-500 font-extrabold hover:underline underline-offset-4">Login</button>
-                    </p>
-                  </div>
-                </form>
-                </div>
-              )}
-
-
               {view === "FORGOT_EMAIL" && (
                 <form onSubmit={handleForgotPassword} className="space-y-6">
                   <div className="space-y-2 text-center">
@@ -812,7 +700,7 @@ function LoginContent() {
 
       {/* SIGNUP MODAL */}
       <AnimatePresence>
-        {view === "SIGNUP" && signupStep === 2 && (
+        {view === "SIGNUP" && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
             <motion.div
               initial={{ opacity: 0 }}
@@ -846,6 +734,66 @@ function LoginContent() {
                   )}
 
                   <div className="space-y-4 pr-2 pb-4">
+                      {/* Role Selector */}
+                      <div className="flex justify-center gap-8 py-0.5 mb-2">
+                        {["student", "faculty"].map((r) => (
+                          <label key={r} className="flex items-center gap-3 cursor-pointer group">
+                            <div className="relative">
+                              <input
+                                type="radio"
+                                name="role"
+                                value={r}
+                                checked={signupForm.role === r}
+                                onChange={handleSignupChange}
+                                className="peer hidden"
+                              />
+                              <div className={`w-5 h-5 rounded-full border-2 transition-all ${darkMode ? "border-white/20 peer-checked:border-blue-500" : "border-gray-300 peer-checked:border-blue-600"}`}></div>
+                              <div className={`absolute inset-1 rounded-full scale-0 peer-checked:scale-100 transition-transform ${darkMode ? "bg-blue-500" : "bg-blue-600"}`}></div>
+                            </div>
+                            <span className={`text-[9px] uppercase tracking-widest font-black transition-colors ${signupForm.role === r ? (darkMode ? "text-blue-400" : "text-blue-600") : (darkMode ? "text-white" : "text-black")}`}>
+                              {r === "student" ? "Student" : r}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <input
+                            type="email"
+                            name="email"
+                            placeholder="example@gehu.ac.in"
+                            value={signupForm.email}
+                            onChange={handleSignupChange}
+                            className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password</label>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="••••••••"
+                            value={signupForm.password}
+                            onChange={handleSignupChange}
+                            className={`w-full px-4 sm:px-6 pr-12 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            required
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors ${darkMode ? "text-white/40 hover:text-white" : "text-slate-400 hover:text-slate-600"}`}
+                          >
+                            {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                          </button>
+                        </div>
+                      </div>
+
                     <div className="space-y-1">
                       <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name</label>
                       <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
@@ -990,8 +938,8 @@ function LoginContent() {
                   <div className="flex gap-3 sm:gap-4 mt-6 shrink-0 pt-2">
                      <button
                        type="button"
-                       onClick={() => setSignupStep(1)}
-                       className={`flex-1 py-3 sm:py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all ${darkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-800"}`}
+                       onClick={() => setView("LOGIN")}
+                       className={`flex-1 py-3 sm:py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all border-2 border-gray-500 ${darkMode ? "bg-transparent hover:bg-white/10 text-white" : "bg-transparent hover:bg-gray-100 text-gray-800"}`}
                      >
                        Back
                      </button>
