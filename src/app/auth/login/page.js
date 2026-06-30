@@ -1081,16 +1081,9 @@ function LoginContent() {
 <div className="flex gap-3 sm:gap-4 mt-6 shrink-0 pt-2">
                      <button
                        type="button"
-                       onClick={() => setView("LOGIN")}
-                       className={`flex-1 py-3 sm:py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all border-2 border-gray-500 ${darkMode ? "bg-transparent hover:bg-white/10 text-white" : "bg-transparent hover:bg-gray-100 text-gray-800"}`}
-                     >
-                       Back
-                     </button>
-                     <button
-                       type="button"
                        onClick={handleSignupSubmit}
                        disabled={loading}
-                       className="flex-[2] relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95 disabled:opacity-50"
+                       className="w-full relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95 disabled:opacity-50"
                      >
                        <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-3 sm:py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
                          <span className="text-white font-black text-sm uppercase tracking-widest leading-none">
