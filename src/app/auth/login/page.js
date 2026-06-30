@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaEnvelope, FaUser, FaLock, FaBuilding, FaIdCard, FaBook, FaCheckCircle, FaQuestionCircle, FaUserTie } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -779,16 +779,24 @@ function LoginContent() {
 
                       <div className="space-y-1">
                         <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address <span className="text-red-500 ml-1">*</span></label>
-                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                           <input
                             type="email"
                             name="email"
                             placeholder="example@gehu.ac.in"
                             value={signupForm.email}
                             onChange={handleSignupChange}
-                            className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            className={`w-full pl-10 pr-10 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             required
                           />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaEnvelope size={14} />
+</div>
+{ signupForm.email.includes("@") && signupForm.email.includes(".") && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                         </div>
                       </div>
 
@@ -801,9 +809,12 @@ function LoginContent() {
                             placeholder="••••••••"
                             value={signupForm.password}
                             onChange={handleSignupChange}
-                            className={`w-full px-4 sm:px-6 pr-12 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            className={`w-full pl-10 pr-10 pr-12 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             required
                           />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaLock size={14} />
+</div>
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
@@ -816,32 +827,56 @@ function LoginContent() {
 
                     <div className="space-y-1">
                       <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name <span className="text-red-500 ml-1">*</span></label>
-                      <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                      <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                         <input
                           type="text"
                           name="name"
                           placeholder="John Doe"
                           value={signupForm.name}
                           onChange={handleSignupChange}
-                          className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                         />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaUser size={14} />
+</div>
+{ signupForm.name.length > 2 && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>
-                          {signupForm.role === "faculty" ? "Employee ID" : "Enrollment No."} <span className="text-red-500 ml-1">*</span>
-                        </label>
-                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                        <div className="flex items-center gap-1.5 ml-4">
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} font-black`}>
+                              {signupForm.role === "faculty" ? "Employee ID" : "Enrollment No."} <span className="text-red-500 ml-1">*</span>
+                            </label>
+                            <div className="group/tooltip relative flex items-center">
+                              <FaQuestionCircle className="text-gray-400 cursor-help transition-colors hover:text-blue-400" size={10} />
+                              <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1.5 hidden group-hover/tooltip:block bg-gray-800 text-white text-[10px] p-2 rounded-lg min-w-[140px] text-center z-50 shadow-xl border border-gray-700 whitespace-nowrap font-bold tracking-wide">
+                                Found on your ERP Account
+                              </div>
+                            </div>
+                          </div>
+                        <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                           <input
                             type="text"
                             name="enrollmentNumber"
                             placeholder={signupForm.role === "faculty" ? "Ex: Emp-123" : "Ex: PV-H209001"}
                             value={signupForm.enrollmentNumber}
                             onChange={handleSignupChange}
-                            className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                            className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaIdCard size={14} />
+</div>
+{ signupForm.enrollmentNumber.length > 3 && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                         </div>
                       </div>
 
@@ -850,14 +885,14 @@ function LoginContent() {
                           <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>
                             University Roll No.
                           </label>
-                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                             <input
                               type="text"
                               name="universityRollNumber"
                               placeholder="Ex: 22010101"
                               value={signupForm.universityRollNumber}
                               onChange={handleSignupChange}
-                              className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             />
                           </div>
                         </div>
@@ -868,28 +903,44 @@ function LoginContent() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1">
                           <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Position</label>
-                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                             <input
                               type="text"
                               name="position"
                               placeholder="Ex: Assistant Professor"
                               value={signupForm.position}
                               onChange={handleSignupChange}
-                              className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaUserTie size={14} />
+</div>
+{ signupForm.position?.length > 2 && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                           </div>
                         </div>
                         <div className="space-y-1">
                           <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Department</label>
-                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                          <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                             <input
                               type="text"
                               name="department"
                               placeholder="Ex: CS"
                               value={signupForm.department}
                               onChange={handleSignupChange}
-                              className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                              className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                             />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaBuilding size={14} />
+</div>
+{ signupForm.department?.length > 2 && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                           </div>
                         </div>
                       </div>
@@ -898,20 +949,28 @@ function LoginContent() {
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
                             <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course <span className="text-red-500 ml-1">*</span></label>
-                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                               <input
                                 type="text"
                                 name="course"
                                 placeholder="Ex: BTECH"
                                 value={signupForm.course}
                                 onChange={handleSignupChange}
-                                className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                                className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaBook size={14} />
+</div>
+{ signupForm.course.length > 1 && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                             </div>
                           </div>
                           <div className="space-y-1">
                             <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Semester <span className="text-red-500 ml-1">*</span></label>
-                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                               <input
                                 type="number"
                                 name="semester"
@@ -920,13 +979,21 @@ function LoginContent() {
                                 onChange={handleSignupChange}
                                 className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaBook size={14} />
+</div>
+{ signupForm.semester > 0 && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                             </div>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
                             <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Branch <span className="text-red-500 ml-1">*</span></label>
-                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                               <input
                                 type="text"
                                 name="branch"
@@ -935,11 +1002,19 @@ function LoginContent() {
                                 onChange={handleSignupChange}
                                 className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaBuilding size={14} />
+</div>
+{ signupForm.branch.length > 1 && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                             </div>
                           </div>
                           <div className="space-y-1">
                             <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section <span className="text-red-500 ml-1">*</span></label>
-                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
+                            <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                               <input
                                 type="text"
                                 name="section"
@@ -948,6 +1023,14 @@ function LoginContent() {
                                 onChange={handleSignupChange}
                                 className={`w-full px-4 sm:px-6 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                               />
+<div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+  <FaUserTie size={14} />
+</div>
+{ signupForm.section.length > 0 && (
+  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400 pointer-events-none">
+    <FaCheckCircle size={14} />
+  </div>
+)}
                             </div>
                           </div>
                         </div>
