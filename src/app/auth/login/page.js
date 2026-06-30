@@ -830,7 +830,7 @@ function LoginContent() {
               className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-[2.5rem] p-[2px] shadow-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex flex-col"
             >
                <div className={`${darkMode ? "bg-[#0f172a]" : "bg-white"} w-full h-full rounded-[calc(2.5rem-2px)] overflow-hidden flex flex-col`}>
-                 <div className="p-6 sm:p-8 flex flex-col h-full">
+                 <div className="p-6 sm:p-8 flex flex-col overflow-y-auto drawer-scrollbar">
                   <div className="shrink-0 mb-6">
                     <h3 className={`text-2xl sm:text-3xl font-black text-center ${darkMode ? "text-white" : "text-black"}`}>Complete Your Profile</h3>
                     <p className={`text-center text-sm font-bold opacity-70 mt-1 ${darkMode ? "text-white" : "text-black"}`}>Tell us a bit more about yourself</p>
@@ -845,7 +845,7 @@ function LoginContent() {
                     </motion.div>
                   )}
 
-                  <div className="space-y-4 overflow-y-auto drawer-scrollbar flex-1 pr-2 pb-4">
+                  <div className="space-y-4 pr-2 pb-4">
                     <div className="space-y-1">
                       <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name</label>
                       <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
