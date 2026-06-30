@@ -461,7 +461,7 @@ function LoginContent() {
                           placeholder="example@gehu.ac.in"
                           value={form.identifier}
                           onChange={handleChange}
-                          className={`w-full px-4 sm:px-6 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          className={`w-full px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           required
                         />
                       </div>
@@ -485,7 +485,7 @@ function LoginContent() {
                           placeholder="••••••••"
                           value={form.password}
                           onChange={handleChange}
-                          className={`w-full px-4 sm:px-6 pr-12 py-3 sm:py-4 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          className={`w-full px-4 sm:px-6 pr-12 py-2.5 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           required
                         />
                         <button
@@ -528,19 +528,21 @@ function LoginContent() {
                       </div>
                     </button>
                     
-                    <div className="flex flex-col gap-4 mt-2">
+                    <div className="flex flex-col gap-2 mt-2">
                       <div className="relative flex items-center">
                         <div className={`flex-grow border-t ${darkMode ? "border-white/10" : "border-gray-300"}`}></div>
-                        <span className="flex-shrink-0 mx-4 text-[10px] uppercase tracking-widest text-gray-400 font-black">Or</span>
+                        <span className={`flex-shrink-0 mx-4 text-[10px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} font-black`}>Or</span>
                         <div className={`flex-grow border-t ${darkMode ? "border-white/10" : "border-gray-300"}`}></div>
                       </div>
                       
-                      <button 
-                        type="button" 
-                        onClick={() => setView("SIGNUP")} 
-                        className={`w-full py-3 sm:py-4 rounded-2xl border-2 transition-all duration-300 font-black text-xs uppercase tracking-widest hover:shadow-lg ${darkMode ? "border-white/20 text-white hover:border-blue-500 hover:bg-blue-500/10" : "border-gray-300 text-black hover:border-blue-600 hover:bg-blue-50"}`}
+                      <button
+                        type="button"
+                        onClick={() => setView("SIGNUP")}
+                        className="w-full relative group p-[2px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl overflow-hidden transition-all shadow-xl active:scale-95"
                       >
-                        Create a New Account
+                        <div className="bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-blue-500 group-hover:to-purple-500 py-3 sm:py-4 w-full h-full rounded-[calc(1rem-2px)] flex items-center justify-center transition-all">
+                          <span className="text-white font-black text-xs uppercase tracking-widest leading-none">Create a New Account</span>
+                        </div>
                       </button>
                     </div>
                   </div>
