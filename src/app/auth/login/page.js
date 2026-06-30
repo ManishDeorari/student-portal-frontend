@@ -461,10 +461,22 @@ function LoginContent() {
                     </div>
                   </button>
 
-                    <p className={`text-sm text-center ${darkMode ? "text-white font-bold" : "text-black font-bold"}`}>
-                      New here?{" "}
-                      <button type="button" onClick={() => setView("SIGNUP")} className="text-blue-500 font-extrabold hover:underline underline-offset-4">Create an Account</button>
-                    </p>
+                    
+                    <div className="flex flex-col gap-4 mt-2">
+                      <div className="relative flex items-center">
+                        <div className={`flex-grow border-t ${darkMode ? "border-white/10" : "border-gray-300"}`}></div>
+                        <span className="flex-shrink-0 mx-4 text-[10px] uppercase tracking-widest text-gray-400 font-black">Or</span>
+                        <div className={`flex-grow border-t ${darkMode ? "border-white/10" : "border-gray-300"}`}></div>
+                      </div>
+                      
+                      <button 
+                        type="button" 
+                        onClick={() => setView("SIGNUP")} 
+                        className={`w-full py-3 sm:py-4 rounded-2xl border-2 transition-all duration-300 font-black text-xs uppercase tracking-widest hover:shadow-lg ${darkMode ? "border-white/20 text-white hover:border-blue-500 hover:bg-blue-500/10" : "border-gray-300 text-black hover:border-blue-600 hover:bg-blue-50"}`}
+                      >
+                        Create a New Account
+                      </button>
+                    </div>
                   </div>
                 </form>
               )}
@@ -720,7 +732,14 @@ function LoginContent() {
             >
                <div className={`${darkMode ? "bg-[#0f172a]" : "bg-white"} w-full h-full rounded-[calc(2.5rem-2px)] overflow-hidden flex flex-col`}>
                  <div className="p-6 sm:p-8 flex flex-col overflow-y-auto drawer-scrollbar">
-                  <div className="shrink-0 mb-6">
+                  <div className="shrink-0 mb-6 relative">
+                      <button
+                        type="button"
+                        onClick={() => setView("LOGIN")}
+                        className={`absolute -top-2 -right-2 p-2 rounded-xl border-2 border-gray-500 transition-all ${darkMode ? "hover:bg-white/10 text-gray-400" : "hover:bg-gray-100 text-gray-500"}`}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                      </button>
                     <h3 className={`text-2xl sm:text-3xl font-black text-center ${darkMode ? "text-white" : "text-black"}`}>Complete Your Profile</h3>
                     <p className={`text-center text-sm font-bold opacity-70 mt-1 ${darkMode ? "text-white" : "text-black"}`}>Tell us a bit more about yourself</p>
                   </div>
