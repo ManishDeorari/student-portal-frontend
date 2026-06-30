@@ -845,7 +845,7 @@ function LoginContent() {
                     </motion.div>
                   )}
 
-                  <div className="space-y-4 overflow-y-auto flex-1 pr-2 pb-4" style={{ scrollbarWidth: "thin", scrollbarColor: darkMode ? "#475569 transparent" : "#cbd5e1 transparent" }}>
+                  <div className="space-y-4 overflow-y-auto drawer-scrollbar flex-1 pr-2 pb-4">
                     <div className="space-y-1">
                       <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name</label>
                       <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
