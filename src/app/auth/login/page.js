@@ -33,6 +33,7 @@ function LoginContent() {
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
 
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -400,7 +401,7 @@ function LoginContent() {
 
                   <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-2 sm:space-y-5 flex flex-col justify-center">
                     <div className="space-y-1">
-                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
+                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address <span className="text-red-500 ml-1">*</span></label>
                       <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                         <input
                           type="text"
@@ -416,7 +417,7 @@ function LoginContent() {
 
                     <div className="space-y-1">
                       <div className="flex justify-between items-center ml-4 mr-2">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} font-black`}>Password</label>
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} font-black`}>Password <span className="text-red-500 ml-1">*</span></label>
                         <button
                           type="button"
                           onClick={() => setView("FORGOT_EMAIL")}
@@ -478,7 +479,7 @@ function LoginContent() {
 
                   <div className="space-y-3">
                     <div className="space-y-1">
-                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
+                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address <span className="text-red-500 ml-1">*</span></label>
                       <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                         <input
                           type="email"
@@ -758,7 +759,7 @@ function LoginContent() {
                       </div>
 
                       <div className="space-y-1">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address</label>
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Email Address <span className="text-red-500 ml-1">*</span></label>
                         <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                           <input
                             type="email"
@@ -773,7 +774,7 @@ function LoginContent() {
                       </div>
 
                       <div className="space-y-1">
-                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password</label>
+                        <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password <span className="text-red-500 ml-1">*</span></label>
                         <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                           <input
                             type={showPassword ? "text" : "password"}
@@ -795,7 +796,7 @@ function LoginContent() {
                       </div>
 
                     <div className="space-y-1">
-                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name</label>
+                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Full Name <span className="text-red-500 ml-1">*</span></label>
                       <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                         <input
                           type="text"
@@ -811,7 +812,7 @@ function LoginContent() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>
-                          {signupForm.role === "faculty" ? "Employee ID" : "Enrollment No."}
+                          {signupForm.role === "faculty" ? "Employee ID" : "Enrollment No."} <span className="text-red-500 ml-1">*</span>
                         </label>
                         <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                           <input
@@ -877,7 +878,7 @@ function LoginContent() {
                       <>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course</label>
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Course <span className="text-red-500 ml-1">*</span></label>
                             <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                               <input
                                 type="text"
@@ -890,7 +891,7 @@ function LoginContent() {
                             </div>
                           </div>
                           <div className="space-y-1">
-                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Semester</label>
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Semester <span className="text-red-500 ml-1">*</span></label>
                             <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                               <input
                                 type="number"
@@ -905,7 +906,7 @@ function LoginContent() {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Branch</label>
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Branch <span className="text-red-500 ml-1">*</span></label>
                             <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                               <input
                                 type="text"
@@ -918,7 +919,7 @@ function LoginContent() {
                             </div>
                           </div>
                           <div className="space-y-1">
-                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section</label>
+                            <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Section <span className="text-red-500 ml-1">*</span></label>
                             <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm">
                               <input
                                 type="text"
