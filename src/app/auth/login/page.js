@@ -749,19 +749,20 @@ function LoginContent() {
                animate={{ opacity: 1, scale: 1, y: 0 }}
                exit={{ opacity: 0, scale: 0.95, y: 20 }}
                transition={{ type: "spring", duration: 0.5, bounce: 0 }}
-               className={`relative w-full max-w-2xl ${darkMode ? "bg-[#0f172a] border-white/10" : "bg-white border-gray-200"} border-2 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}
+               className="relative w-full max-w-2xl p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-[2.5rem] shadow-2xl flex flex-col max-h-[90vh]"
             >
-               <button
-                  type="button"
-                  onClick={() => setView("LOGIN")}
-                  className={`absolute top-4 right-4 z-10 p-2 rounded-full border-2 border-gray-500 ${darkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-black hover:bg-gray-100"} transition-colors`}
-               >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-               </button>
+               <div className={`${darkMode ? "bg-[#0f172a]" : "bg-white"} w-full h-full rounded-[calc(2.5rem-2px)] overflow-hidden flex flex-col relative`}>
+                 <button
+                    type="button"
+                    onClick={() => setView("LOGIN")}
+                    className={`absolute top-4 right-4 z-10 p-2 rounded-full border-2 border-gray-500 ${darkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-black hover:bg-gray-100"} transition-colors`}
+                 >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                 </button>
 
-               <div className="p-6 sm:p-8 flex flex-col h-full overflow-hidden">
+                 <div className="p-6 sm:p-8 flex flex-col h-full overflow-hidden">
                  <div className="space-y-1 sm:space-y-2 text-center shrink-0 mb-6">
                    <h2 className={`text-3xl sm:text-4xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Complete Profile</h2>
                    <p className={`text-sm sm:text-base ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>Join the largest student network at GEHU</p>
@@ -780,21 +781,23 @@ function LoginContent() {
                  <div className="flex-1 overflow-y-auto drawer-scrollbar pr-2 sm:pr-4 min-h-0 flex flex-col">
                   <div className="space-y-4 sm:space-y-6 flex-1">
                     <div className="flex justify-center mb-2">
-                      <div className={`inline-flex p-1 rounded-2xl ${darkMode ? "bg-white/5" : "bg-gray-100"}`}>
-                        <button
-                          type="button"
-                          onClick={() => handleSignupChange({ target: { name: 'role', value: 'student' }})}
-                          className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${signupForm.role === 'student' ? 'bg-blue-500 text-white shadow-lg' : darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-black'}`}
-                        >
-                          Student
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleSignupChange({ target: { name: 'role', value: 'faculty' }})}
-                          className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${signupForm.role === 'faculty' ? 'bg-purple-500 text-white shadow-lg' : darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-black'}`}
-                        >
-                          Faculty
-                        </button>
+                      <div className="inline-flex p-[1.5px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm relative">
+                        <div className={`inline-flex p-1 rounded-[calc(1rem-1.5px)] w-full h-full ${darkMode ? "bg-[#0f172a]" : "bg-white"}`}>
+                          <button
+                            type="button"
+                            onClick={() => handleSignupChange({ target: { name: 'role', value: 'student' }})}
+                            className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${signupForm.role === 'student' ? 'bg-blue-500 text-white shadow-lg' : darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-black'}`}
+                          >
+                            Student
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleSignupChange({ target: { name: 'role', value: 'faculty' }})}
+                            className={`px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${signupForm.role === 'faculty' ? 'bg-purple-500 text-white shadow-lg' : darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-black'}`}
+                          >
+                            Faculty
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -807,10 +810,13 @@ function LoginContent() {
                           placeholder="example@gehu.ac.in"
                           value={signupForm.email}
                           onChange={handleSignupChange}
-                          className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           required
                         />
                         <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaEnvelope size={14} /></div>
+                        {signupForm.email.endsWith("@gehu.ac.in") && signupForm.email.length > 13 && (
+                          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none font-black text-sm">✓</div>
+                        )}
                       </div>
                     </div>
 
@@ -823,10 +829,13 @@ function LoginContent() {
                           placeholder="Manish Deorari"
                           value={signupForm.name}
                           onChange={handleSignupChange}
-                          className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           required
                         />
                         <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaUser size={14} /></div>
+                        {signupForm.name.length >= 3 && (
+                          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none font-black text-sm">✓</div>
+                        )}
                       </div>
                     </div>
 
@@ -849,10 +858,13 @@ function LoginContent() {
                           placeholder={signupForm.role === "faculty" ? "Ex: Emp-123" : "Ex: PV-H209001"}
                           value={signupForm.enrollmentNumber}
                           onChange={handleSignupChange}
-                          className={`w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          className={`w-full pl-10 pr-10 py-3 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-sm sm:text-base ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           required
                         />
                         <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none"><FaIdCard size={14} /></div>
+                        {signupForm.enrollmentNumber.length > 5 && (
+                          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none font-black text-sm">✓</div>
+                        )}
                       </div>
                     </div>
 
@@ -999,7 +1011,7 @@ function LoginContent() {
 
 
 
-                  <div className="space-y-1">
+                  <div className="space-y-1 mt-4">
                         <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Password <span className="text-red-500 ml-1">*</span></label>
                         <div className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm relative">
                           <input
@@ -1020,18 +1032,30 @@ function LoginContent() {
                             {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
                           </button>
                         </div>
-                        <div className="flex justify-between items-center px-2 mt-1">
+                        <div className="flex justify-between items-center px-2 mt-1.5">
                           <p className={`text-[10px] ${darkMode ? "text-white" : "text-black"} font-black`}>
                             Requires: 8+ chars, 1 uppercase, 1 number, 1 symbol.
                           </p>
-                          <span className={`text-[9px] font-black uppercase tracking-wider ${
-                            signupForm.password.length === 0 ? "text-gray-400" :
-                            (signupForm.password.length >= 8 && /[A-Z]/.test(signupForm.password) && /[0-9]/.test(signupForm.password) && /[^A-Za-z0-9]/.test(signupForm.password)) ? "text-green-500" : "text-yellow-500"
-                          }`}>
-                            {signupForm.password.length === 0 ? "" : 
-                            (signupForm.password.length >= 8 && /[A-Z]/.test(signupForm.password) && /[0-9]/.test(signupForm.password) && /[^A-Za-z0-9]/.test(signupForm.password) ? "Strong" : "Weak")}
-                          </span>
                         </div>
+                        {(() => {
+                          const pw = signupForm.password;
+                          if (pw.length === 0) return null;
+                          let score = 0;
+                          if (pw.length >= 8) score++;
+                          if (/[A-Z]/.test(pw)) score++;
+                          if (/[0-9]/.test(pw)) score++;
+                          if (/[^A-Za-z0-9]/.test(pw)) score++;
+                          const colors = ["bg-transparent", "bg-red-500", "bg-red-400", "bg-yellow-500", "bg-green-500"];
+                          return (
+                            <div className="mt-1.5 px-2">
+                              <div className="flex gap-1 h-1 w-full">
+                                {[1, 2, 3, 4].map(idx => (
+                                  <div key={idx} className={`flex-1 rounded-full transition-colors duration-300 ${score >= idx ? colors[score] : (darkMode ? "bg-white/10" : "bg-black/10")}`}></div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })()}
                       </div>
 
 <div className="flex gap-3 sm:gap-4 mt-6 shrink-0 pt-2">
@@ -1057,6 +1081,7 @@ function LoginContent() {
                   </div>
                  </div>
                </div>
+              </div>
             </motion.div>
           </div>
         )}
