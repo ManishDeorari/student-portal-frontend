@@ -16,6 +16,10 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
         linkedin: "",
         secondaryEmail: "",
         universityRollNumber: "",
+        branch: "",
+        section: "",
+        position: "",
+        department: "",
     });
 
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -34,6 +38,10 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                 linkedin: currentProfile.linkedin || "",
                 secondaryEmail: currentProfile.secondaryEmail || "",
                 universityRollNumber: currentProfile.universityRollNumber || "",
+                branch: currentProfile.branch || "",
+                section: currentProfile.section || "",
+                position: currentProfile.position || "",
+                department: currentProfile.department || "",
             });
 
             if (currentProfile.address) {
@@ -71,6 +79,8 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
             value = value.replace(/[^a-zA-Z\s\.\-']/g, '');
         } else if (name === "whatsapp" || name === "universityRollNumber") {
             value = value.replace(/\D/g, '');
+        } else if (name === "section") {
+            value = value.replace(/[^a-zA-Z0-9\s]/g, '').slice(0, 5);
         } else if (name === "secondaryEmail") {
             value = value.toLowerCase().replace(/\s/g, '');
         } else if (name === "linkedin") {
@@ -227,19 +237,88 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
 
                             {/* University Roll Number */}
                             {currentProfile?.role === "student" && (
-                                <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
-                                        <User className="w-3.5 h-3.5" /> Univ Roll Number
-                                    </label>
-                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
-                                        <input
-                                            type="text"
-                                            name="universityRollNumber"
-                                            value={formData.universityRollNumber}
-                                            onChange={handleChange}
-                                            placeholder="Enter Roll Number"
-                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                        />
+                                <>
+                                    <div>
+                                        <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
+                                            <User className="w-3.5 h-3.5" /> Univ Roll Number
+                                        </label>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                            <input
+                                                type="text"
+                                                name="universityRollNumber"
+                                                value={formData.universityRollNumber}
+                                                onChange={handleChange}
+                                                placeholder="Enter Roll Number"
+                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+                                                Branch
+                                            </label>
+                                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                                <input
+                                                    type="text"
+                                                    name="branch"
+                                                    value={formData.branch}
+                                                    onChange={handleChange}
+                                                    placeholder="E.g. Computer Science"
+                                                    className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+                                                Section
+                                            </label>
+                                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                                <input
+                                                    type="text"
+                                                    name="section"
+                                                    value={formData.section}
+                                                    onChange={handleChange}
+                                                    placeholder="E.g. A"
+                                                    className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
+                            {currentProfile?.role !== "student" && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
+                                            Position
+                                        </label>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                            <input
+                                                type="text"
+                                                name="position"
+                                                value={formData.position}
+                                                onChange={handleChange}
+                                                placeholder="E.g. Assistant Professor"
+                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
+                                            Department
+                                        </label>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                            <input
+                                                type="text"
+                                                name="department"
+                                                value={formData.department}
+                                                onChange={handleChange}
+                                                placeholder="E.g. Computer Science"
+                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             )}

@@ -85,6 +85,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
           degree: edu.degree || levelName,
           course: edu.course || "",
           branch: edu.branch || "",
+          fieldOfStudy: edu.fieldOfStudy || "",
           startMonth: sMonth || "",
           startYear: sYear || "",
           endMonth: eMonth || "",
@@ -93,6 +94,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
           campus: edu.campus || "",
           grade: edu.grade || "",
           isOngoing: edu.isOngoing || false,
+          isResultAwaited: edu.isResultAwaited || false,
           activities: edu.activities || "",
           description: edu.description || "",
           isMandatory: true,
@@ -108,12 +110,14 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
             ...edu,
             course: edu.course || "",
             branch: edu.branch || "",
+            fieldOfStudy: edu.fieldOfStudy || "",
             startMonth: sMonth || "",
             startYear: sYear || "",
             endMonth: eMonth || "",
             endYear: eYear || "",
             grade: edu.grade || "",
             isOngoing: edu.isOngoing || false,
+            isResultAwaited: edu.isResultAwaited || false,
             isMandatory: false
           });
         }
@@ -165,6 +169,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
         endYear: "",
         grade: "",
         isOngoing: false,
+        isResultAwaited: false,
         activities: "",
         description: "",
         isMandatory: false
@@ -181,11 +186,11 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
     const newErrors = {};
     educations.forEach((edu, idx) => {
       const hasData = edu.institution || edu.course || edu.startMonth || edu.startYear || edu.endMonth || edu.endYear || edu.grade || edu.activities || edu.description;
-      if (hasData || !edu.isMandatory) {
+      if (hasData || edu.isMandatory) {
         if (!edu.institution) newErrors[`${idx}-institution`] = "Institution is required";
         if (!edu.startMonth || !edu.startYear) newErrors[`${idx}-startDate`] = "Start date is required";
-        if (!edu.isOngoing && (!edu.endMonth || !edu.endYear)) newErrors[`${idx}-endDate`] = "End date is required";
-        if (!edu.isOngoing && (!edu.grade || edu.grade.trim() === "")) newErrors[`${idx}-grade`] = "Grade/Percentage is required";
+        if (!edu.endMonth || !edu.endYear) newErrors[`${idx}-endDate`] = "End date is required";
+        if (!edu.isResultAwaited && (!edu.grade || edu.grade.trim() === "")) newErrors[`${idx}-grade`] = "Grade/Percentage is required";
       }
     });
     setErrors(newErrors);
@@ -202,7 +207,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
     setLoading(true);
     try {
       const validEducations = educations.filter(edu =>
-        edu.institution || edu.course || edu.startMonth || edu.startYear || edu.endMonth || edu.endYear || edu.grade || edu.activities || edu.description || !edu.isMandatory
+        edu.institution || edu.course || edu.startMonth || edu.startYear || edu.endMonth || edu.endYear || edu.grade || edu.activities || edu.description || edu.isMandatory
       );
 
       const finalData = validEducations.map(edu => {
@@ -221,6 +226,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
           startDate,
           endDate,
           isOngoing: edu.isOngoing || false,
+          isResultAwaited: edu.isResultAwaited || false,
           grade: edu.grade,
           activities: edu.activities,
           description: edu.description
@@ -276,7 +282,10 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
 
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
-              {educations.map((edu, idx) => (
+              {educations.map((edu, idx) => {
+                const isSchool = edu.degree === "High School (Secondary - Class 10)" || edu.degree === "Intermediate (Higher Secondary - Class 12)";
+                
+                return (
                 <div key={idx} className="p-[2px] rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 mb-4 transition-all">
                   <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                     <div
@@ -310,125 +319,180 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                     </div>
 
                     {expandedIndex === idx && (
-                      <div className="mt-4 space-y-4 pt-4 border-t border-gray-200 dark:border-white/10">
+                      <div className="mt-4 space-y-4 pt-4 border-t border-gray-200 dark:border-white/10 flex flex-col">
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Degree / Level</label>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                        <div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Degree / Level <span className="text-red-500">*</span></label>
+                          <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                            <select
+                              value={edu.degree}
+                              onChange={(e) => handleChange(idx, "degree", e.target.value)}
+                              disabled={edu.isFixed}
+                              className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                            >
+                              <option value="">Select Degree</option>
+                              {DEGREE_SUGGESTIONS.map(d => <option key={d} value={d}>{d}</option>)}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Institution <span className="text-red-500">*</span></label>
+                          <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-institution`] ? 'from-red-500 to-red-600' : ''}`}>
+                            <input
+                              type="text"
+                              value={edu.institution}
+                              onChange={(e) => handleChange(idx, "institution", e.target.value)}
+                              className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                              placeholder="Name of school/college"
+                              list={`inst-suggestions-${idx}`}
+                            />
+                            <datalist id={`inst-suggestions-${idx}`}>
+                                {INSTITUTION_SUGGESTIONS.map(s => <option key={s} value={s} />)}
+                            </datalist>
+                          </div>
+                          {errors[`${idx}-institution`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-institution`]}</p>}
+                        </div>
+
+                        {!isSchool && (
+                          <>
+                            <div>
+                              <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Course</label>
+                              <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                <input
+                                  type="text"
+                                  value={edu.course}
+                                  onChange={(e) => handleChange(idx, "course", e.target.value)}
+                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                  placeholder="e.g. B.Tech"
+                                  list={`course-suggestions-${idx}`}
+                                />
+                                <datalist id={`course-suggestions-${idx}`}>
+                                    {COURSE_SUGGESTIONS.map(s => <option key={s} value={s} />)}
+                                </datalist>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Branch</label>
+                              <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                <input
+                                  type="text"
+                                  value={edu.branch}
+                                  onChange={(e) => handleChange(idx, "branch", e.target.value)}
+                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                  placeholder="e.g. Computer Science"
+                                  list={`branch-suggestions-${idx}`}
+                                />
+                                <datalist id={`branch-suggestions-${idx}`}>
+                                    {BRANCH_SUGGESTIONS.map(s => <option key={s} value={s} />)}
+                                </datalist>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Field of Study</label>
+                              <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                <input
+                                  type="text"
+                                  value={edu.fieldOfStudy}
+                                  onChange={(e) => handleChange(idx, "fieldOfStudy", e.target.value)}
+                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                  placeholder="e.g. Artificial Intelligence"
+                                  list={`study-suggestions-${idx}`}
+                                />
+                                <datalist id={`study-suggestions-${idx}`}>
+                                    {STUDY_SUGGESTIONS.map(s => <option key={s} value={s} />)}
+                                </datalist>
+                              </div>
+                            </div>
+                          </>
+                        )}
+
+                        <div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Start Date <span className="text-red-500">*</span></label>
+                          <div className="flex gap-2">
+                            <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-startDate`] ? 'from-red-500 to-red-600' : ''}`}>
                               <select
-                                value={edu.degree}
-                                onChange={(e) => handleChange(idx, "degree", e.target.value)}
-                                disabled={edu.isFixed}
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                value={edu.startMonth}
+                                onChange={(e) => handleChange(idx, "startMonth", e.target.value)}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
                               >
-                                <option value="">Select Degree</option>
-                                {DEGREE_SUGGESTIONS.map(d => <option key={d} value={d}>{d}</option>)}
+                                <option value="">Month</option>
+                                {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                              </select>
+                            </div>
+                            <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-startDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <select
+                                value={edu.startYear}
+                                onChange={(e) => handleChange(idx, "startYear", e.target.value)}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                              >
+                                <option value="">Year</option>
+                                {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                               </select>
                             </div>
                           </div>
-
-                          <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Institution</label>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-institution`] ? 'from-red-500 to-red-600' : ''}`}>
-                              <input
-                                type="text"
-                                value={edu.institution}
-                                onChange={(e) => handleChange(idx, "institution", e.target.value)}
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                placeholder="Name of school/college"
-                              />
-                            </div>
-                            {errors[`${idx}-institution`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-institution`]}</p>}
-                          </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Start Date</label>
-                            <div className="flex gap-2">
-                              <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-startDate`] ? 'from-red-500 to-red-600' : ''}`}>
-                                <select
-                                  value={edu.startMonth}
-                                  onChange={(e) => handleChange(idx, "startMonth", e.target.value)}
-                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                >
-                                  <option value="">Month</option>
-                                  {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                                </select>
-                              </div>
-                              <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-startDate`] ? 'from-red-500 to-red-600' : ''}`}>
-                                <select
-                                  value={edu.startYear}
-                                  onChange={(e) => handleChange(idx, "startYear", e.target.value)}
-                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                >
-                                  <option value="">Year</option>
-                                  {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div>
-                            <div className="flex justify-between items-center mb-1.5">
-                              <label className={`block text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>End Date</label>
-                              <label className={`flex items-center gap-1.5 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-black'}`}>
+                        <div>
+                          <div className="flex justify-between items-center mb-1.5">
+                            <label className={`block text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>
+                                {edu.isOngoing ? "Expected End Date" : "End Date"} <span className="text-red-500">*</span>
+                            </label>
+                            {!isSchool && (
+                                <label className={`flex items-center gap-1.5 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-black'}`}>
                                 <input type="checkbox" checked={edu.isOngoing} onChange={(e) => handleChange(idx, "isOngoing", e.target.checked)} className="rounded" />
                                 Currently studying
-                              </label>
+                                </label>
+                            )}
+                          </div>
+                          <div className="flex gap-2">
+                            <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-endDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <select
+                                value={edu.endMonth}
+                                onChange={(e) => handleChange(idx, "endMonth", e.target.value)}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                              >
+                                <option value="">Month</option>
+                                {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                              </select>
                             </div>
-                            <div className="flex gap-2">
-                              <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-endDate`] ? 'from-red-500 to-red-600' : ''}`}>
-                                <select
-                                  value={edu.endMonth}
-                                  onChange={(e) => handleChange(idx, "endMonth", e.target.value)}
-                                  disabled={edu.isOngoing}
-                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                >
-                                  <option value="">Month</option>
-                                  {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                                </select>
-                              </div>
-                              <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-endDate`] ? 'from-red-500 to-red-600' : ''}`}>
-                                <select
-                                  value={edu.endYear}
-                                  onChange={(e) => handleChange(idx, "endYear", e.target.value)}
-                                  disabled={edu.isOngoing}
-                                  className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                >
-                                  <option value="">Year</option>
-                                  {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                                </select>
-                              </div>
+                            <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-endDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <select
+                                value={edu.endYear}
+                                onChange={(e) => handleChange(idx, "endYear", e.target.value)}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                              >
+                                <option value="">Year</option>
+                                {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                              </select>
                             </div>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>Grade/Percentage</label>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-grade`] ? 'from-red-500 to-red-600' : ''}`}>
-                              <input
-                                type="text"
-                                value={edu.grade}
-                                onChange={(e) => handleChange(idx, "grade", e.target.value)}
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                placeholder="e.g. 8.5 CGPA or 90%"
-                              />
-                            </div>
+                        <div>
+                          <div className="flex justify-between items-center mb-1.5">
+                              <label className={`block text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
+                                  Grade/Percentage {!edu.isResultAwaited && <span className="text-red-500">*</span>}
+                              </label>
+                              <label className={`flex items-center gap-1.5 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-black'}`}>
+                                <input type="checkbox" checked={edu.isResultAwaited} onChange={(e) => {
+                                    handleChange(idx, "isResultAwaited", e.target.checked);
+                                    if(e.target.checked) handleChange(idx, "grade", "");
+                                }} className="rounded" />
+                                Result Awaited
+                              </label>
                           </div>
-                          <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>Course/Branch</label>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
-                              <input
-                                type="text"
-                                value={edu.course}
-                                onChange={(e) => handleChange(idx, "course", e.target.value)}
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                placeholder="e.g. B.Tech Computer Science"
-                              />
-                            </div>
+                          <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-grade`] ? 'from-red-500 to-red-600' : ''}`}>
+                            <input
+                              type="text"
+                              value={edu.grade}
+                              onChange={(e) => handleChange(idx, "grade", e.target.value)}
+                              disabled={edu.isResultAwaited}
+                              className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                              placeholder="e.g. 8.5 CGPA or 90%"
+                            />
                           </div>
                         </div>
 
@@ -448,7 +512,8 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                     )}
                   </div>
                 </div>
-              ))}
+                );
+              })}
 
               <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm w-full transition-all hover:scale-[1.01]">
                 <button
