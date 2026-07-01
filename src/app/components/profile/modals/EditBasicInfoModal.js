@@ -106,28 +106,36 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
         const URL_REGEX = /^(https?:\/\/)?([\w\d]+\.)?[\w\d]+\.\w+\/.*$/;
         const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!formData.name.trim()) {
-            newErrors.name = "Name is required.";
+        if (!formData.name.trim()) newErrors.name = "Name is required.";
+        
+        if (currentProfile?.role === "student" && !formData.universityRollNumber.trim()) {
+            newErrors.universityRollNumber = "Roll Number is required.";
+        }
+        
+        if (currentProfile?.role === "faculty" || currentProfile?.role === "admin") {
+            if (!formData.position.trim()) newErrors.position = "Position is required.";
+            if (!formData.department.trim()) newErrors.department = "Department is required.";
         }
 
-        if (formData.phone && formData.phone.length < 7) {
-            newErrors.phone = "Invalid phone number.";
+        if (!formData.phone || formData.phone.length < 7) {
+            newErrors.phone = "Valid phone number is required.";
         }
 
-        if (formData.whatsapp && !WHATSAPP_REGEX.test(formData.whatsapp.replace(/\D/g, ""))) {
-            newErrors.whatsapp = "Invalid WhatsApp number (digits only).";
+        if (!formData.whatsapp || !WHATSAPP_REGEX.test(formData.whatsapp.replace(/\D/g, ""))) {
+            newErrors.whatsapp = "Valid WhatsApp number is required.";
         }
 
-        if (formData.linkedin && !formData.linkedin.includes("linkedin.com")) {
-            newErrors.linkedin = "Please enter a valid LinkedIn profile URL.";
-        }
-        else if (formData.linkedin && !URL_REGEX.test(formData.linkedin)) {
-            newErrors.linkedin = "Invalid URL format.";
+        if (!formData.linkedin || !formData.linkedin.includes("linkedin.com") || !URL_REGEX.test(formData.linkedin)) {
+            newErrors.linkedin = "Valid LinkedIn profile URL is required.";
         }
 
-        if (formData.secondaryEmail && !EMAIL_REGEX.test(formData.secondaryEmail)) {
-            newErrors.secondaryEmail = "Please enter a valid email format.";
+        if (!formData.secondaryEmail || !EMAIL_REGEX.test(formData.secondaryEmail)) {
+            newErrors.secondaryEmail = "Valid email is required.";
         }
+        
+        if (!selectedCountry) newErrors.country = "Country is required.";
+        if (!selectedState) newErrors.state = "State is required.";
+        if (!selectedCity) newErrors.city = "City is required.";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -221,7 +229,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                             {/* Secondary Email */}
                             <div>
                                 <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>
-                                    <Globe className="w-3.5 h-3.5" /> Secondary Email
+                                    <Globe className="w-3.5 h-3.5" /> Secondary Email <span className="text-red-500">*</span>
                                 </label>
                                 <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.secondaryEmail ? 'from-red-500 to-red-600' : ''}`}>
                                     <input
@@ -233,6 +241,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                         className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
                                     />
                                 </div>
+                                {errors.secondaryEmail && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors.secondaryEmail}</p>}
                             </div>
 
                             {/* University Roll Number */}
@@ -240,9 +249,9 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                 <>
                                     <div>
                                         <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
-                                            <User className="w-3.5 h-3.5" /> Univ Roll Number
+                                            <User className="w-3.5 h-3.5" /> Univ Roll Number <span className="text-red-500">*</span>
                                         </label>
-                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.universityRollNumber ? 'from-red-500 to-red-600' : ''}`}>
                                             <input
                                                 type="text"
                                                 name="universityRollNumber"
@@ -252,6 +261,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                                 className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
                                             />
                                         </div>
+                                        {errors.universityRollNumber && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors.universityRollNumber}</p>}
                                     </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
@@ -292,9 +302,9 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
-                                            Position
+                                            Position <span className="text-red-500">*</span>
                                         </label>
-                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.position ? 'from-red-500 to-red-600' : ''}`}>
                                             <input
                                                 type="text"
                                                 name="position"
@@ -304,12 +314,13 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                                 className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
                                             />
                                         </div>
+                                        {errors.position && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors.position}</p>}
                                     </div>
                                     <div>
                                         <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
-                                            Department
+                                            Department <span className="text-red-500">*</span>
                                         </label>
-                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.department ? 'from-red-500 to-red-600' : ''}`}>
                                             <input
                                                 type="text"
                                                 name="department"
@@ -319,6 +330,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                                 className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
                                             />
                                         </div>
+                                        {errors.department && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors.department}</p>}
                                     </div>
                                 </div>
                             )}
@@ -327,7 +339,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                 {/* Phone Number */}
                                 <div>
                                     <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                                        <Phone className="w-3.5 h-3.5" /> Phone Number
+                                        <Phone className="w-3.5 h-3.5" /> Phone Number <span className="text-red-500">*</span>
                                     </label>
                                     <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.phone ? 'from-red-500 to-red-600' : ''}`}>
                                         <PhoneInput
@@ -355,7 +367,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                 {/* WhatsApp */}
                                 <div>
                                     <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-green-400' : 'text-green-600'}`}>
-                                        <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+                                        <MessageCircle className="w-3.5 h-3.5" /> WhatsApp <span className="text-red-500">*</span>
                                     </label>
                                     <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.whatsapp ? 'from-red-500 to-red-600' : ''}`}>
                                         <input
@@ -374,7 +386,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                             {/* LinkedIn */}
                             <div>
                                 <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-500' : 'text-blue-700'}`}>
-                                    <Linkedin className="w-3.5 h-3.5" /> LinkedIn Profile
+                                    <Linkedin className="w-3.5 h-3.5" /> LinkedIn Profile <span className="text-red-500">*</span>
                                 </label>
                                 <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.linkedin ? 'from-red-500 to-red-600' : ''}`}>
                                     <input
@@ -392,57 +404,69 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                             {/* Address / Location */}
                             <div>
                                 <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>
-                                    <MapPin className="w-3.5 h-3.5" /> Location
+                                    <MapPin className="w-3.5 h-3.5" /> Location <span className="text-red-500">*</span>
                                 </label>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                                        <select
-                                            value={selectedCountry}
-                                            onChange={(e) => {
-                                                setSelectedCountry(e.target.value);
-                                                setSelectedState("");
-                                                setSelectedCity("");
-                                            }}
-                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                        >
-                                            <option value="">Country</option>
-                                            {Country.getAllCountries().map((c) => (
-                                                <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
-                                            ))}
-                                        </select>
+                                    <div>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.country ? 'from-red-500 to-red-600' : ''}`}>
+                                            <select
+                                                value={selectedCountry}
+                                                onChange={(e) => {
+                                                    setSelectedCountry(e.target.value);
+                                                    setSelectedState("");
+                                                    setSelectedCity("");
+                                                    if(errors.country) setErrors(prev => ({...prev, country: null}));
+                                                }}
+                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                            >
+                                                <option value="">Country</option>
+                                                {Country.getAllCountries().map((c) => (
+                                                    <option key={c.isoCode} value={c.isoCode}>{c.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
 
-                                    <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                                        <select
-                                            value={selectedState}
-                                            onChange={(e) => {
-                                                setSelectedState(e.target.value);
-                                                setSelectedCity("");
-                                            }}
-                                            disabled={!selectedCountry}
-                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                        >
-                                            <option value="">State</option>
-                                            {selectedCountry && State.getStatesOfCountry(selectedCountry).map((s) => (
-                                                <option key={s.isoCode} value={s.isoCode}>{s.name}</option>
-                                            ))}
-                                        </select>
+                                    <div>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.state ? 'from-red-500 to-red-600' : ''}`}>
+                                            <select
+                                                value={selectedState}
+                                                onChange={(e) => {
+                                                    setSelectedState(e.target.value);
+                                                    setSelectedCity("");
+                                                    if(errors.state) setErrors(prev => ({...prev, state: null}));
+                                                }}
+                                                disabled={!selectedCountry}
+                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                            >
+                                                <option value="">State</option>
+                                                {selectedCountry && State.getStatesOfCountry(selectedCountry).map((s) => (
+                                                    <option key={s.isoCode} value={s.isoCode}>{s.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
 
-                                    <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                                        <select
-                                            value={selectedCity}
-                                            onChange={(e) => setSelectedCity(e.target.value)}
-                                            disabled={!selectedState}
-                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                        >
-                                            <option value="">City</option>
-                                            {selectedState && City.getCitiesOfState(selectedCountry, selectedState).map((city) => (
-                                                <option key={city.name} value={city.name}>{city.name}</option>
-                                            ))}
-                                        </select>
+                                    <div>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.city ? 'from-red-500 to-red-600' : ''}`}>
+                                            <select
+                                                value={selectedCity}
+                                                onChange={(e) => {
+                                                    setSelectedCity(e.target.value);
+                                                    if(errors.city) setErrors(prev => ({...prev, city: null}));
+                                                }}
+                                                disabled={!selectedState}
+                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                                            >
+                                                <option value="">City</option>
+                                                {selectedState && City.getCitiesOfState(selectedCountry, selectedState).map((city) => (
+                                                    <option key={city.name} value={city.name}>{city.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
+                                {(errors.country || errors.state || errors.city) && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">Please select complete location</p>}
                             </div>
                         </div>
 
