@@ -62,20 +62,21 @@ export default function EditAboutModal({ isOpen, onClose, currentBio, onSave }) 
                         <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
                             <div className="space-y-4">
                                 <div>
-                                    <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-white' : 'text-black'}`}>
                                         Bio
                                     </label>
-                                    <textarea
-                                        value={bio}
-                                        onChange={(e) => setBio(e.target.value)}
-                                        rows={6}
-                                        className={`w-full p-4 rounded-xl outline-none transition duration-300 resize-none ${
-                                            darkMode 
-                                                ? 'bg-[#1e1e1e] text-white border-white/10 focus:border-blue-500' 
-                                                : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10'
-                                        } border-2`}
-                                        placeholder="Write something about yourself..."
-                                    />
+                                    <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
+                                        <textarea
+                                            value={bio}
+                                            onChange={(e) => setBio(e.target.value)}
+                                            rows={6}
+                                            className={`w-full p-4 rounded-[calc(0.75rem-2px)] outline-none transition duration-300 resize-none ${darkMode
+                                                    ? 'bg-[#1e1e1e] text-white'
+                                                    : 'bg-white text-black focus:ring-4 focus:ring-blue-500/10'
+                                                }`}
+                                            placeholder="Write something about yourself..."
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -159,7 +159,7 @@ export default function EditExperienceModal({
             : exp.skills || "",
           isInternship: exp.isInternship || false,
           proofImage: exp.proofImage || "",
-          proofImageFile: null, 
+          proofImageFile: null,
         };
       });
       setExperiences(transformed.length ? transformed : [{
@@ -167,7 +167,7 @@ export default function EditExperienceModal({
         startMonth: "", startYear: "", isCurrent: false, endMonth: "", endYear: "", description: "", skills: "", isInternship: false, proofImage: "", proofImageFile: null
       }]);
     } else {
-        setExperiences([]);
+      setExperiences([]);
     }
   }, [currentExperience, isOpen]);
 
@@ -264,7 +264,7 @@ export default function EditExperienceModal({
 
     setLoading(true);
     try {
-      const validExperiences = experiences.filter(exp => 
+      const validExperiences = experiences.filter(exp =>
         exp.title || exp.company || exp.startMonth || exp.startYear || exp.description
       );
 
@@ -332,9 +332,9 @@ export default function EditExperienceModal({
             ? exp.skills.filter((s) => s !== "")
             : typeof exp.skills === "string"
               ? exp.skills
-                  .split(",")
-                  .map((s) => s.trim())
-                  .filter((s) => s !== "")
+                .split(",")
+                .map((s) => s.trim())
+                .filter((s) => s !== "")
               : [],
           isInternship: exp.isInternship,
           proofImage: exp.proofImage,
@@ -380,27 +380,27 @@ export default function EditExperienceModal({
       <div className="fixed inset-0 h-[100dvh] w-full bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
         <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl sm:rounded-[2.5rem] shadow-[0_20px_60px_rgba(37,99,235,0.4)] w-full max-w-4xl max-h-[95dvh] sm:max-h-[90vh]">
           <div className={`rounded-[calc(2.5rem-2.5px)] w-full shadow-2xl overflow-hidden animate-fadeIn flex flex-col transition-colors duration-500 max-h-[90vh] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
-            
+
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex justify-between items-center text-white shrink-0">
-                <h2 className="text-lg font-bold flex items-center gap-2">
-                    <Briefcase className="w-5 h-5" /> Edit Experience
-                </h2>
-                <button
-                    onClick={onClose}
-                    className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition ml-3"
-                >
-                    <X className="w-5 h-5" />
-                </button>
+              <h2 className="text-lg font-bold flex items-center gap-2">
+                <Briefcase className="w-5 h-5" /> Edit Experience
+              </h2>
+              <button
+                onClick={onClose}
+                className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition ml-3"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
             {/* Hint Banner */}
             <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-blue-500/20 p-3 shrink-0 flex items-start gap-2">
-                <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Add proof images for your experiences to earn profile points! (Max 3 proofs, 10 pts each). 
-                    Current points from experiences: <span className="font-bold text-blue-500">{expPointsEarning} / 30</span>
-                </p>
+              <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+              <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Add proof images for your experiences to earn profile points! (Max 3 proofs, 10 pts each).
+                Current points from experiences: <span className="font-bold text-blue-500">{expPointsEarning} / 30</span>
+              </p>
             </div>
 
             <datalist id="job-titles">
@@ -418,292 +418,292 @@ export default function EditExperienceModal({
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
               {experiences.map((exp, idx) => (
                 <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${expandedIndex === idx ? (darkMode ? 'bg-[#1e1e1e] border-blue-500' : 'bg-blue-50 border-blue-400') : (darkMode ? 'bg-transparent border-white/5 hover:border-white/10' : 'bg-white border-gray-100 hover:border-gray-200')}`}>
-                    <div 
-                        className="flex justify-between items-center cursor-pointer"
-                        onClick={() => setExpandedIndex(expandedIndex === idx ? -1 : idx)}
-                    >
-                        <div className="flex items-center gap-3">
-                            {isExpComplete(exp) ? (
-                                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                            ) : (
-                                <Circle className="w-5 h-5 text-gray-400" />
-                            )}
-                            <div>
-                                <h3 className={`font-bold flex items-center gap-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                    {exp.title || "New Experience"}
-                                    {exp.isInternship && <span className="px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-500 text-[10px] uppercase font-black tracking-wider">Internship</span>}
-                                </h3>
-                                {exp.company && <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{exp.company}</p>}
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={(e) => { e.stopPropagation(); removeExperience(idx); }}
-                                className="p-1.5 text-red-500 hover:bg-red-500/10 rounded-lg transition"
-                            >
-                                <Trash2 className="w-4 h-4" />
-                            </button>
-                            {expandedIndex === idx ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-                        </div>
+                  <div
+                    className="flex justify-between items-center cursor-pointer"
+                    onClick={() => setExpandedIndex(expandedIndex === idx ? -1 : idx)}
+                  >
+                    <div className="flex items-center gap-3">
+                      {isExpComplete(exp) ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-500" />
+                      ) : (
+                        <Circle className="w-5 h-5 text-gray-400" />
+                      )}
+                      <div>
+                        <h3 className={`font-bold flex items-center gap-2 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {exp.title || "New Experience"}
+                          {exp.isInternship && <span className="px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-500 text-[10px] uppercase font-black tracking-wider">Internship</span>}
+                        </h3>
+                        {exp.company && <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{exp.company}</p>}
+                      </div>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); removeExperience(idx); }}
+                        className="p-1.5 text-red-500 hover:bg-red-500/10 rounded-lg transition"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      {expandedIndex === idx ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                    </div>
+                  </div>
 
-                    {expandedIndex === idx && (
-                        <div className="mt-4 space-y-4 pt-4 border-t border-gray-200 dark:border-white/10">
-                            
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title</label>
-                                    <input
-                                        type="text"
-                                        list="job-titles"
-                                        value={exp.title}
-                                        onChange={(e) => handleChange(idx, "title", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-title`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        placeholder="Ex: Software Engineer"
-                                    />
-                                    {errors[`${idx}-title`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-title`]}</p>}
-                                </div>
-                                
-                                <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Company Name</label>
-                                    <input
-                                        type="text"
-                                        list="companies"
-                                        value={exp.company}
-                                        onChange={(e) => handleChange(idx, "company", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-company`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        placeholder="Ex: Microsoft"
-                                    />
-                                    {errors[`${idx}-company`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-company`]}</p>}
-                                </div>
-                            </div>
+                  {expandedIndex === idx && (
+                    <div className="mt-4 space-y-4 pt-4 border-t border-gray-200 dark:border-white/10">
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Employment Type</label>
-                                    <select
-                                        value={exp.employmentType}
-                                        onChange={(e) => handleChange(idx, "employmentType", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-employmentType`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    >
-                                        <option value="">Please select</option>
-                                        {EMPLOYMENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                    </select>
-                                    {errors[`${idx}-employmentType`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-employmentType`]}</p>}
-                                </div>
-
-                                <div className="flex flex-col justify-end">
-                                    <label className="flex items-center gap-2 cursor-pointer p-2.5">
-                                        <input
-                                            type="checkbox"
-                                            checked={exp.isInternship}
-                                            onChange={(e) => handleChange(idx, "isInternship", e.target.checked)}
-                                            className="rounded w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                                        />
-                                        <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>This is an Internship</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Location</label>
-                                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
-                                    <select
-                                        value={exp.locationType}
-                                        onChange={(e) => handleChange(idx, "locationType", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition sm:col-span-1 ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                    >
-                                        <option value="">Type</option>
-                                        {LOCATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                    </select>
-                                    <select
-                                        value={exp.selectedCountry}
-                                        onChange={(e) => {
-                                            const updated = [...experiences];
-                                            updated[idx].selectedCountry = e.target.value;
-                                            updated[idx].selectedState = "";
-                                            updated[idx].selectedCity = "";
-                                            setExperiences(updated);
-                                        }}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition sm:col-span-1 ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                    >
-                                        <option value="">Country</option>
-                                        {Country.getAllCountries().map(c => <option key={c.isoCode} value={c.isoCode}>{c.name}</option>)}
-                                    </select>
-                                    <select
-                                        value={exp.selectedState}
-                                        onChange={(e) => {
-                                            const updated = [...experiences];
-                                            updated[idx].selectedState = e.target.value;
-                                            updated[idx].selectedCity = "";
-                                            setExperiences(updated);
-                                        }}
-                                        disabled={!exp.selectedCountry}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition sm:col-span-1 disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                    >
-                                        <option value="">State</option>
-                                        {exp.selectedCountry && State.getStatesOfCountry(exp.selectedCountry).map(s => <option key={s.isoCode} value={s.isoCode}>{s.name}</option>)}
-                                    </select>
-                                    <select
-                                        value={exp.selectedCity}
-                                        onChange={(e) => handleChange(idx, "selectedCity", e.target.value)}
-                                        disabled={!exp.selectedState}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition sm:col-span-1 disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                    >
-                                        <option value="">City</option>
-                                        {exp.selectedState && City.getCitiesOfState(exp.selectedCountry, exp.selectedState).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Start Date</label>
-                                    <div className="flex gap-2">
-                                        <select
-                                            value={exp.startMonth}
-                                            onChange={(e) => handleChange(idx, "startMonth", e.target.value)}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-startDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        >
-                                            <option value="">Month</option>
-                                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                                        </select>
-                                        <select
-                                            value={exp.startYear}
-                                            onChange={(e) => handleChange(idx, "startYear", e.target.value)}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-startDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        >
-                                            <option value="">Year</option>
-                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                                        </select>
-                                    </div>
-                                    {errors[`${idx}-startDate`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-startDate`]}</p>}
-                                </div>
-
-                                <div>
-                                    <div className="flex justify-between items-center mb-1">
-                                        <label className={`block text-xs font-black uppercase tracking-widest ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>End Date</label>
-                                        <label className="flex items-center gap-1.5 text-xs font-bold cursor-pointer">
-                                            <input type="checkbox" checked={exp.isCurrent} onChange={(e) => handleChange(idx, "isCurrent", e.target.checked)} className="rounded text-blue-600 focus:ring-blue-500" />
-                                            I currently work here
-                                        </label>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <select
-                                            value={exp.endMonth}
-                                            onChange={(e) => handleChange(idx, "endMonth", e.target.value)}
-                                            disabled={exp.isCurrent}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition disabled:opacity-50 ${errors[`${idx}-endDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        >
-                                            <option value="">Month</option>
-                                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                                        </select>
-                                        <select
-                                            value={exp.endYear}
-                                            onChange={(e) => handleChange(idx, "endYear", e.target.value)}
-                                            disabled={exp.isCurrent}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition disabled:opacity-50 ${errors[`${idx}-endDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        >
-                                            <option value="">Year</option>
-                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                                        </select>
-                                    </div>
-                                    {errors[`${idx}-endDate`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-endDate`]}</p>}
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description</label>
-                                <textarea
-                                    value={exp.description}
-                                    onChange={(e) => handleChange(idx, "description", e.target.value)}
-                                    rows={4}
-                                    className={`w-full p-3 rounded-xl border-2 outline-none transition resize-none ${errors[`${idx}-description`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    placeholder="Describe your responsibilities and achievements..."
-                                />
-                                {errors[`${idx}-description`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-description`]}</p>}
-                            </div>
-
-                            <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>Skills (comma separated)</label>
-                                <input
-                                    type="text"
-                                    value={exp.skills}
-                                    onChange={(e) => handleChange(idx, "skills", e.target.value)}
-                                    className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                    placeholder="Ex: React, Node.js, Project Management"
-                                />
-                            </div>
-
-                            <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>Proof of Experience (Optional)</label>
-                                <div className={`flex items-center gap-4 p-3 rounded-xl border-2 border-dashed ${darkMode ? 'border-white/20' : 'border-gray-300'}`}>
-                                    {exp.proofImage ? (
-                                        <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
-                                            <img src={exp.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
-                                            <button 
-                                                onClick={() => {
-                                                    const updated = [...experiences];
-                                                    updated[idx].proofImage = "";
-                                                    updated[idx].proofImageFile = null;
-                                                    setExperiences(updated);
-                                                }}
-                                                className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
-                                            >
-                                                <X className="w-3 h-3" />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-white/5`}>
-                                            <Award className="w-6 h-6 text-gray-400" />
-                                        </div>
-                                    )}
-                                    <div className="flex-1">
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            id={`proof-${idx}`}
-                                            className="hidden"
-                                            onChange={(e) => handleFileChange(idx, e)}
-                                        />
-                                        <label htmlFor={`proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
-                                            {exp.proofImage ? "Change Image" : "Upload Certificate/Offer Letter"}
-                                        </label>
-                                        <p className="text-xs text-gray-500 mt-1">Max 5MB (JPG, PNG)</p>
-                                    </div>
-                                    {exp.proofImage && (
-                                        <button 
-                                            onClick={() => setSelectedProofImage(exp.proofImage)}
-                                            className="text-blue-500 hover:text-blue-600"
-                                        >
-                                            <ExternalLink className="w-5 h-5" />
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title</label>
+                          <input
+                            type="text"
+                            list="job-titles"
+                            value={exp.title}
+                            onChange={(e) => handleChange(idx, "title", e.target.value)}
+                            className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-title`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                            placeholder="Ex: Software Engineer"
+                          />
+                          {errors[`${idx}-title`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-title`]}</p>}
                         </div>
-                    )}
+
+                        <div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Company Name</label>
+                          <input
+                            type="text"
+                            list="companies"
+                            value={exp.company}
+                            onChange={(e) => handleChange(idx, "company", e.target.value)}
+                            className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-company`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                            placeholder="Ex: Microsoft"
+                          />
+                          {errors[`${idx}-company`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-company`]}</p>}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Employment Type</label>
+                          <select
+                            value={exp.employmentType}
+                            onChange={(e) => handleChange(idx, "employmentType", e.target.value)}
+                            className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-employmentType`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                          >
+                            <option value="">Please select</option>
+                            {EMPLOYMENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                          </select>
+                          {errors[`${idx}-employmentType`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-employmentType`]}</p>}
+                        </div>
+
+                        <div className="flex flex-col justify-end">
+                          <label className="flex items-center gap-2 cursor-pointer p-2.5">
+                            <input
+                              type="checkbox"
+                              checked={exp.isInternship}
+                              onChange={(e) => handleChange(idx, "isInternship", e.target.checked)}
+                              className="rounded w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                            />
+                            <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>This is an Internship</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Location</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                          <select
+                            value={exp.locationType}
+                            onChange={(e) => handleChange(idx, "locationType", e.target.value)}
+                            className={`w-full p-2.5 rounded-xl border-2 outline-none transition sm:col-span-1 ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
+                          >
+                            <option value="">Type</option>
+                            {LOCATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                          </select>
+                          <select
+                            value={exp.selectedCountry}
+                            onChange={(e) => {
+                              const updated = [...experiences];
+                              updated[idx].selectedCountry = e.target.value;
+                              updated[idx].selectedState = "";
+                              updated[idx].selectedCity = "";
+                              setExperiences(updated);
+                            }}
+                            className={`w-full p-2.5 rounded-xl border-2 outline-none transition sm:col-span-1 ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
+                          >
+                            <option value="">Country</option>
+                            {Country.getAllCountries().map(c => <option key={c.isoCode} value={c.isoCode}>{c.name}</option>)}
+                          </select>
+                          <select
+                            value={exp.selectedState}
+                            onChange={(e) => {
+                              const updated = [...experiences];
+                              updated[idx].selectedState = e.target.value;
+                              updated[idx].selectedCity = "";
+                              setExperiences(updated);
+                            }}
+                            disabled={!exp.selectedCountry}
+                            className={`w-full p-2.5 rounded-xl border-2 outline-none transition sm:col-span-1 disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
+                          >
+                            <option value="">State</option>
+                            {exp.selectedCountry && State.getStatesOfCountry(exp.selectedCountry).map(s => <option key={s.isoCode} value={s.isoCode}>{s.name}</option>)}
+                          </select>
+                          <select
+                            value={exp.selectedCity}
+                            onChange={(e) => handleChange(idx, "selectedCity", e.target.value)}
+                            disabled={!exp.selectedState}
+                            className={`w-full p-2.5 rounded-xl border-2 outline-none transition sm:col-span-1 disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
+                          >
+                            <option value="">City</option>
+                            {exp.selectedState && City.getCitiesOfState(exp.selectedCountry, exp.selectedState).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Start Date</label>
+                          <div className="flex gap-2">
+                            <select
+                              value={exp.startMonth}
+                              onChange={(e) => handleChange(idx, "startMonth", e.target.value)}
+                              className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-startDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                            >
+                              <option value="">Month</option>
+                              {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                            </select>
+                            <select
+                              value={exp.startYear}
+                              onChange={(e) => handleChange(idx, "startYear", e.target.value)}
+                              className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-startDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                            >
+                              <option value="">Year</option>
+                              {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                            </select>
+                          </div>
+                          {errors[`${idx}-startDate`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-startDate`]}</p>}
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between items-center mb-1">
+                            <label className={`block text-xs font-black uppercase tracking-widest ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>End Date</label>
+                            <label className="flex items-center gap-1.5 text-xs font-bold cursor-pointer">
+                              <input type="checkbox" checked={exp.isCurrent} onChange={(e) => handleChange(idx, "isCurrent", e.target.checked)} className="rounded text-blue-600 focus:ring-blue-500" />
+                              I currently work here
+                            </label>
+                          </div>
+                          <div className="flex gap-2">
+                            <select
+                              value={exp.endMonth}
+                              onChange={(e) => handleChange(idx, "endMonth", e.target.value)}
+                              disabled={exp.isCurrent}
+                              className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition disabled:opacity-50 ${errors[`${idx}-endDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                            >
+                              <option value="">Month</option>
+                              {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                            </select>
+                            <select
+                              value={exp.endYear}
+                              onChange={(e) => handleChange(idx, "endYear", e.target.value)}
+                              disabled={exp.isCurrent}
+                              className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition disabled:opacity-50 ${errors[`${idx}-endDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                            >
+                              <option value="">Year</option>
+                              {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                            </select>
+                          </div>
+                          {errors[`${idx}-endDate`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-endDate`]}</p>}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description</label>
+                        <textarea
+                          value={exp.description}
+                          onChange={(e) => handleChange(idx, "description", e.target.value)}
+                          rows={4}
+                          className={`w-full p-3 rounded-xl border-2 outline-none transition resize-none ${errors[`${idx}-description`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                          placeholder="Describe your responsibilities and achievements..."
+                        />
+                        {errors[`${idx}-description`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-description`]}</p>}
+                      </div>
+
+                      <div>
+                        <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>Skills (comma separated)</label>
+                        <input
+                          type="text"
+                          value={exp.skills}
+                          onChange={(e) => handleChange(idx, "skills", e.target.value)}
+                          className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
+                          placeholder="Ex: React, Node.js, Project Management"
+                        />
+                      </div>
+
+                      <div>
+                        <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>Proof of Experience (Optional)</label>
+                        <div className={`flex items-center gap-4 p-3 rounded-xl border-2 border-dashed ${darkMode ? 'border-white/20' : 'border-gray-300'}`}>
+                          {exp.proofImage ? (
+                            <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
+                              <img src={exp.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
+                              <button
+                                onClick={() => {
+                                  const updated = [...experiences];
+                                  updated[idx].proofImage = "";
+                                  updated[idx].proofImageFile = null;
+                                  setExperiences(updated);
+                                }}
+                                className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className={`w-16 h-16 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-white/5`}>
+                              <Award className="w-6 h-6 text-gray-400" />
+                            </div>
+                          )}
+                          <div className="flex-1">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              id={`proof-${idx}`}
+                              className="hidden"
+                              onChange={(e) => handleFileChange(idx, e)}
+                            />
+                            <label htmlFor={`proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
+                              {exp.proofImage ? "Change Image" : "Upload Certificate/Offer Letter"}
+                            </label>
+                            <p className="text-xs text-gray-500 mt-1">Max 5MB (JPG, PNG)</p>
+                          </div>
+                          {exp.proofImage && (
+                            <button
+                              onClick={() => setSelectedProofImage(exp.proofImage)}
+                              className="text-blue-500 hover:text-blue-600"
+                            >
+                              <ExternalLink className="w-5 h-5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
 
               <button
-                  onClick={addExperience}
-                  className={`w-full py-4 border-2 border-dashed rounded-xl transition flex items-center justify-center gap-2 font-bold ${darkMode ? 'border-white/10 text-blue-400 hover:border-blue-500 hover:bg-blue-500/10' : 'border-gray-200 text-blue-600 hover:border-blue-400 hover:bg-blue-50'}`}
+                onClick={addExperience}
+                className={`w-full py-4 border-2 border-dashed rounded-xl transition flex items-center justify-center gap-2 font-bold ${darkMode ? 'border-white/10 text-blue-400 hover:border-blue-500 hover:bg-blue-500/10' : 'border-gray-200 text-blue-600 hover:border-blue-400 hover:bg-blue-50'}`}
               >
-                  <Plus className="w-5 h-5" /> Add Another Experience
+                <Plus className="w-5 h-5" /> Add Another Experience
               </button>
             </div>
 
             {/* Footer */}
             <div className={`p-4 flex justify-end gap-3 flex-shrink-0 ${darkMode ? 'bg-slate-800/50 border-t border-white/5' : 'bg-gray-50 border-t'}`}>
-                <button
-                    onClick={handleSave}
-                    disabled={loading}
-                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transition transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                    <Save className="w-4 h-4" />
-                    {loading ? "Saving..." : "Save Changes"}
-                </button>
+              <button
+                onClick={handleSave}
+                disabled={loading}
+                className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transition transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <Save className="w-4 h-4" />
+                {loading ? "Saving..." : "Save Changes"}
+              </button>
             </div>
           </div>
 
@@ -726,12 +726,12 @@ export default function EditExperienceModal({
       </div>
 
       {selectedProofImage && (
-          <ImageViewerModal
-              isOpen={!!selectedProofImage}
-              onClose={() => setSelectedProofImage(null)}
-              imageUrl={selectedProofImage}
-              title="Experience Proof"
-          />
+        <ImageViewerModal
+          isOpen={!!selectedProofImage}
+          onClose={() => setSelectedProofImage(null)}
+          imageUrl={selectedProofImage}
+          title="Experience Proof"
+        />
       )}
     </>
   );
