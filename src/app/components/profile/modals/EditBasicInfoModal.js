@@ -75,7 +75,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
         let { name, value } = e.target;
 
         // Input Locks
-        if (name === "name") {
+        if (name === "name" || name === "branch" || name === "position" || name === "department") {
             value = value.replace(/[^a-zA-Z\s\.\-']/g, '');
         } else if (name === "whatsapp" || name === "universityRollNumber") {
             value = value.replace(/\D/g, '');
@@ -203,7 +203,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                             {/* Name */}
                             <div>
                                 <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
-                                    <User className="w-3.5 h-3.5" /> Full Name
+                                    <User className="w-3.5 h-3.5" /> Full Name <span className="text-red-500">*</span>
                                 </label>
                                 <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors.name ? 'from-red-500 to-red-600' : ''}`}>
                                     <input
@@ -288,7 +288,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                                 </>
                             )}
 
-                            {currentProfile?.role !== "student" && (
+                            {(currentProfile?.role === "faculty" || currentProfile?.role === "admin") && (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>

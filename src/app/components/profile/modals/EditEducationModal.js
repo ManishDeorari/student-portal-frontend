@@ -24,7 +24,9 @@ const DEGREE_SUGGESTIONS = [
 const COURSE_SUGGESTIONS = [
   "B.Tech", "M.Tech", "MBA", "BCA", "MCA", "B.Sc", "M.Sc", "B.A", "M.A"
 ];
+
 const BRANCH_SUGGESTIONS = [
+  "CS", "AI", "IT", "ME", "CE", "ECE", "EE", 
   "Computer Science", "Information Technology", "Mechanical Engineering",
   "Civil Engineering", "Electronics and Communication", "Electrical Engineering",
   "Business Administration", "Finance", "Marketing", "HR", "Physics", "Maths"
@@ -37,13 +39,28 @@ const STUDY_SUGGESTIONS = [
 ];
 
 const INSTITUTION_SUGGESTIONS = [
-  "Graphic Era Deemed to be University",
   "Graphic Era Hill University",
-  "Indian Institute of Technology (IIT)",
-  "National Institute of Technology (NIT)",
-  "BITS Pilani",
-  "Delhi University",
-  "Amity University"
+  "Graphic Era Deemed to be University",
+  "IIT Roorkee",
+  "NIT Uttarakhand",
+  "UPES Dehradun",
+  "DIT University",
+  "Uttaranchal University",
+  "GB Pant University of Agriculture and Technology",
+  "Kumaun University",
+  "Doon University"
+];
+
+const SCHOOL_SUGGESTIONS = [
+  "The Doon School, Dehradun",
+  "Welham Girls' School, Dehradun",
+  "Welham Boys' School, Dehradun",
+  "Woodstock School, Mussoorie",
+  "St. Joseph's Academy, Dehradun",
+  "St. George's College, Mussoorie",
+  "Sherwood College, Nainital",
+  "Convent of Jesus and Mary, Dehradun",
+  "Ever Green Sr. Sec. School"
 ];
 
 const GEHU_CAMPUSES = ["Dehradun", "Bhimtal", "Haldwani"];
@@ -94,7 +111,6 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
           campus: edu.campus || "",
           grade: edu.grade || "",
           isOngoing: edu.isOngoing || false,
-          isResultAwaited: edu.isResultAwaited || false,
           activities: edu.activities || "",
           description: edu.description || "",
           isMandatory: true,
@@ -117,7 +133,6 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
             endYear: eYear || "",
             grade: edu.grade || "",
             isOngoing: edu.isOngoing || false,
-            isResultAwaited: edu.isResultAwaited || false,
             isMandatory: false
           });
         }
@@ -144,6 +159,12 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
 
     const updated = [...educations];
     updated[index][field] = processedValue;
+    
+    // Clear campus if institution is changed away from GEHU
+    if (field === "institution" && processedValue !== "Graphic Era Hill University") {
+      updated[index].campus = "";
+    }
+    
     setEducations(updated);
 
     if (errors[`${index}-${field}`]) {
@@ -169,7 +190,6 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
         endYear: "",
         grade: "",
         isOngoing: false,
-        isResultAwaited: false,
         activities: "",
         description: "",
         isMandatory: false
@@ -185,12 +205,27 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
   const validate = () => {
     const newErrors = {};
     educations.forEach((edu, idx) => {
+      const isSchool = edu.degree === "High School (Secondary - Class 10)" || edu.degree === "Intermediate (Higher Secondary - Class 12)";
       const hasData = edu.institution || edu.course || edu.startMonth || edu.startYear || edu.endMonth || edu.endYear || edu.grade || edu.activities || edu.description;
+      
       if (hasData || edu.isMandatory) {
-        if (!edu.institution) newErrors[`${idx}-institution`] = "Institution is required";
+        if (!edu.institution) newErrors[`${idx}-institution`] = isSchool ? "Name of School is required" : "Institution is required";
+        
+        if (edu.institution === "Graphic Era Hill University" && !edu.campus) {
+          newErrors[`${idx}-campus`] = "Campus is required for GEHU";
+        }
+        
+        if (!isSchool && !edu.course) {
+          newErrors[`${idx}-course`] = "Course is required";
+        }
+
         if (!edu.startMonth || !edu.startYear) newErrors[`${idx}-startDate`] = "Start date is required";
         if (!edu.endMonth || !edu.endYear) newErrors[`${idx}-endDate`] = "End date is required";
-        if (!edu.isResultAwaited && (!edu.grade || edu.grade.trim() === "")) newErrors[`${idx}-grade`] = "Grade/Percentage is required";
+        
+        // Grade is mandatory ONLY if not ongoing
+        if (!edu.isOngoing && (!edu.grade || edu.grade.trim() === "")) {
+          newErrors[`${idx}-grade`] = "Grade/Percentage is required";
+        }
       }
     });
     setErrors(newErrors);
@@ -226,8 +261,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
           startDate,
           endDate,
           isOngoing: edu.isOngoing || false,
-          isResultAwaited: edu.isResultAwaited || false,
-          grade: edu.grade,
+          grade: edu.isOngoing ? "" : edu.grade, // Clear grade if currently studying
           activities: edu.activities,
           description: edu.description
         };
@@ -337,40 +371,64 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                         </div>
 
                         <div>
-                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Institution <span className="text-red-500">*</span></label>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+                              {isSchool ? "Name of School" : "Institution"} <span className="text-red-500">*</span>
+                          </label>
                           <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-institution`] ? 'from-red-500 to-red-600' : ''}`}>
                             <input
                               type="text"
                               value={edu.institution}
                               onChange={(e) => handleChange(idx, "institution", e.target.value)}
                               className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                              placeholder="Name of school/college"
+                              placeholder={isSchool ? "Name of school" : "Name of college/university"}
                               list={`inst-suggestions-${idx}`}
                             />
                             <datalist id={`inst-suggestions-${idx}`}>
-                                {INSTITUTION_SUGGESTIONS.map(s => <option key={s} value={s} />)}
+                                {isSchool ? SCHOOL_SUGGESTIONS.map(s => <option key={s} value={s} />) : INSTITUTION_SUGGESTIONS.map(s => <option key={s} value={s} />)}
                             </datalist>
                           </div>
                           {errors[`${idx}-institution`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-institution`]}</p>}
                         </div>
 
+                        {edu.institution === "Graphic Era Hill University" && (
+                          <div className="animate-fadeIn">
+                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+                                Campus <span className="text-red-500">*</span>
+                            </label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-campus`] ? 'from-red-500 to-red-600' : ''}`}>
+                              <select
+                                value={edu.campus}
+                                onChange={(e) => handleChange(idx, "campus", e.target.value)}
+                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
+                              >
+                                <option value="">Select Campus</option>
+                                {GEHU_CAMPUSES.map(c => <option key={c} value={c}>{c}</option>)}
+                              </select>
+                            </div>
+                            {errors[`${idx}-campus`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-campus`]}</p>}
+                          </div>
+                        )}
+
                         {!isSchool && (
                           <>
                             <div>
-                              <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Course</label>
-                              <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                              <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+                                  Course <span className="text-red-500">*</span>
+                              </label>
+                              <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-course`] ? 'from-red-500 to-red-600' : ''}`}>
                                 <input
                                   type="text"
                                   value={edu.course}
                                   onChange={(e) => handleChange(idx, "course", e.target.value)}
                                   className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                  placeholder="e.g. B.Tech"
+                                  placeholder="e.g. BCA, MCA, B.Tech"
                                   list={`course-suggestions-${idx}`}
                                 />
                                 <datalist id={`course-suggestions-${idx}`}>
                                     {COURSE_SUGGESTIONS.map(s => <option key={s} value={s} />)}
                                 </datalist>
                               </div>
+                              {errors[`${idx}-course`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-course`]}</p>}
                             </div>
                             
                             <div>
@@ -381,7 +439,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                                   value={edu.branch}
                                   onChange={(e) => handleChange(idx, "branch", e.target.value)}
                                   className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
-                                  placeholder="e.g. Computer Science"
+                                  placeholder="e.g. AI, CS"
                                   list={`branch-suggestions-${idx}`}
                                 />
                                 <datalist id={`branch-suggestions-${idx}`}>
@@ -442,7 +500,10 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                             </label>
                             {!isSchool && (
                                 <label className={`flex items-center gap-1.5 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-black'}`}>
-                                <input type="checkbox" checked={edu.isOngoing} onChange={(e) => handleChange(idx, "isOngoing", e.target.checked)} className="rounded" />
+                                <input type="checkbox" checked={edu.isOngoing} onChange={(e) => {
+                                    handleChange(idx, "isOngoing", e.target.checked);
+                                    if(e.target.checked) handleChange(idx, "grade", "");
+                                }} className="rounded" />
                                 Currently studying
                                 </label>
                             )}
@@ -472,24 +533,15 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                         </div>
 
                         <div>
-                          <div className="flex justify-between items-center mb-1.5">
-                              <label className={`block text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
-                                  Grade/Percentage {!edu.isResultAwaited && <span className="text-red-500">*</span>}
-                              </label>
-                              <label className={`flex items-center gap-1.5 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-black'}`}>
-                                <input type="checkbox" checked={edu.isResultAwaited} onChange={(e) => {
-                                    handleChange(idx, "isResultAwaited", e.target.checked);
-                                    if(e.target.checked) handleChange(idx, "grade", "");
-                                }} className="rounded" />
-                                Result Awaited
-                              </label>
-                          </div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>
+                              Grade/Percentage {!edu.isOngoing && <span className="text-red-500">*</span>}
+                          </label>
                           <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-grade`] ? 'from-red-500 to-red-600' : ''}`}>
                             <input
                               type="text"
                               value={edu.grade}
                               onChange={(e) => handleChange(idx, "grade", e.target.value)}
-                              disabled={edu.isResultAwaited}
+                              disabled={edu.isOngoing}
                               className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
                               placeholder="e.g. 8.5 CGPA or 90%"
                             />
