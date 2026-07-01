@@ -72,9 +72,20 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
 
     const handleChange = (e) => {
         let { name, value } = e.target;
-        if (name === "section") {
-            value = value.toUpperCase();
+
+        // Input Locks
+        if (name === "name") {
+            value = value.replace(/[^a-zA-Z\s\.\-']/g, '');
+        } else if (name === "whatsapp" || name === "universityRollNumber") {
+            value = value.replace(/\D/g, '');
+        } else if (name === "section") {
+            value = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        } else if (name === "secondaryEmail") {
+            value = value.toLowerCase().replace(/\s/g, '');
+        } else if (name === "portfolio" || name === "github" || name === "linkedin") {
+            value = value.replace(/\s/g, '');
         }
+
         setFormData((prev) => ({ ...prev, [name]: value }));
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: null }));
@@ -92,6 +103,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
         const newErrors = {};
         const WHATSAPP_REGEX = /^\d{7,15}$/;
         const URL_REGEX = /^(https?:\/\/)?([\w\d]+\.)?[\w\d]+\.\w+\/.*$/;
+        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!formData.name.trim()) {
             newErrors.name = "Name is required.";
@@ -110,6 +122,10 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
         }
         else if (formData.linkedin && !URL_REGEX.test(formData.linkedin)) {
             newErrors.linkedin = "Invalid URL format.";
+        }
+
+        if (formData.secondaryEmail && !EMAIL_REGEX.test(formData.secondaryEmail)) {
+            newErrors.secondaryEmail = "Please enter a valid email format.";
         }
 
         setErrors(newErrors);
@@ -180,7 +196,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                     </h2>
                     <button
                         onClick={onClose}
-                        className="text-white/80 hover:text-white hover:bg-[#FAFAFA]/20 p-1 rounded-full transition"
+                        className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -409,12 +425,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                 </div>
 
                 <div className={`p-4 flex justify-end gap-3 flex-shrink-0 ${darkMode ? 'bg-slate-800/50 border-t border-white/5' : 'bg-gray-50 border-t'}`}>
-                    <button 
-                        onClick={onClose} 
-                        className={`px-6 py-2.5 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm ${darkMode ? "border-white text-white hover:bg-white/10" : "border-black text-black hover:bg-gray-100"}`}
-                    >
-                        Cancel
-                    </button>
+                    
                     <button
                         onClick={handleSave}
                         disabled={loading}

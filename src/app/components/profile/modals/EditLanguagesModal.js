@@ -75,13 +75,12 @@ export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, 
                         <h2 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 flex items-center gap-2">
                             <Languages className="w-6 h-6 text-blue-500" /> Edit Languages
                         </h2>
-                        <button 
-                            onClick={onClose}
-                            disabled={loading}
-                            className={`p-2 rounded-full transition-colors ${darkMode ? 'hover:bg-slate-800' : 'hover:bg-gray-100'}`}
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
+                    <button
+                        onClick={onClose}
+                        className={`p-1 border-2 transition rounded-xl ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`}
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
                     </div>
 
                     <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6">
@@ -95,7 +94,7 @@ export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, 
                                     <input
                                         type="text"
                                         value={newLanguage}
-                                        onChange={e => setNewLanguage(e.target.value)}
+                                        onChange={e => setNewLanguage(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
                                         placeholder="e.g. English, Spanish, French..."
                                         className={`w-full p-3 rounded-[calc(0.75rem-2px)] outline-none transition-colors ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
                                     />

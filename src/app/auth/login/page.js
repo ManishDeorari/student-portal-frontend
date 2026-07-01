@@ -597,18 +597,18 @@ function LoginContent() {
               )}
 
               {view === "FORGOT_OTP" && (
-                <form onSubmit={handleResetPassword} className="space-y-6">
+                <form onSubmit={handleResetPassword} className="space-y-3 flex-1 flex flex-col min-h-0">
                   <div className="space-y-2 text-center">
                     <h2 className={`text-3xl font-black ${darkMode ? "text-white" : "text-black"} tracking-tight`}>Security Check</h2>
                     <p className={`text-sm ${darkMode ? "text-white" : "text-black"} font-bold opacity-70`}>Verification code sent to your inbox</p>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3 flex flex-col justify-center">
                     <div className="space-y-1">
-                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Verification Code</label>
+                      <label className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} ml-4 font-black`}>Security Code</label>
                       <div className="flex justify-center gap-2 sm:gap-4">
                         {[0, 1, 2, 3, 4, 5].map((index) => (
-                          <div key={index} className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-sm flex-1 max-w-[48px]">
+                          <div key={index} className="p-[1.5px] bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-sm flex-1 max-w-[48px]">
                             <input
                               id={`otp-${index}`}
                               type="text"
@@ -627,7 +627,7 @@ function LoginContent() {
                                   document.getElementById(`otp-${index - 1}`).focus();
                                 }
                               }}
-                              className={`w-full px-1 py-4 rounded-[calc(1rem-1.5px)] outline-none text-center font-black ${darkMode ? "bg-black text-white" : "bg-white text-black"} font-bold`}
+                              className={`w-full px-1 py-2.5 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-center text-lg sm:text-xl font-black ${darkMode ? "bg-black text-white" : "bg-white text-black"}`}
                               required={index === 0}
                             />
                           </div>
@@ -643,7 +643,7 @@ function LoginContent() {
                           placeholder="Enter new password"
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
-                          className={`w-full px-6 pr-12 py-4 rounded-[calc(1rem-1.5px)] outline-none ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
+                          className={`w-full px-4 sm:px-6 pr-12 py-2.5 sm:py-3.5 rounded-[calc(1rem-1.5px)] outline-none text-base sm:text-lg ${darkMode ? "bg-black text-white placeholder-white/40" : "bg-white text-black placeholder-gray-400"} font-bold`}
                           required
                         />
                         <button
@@ -658,7 +658,7 @@ function LoginContent() {
                     </div>
                   </div>
 
-                  <div className="text-center">
+                  <div className="text-center mt-1">
                     {timer > 0 ? (
                       <p className={`text-[9px] uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} font-black`}>Code expires in <span className="text-blue-500">{timer}s</span></p>
                     ) : (
@@ -687,7 +687,7 @@ function LoginContent() {
                     <button
                       type="button"
                       onClick={() => setView("LOGIN")}
-                      className={`w-full ${darkMode ? "text-white hover:text-blue-400" : "text-black hover:text-blue-600"} text-[9px] uppercase tracking-widest font-black transition-colors`}
+                      className={`w-full py-2.5 sm:py-3.5 rounded-2xl border-2 transition-all duration-300 font-black text-xs uppercase tracking-widest hover:shadow-lg ${darkMode ? "border-white/20 text-white hover:border-gray-500 hover:bg-gray-500/10" : "border-gray-300 text-black hover:border-gray-400 hover:bg-gray-50"}`}
                     >
                       Cancel
                     </button>
@@ -696,7 +696,7 @@ function LoginContent() {
               )}
 
               {/* Back to Home Inside the Div */}
-              <div className="pt-4 border-t border-white/5 text-center shrink-0 mt-auto">
+              <div className="pt-3 sm:pt-4 border-t border-white/5 text-center shrink-0 mt-1 sm:mt-auto">
                 <div className="p-[1px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full inline-block group transition-all hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] shadow-lg">
                   <Link
                     href="/"

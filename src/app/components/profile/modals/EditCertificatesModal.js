@@ -72,8 +72,16 @@ export default function EditCertificatesModal({
   if (!isOpen) return null;
 
   const handleChange = (index, field, value) => {
+    let processedValue = value;
+
+    if (field === "name" || field === "issuer") {
+      processedValue = processedValue.replace(/[^a-zA-Z0-9\s\.\-]/g, '');
+    } else if (field === "credentialId") {
+      processedValue = processedValue.replace(/[^a-zA-Z0-9\-]/g, '');
+    }
+
     const updated = [...certificates];
-    updated[index][field] = value;
+    updated[index][field] = processedValue;
     setCertificates(updated);
 
     if (errors[`${index}-${field}`]) {
@@ -227,259 +235,9 @@ export default function EditCertificatesModal({
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5" /> Edit Certificates
               </h2>
-              <button
-                onClick={onClose}
-                className="text-white/80 hover:text-white hover:bg-[#FAFAFA]/20 p-1 rounded-full transition"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div
-              className={`p-4 md:p-6 space-y-8 overflow-y-auto custom-scrollbar flex-grow transition-colors ${darkMode ? "bg-[#121213]" : "bg-gray-50/30"}`}
-            >
-              {/* Guide Text */}
-              <div className="p-[2px] bg-gradient-to-tr from-purple-500 via-pink-500 to-red-500 rounded-xl mb-6">
-                <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-purple-300' : 'bg-purple-50 text-purple-800'}`}>
-                  <Award className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm leading-relaxed">
-                    <p className="font-bold mb-0.5">Earn Points!</p>
-                    <p>Add up to 5 Certificates with a valid Proof Image to earn 2 points each (Maximum 10 points total).</p>
-                  </div>
-                </div>
-              </div>
-
-              {certificates.map((cert, index) => (
-                <div
-                  key={index}
-                  className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] transition-all duration-300"
-                >
-                  <div
-                    className={`${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} rounded-[calc(2.5rem-2.5px)] overflow-hidden shadow-2xl`}
-                  >
-                    {/* Header Section */}
-                    <div
-                      onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
-                      className={`p-5 flex items-center justify-between cursor-pointer select-none border-b border-dashed ${darkMode ? "border-white/10" : "border-gray-200"} ${expandedIndex === index ? (darkMode ? "bg-blue-600/10" : "bg-blue-50/50") : ""}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="text-blue-500 transition-transform duration-300">
-                          {expandedIndex === index ? (
-                            <ChevronDown className="w-5 h-5" />
-                          ) : (
-                            <ChevronRight className="w-5 h-5" />
-                          )}
-                        </div>
-                        <h3
-                          className={`font-black uppercase tracking-tight text-sm ${expandedIndex === index ? "text-blue-500" : darkMode ? "text-slate-300" : "text-gray-700"}`}
-                        >
-                          {cert.name || "New Certificate"}
-                        </h3>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeCertificate(index);
-                        }}
-                        className={`p-2 rounded-xl transition-all ${darkMode ? "text-red-400 hover:bg-red-500/10" : "text-red-500 hover:bg-red-50"}`}
-                        title="Remove Certificate"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    {/* Form Section */}
-                    {expandedIndex === index && (
-                      <div className="p-5 sm:p-8 space-y-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          <div className="sm:col-span-2 space-y-1.5">
-                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-name`] ? 'text-red-500' : (darkMode ? 'text-blue-400' : 'text-blue-600')}`}>
-                              Certificate Name <span className="text-red-500 font-bold">*</span>
-                            </label>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-name`] ? 'from-red-500 to-red-600' : ''}`}>
-                              <input
-                                type="text"
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
-                                value={cert.name}
-                                onChange={(e) => handleChange(index, "name", e.target.value)}
-                                placeholder="e.g. AWS Certified Solutions Architect"
-                              />
-                            </div>
-                            {errors[`${index}-name`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-name`]}</p>}
-                          </div>
-
-                          <div className="sm:col-span-2 space-y-1.5">
-                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-issuer`] ? 'text-red-500' : (darkMode ? 'text-blue-400' : 'text-blue-600')}`}>
-                              Issuing Organization <span className="text-red-500 font-bold">*</span>
-                            </label>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-issuer`] ? 'from-red-500 to-red-600' : ''}`}>
-                              <input
-                                type="text"
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
-                                value={cert.issuer}
-                                onChange={(e) => handleChange(index, "issuer", e.target.value)}
-                                placeholder="e.g. Amazon Web Services"
-                              />
-                            </div>
-                            {errors[`${index}-issuer`] && <p className="text-red-500 text-[10px] font-bold uppercase mt-1.5 ml-1">{errors[`${index}-issuer`]}</p>}
-                          </div>
-
-                          {/* Description */}
-                          <div className="sm:col-span-2 space-y-1.5">
-                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
-                              Description <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-300" : "text-gray-600"}`}>(Optional)</span>
-                            </label>
-                            <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                              <textarea
-                                rows={3}
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition resize-none ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
-                                value={cert.description || ""}
-                                onChange={(e) => handleChange(index, "description", e.target.value)}
-                                placeholder="What did you learn? Any key takeaways?"
-                              />
-                            </div>
-                          </div>
-
-                          {/* Issue Date */}
-                          <div className="sm:col-span-2 space-y-1.5 mt-4">
-                            <label className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${errors[`${index}-issueDate`] ? "text-red-500" : darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                              Issue Date <span className="text-red-500 font-bold">*</span>
-                            </label>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${index}-issueDate`] ? "from-red-500 to-red-600" : ""}`}>
-                              <div className={`grid grid-cols-2 gap-2 p-1 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                                <select
-                                  className={`w-full p-2 rounded-lg text-sm outline-none ${darkMode ? "bg-[#121213] text-white border-none" : "bg-white text-gray-900 border-none"}`}
-                                  value={cert.issueMonth || ""}
-                                  onChange={(e) => handleChange(index, "issueMonth", e.target.value)}
-                                >
-                                  <option value="">Month</option>
-                                  {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
-                                </select>
-                                <select
-                                  className={`w-full p-2 rounded-lg text-sm outline-none ${darkMode ? "bg-[#121213] text-white border-none" : "bg-white text-gray-900 border-none"}`}
-                                  value={cert.issueYear || ""}
-                                  onChange={(e) => handleChange(index, "issueYear", e.target.value)}
-                                >
-                                  <option value="">Year</option>
-                                  {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
-                                </select>
-                              </div>
-                            </div>
-                            {errors[`${index}-issueDate`] && <p className="text-red-500 text-[10px] font-bold uppercase ml-1 mt-1.5">{errors[`${index}-issueDate`]}</p>}
-                          </div>
-
-                          {/* Duration */}
-                          <div className="sm:col-span-2 space-y-1.5">
-                            <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                              Duration <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-300" : "text-gray-600"}`}>(Optional — for courses)</span>
-                            </label>
-                            <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                              <input
-                                type="text"
-                                placeholder="e.g. 3 Months, 40 Hours"
-                                value={cert.duration || ""}
-                                onChange={(e) => handleChange(index, "duration", e.target.value)}
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
-                              />
-                            </div>
-                          </div>
-
-                          {/* Credential URL */}
-                          <div className="sm:col-span-2 space-y-1.5">
-                            <label className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                              Credential URL <span className={`text-[10px] font-medium normal-case ${darkMode ? "text-slate-300" : "text-gray-600"}`}>(Optional — verify certificate online)</span>
-                            </label>
-                            <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
-                              <input
-                                type="url"
-                                placeholder="https://www.credly.com/badges/..."
-                                value={cert.credentialUrl || ""}
-                                onChange={(e) => handleChange(index, "credentialUrl", e.target.value)}
-                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? "bg-[#121213] text-white placeholder-slate-500" : "bg-white text-gray-900 placeholder-gray-400"}`}
-                              />
-                            </div>
-                          </div>
-
-                          {/* Proof Image Section */}
-                          <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm mt-4 sm:col-span-2`}>
-                            <div className={`p-4 rounded-[calc(0.75rem-2px)] flex flex-col gap-4 ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                              <div className="space-y-2">
-                                <label
-                                  className={`text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
-                                >
-                                  Proof Image (Certificate Image / Screenshot)
-                                </label>
-                                <div className="flex flex-col gap-2">
-                                  {cert.proofImage && !cert.proofImageFile && (
-                                    <div className="flex flex-wrap items-center gap-3">
-                                      <button
-                                        type="button"
-                                        onClick={() => setSelectedProofImage({ url: cert.proofImage, title: cert.name })}
-                                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20" : "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100"}`}
-                                      >
-                                        <ExternalLink size={14} />
-                                        View Current Proof Image
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={() => handleChange(index, "proofImage", "")}
-                                        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${darkMode ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"}`}
-                                      >
-                                        <Trash2 size={14} />
-                                        Remove
-                                      </button>
-                                    </div>
-                                  )}
-                                  {cert.proofImageFile && (
-                                    <span className="text-xs font-bold text-green-500">
-                                      {cert.proofImageFile.name} (Ready to upload)
-                                    </span>
-                                  )}
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) =>
-                                      handleChange(
-                                        index,
-                                        "proofImageFile",
-                                        e.target.files[0],
-                                      )
-                                    }
-                                    className={`text-sm w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-black file:uppercase file:tracking-widest file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 transition outline-none cursor-pointer ${darkMode ? "text-white" : "text-black"}`}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              <button
-                type="button"
-                onClick={addCertificate}
-                className={`w-full py-5 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all hover:border-solid hover:scale-[1.01] ${darkMode ? "border-blue-500/30 hover:border-blue-500 bg-blue-500/5 text-blue-400" : "border-blue-200 hover:border-blue-500 bg-blue-50 text-blue-600"}`}
-              >
-                <div className={`p-2 rounded-full ${darkMode ? "bg-blue-500/20" : "bg-blue-100"}`}>
-                  <Plus className="w-6 h-6" />
-                </div>
-                <span className="font-bold">Add Certificate</span>
-              </button>
-            </div>
-
-            {/* Footer */}
-            <div className={`p-4 md:p-6 border-t flex justify-end gap-3 flex-shrink-0 transition-all ${darkMode ? "bg-slate-800 border-white/5" : "bg-gray-50 border-gray-200"}`}>
-              <button
-                onClick={onClose}
-                className={`px-6 py-2.5 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm ${darkMode ? "border-white text-white hover:bg-white/10" : "border-black text-black hover:bg-gray-100"}`}
-              >
-                Cancel
-              </button>
-              <button
+              
+              <div className="flex items-center">
+<button
                 onClick={handleSave}
                 disabled={loading}
                 className="px-6 py-2.5 rounded-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-[1.02] transition-all flex items-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
@@ -496,6 +254,13 @@ export default function EditCertificatesModal({
                   </>
                 )}
               </button>
+<button
+                        onClick={onClose}
+                        className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition ml-3"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+</div>
             </div>
           </div>
         </div>

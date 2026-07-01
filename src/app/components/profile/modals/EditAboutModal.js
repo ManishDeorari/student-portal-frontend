@@ -53,38 +53,9 @@ export default function EditAboutModal({ isOpen, onClose, currentBio, onSave }) 
                     <h2 className="text-lg font-bold flex items-center gap-2">
                         <Info className="w-5 h-5" /> Edit About
                     </h2>
-                    <button
-                        onClick={onClose}
-                        className="text-white/80 hover:text-white hover:bg-[#FAFAFA]/20 p-1 rounded-full transition"
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
-                </div>
-
-                <div className="p-6 space-y-4">
-                    <div>
-                        <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                            <Info className="w-3.5 h-3.5" /> Your Bio
-                        </label>
-                        <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-sm">
-                            <textarea
-                                className={`w-full p-4 rounded-[calc(1rem-2.5px)] h-48 outline-none transition custom-scrollbar ${darkMode ? 'bg-[#121213] text-white placeholder-gray-500' : 'bg-white text-gray-800 placeholder-gray-400'}`}
-                                value={bio}
-                                onChange={(e) => setBio(e.target.value)}
-                                placeholder="Write something about yourself..."
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className={`p-4 flex justify-end gap-3 border-t transition-all ${darkMode ? 'bg-slate-800 border-white/5' : 'bg-gray-50 border-gray-200'}`}>
-                    <button 
-                        onClick={onClose} 
-                        className={`px-6 py-2.5 border-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm ${darkMode ? "border-white text-white hover:bg-white/10" : "border-black text-black hover:bg-gray-100"}`}
-                    >
-                        Cancel
-                    </button>
-                    <button
+                    
+                    <div className="flex items-center">
+<button
                         onClick={handleSave}
                         disabled={loading}
                         className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -92,6 +63,13 @@ export default function EditAboutModal({ isOpen, onClose, currentBio, onSave }) 
                         <Save className="w-4 h-4" />
                         {loading ? "Saving..." : "Save Changes"}
                     </button>
+<button
+                        onClick={onClose}
+                        className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition ml-3"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+</div>
                 </div>
             </div>
 
