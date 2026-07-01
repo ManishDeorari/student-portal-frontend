@@ -198,7 +198,7 @@ export default function EditBasicInfoModal({ isOpen, onClose, currentProfile, on
                         onClick={onClose}
                         className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition"
                     >
-                        <X className="w-5 h-5" />
+                        <X className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition" />
                     </button>
                 </div>
 

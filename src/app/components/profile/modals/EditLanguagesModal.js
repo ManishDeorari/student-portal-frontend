@@ -75,11 +75,11 @@ export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, 
                         <h2 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 flex items-center gap-2">
                             <Languages className="w-6 h-6 text-blue-500" /> Edit Languages
                         </h2>
-                    <button
+                        <button
                         onClick={onClose}
-                        className={`p-1 border-2 transition rounded-xl ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`}
+                        className={`p-1.5 border-2 rounded-full transition-colors ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/20'}`}
                     >
-                        <X className="w-5 h-5" />
+                        <X className={`p-1 border-2 transition rounded-xl ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`} />
                     </button>
                     </div>
 
