@@ -23,8 +23,7 @@ export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, 
         const trimmed = newLanguage.trim();
         if (!trimmed) return;
         
-        // Prevent duplicates
-        if (languages.some(l => l.toLowerCase() === trimmed.toLowerCase())) {
+        if (languages.some(lang => lang.toLowerCase() === trimmed.toLowerCase())) {
             toast.error("Language already added");
             return;
         }
@@ -33,8 +32,8 @@ export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, 
         setNewLanguage("");
     };
 
-    const handleRemoveLanguage = (langName) => {
-        setLanguages(languages.filter(l => l !== langName));
+    const handleRemoveLanguage = (langToRemove) => {
+        setLanguages(languages.filter(lang => lang !== langToRemove));
     };
 
     const handleSave = async () => {
@@ -75,12 +74,9 @@ export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, 
                         <h2 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 flex items-center gap-2">
                             <Languages className="w-6 h-6 text-blue-500" /> Edit Languages
                         </h2>
-                        <button
-                        onClick={onClose}
-                        className={`p-1.5 border-2 rounded-full transition-colors ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/20'}`}
-                    >
-                        <X className={`p-1 border-2 transition rounded-xl ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`} />
-                    </button>
+                        <button onClick={onClose} className={`p-1 border-2 transition rounded-xl ml-3 ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`}>
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
 
                     <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-6">
@@ -137,10 +133,10 @@ export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, 
                                                 </span>
                                                 <button
                                                     onClick={() => handleRemoveLanguage(lang)}
-                                                    className={`p-1 rounded-full transition-colors ${darkMode ? 'hover:bg-red-500/20 text-red-400' : 'hover:bg-red-50 text-red-500'}`}
+                                                    className={`p-1 rounded-full ${darkMode ? 'hover:bg-slate-800 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-500'} transition-colors`}
                                                     title="Remove language"
                                                 >
-                                                    <X className="w-4 h-4" />
+                                                    <X className="w-3.5 h-3.5" />
                                                 </button>
                                             </div>
                                         </div>
@@ -150,31 +146,33 @@ export default function EditLanguagesModal({ isOpen, onClose, currentLanguages, 
                         </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-white/10 flex justify-end flex-shrink-0">
+                    <div className="mt-8 pt-6 border-t flex justify-end gap-3 flex-shrink-0 border-opacity-20 border-gray-500">
                         <button
                             onClick={handleSave}
                             disabled={loading}
-                            className={`w-full sm:w-auto px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-white shadow-lg transition-all
-                                ${loading 
-                                    ? 'bg-gray-500 cursor-wait' 
-                                    : 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:shadow-purple-500/50 hover:scale-105 active:scale-95'
-                                }
-                            `}
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-95 active:scale-95 transition-transform disabled:opacity-70"
                         >
-                            {loading ? (
-                                <span className="flex items-center gap-2">
-                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Saving...
-                                </span>
-                            ) : (
-                                <>
-                                    <Save className="w-5 h-5" /> Save Languages
-                                </>
-                            )}
+                            <Save className="w-5 h-5" />
+                            {loading ? "Saving..." : "Save Languages"}
                         </button>
                     </div>
-
                 </div>
+
+                <style jsx>{`
+                    .custom-scrollbar::-webkit-scrollbar {
+                        width: 6px;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar-track {
+                        background: transparent;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar-thumb {
+                        background: ${darkMode ? '#333' : '#d1d5db'};
+                        border-radius: 10px;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                        background: ${darkMode ? '#555' : '#9ca3af'};
+                    }
+                `}</style>
             </div>
         </div>
     );

@@ -1,20 +1,8 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import {
-  X,
-  Trash2,
-  Plus,
-  Save,
-  ChevronDown,
-  ChevronRight,
-  CheckCircle2,
-  Award,
-  Calendar,
-  Link as LinkIcon,
-  Eye,
-  EyeOff,
-  Image as ImageIcon,
-  Upload,
+  X, Trash2, Plus, Save, ChevronDown, ChevronRight,
+  Award, Calendar, Link as LinkIcon, Eye, EyeOff, Image as ImageIcon, Upload, Info
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
@@ -24,29 +12,19 @@ const MONTHS = [
   "January", "February", "March", "April", "May", "June", 
   "July", "August", "September", "October", "November", "December"
 ];
+const YEARS = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i);
 
-const YEARS = Array.from(
-  { length: 50 },
-  (_, i) => new Date().getFullYear() - i
-);
-
-export default function EditAchievementsModal({
-  isOpen,
-  onClose,
-  currentAchievements,
-  onSave,
-}) {
+export default function EditAchievementsModal({ isOpen, onClose, currentAchievements, onSave }) {
   const { darkMode } = useTheme();
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [expandedIndex, setExpandedIndex] = useState(null);
+  const [expandedIndex, setExpandedIndex] = useState(0);
   const [selectedProofImage, setSelectedProofImage] = useState(null);
 
   useEffect(() => {
     if (currentAchievements && isOpen) {
       const transformed = currentAchievements.map((ach) => {
-        // Parse "Month Year" from ach.date
         let mMonth = "";
         let mYear = "";
         if (ach.date) {
@@ -58,7 +36,6 @@ export default function EditAchievementsModal({
                 mYear = parts[0] || "";
             }
         }
-
         return {
           title: ach.title || "",
           description: ach.description || "",
@@ -72,21 +49,20 @@ export default function EditAchievementsModal({
           activeTab: ach.proofImage ? 'image' : 'link'
         };
       });
-      setAchievements(transformed);
+      setAchievements(transformed.length ? transformed : [{
+        title: "", description: "", month: "", year: "",
+        link: "", isLinkPublic: false, proofImage: "", proofImageFile: null, isProofPublic: false, activeTab: 'link'
+      }]);
+    } else {
+        setAchievements([]);
     }
   }, [currentAchievements, isOpen]);
 
   if (!isOpen) return null;
 
   const handleChange = (index, field, value) => {
-    let processedValue = value;
-
-    if (field === "title") {
-      processedValue = processedValue.replace(/[^a-zA-Z0-9\s\.\-]/g, '');
-    }
-
     const updated = [...achievements];
-    updated[index][field] = processedValue;
+    updated[index][field] = value;
     setAchievements(updated);
     if (errors[`${index}-${field}`]) {
       const newErrors = { ...errors };
@@ -95,14 +71,14 @@ export default function EditAchievementsModal({
     }
   };
 
-  const handleFileChange = (index, file) => {
+  const handleFileChange = (index, e) => {
+    const file = e.target.files[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
-
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File size should be less than 5MB");
       return;
@@ -126,16 +102,8 @@ export default function EditAchievementsModal({
     setAchievements([
       ...achievements,
       {
-        title: "",
-        description: "",
-        month: "",
-        year: "",
-        link: "",
-        isLinkPublic: false,
-        proofImage: "",
-        proofImageFile: null,
-        isProofPublic: false,
-        activeTab: 'link'
+        title: "", description: "", month: "", year: "",
+        link: "", isLinkPublic: false, proofImage: "", proofImageFile: null, isProofPublic: false, activeTab: 'link'
       },
     ]);
     setExpandedIndex(achievements.length);
@@ -148,9 +116,11 @@ export default function EditAchievementsModal({
   const validate = () => {
     const newErrors = {};
     achievements.forEach((ach, idx) => {
-      if (!ach.title.trim()) newErrors[`${idx}-title`] = "Title is required";
-      if (!ach.month || !ach.year) newErrors[`${idx}-date`] = "Month and Year are required";
-      if (!ach.description.trim()) newErrors[`${idx}-description`] = "Description is required";
+      const hasData = ach.title || ach.description || ach.month || ach.year;
+      if (hasData) {
+        if (!ach.title.trim()) newErrors[`${idx}-title`] = "Title is required";
+        if (!ach.month || !ach.year) newErrors[`${idx}-date`] = "Month and Year are required";
+      }
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -165,15 +135,16 @@ export default function EditAchievementsModal({
 
     setLoading(true);
     try {
-      const uploadedAchievements = await Promise.all(
-        achievements.map(async (ach) => {
-          let proofImageUrl = ach.proofImage;
+      const validAchievements = achievements.filter(ach => ach.title || ach.description || ach.month || ach.year);
 
+      const uploadedAchievements = await Promise.all(
+        validAchievements.map(async (ach) => {
+          let proofImageUrl = ach.proofImage;
           if (ach.proofImageFile) {
             const formData = new FormData();
             formData.append("file", ach.proofImageFile);
             formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
-            formData.append("folder", "achievements_proof");
+            formData.append("folder", "achievements");
 
             try {
               const uploadRes = await fetch(
@@ -193,9 +164,8 @@ export default function EditAchievementsModal({
               console.error("Cloudinary upload error:", err);
             }
           }
-
           return { ...ach, proofImage: proofImageUrl };
-        }),
+        })
       );
 
       const finalData = uploadedAchievements.map((ach) => ({
@@ -211,10 +181,7 @@ export default function EditAchievementsModal({
       const token = localStorage.getItem("token");
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ achievements: finalData }),
       });
 
@@ -229,66 +196,235 @@ export default function EditAchievementsModal({
       console.error(error);
       toast.error("Error updating achievements");
     } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+      setTimeout(() => setLoading(false), 1000);
     }
   };
 
   const achWithProof = achievements.filter(
-    (a) => (a.proofImage && a.proofImage.trim().length > 0) || (a.link && a.link.trim().length > 0)
+    (a) => (a.proofImage && a.proofImage.trim().length > 0 && !a.proofImage.startsWith("blob")) || (a.link && a.link.trim().length > 0)
   ).length;
   const achPointsEarning = Math.min(achWithProof, 3) * 15;
 
   return (
     <>
       <LoadingOverlay isVisible={loading} />
-      <div className="fixed inset-0 h-[100dvh] w-full bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-2 md:p-4 text-gray-900">
-        <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl sm:rounded-[2.5rem] shadow-[0_20px_60px_rgba(99,102,241,0.4)] w-full max-w-3xl">
-          <div
-            className={`rounded-[calc(1rem-2.5px)] sm:rounded-[calc(2.5rem-2.5px)] w-full shadow-2xl overflow-hidden animate-fadeIn max-h-[95dvh] sm:max-h-[90vh] flex flex-col transition-colors duration-500 ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"}`}
-          >
+      <div className="fixed inset-0 h-[100dvh] w-full bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+        <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl sm:rounded-[2.5rem] shadow-[0_20px_60px_rgba(99,102,241,0.4)] w-full max-w-4xl max-h-[95dvh] sm:max-h-[90vh]">
+          <div className={`rounded-[calc(2.5rem-2.5px)] w-full shadow-2xl overflow-hidden animate-fadeIn flex flex-col transition-colors duration-500 max-h-[90vh] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+            
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex justify-between items-center text-white flex-shrink-0">
-              <h2 className="text-lg font-bold flex items-center gap-2">
-                <Award className="w-5 h-5" /> Edit Achievements
-              </h2>
-              
-              <div className="flex items-center">
-<button
-                onClick={handleSave}
-                disabled={loading}
-                className="px-6 py-2.5 rounded-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-[1.02] transition-all flex items-center gap-2 disabled:opacity-70"
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Saving...
-                  </span>
-                ) : (
-                  <>
-                    <Save className="w-5 h-5" /> Save Entries
-                  </>
-                )}
-              </button>
-<button
-                        onClick={onClose}
-                        className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition ml-3"
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex justify-between items-center text-white shrink-0">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                    <Award className="w-5 h-5" /> Edit Achievements
+                </h2>
+                <button
+                    onClick={onClose}
+                    className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition ml-3"
+                >
+                    <X className="w-5 h-5" />
+                </button>
+            </div>
+
+            {/* Hint Banner */}
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-blue-500/20 p-3 shrink-0 flex items-start gap-2">
+                <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+                <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    Add proof images or links for your achievements to earn profile points! (Max 3 proofs, 15 pts each). 
+                    Current points from achievements: <span className="font-bold text-blue-500">{achPointsEarning} / 45</span>
+                </p>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+              {achievements.map((ach, idx) => (
+                <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${expandedIndex === idx ? (darkMode ? 'bg-[#1e1e1e] border-blue-500' : 'bg-blue-50 border-blue-400') : (darkMode ? 'bg-transparent border-white/5 hover:border-white/10' : 'bg-white border-gray-100 hover:border-gray-200')}`}>
+                    <div 
+                        className="flex justify-between items-center cursor-pointer"
+                        onClick={() => setExpandedIndex(expandedIndex === idx ? -1 : idx)}
                     >
-                        <X className="w-5 h-5" />
-                    </button>
-</div>
+                        <div className="flex items-center gap-3">
+                            <Award className="w-5 h-5 text-blue-500" />
+                            <div>
+                                <h3 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                    {ach.title || "New Achievement"}
+                                </h3>
+                                {ach.year && <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{ach.month} {ach.year}</p>}
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); removeAchievement(idx); }}
+                                className="p-1.5 text-red-500 hover:bg-red-500/10 rounded-lg transition"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                            {expandedIndex === idx ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                        </div>
+                    </div>
+
+                    {expandedIndex === idx && (
+                        <div className="mt-4 space-y-4 pt-4 border-t border-gray-200 dark:border-white/10">
+                            
+                            <div>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title</label>
+                                <input
+                                    type="text"
+                                    value={ach.title}
+                                    onChange={(e) => handleChange(idx, "title", e.target.value)}
+                                    className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-title`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                                    placeholder="Ex: 1st Place Hackathon, Best Employee Award"
+                                />
+                                {errors[`${idx}-title`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-title`]}</p>}
+                            </div>
+
+                            <div>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Date</label>
+                                <div className="flex gap-2">
+                                    <select
+                                        value={ach.month}
+                                        onChange={(e) => handleChange(idx, "month", e.target.value)}
+                                        className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-date`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                                    >
+                                        <option value="">Month</option>
+                                        {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                                    </select>
+                                    <select
+                                        value={ach.year}
+                                        onChange={(e) => handleChange(idx, "year", e.target.value)}
+                                        className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-date`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                                    >
+                                        <option value="">Year</option>
+                                        {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                                    </select>
+                                </div>
+                                {errors[`${idx}-date`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-date`]}</p>}
+                            </div>
+
+                            <div>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description</label>
+                                <textarea
+                                    value={ach.description}
+                                    onChange={(e) => handleChange(idx, "description", e.target.value)}
+                                    rows={3}
+                                    className={`w-full p-3 rounded-xl border-2 outline-none transition resize-none ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
+                                    placeholder="Describe your achievement..."
+                                />
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className={`block text-xs font-black uppercase tracking-widest ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Proof</label>
+                                    <div className={`flex rounded-lg overflow-hidden border ${darkMode ? 'border-white/10' : 'border-gray-200'}`}>
+                                        <button
+                                            onClick={() => handleChange(idx, 'activeTab', 'link')}
+                                            className={`px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 transition ${ach.activeTab === 'link' ? (darkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
+                                        >
+                                            <LinkIcon className="w-3.5 h-3.5" /> URL Link
+                                        </button>
+                                        <button
+                                            onClick={() => handleChange(idx, 'activeTab', 'image')}
+                                            className={`px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 transition ${ach.activeTab === 'image' ? (darkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
+                                        >
+                                            <ImageIcon className="w-3.5 h-3.5" /> Image Proof
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {ach.activeTab === 'link' ? (
+                                    <div className="relative">
+                                        <LinkIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            value={ach.link}
+                                            onChange={(e) => handleChange(idx, "link", e.target.value)}
+                                            className={`w-full p-2.5 pl-10 pr-24 rounded-xl border-2 outline-none transition ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
+                                            placeholder="https://..."
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className={`flex items-center gap-4 p-3 rounded-xl border-2 border-dashed ${darkMode ? 'border-white/20' : 'border-gray-300'}`}>
+                                        {ach.proofImage ? (
+                                            <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
+                                                <img src={ach.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
+                                                <button 
+                                                    onClick={() => removeProofImage(idx)}
+                                                    className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className={`w-16 h-16 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-white/5`}>
+                                                <Upload className="w-6 h-6 text-gray-400" />
+                                            </div>
+                                        )}
+                                        <div className="flex-1">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                id={`ach-proof-${idx}`}
+                                                className="hidden"
+                                                onChange={(e) => handleFileChange(idx, e)}
+                                            />
+                                            <label htmlFor={`ach-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
+                                                {ach.proofImage ? "Change Image" : "Upload Proof Image"}
+                                            </label>
+                                            <p className="text-xs text-gray-500 mt-1">Max 5MB (JPG, PNG)</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+              ))}
+
+              <button
+                  onClick={addAchievement}
+                  className={`w-full py-4 border-2 border-dashed rounded-xl transition flex items-center justify-center gap-2 font-bold ${darkMode ? 'border-white/10 text-blue-400 hover:border-blue-500 hover:bg-blue-500/10' : 'border-gray-200 text-blue-600 hover:border-blue-400 hover:bg-blue-50'}`}
+              >
+                  <Plus className="w-5 h-5" /> Add Another Achievement
+              </button>
+            </div>
+
+            {/* Footer */}
+            <div className={`p-4 flex justify-end gap-3 flex-shrink-0 ${darkMode ? 'bg-slate-800/50 border-t border-white/5' : 'bg-gray-50 border-t'}`}>
+                <button
+                    onClick={handleSave}
+                    disabled={loading}
+                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transition transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                    <Save className="w-4 h-4" />
+                    {loading ? "Saving..." : "Save Changes"}
+                </button>
             </div>
           </div>
+
+          <style jsx>{`
+              .custom-scrollbar::-webkit-scrollbar {
+                  width: 6px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-track {
+                  background: transparent;
+              }
+              .custom-scrollbar::-webkit-scrollbar-thumb {
+                  background: ${darkMode ? '#333' : '#d1d5db'};
+                  border-radius: 10px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                  background: ${darkMode ? '#555' : '#9ca3af'};
+              }
+          `}</style>
         </div>
       </div>
 
       {selectedProofImage && (
-        <ImageViewerModal
-          imageUrl={selectedProofImage.url}
-          downloadName={`${selectedProofImage.title} - Proof`}
-          onClose={() => setSelectedProofImage(null)}
-        />
+          <ImageViewerModal
+              isOpen={!!selectedProofImage}
+              onClose={() => setSelectedProofImage(null)}
+              imageUrl={selectedProofImage}
+              title="Achievement Proof"
+          />
       )}
     </>
   );

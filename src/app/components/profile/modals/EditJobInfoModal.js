@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
-import { X, Briefcase, BarChart, Settings, Layers, Code, Heart, MapPin, Clock, DollarSign, FileText } from "lucide-react";
-import { useTheme } from "@/context/ThemeContext";
-import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
 
-export default function EditJobInfoModal({ isOpen, onClose, currentProfile, onSave }) {
-    const { darkMode } = useTheme();
-    const [workProfile, setWorkProfile] = useState({});
-    const [jobPreferences, setJobPreferences] = useState({});
-    const [skills, setSkills] = useState("");
-    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
+
+
+
+
+
+
+
+
+
+
+
+
         if (currentProfile) {
             setWorkProfile(currentProfile.workProfile || {});
             setJobPreferences(currentProfile.jobPreferences || {});
@@ -22,26 +22,15 @@ export default function EditJobInfoModal({ isOpen, onClose, currentProfile, onSa
     if (!isOpen) return null;
 
     const handleWorkChange = (field, value) => {
-        let processedValue = value;
-        if (field === "experience") {
-            processedValue = processedValue.replace(/[^0-9\.]/g, '');
-        } else if (field === "industry" || field === "functionalArea" || field === "subFunctionalArea") {
-            processedValue = processedValue.replace(/[^a-zA-Z0-9\s\.\-]/g, '');
-        }
-        setWorkProfile((prev) => ({ ...prev, [field]: processedValue }));
+        setWorkProfile((prev) => ({ ...prev, [field]: value }));
     };
 
     const handleJobChange = (field, value) => {
-        let processedValue = value;
-        if (field === "preferredRoles") {
-            processedValue = processedValue.replace(/[^a-zA-Z0-9\s\.\-,]/g, '');
-        }
-        setJobPreferences((prev) => ({ ...prev, [field]: processedValue }));
+        setJobPreferences((prev) => ({ ...prev, [field]: value }));
     };
 
     const handleLocationsChange = (value) => {
-        let processedValue = value.replace(/[^a-zA-Z\s\-,]/g, '');
-        const locations = processedValue.split(",").map((loc) => loc.trim());
+        const locations = value.split(",").map((loc) => loc.trim());
         setJobPreferences((prev) => ({ ...prev, preferredLocations: locations }));
     };
 
@@ -54,10 +43,10 @@ export default function EditJobInfoModal({ isOpen, onClose, currentProfile, onSa
             const updateData = {
                 workProfile,
                 jobPreferences,
-                skills: skillsArray,
-            };
 
-            const token = localStorage.getItem("token");
+
+
+
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update`, {
                 method: "PUT",
                 headers: {
@@ -95,42 +84,33 @@ export default function EditJobInfoModal({ isOpen, onClose, currentProfile, onSa
                     <h2 className="text-lg font-bold flex items-center gap-2">
                         <Briefcase className="w-5 h-5" /> Edit Job Info & Skills
                     </h2>
-                    
-                    <div className="flex items-center">
-<button
-                        onClick={handleSave}
-                        disabled={loading}
-                        className="flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
-                    >
-                        {loading ? "Saving..." : "Save All Changes"}
-                    </button>
-<button
+                    <button
                         onClick={onClose}
-                        className="text-white hover:bg-white/20 p-1 border-2 border-white rounded-xl transition ml-3"
+                        className="text-white/80 hover:text-white hover:bg-[#FAFAFA]/20 p-1 rounded-full transition"
                     >
                         <X className="w-5 h-5" />
                     </button>
-</div>
                 </div>
-            </div>
 
-            <style jsx>{`
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 6px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: ${darkMode ? '#334155' : '#d1d5db'};
-                    border-radius: 10px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: ${darkMode ? '#475569' : '#9ca3af'};
-                }
-            `}</style>
-            </div>
-        </div>
-        </>
-    );
-}
+                <div className={`p-6 space-y-6 overflow-y-auto custom-scrollbar flex-grow ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                    {/* Work Profile Section */}
+                    <div className={`p-5 rounded-2xl border transition-all duration-300 ${darkMode ? 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-800/60' : 'bg-gray-50/50 border-gray-200 hover:bg-gray-50'}`}>
+                        <h3 className={`font-bold mb-4 flex items-center gap-2 ${darkMode ? 'text-blue-400' : 'text-blue-700'}`}>
+                            <Settings className="w-4 h-4" /> Current Work Profile
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {[
+                                { label: "Functional Area", field: "functionalArea", target: "work" },
+                                { label: "Sub-Functional Area", field: "subFunctionalArea", target: "work" },
+                                { label: "Experience", field: "experience", target: "work" },
+                                { label: "Industry", field: "industry", target: "work" }
+                            ].map((item) => (
+                                <div key={item.field}>
+                                    <label className={`block text-[10px] font-black mb-1.5 uppercase tracking-widest ${darkMode ? 'text-slate-400' : 'text-gray-500'}`}>
+                                        {item.label}
+                                    </label>
+                                    <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm">
+                                        <input
+                                            type="text"
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] text-sm outline-none transition ${darkMode ? 'bg-[#121213] text-white placeholder-slate-500' : 'bg-white text-gray-900 placeholder-gray-400'}`}
+                                            value={workProfile[item.field] || "\

@@ -10,12 +10,10 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
     const [newCategory, setNewCategory] = useState("");
     const [loading, setLoading] = useState(false);
 
-    // Predefined suggestions for autocomplete
     const categorySuggestions = ["Languages", "Developer Tools", "Frameworks", "Databases", "Coursework", "Areas of Interest", "Soft Skills", "Core Competencies", "Other"];
 
     useEffect(() => {
         if (isOpen) {
-            // Copy existing skills and preserve endorsements
             setSkills(currentSkills ? [...currentSkills] : []);
             setNewSkill("");
         }
@@ -28,7 +26,6 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
         const trimmed = newSkill.trim();
         if (!trimmed) return;
         
-        // Prevent duplicates
         if (skills.some(s => s.name.toLowerCase() === trimmed.toLowerCase())) {
             toast.error("Skill already added");
             return;
@@ -37,7 +34,6 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
         const catTrimmed = newCategory.trim() || "Other";
         setSkills([...skills, { name: trimmed, category: catTrimmed, endorsements: [] }]);
         setNewSkill("");
-        // Intentionally keep category same to allow fast entry of multiple skills in one category
     };
 
     const handleRemoveSkill = (skillName) => {
@@ -84,27 +80,120 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         </h2>
                         
                         <div className="flex items-center">
-<button
+                            <button onClick={onClose} className={`p-1 border-2 transition rounded-xl ml-3 ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`}>
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="overflow-y-auto flex-1 pr-2 custom-scrollbar space-y-6">
+                        <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 rounded-xl">
+                            <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
+                                <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                                <div className="text-sm leading-relaxed">
+                                    <p className="font-bold mb-0.5">Automated Points System Active!</p>
+                                    <p>Adding skills awards you points automatically based on quantity. Add more skills to earn more points!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleAddSkill} className="space-y-4">
+                            <div className="flex flex-col sm:flex-row gap-3">
+                                <div className="flex-[2] p-[2px] rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600">
+                                    <input
+                                        type="text"
+                                        value={newSkill}
+                                        onChange={(e) => setNewSkill(e.target.value)}
+                                        placeholder="Skill (e.g. React.js)"
+                                        className={`w-full h-full px-4 py-3 rounded-[calc(0.75rem-2px)] font-bold ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} outline-none transition-colors`}
+                                    />
+                                </div>
+                                <div className="flex-[1.5] p-[2px] rounded-xl bg-gradient-to-tr from-purple-600 to-pink-600">
+                                    <input
+                                        type="text"
+                                        value={newCategory}
+                                        onChange={(e) => setNewCategory(e.target.value)}
+                                        list="category-suggestions"
+                                        placeholder="Category"
+                                        className={`w-full h-full px-4 py-3 rounded-[calc(0.75rem-2px)] font-bold ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'} outline-none transition-colors`}
+                                    />
+                                    <datalist id="category-suggestions">
+                                        {categorySuggestions.map(cat => (
+                                            <option key={cat} value={cat} />
+                                        ))}
+                                    </datalist>
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={!newSkill.trim()}
+                                    className="px-6 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-500 hover:to-pink-500 transition-all disabled:opacity-50 flex justify-center items-center"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                </button>
+                            </div>
+                        </form>
+
+                        <div className="space-y-6">
+                            {skills.length === 0 && (
+                                <p className={`text-sm italic ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>No skills added yet.</p>
+                            )}
+                            
+                            {Array.from(new Set(skills.map(s => s.category || "Other"))).map(category => (
+                                <div key={category} className={`p-4 rounded-2xl border ${darkMode ? 'bg-slate-800/40 border-gray-700' : 'bg-gray-50 border-gray-200'} space-y-3`}>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-sm"></div>
+                                        <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                            {category}
+                                        </h4>
+                                    </div>
+                                    <div className="flex flex-wrap gap-3">
+                                        {skills.filter(s => (s.category || "Other") === category).map((skill, idx) => (
+                                            <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md relative z-10">
+                                                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(9999px-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                                    <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{skill.name}</span>
+                                                    <button
+                                                        onClick={() => handleRemoveSkill(skill.name)}
+                                                        className={`p-1 rounded-full ${darkMode ? 'hover:bg-slate-800 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-500'} transition-colors`}
+                                                        title="Remove skill"
+                                                    >
+                                                        <X className="w-3.5 h-3.5" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mt-8 pt-6 border-t flex justify-end gap-3 flex-shrink-0 border-opacity-20 border-gray-500">
+                        <button
                             onClick={handleSave}
                             disabled={loading}
                             className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-95 active:scale-95 transition-transform disabled:opacity-70"
                         >
-                            {loading ? (
-                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            ) : (
-                                <Save className="w-5 h-5" />
-                            )}
-                            Save Skills
+                            <Save className="w-5 h-5" />
+                            {loading ? "Saving..." : "Save Skills"}
                         </button>
-<button
-                        onClick={onClose}
-                        className={`p-1 border-2 transition rounded-xl ml-3 ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`}
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
-</div>
                     </div>
                 </div>
+
+                <style jsx>{`
+                    .custom-scrollbar::-webkit-scrollbar {
+                        width: 6px;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar-track {
+                        background: transparent;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar-thumb {
+                        background: ${darkMode ? '#333' : '#d1d5db'};
+                        border-radius: 10px;
+                    }
+                    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                        background: ${darkMode ? '#555' : '#9ca3af'};
+                    }
+                `}</style>
             </div>
         </div>
     );
