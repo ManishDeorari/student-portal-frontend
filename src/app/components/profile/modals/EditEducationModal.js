@@ -598,11 +598,11 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                             background: transparent;
                         }
                         .custom-scrollbar::-webkit-scrollbar-thumb {
-                            background: ${darkMode ? '#333' : '#d1d5db'};
+                            background: linear-gradient(to bottom, #2563eb, #9333ea);
                             border-radius: 10px;
                         }
                         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                            background: ${darkMode ? '#555' : '#9ca3af'};
+                            background: linear-gradient(to bottom, #1d4ed8, #7e22ce);
                         }
                     `}</style>
         </div>
