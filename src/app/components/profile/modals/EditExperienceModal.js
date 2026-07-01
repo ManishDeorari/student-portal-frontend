@@ -157,14 +157,13 @@ export default function EditExperienceModal({
           skills: Array.isArray(exp.skills)
             ? exp.skills.join(", ")
             : exp.skills || "",
-          isInternship: exp.isInternship || false,
           proofImage: exp.proofImage || "",
           proofImageFile: null,
         };
       });
       setExperiences(transformed.length ? transformed : [{
         title: "", company: "", employmentType: "", locationType: "", selectedCountry: "", selectedState: "", selectedCity: "",
-        startMonth: "", startYear: "", isCurrent: false, endMonth: "", endYear: "", description: "", skills: "", isInternship: false, proofImage: "", proofImageFile: null
+        startMonth: "", startYear: "", isCurrent: false, endMonth: "", endYear: "", description: "", skills: "", proofImage: "", proofImageFile: null
       }]);
     } else {
       setExperiences([]);
@@ -223,7 +222,6 @@ export default function EditExperienceModal({
         endYear: "",
         description: "",
         skills: "",
-        isInternship: false,
         proofImage: "",
         proofImageFile: null,
       },
@@ -243,12 +241,15 @@ export default function EditExperienceModal({
         if (!exp.title) newErrors[`${idx}-title`] = "Title is required";
         if (!exp.company) newErrors[`${idx}-company`] = "Company is required";
         if (!exp.employmentType) newErrors[`${idx}-employmentType`] = "Employment type is required";
+        if (!exp.locationType) newErrors[`${idx}-locationType`] = "Location type is required";
         if (!exp.startMonth || !exp.startYear)
           newErrors[`${idx}-startDate`] = "Start date required";
         if (!exp.isCurrent && (!exp.endMonth || !exp.endYear))
           newErrors[`${idx}-endDate`] = "End date required";
         if (!exp.description || exp.description.trim().length === 0)
           newErrors[`${idx}-description`] = "Description is required";
+        if (!exp.selectedCountry || !exp.selectedState || !exp.selectedCity)
+          newErrors[`${idx}-location`] = "Complete location is required";
       }
     });
     setErrors(newErrors);
@@ -336,7 +337,6 @@ export default function EditExperienceModal({
                 .map((s) => s.trim())
                 .filter((s) => s !== "")
               : [],
-          isInternship: exp.isInternship,
           proofImage: exp.proofImage,
         };
       });
@@ -432,7 +432,6 @@ export default function EditExperienceModal({
                         <div>
                           <h3 className={`font-bold flex items-center gap-2 ${darkMode ? 'text-white' : 'text-black'}`}>
                             {exp.title || "New Experience"}
-                            {exp.isInternship && <span className="px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-500 text-[10px] uppercase font-black tracking-wider">Internship</span>}
                           </h3>
                           {exp.company && <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{exp.company}</p>}
                         </div>
@@ -453,7 +452,7 @@ export default function EditExperienceModal({
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title</label>
+                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title <span className="text-red-500">*</span></label>
                             <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-title`] ? 'from-red-500 to-red-600' : ''}`}>
                               <input
                                 type="text"
@@ -468,7 +467,7 @@ export default function EditExperienceModal({
                           </div>
 
                           <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Company Name</label>
+                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Company Name <span className="text-red-500">*</span></label>
                             <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-company`] ? 'from-red-500 to-red-600' : ''}`}>
                               <input
                                 type="text"
@@ -485,7 +484,7 @@ export default function EditExperienceModal({
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Employment Type</label>
+                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Employment Type <span className="text-red-500">*</span></label>
                             <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-employmentType`] ? 'from-red-500 to-red-600' : ''}`}>
                               <select
                                 value={exp.employmentType}
@@ -499,23 +498,9 @@ export default function EditExperienceModal({
                             {errors[`${idx}-employmentType`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-employmentType`]}</p>}
                           </div>
 
-                          <div className="flex flex-col justify-end">
-                            <label className="flex items-center gap-2 cursor-pointer p-2.5">
-                              <input
-                                type="checkbox"
-                                checked={exp.isInternship}
-                                onChange={(e) => handleChange(idx, "isInternship", e.target.checked)}
-                                className="rounded w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                              />
-                              <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-black'}`}>This is an Internship</span>
-                            </label>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Location</label>
-                          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm sm:col-span-1`}>
+                          <div>
+                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Location Type <span className="text-red-500">*</span></label>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-locationType`] ? 'from-red-500 to-red-600' : ''}`}>
                               <select
                                 value={exp.locationType}
                                 onChange={(e) => handleChange(idx, "locationType", e.target.value)}
@@ -525,7 +510,14 @@ export default function EditExperienceModal({
                                 {LOCATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                               </select>
                             </div>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm sm:col-span-1`}>
+                            {errors[`${idx}-locationType`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-locationType`]}</p>}
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Location <span className="text-red-500">*</span></label>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm sm:col-span-1 ${errors[`${idx}-location`] ? 'from-red-500 to-red-600' : ''}`}>
                               <select
                                 value={exp.selectedCountry}
                                 onChange={(e) => {
@@ -541,7 +533,7 @@ export default function EditExperienceModal({
                                 {Country.getAllCountries().map(c => <option key={c.isoCode} value={c.isoCode}>{c.name}</option>)}
                               </select>
                             </div>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm sm:col-span-1`}>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm sm:col-span-1 ${errors[`${idx}-location`] ? 'from-red-500 to-red-600' : ''}`}>
                               <select
                                 value={exp.selectedState}
                                 onChange={(e) => {
@@ -557,7 +549,7 @@ export default function EditExperienceModal({
                                 {exp.selectedCountry && State.getStatesOfCountry(exp.selectedCountry).map(s => <option key={s.isoCode} value={s.isoCode}>{s.name}</option>)}
                               </select>
                             </div>
-                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm sm:col-span-1`}>
+                            <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm sm:col-span-1 ${errors[`${idx}-location`] ? 'from-red-500 to-red-600' : ''}`}>
                               <select
                                 value={exp.selectedCity}
                                 onChange={(e) => handleChange(idx, "selectedCity", e.target.value)}
@@ -569,11 +561,12 @@ export default function EditExperienceModal({
                               </select>
                             </div>
                           </div>
+                          {errors[`${idx}-location`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-location`]}</p>}
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Start Date</label>
+                            <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Start Date <span className="text-red-500">*</span></label>
                             <div className="flex gap-2">
                               <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-startDate`] ? 'from-red-500 to-red-600' : ''}`}>
                                 <select
@@ -601,7 +594,7 @@ export default function EditExperienceModal({
 
                           <div>
                             <div className="flex justify-between items-center mb-1.5">
-                              <label className={`block text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>End Date</label>
+                              <label className={`block text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>End Date {!exp.isCurrent && <span className="text-red-500">*</span>}</label>
                               <label className={`flex items-center gap-1.5 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-black'}`}>
                                 <input type="checkbox" checked={exp.isCurrent} onChange={(e) => handleChange(idx, "isCurrent", e.target.checked)} className="rounded text-blue-600 focus:ring-blue-500" />
                                 I currently work here
@@ -636,7 +629,7 @@ export default function EditExperienceModal({
                         </div>
 
                         <div>
-                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description</label>
+                          <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description <span className="text-red-500">*</span></label>
                           <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-description`] ? 'from-red-500 to-red-600' : ''}`}>
                             <textarea
                               value={exp.description}

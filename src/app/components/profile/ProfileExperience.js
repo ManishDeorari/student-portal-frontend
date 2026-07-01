@@ -73,11 +73,6 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
                                         <div className="flex flex-col">
                                             <h3 className={`text-base font-black leading-tight flex items-center gap-2 ${darkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600'}`}>
                                                 {exp.title}
-                                                {exp.isInternship && (
-                                                    <span className={`text-[9px] px-2 py-0.5 rounded-full border ${darkMode ? 'border-purple-400/30 text-purple-400 bg-purple-400/10' : 'border-purple-200 text-purple-600 bg-purple-50'}`}>
-                                                        Internship
-                                                    </span>
-                                                )}
                                             </h3>
                                             <p className={`text-sm font-black mt-1 ${darkMode ? 'text-slate-100' : 'text-slate-900'}`}>
                                                 {exp.company}
