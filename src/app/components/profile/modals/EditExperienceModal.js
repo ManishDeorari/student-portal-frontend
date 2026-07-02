@@ -112,6 +112,9 @@ export default function EditExperienceModal({
     exp.description;
 
   useEffect(() => {
+    if (isOpen) {
+      setExpandedIndex(null);
+    }
     if (currentExperience && isOpen) {
       const transformed = currentExperience.map((exp) => {
         const [sMonth, sYear] = (exp.startDate || "").split(" ");

@@ -85,6 +85,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
 
   useEffect(() => {
     if (isOpen) {
+      setExpandedIndex(null);
       const existingMap = (currentEducation || []).reduce((acc, edu) => {
         const key = edu.level || edu.degree;
         acc[key] = edu;
@@ -377,7 +378,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                               className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition disabled:opacity-50 ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-black'}`}
                             >
                               <option value="">Select Degree</option>
-                              {DEGREE_SUGGESTIONS.map(d => <option key={d} value={d}>{d}</option>)}
+                              {DEGREE_SUGGESTIONS.filter(d => edu.isMandatory || (d !== "High School (Secondary - Class 10)" && d !== "Intermediate (Higher Secondary - Class 12)")).map(d => <option key={d} value={d}>{d}</option>)}
                             </select>
                           </div>
                         </div>

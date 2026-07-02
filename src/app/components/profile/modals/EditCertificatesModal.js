@@ -49,6 +49,9 @@ export default function EditCertificatesModal({
     cert.name && cert.issuer && cert.issueMonth && cert.issueYear;
 
   useEffect(() => {
+    if (isOpen) {
+      setExpandedIndex(null);
+    }
     if (currentCertificates && isOpen) {
       const transformed = currentCertificates.map((cert) => {
         let cMonth = "",

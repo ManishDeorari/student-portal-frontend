@@ -21,6 +21,9 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
   const [expandedIndex, setExpandedIndex] = useState(null);
 
   useEffect(() => {
+    if (isOpen) {
+      setExpandedIndex(null);
+    }
     if (currentProjects && isOpen) {
       const transformed = currentProjects.map((p) => {
         const parseDate = (dateStr) => {
