@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import {
   X, Trash2, Plus, Save, ChevronDown, ChevronRight,
-  FolderGit2, Calendar, Link as LinkIcon, Target, Eye, EyeOff, Wrench, Info
+  FolderGit2, Calendar, Link as LinkIcon, Target, Eye, EyeOff, Wrench, Info, Globe, Lock
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
@@ -357,22 +357,32 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                                                 placeholder="https://..."
                                             />
                                         </div>
-                                        <label className={`flex items-center gap-2 cursor-pointer p-[2px] rounded-xl transition-all ${project.link && !project.isLinkPublic ? 'bg-gradient-to-r from-red-500 to-red-600' : darkMode ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-200 hover:bg-gray-300'}`}>
-                                            <div className={`flex items-center gap-2 w-full px-4 py-2.5 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
-                                                <input 
-                                                    type="checkbox"
-                                                    checked={!project.isLinkPublic}
-                                                    onChange={(e) => handleChange(idx, "isLinkPublic", !e.target.checked)}
-                                                    className="w-4 h-4 rounded text-blue-500 bg-gray-100 border-gray-300 focus:ring-blue-500 cursor-pointer"
-                                                />
-                                                <div className="flex flex-col">
-                                                    <span className={`text-sm font-bold ${project.link && !project.isLinkPublic ? 'text-red-500' : darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                        Keep project link private
-                                                    </span>
-                                                    <span className={`text-[10px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Only faculty & admin can view</span>
-                                                </div>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm mt-1`}>
+                                            <div className={`p-1.5 rounded-[calc(0.75rem-2px)] flex gap-1 ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.preventDefault(); handleChange(idx, "isLinkPublic", true); }}
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                        project.isLinkPublic 
+                                                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md' 
+                                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
+                                                    }`}
+                                                >
+                                                    <Globe className="w-4 h-4" /> Public
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.preventDefault(); handleChange(idx, "isLinkPublic", false); }}
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                        !project.isLinkPublic 
+                                                            ? 'bg-gradient-to-r from-slate-600 to-gray-700 text-white shadow-md' 
+                                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
+                                                    }`}
+                                                >
+                                                    <Lock className="w-4 h-4" /> Private
+                                                </button>
                                             </div>
-                                        </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

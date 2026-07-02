@@ -14,7 +14,9 @@ import {
   Award,
   Link as LinkIcon,
   ExternalLink,
-  Info
+  Info,
+  Globe,
+  Lock
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
@@ -456,15 +458,30 @@ export default function EditCertificatesModal({
                                       )}
                                     </div>
                                     <div className={`pt-2 px-4 pb-3 rounded-b-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
-                                        <label className={`flex items-center gap-2 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-gray-700'}`}>
-                                            <input 
-                                                type="checkbox" 
-                                                checked={cert.isPrivate} 
-                                                onChange={(e) => handleChange(idx, "isPrivate", e.target.checked)} 
-                                                className="rounded text-blue-600 focus:ring-blue-500" 
-                                            />
-                                            Keep proof image private (only faculty/admin can view)
-                                        </label>
+                                        <div className={`p-1.5 rounded-[calc(0.75rem-2px)] flex gap-1 ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => { e.preventDefault(); handleChange(idx, "isPrivate", false); }}
+                                                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                    !cert.isPrivate 
+                                                        ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md' 
+                                                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/10'
+                                                }`}
+                                            >
+                                                <Globe className="w-4 h-4" /> Public
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => { e.preventDefault(); handleChange(idx, "isPrivate", true); }}
+                                                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                    cert.isPrivate 
+                                                        ? 'bg-gradient-to-r from-slate-600 to-gray-700 text-white shadow-md' 
+                                                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/10'
+                                                }`}
+                                            >
+                                                <Lock className="w-4 h-4" /> Private
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
