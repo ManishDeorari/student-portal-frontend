@@ -13,7 +13,7 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
     const handleSave = (updatedUser) => {
         setProfile((prev) => ({
             ...prev,
-            experience: updatedUser.experience,
+            ...updatedUser,
         }));
     };
     const calculateDuration = (startDate, endDate) => {
@@ -163,3 +163,4 @@ export default function ProfileExperience({ profile, setProfile, isPublicView })
         </>
     );
 }
+

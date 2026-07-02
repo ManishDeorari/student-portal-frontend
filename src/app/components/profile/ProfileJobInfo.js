@@ -11,7 +11,7 @@ export default function ProfileJobInfo({ profile, setProfile }) {
     const handleSave = (updatedUser) => {
         setProfile((prev) => ({
             ...prev,
-            workProfile: updatedUser.workProfile,
+            ...updatedUser,
             jobPreferences: updatedUser.jobPreferences,
             skills: updatedUser.skills,
         }));
@@ -89,3 +89,4 @@ export default function ProfileJobInfo({ profile, setProfile }) {
         </>
     );
 }
+

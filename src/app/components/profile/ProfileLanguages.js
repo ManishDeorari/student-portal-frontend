@@ -9,7 +9,7 @@ export default function ProfileLanguages({ profile, setProfile, isPublicView }) 
     const [isEditing, setIsEditing] = useState(false);
 
     const handleSave = (updatedUser) => {
-        setProfile(updatedUser);
+        setProfile((prev) => ({ ...prev, ...updatedUser }));
         setIsEditing(false);
     };
 

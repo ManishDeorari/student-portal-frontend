@@ -23,7 +23,7 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
         setSkills(updatedProfile.profileSkills || []);
         setProfile((prev) => ({
             ...prev,
-            profileSkills: updatedProfile.profileSkills,
+            ...updatedProfile,
         }));
     };
 
@@ -137,3 +137,5 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
         </>
     );
 }
+
+

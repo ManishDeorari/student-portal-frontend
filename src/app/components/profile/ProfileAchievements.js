@@ -11,7 +11,7 @@ export default function ProfileAchievements({ profile, setProfile, isPublicView 
     const [selectedProofImage, setSelectedProofImage] = useState(null);
 
     const handleSave = (updatedUser) => {
-        setProfile(updatedUser);
+        setProfile((prev) => ({ ...prev, ...updatedUser }));
         setIsEditing(false);
     };
 

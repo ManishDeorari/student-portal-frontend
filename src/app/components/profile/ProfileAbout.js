@@ -13,7 +13,7 @@ export default function ProfileAbout({ profile, setProfile, isPublicView }) {
   const handleSave = (updatedUser) => {
     setProfile((prev) => ({
       ...prev,
-      bio: updatedUser.bio,
+            ...updatedUser,
     }));
   };
 
@@ -39,3 +39,4 @@ export default function ProfileAbout({ profile, setProfile, isPublicView }) {
     </>
   );
 }
+

@@ -13,7 +13,7 @@ export default function ProfileCertificates({ profile, setProfile, isPublicView 
     const handleSave = (updatedUser) => {
         setProfile((prev) => ({
             ...prev,
-            certificates: updatedUser.certificates,
+            ...updatedUser,
         }));
     };
 
@@ -149,3 +149,4 @@ export default function ProfileCertificates({ profile, setProfile, isPublicView 
         </>
     );
 }
+

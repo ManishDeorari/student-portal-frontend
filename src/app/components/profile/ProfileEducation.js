@@ -11,7 +11,7 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
     const handleSave = (updatedUser) => {
         setProfile((prev) => ({
             ...prev,
-            education: updatedUser.education,
+            ...updatedUser,
         }));
     };
 
@@ -118,3 +118,4 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
         </>
     );
 }
+

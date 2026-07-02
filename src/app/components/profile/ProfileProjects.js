@@ -11,7 +11,7 @@ export default function ProfileProjects({ profile, setProfile, isPublicView }) {
     const handleSave = (updatedUser) => {
         setProfile((prev) => ({
             ...prev,
-            projects: updatedUser.projects,
+            ...updatedUser,
             pointsAwardedForProjects: updatedUser.pointsAwardedForProjects,
         }));
     };
@@ -144,3 +144,4 @@ export default function ProfileProjects({ profile, setProfile, isPublicView }) {
         </>
     );
 }
+
