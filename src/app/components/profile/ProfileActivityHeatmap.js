@@ -38,23 +38,12 @@ export default function ProfileActivityHeatmap({ profile }) {
         }
 
         const allDays = [];
-
+        // Build all days using safe date arithmetic (clone to avoid mutation)
         for (let i = totalDaysToRender - 1; i >= 0; i--) {
-            const date = new Date(today);
-            date.setDate(today.getDate() - i);
+            const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
             const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
             const count = heatmapData[dateString] || 0;
-            
-            // Stats logic
             total += count;
-            if (count > 0) {
-                streak++;
-            } else {
-                if (i > 0 || (i === 0 && count === 0)) { 
-                    isCurrentStreakActive = false;
-                }
-                if (!isCurrentStreakActive) streak = 0;
-            }
 
             allDays.push({
                 date: dateString,
@@ -64,6 +53,17 @@ export default function ProfileActivityHeatmap({ profile }) {
             });
         }
 
+        // Calculate streak: count consecutive active days backwards from today
+        for (let i = allDays.length - 1; i >= 0; i--) {
+            if (allDays[i].count > 0) {
+                streak++;
+            } else {
+                // Allow today to be inactive (still building streak from yesterday)
+                if (i === allDays.length - 1) continue;
+                break;
+            }
+        }
+
         const resultCols = [];
         const mLabels = [];
         let currentMonth = -1;
@@ -71,23 +71,28 @@ export default function ProfileActivityHeatmap({ profile }) {
         for (let i = 0; i < allDays.length; i += 7) {
             const colDays = allDays.slice(i, i + 7);
             let isNewMonth = false;
+            let newMonthDay = null;
 
-            if (colDays[0]) {
-                const month = colDays[0].dateObj.getMonth();
-                
-                if (resultCols.length === 0) {
-                    // Do NOT add a label for the very first column if it's just the leftover days of the previous month.
-                    // This prevents "December" from showing up when we are rendering Jan-Jun.
-                    currentMonth = month;
-                } else if (month !== currentMonth) {
-                    isNewMonth = true;
-                    currentMonth = month;
-                    
-                    mLabels.push({
-                        label: colDays[0].dateObj.toLocaleString('default', { month: 'long' }),
-                        colIndex: resultCols.length
-                    });
+            if (resultCols.length === 0) {
+                // Initialize currentMonth from first column without adding a label
+                if (colDays[0]) currentMonth = colDays[0].dateObj.getMonth();
+            } else {
+                // Scan all days in this column for a month boundary (day === 1)
+                for (const day of colDays) {
+                    if (day && day.dateObj.getDate() === 1 && day.dateObj.getMonth() !== currentMonth) {
+                        isNewMonth = true;
+                        newMonthDay = day;
+                        currentMonth = day.dateObj.getMonth();
+                        break;
+                    }
                 }
+            }
+
+            if (isNewMonth && newMonthDay) {
+                mLabels.push({
+                    label: newMonthDay.dateObj.toLocaleString('default', { month: 'long' }),
+                    colIndex: resultCols.length
+                });
             }
 
             resultCols.push({
