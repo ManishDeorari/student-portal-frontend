@@ -190,7 +190,8 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                   </div>
               </div>
               {projects.map((project, idx) => (
-                <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${expandedIndex === idx ? (darkMode ? 'bg-[#1e1e1e] border-blue-500' : 'bg-blue-50 border-blue-400') : (darkMode ? 'bg-transparent border-white/5 hover:border-white/10' : 'bg-white border-gray-100 hover:border-gray-200')}`}>
+                <div key={idx} className={`p-[2px] rounded-xl shadow-sm transition-all duration-300 ${expandedIndex === idx ? 'bg-gradient-to-tr from-blue-600 to-purple-600 scale-[1.01]' : (darkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-200 hover:bg-gray-300')}`}>
+                  <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                     <div 
                         className="flex justify-between items-center cursor-pointer"
                         onClick={() => setExpandedIndex(expandedIndex === idx ? -1 : idx)}
@@ -391,6 +392,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                             </div>
                         </div>
                     )}
+                  </div>
                 </div>
               ))}
 
