@@ -173,17 +173,19 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                 </button>
             </div>
 
-            {/* Hint Banner */}
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-blue-500/20 p-3 shrink-0 flex items-start gap-2">
-                <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Add project URLs to earn profile points! (Max 3 URLs, 10 pts each). 
-                    Current points from projects: <span className="font-bold text-blue-500">{pointsEarning} / 30</span>
-                </p>
-            </div>
-
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+
+              {/* Guide Text */}
+              <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 rounded-xl mb-6">
+                  <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
+                      <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm leading-relaxed">
+                          <p className="font-bold mb-0.5">Automated Points System Active!</p>
+                          <p>Add project URLs to earn profile points! (Max 3 URLs, 10 pts each). Current points: <span className="font-bold text-blue-600 dark:text-blue-400">{pointsEarning} / 30</span></p>
+                      </div>
+                  </div>
+              </div>
               {projects.map((project, idx) => (
                 <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${expandedIndex === idx ? (darkMode ? 'bg-[#1e1e1e] border-blue-500' : 'bg-blue-50 border-blue-400') : (darkMode ? 'bg-transparent border-white/5 hover:border-white/10' : 'bg-white border-gray-100 hover:border-gray-200')}`}>
                     <div 
@@ -213,40 +215,44 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                     {expandedIndex === idx && (
                         <div className="mt-4 space-y-4 pt-4 border-t border-gray-200 dark:border-white/10">
                             
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-4">
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Project Title</label>
-                                    <input
-                                        type="text"
-                                        value={project.title}
-                                        onChange={(e) => handleChange(idx, "title", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-title`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        placeholder="Ex: E-commerce Website"
-                                    />
-                                    {errors[`${idx}-title`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-title`]}</p>}
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Project Title <span className="text-red-500">*</span></label>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-title`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <input
+                                            type="text"
+                                            value={project.title}
+                                            onChange={(e) => handleChange(idx, "title", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                            placeholder="Ex: E-commerce Website"
+                                        />
+                                    </div>
+                                    {errors[`${idx}-title`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-title`]}</p>}
                                 </div>
                                 
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Domain</label>
-                                    <input
-                                        type="text"
-                                        value={project.domain}
-                                        onChange={(e) => handleChange(idx, "domain", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-domain`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        placeholder="Ex: Web Development, Machine Learning"
-                                    />
-                                    {errors[`${idx}-domain`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-domain`]}</p>}
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Domain <span className="text-red-500">*</span></label>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-domain`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <input
+                                            type="text"
+                                            value={project.domain}
+                                            onChange={(e) => handleChange(idx, "domain", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                            placeholder="Ex: Web Development, Machine Learning"
+                                        />
+                                    </div>
+                                    {errors[`${idx}-domain`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-domain`]}</p>}
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Start Date</label>
-                                    <div className="flex gap-2">
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Start Date <span className="text-red-500">*</span></label>
+                                    <div className={`flex gap-2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-startDate`] ? 'from-red-500 to-red-600' : ''}`}>
                                         <select
                                             value={project.startMonth}
                                             onChange={(e) => handleChange(idx, "startMonth", e.target.value)}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-startDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                                            className={`w-1/2 p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                         >
                                             <option value="">Month</option>
                                             {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
@@ -254,29 +260,29 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                                         <select
                                             value={project.startYear}
                                             onChange={(e) => handleChange(idx, "startYear", e.target.value)}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-startDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                                            className={`w-1/2 p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                         >
                                             <option value="">Year</option>
                                             {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                                         </select>
                                     </div>
-                                    {errors[`${idx}-startDate`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-startDate`]}</p>}
+                                    {errors[`${idx}-startDate`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-startDate`]}</p>}
                                 </div>
 
                                 <div>
-                                    <div className="flex justify-between items-center mb-1">
-                                        <label className={`block text-xs font-black uppercase tracking-widest ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>End Date</label>
+                                    <div className="flex justify-between items-center mb-1.5">
+                                        <label className={`block text-xs font-black uppercase tracking-widest flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>End Date</label>
                                         <label className="flex items-center gap-1.5 text-xs font-bold cursor-pointer">
                                             <input type="checkbox" checked={project.isOngoing} onChange={(e) => handleChange(idx, "isOngoing", e.target.checked)} className="rounded text-blue-600 focus:ring-blue-500" />
                                             Currently Ongoing
                                         </label>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className={`flex gap-2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-endDate`] ? 'from-red-500 to-red-600' : (project.isOngoing ? 'opacity-50' : '')}`}>
                                         <select
                                             value={project.endMonth}
                                             onChange={(e) => handleChange(idx, "endMonth", e.target.value)}
                                             disabled={project.isOngoing}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition disabled:opacity-50 ${errors[`${idx}-endDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                                            className={`w-1/2 p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                         >
                                             <option value="">Month</option>
                                             {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
@@ -285,66 +291,88 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                                             value={project.endYear}
                                             onChange={(e) => handleChange(idx, "endYear", e.target.value)}
                                             disabled={project.isOngoing}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition disabled:opacity-50 ${errors[`${idx}-endDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
+                                            className={`w-1/2 p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                         >
                                             <option value="">Year</option>
                                             {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
                                         </select>
                                     </div>
-                                    {errors[`${idx}-endDate`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-endDate`]}</p>}
+                                    {errors[`${idx}-endDate`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-endDate`]}</p>}
                                 </div>
                             </div>
 
                             <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Goal</label>
-                                <textarea
-                                    value={project.goal}
-                                    onChange={(e) => handleChange(idx, "goal", e.target.value)}
-                                    rows={2}
-                                    className={`w-full p-3 rounded-xl border-2 outline-none transition resize-none ${errors[`${idx}-goal`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    placeholder="What was the purpose of this project?"
-                                />
-                                {errors[`${idx}-goal`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-goal`]}</p>}
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Goal <span className="text-red-500">*</span></label>
+                                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-goal`] ? 'from-red-500 to-red-600' : ''}`}>
+                                    <textarea
+                                        value={project.goal}
+                                        onChange={(e) => handleChange(idx, "goal", e.target.value)}
+                                        rows={2}
+                                        className={`w-full p-3 rounded-[calc(0.75rem-2px)] outline-none transition resize-none ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        placeholder="What was the purpose of this project?"
+                                    />
+                                </div>
+                                {errors[`${idx}-goal`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-goal`]}</p>}
                             </div>
 
                             <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description</label>
-                                <textarea
-                                    value={project.description}
-                                    onChange={(e) => handleChange(idx, "description", e.target.value)}
-                                    rows={3}
-                                    className={`w-full p-3 rounded-xl border-2 outline-none transition resize-none ${errors[`${idx}-description`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    placeholder="Detail your contributions and the outcomes..."
-                                />
-                                {errors[`${idx}-description`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-description`]}</p>}
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description <span className="text-red-500">*</span></label>
+                                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-description`] ? 'from-red-500 to-red-600' : ''}`}>
+                                    <textarea
+                                        value={project.description}
+                                        onChange={(e) => handleChange(idx, "description", e.target.value)}
+                                        rows={3}
+                                        className={`w-full p-3 rounded-[calc(0.75rem-2px)] outline-none transition resize-none ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        placeholder="Detail your contributions and the outcomes..."
+                                    />
+                                </div>
+                                {errors[`${idx}-description`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-description`]}</p>}
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>Tools / Tech (comma separated)</label>
-                                    <div className="relative">
-                                        <Wrench className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>Tools / Tech (comma separated)</label>
+                                    <div className={`relative p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                        <Wrench className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
                                         <input
                                             type="text"
                                             value={project.toolsUsed}
                                             onChange={(e) => handleChange(idx, "toolsUsed", e.target.value)}
-                                            className={`w-full p-2.5 pl-10 rounded-xl border-2 outline-none transition ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
+                                            className={`w-full p-2.5 pl-10 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
                                             placeholder="React, Node.js, Python..."
                                         />
                                     </div>
                                 </div>
                                 
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Project Link</label>
-                                    <div className="relative">
-                                        <LinkIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                        <input
-                                            type="text"
-                                            value={project.link}
-                                            onChange={(e) => handleChange(idx, "link", e.target.value)}
-                                            className={`w-full p-2.5 pl-10 rounded-xl border-2 outline-none transition ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                            placeholder="https://..."
-                                        />
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Project Link (Optional)</label>
+                                    <div className="flex flex-col gap-2">
+                                        <div className={`relative p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                            <LinkIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
+                                            <input
+                                                type="text"
+                                                value={project.link}
+                                                onChange={(e) => handleChange(idx, "link", e.target.value)}
+                                                className={`w-full p-2.5 pl-10 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                                placeholder="https://..."
+                                            />
+                                        </div>
+                                        <label className={`flex items-center gap-2 cursor-pointer p-[2px] rounded-xl transition-all ${project.link && !project.isLinkPublic ? 'bg-gradient-to-r from-red-500 to-red-600' : darkMode ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-200 hover:bg-gray-300'}`}>
+                                            <div className={`flex items-center gap-2 w-full px-4 py-2.5 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                                                <input 
+                                                    type="checkbox"
+                                                    checked={!project.isLinkPublic}
+                                                    onChange={(e) => handleChange(idx, "isLinkPublic", !e.target.checked)}
+                                                    className="w-4 h-4 rounded text-blue-500 bg-gray-100 border-gray-300 focus:ring-blue-500 cursor-pointer"
+                                                />
+                                                <div className="flex flex-col">
+                                                    <span className={`text-sm font-bold ${project.link && !project.isLinkPublic ? 'text-red-500' : darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                        Keep project link private
+                                                    </span>
+                                                    <span className={`text-[10px] ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Only faculty & admin can view</span>
+                                                </div>
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
