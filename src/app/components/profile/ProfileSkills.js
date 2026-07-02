@@ -74,7 +74,7 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
                                 <div className={`p-5 rounded-[calc(1rem-2px)] space-y-4 ${darkMode ? 'bg-slate-800/90' : 'bg-gray-50'}`}>
                                 <div className="flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-sm"></div>
-                                    <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                    <h4 className="text-xs font-black uppercase tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-pink-500">
                                         {category}
                                     </h4>
                                 </div>
@@ -137,5 +137,6 @@ export default function ProfileSkills({ profile, setProfile, isPublicView, curre
         </>
     );
 }
+
 
 
