@@ -7,6 +7,8 @@ import {
   Save,
   ChevronDown,
   ChevronRight,
+  CheckCircle2,
+  Circle,
   ShieldCheck,
   Calendar,
   Award,
@@ -38,8 +40,11 @@ export default function EditCertificatesModal({
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [expandedIndex, setExpandedIndex] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState(-1);
   const [selectedProofImage, setSelectedProofImage] = useState(null);
+
+  const isCertComplete = (cert) =>
+    cert.name && cert.issuer && cert.issueMonth && cert.issueYear;
 
   useEffect(() => {
     if (currentCertificates && isOpen) {
@@ -57,15 +62,17 @@ export default function EditCertificatesModal({
           name: cert.name || "",
           issuer: cert.issuer || "",
           description: cert.description || "",
+          duration: cert.duration || "",
           issueMonth: cMonth || "",
           issueYear: cYear || "",
           credentialUrl: cert.credentialUrl || "",
           proofImage: cert.proofImage || "",
+          isPrivate: cert.isPrivate || false,
           proofImageFile: null,
         };
       });
       setCertificates(transformed.length ? transformed : [{
-          name: "", issuer: "", description: "", issueMonth: "", issueYear: "", credentialUrl: "", proofImage: "", proofImageFile: null
+          name: "", issuer: "", description: "", duration: "", issueMonth: "", issueYear: "", credentialUrl: "", proofImage: "", isPrivate: false, proofImageFile: null
       }]);
     } else {
         setCertificates([]);
@@ -75,8 +82,13 @@ export default function EditCertificatesModal({
   if (!isOpen) return null;
 
   const handleChange = (index, field, value) => {
+    let processedValue = value;
+    if (field === "name" || field === "issuer") {
+      processedValue = processedValue.replace(/[^a-zA-Z0-9\s\.\-]/g, '');
+    }
+
     const updated = [...certificates];
-    updated[index][field] = value;
+    updated[index][field] = processedValue;
     setCertificates(updated);
 
     if (errors[`${index}-${field}`]) {
@@ -93,10 +105,12 @@ export default function EditCertificatesModal({
         name: "",
         issuer: "",
         description: "",
+        duration: "",
         issueMonth: "",
         issueYear: "",
         credentialUrl: "",
         proofImage: "",
+        isPrivate: false,
         proofImageFile: null,
       },
     ]);
@@ -124,7 +138,7 @@ export default function EditCertificatesModal({
   const validate = () => {
     const newErrors = {};
     certificates.forEach((cert, idx) => {
-      const hasData = cert.name || cert.issuer || cert.issueMonth || cert.issueYear;
+      const hasData = cert.name || cert.issuer || cert.issueMonth || cert.issueYear || cert.description;
       if (hasData) {
         if (!cert.name) newErrors[`${idx}-name`] = "Certificate Name is required";
         if (!cert.issuer) newErrors[`${idx}-issuer`] = "Issuer is required";
@@ -184,9 +198,11 @@ export default function EditCertificatesModal({
         name: cert.name,
         issuer: cert.issuer,
         issueDate: `${cert.issueMonth} ${cert.issueYear}`,
+        duration: cert.duration,
         description: cert.description,
         credentialUrl: cert.credentialUrl,
         proofImage: cert.proofImage,
+        isPrivate: cert.isPrivate,
       }));
 
       const token = localStorage.getItem("token");
@@ -225,9 +241,9 @@ export default function EditCertificatesModal({
   return (
     <>
       <LoadingOverlay isVisible={loading} />
-      <div className="fixed inset-0 h-[100dvh] w-full bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <div className="fixed inset-0 h-[100dvh] w-full bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-fadeIn">
         <div className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl sm:rounded-[2.5rem] shadow-[0_20px_60px_rgba(37,99,235,0.4)] w-full max-w-4xl max-h-[95dvh] sm:max-h-[90vh]">
-          <div className={`rounded-[calc(2.5rem-2.5px)] w-full shadow-2xl overflow-hidden animate-fadeIn flex flex-col transition-colors duration-500 max-h-[90vh] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+          <div className={`${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'} rounded-[calc(2.5rem-2.5px)] w-full shadow-2xl overflow-hidden max-h-[90vh] flex flex-col`}>
             
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex justify-between items-center text-white shrink-0">
@@ -254,15 +270,20 @@ export default function EditCertificatesModal({
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
               {certificates.map((cert, idx) => (
-                <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${expandedIndex === idx ? (darkMode ? 'bg-[#1e1e1e] border-blue-500' : 'bg-blue-50 border-blue-400') : (darkMode ? 'bg-transparent border-white/5 hover:border-white/10' : 'bg-white border-gray-100 hover:border-gray-200')}`}>
+                <div key={idx} className="p-[2px] rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 mb-4 transition-all">
+                  <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                     <div 
                         className="flex justify-between items-center cursor-pointer"
                         onClick={() => setExpandedIndex(expandedIndex === idx ? -1 : idx)}
                     >
                         <div className="flex items-center gap-3">
-                            <ShieldCheck className="w-5 h-5 text-blue-500" />
+                            {isCertComplete(cert) ? (
+                              <CheckCircle2 className="w-5 h-5 text-green-500" />
+                            ) : (
+                              <Circle className="w-5 h-5 text-gray-400" />
+                            )}
                             <div>
-                                <h3 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                <h3 className={`font-bold flex items-center gap-2 ${darkMode ? 'text-white' : 'text-black'}`}>
                                     {cert.name || "New Certificate"}
                                 </h3>
                                 {cert.issuer && <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{cert.issuer}</p>}
@@ -275,7 +296,7 @@ export default function EditCertificatesModal({
                             >
                                 <Trash2 className="w-4 h-4" />
                             </button>
-                            {expandedIndex === idx ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                            {expandedIndex === idx ? <ChevronDown className={`w-5 h-5 ${darkMode ? 'text-white' : 'text-black'}`} /> : <ChevronRight className={`w-5 h-5 ${darkMode ? 'text-white' : 'text-black'}`} />}
                         </div>
                     </div>
 
@@ -284,134 +305,175 @@ export default function EditCertificatesModal({
                             
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Certificate Name</label>
-                                    <input
-                                        type="text"
-                                        value={cert.name}
-                                        onChange={(e) => handleChange(idx, "name", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-name`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        placeholder="Ex: AWS Certified Solutions Architect"
-                                    />
-                                    {errors[`${idx}-name`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-name`]}</p>}
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Certificate Name <span className="text-red-500">*</span></label>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-name`] ? 'from-red-500 to-red-600' : ''}`}>
+                                      <input
+                                          type="text"
+                                          value={cert.name}
+                                          onChange={(e) => handleChange(idx, "name", e.target.value)}
+                                          className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                          placeholder="Ex: AWS Certified Solutions Architect"
+                                      />
+                                    </div>
+                                    {errors[`${idx}-name`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-name`]}</p>}
                                 </div>
                                 
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Issuing Organization</label>
-                                    <input
-                                        type="text"
-                                        value={cert.issuer}
-                                        onChange={(e) => handleChange(idx, "issuer", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-issuer`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        placeholder="Ex: Amazon Web Services"
-                                    />
-                                    {errors[`${idx}-issuer`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-issuer`]}</p>}
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Issuing Organization <span className="text-red-500">*</span></label>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-issuer`] ? 'from-red-500 to-red-600' : ''}`}>
+                                      <input
+                                          type="text"
+                                          value={cert.issuer}
+                                          onChange={(e) => handleChange(idx, "issuer", e.target.value)}
+                                          className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                          placeholder="Ex: Amazon Web Services"
+                                      />
+                                    </div>
+                                    {errors[`${idx}-issuer`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-issuer`]}</p>}
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Issue Date</label>
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Issue Date <span className="text-red-500">*</span></label>
                                     <div className="flex gap-2">
-                                        <select
-                                            value={cert.issueMonth}
-                                            onChange={(e) => handleChange(idx, "issueMonth", e.target.value)}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-issueDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        >
-                                            <option value="">Month</option>
-                                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                                        </select>
-                                        <select
-                                            value={cert.issueYear}
-                                            onChange={(e) => handleChange(idx, "issueYear", e.target.value)}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-issueDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        >
-                                            <option value="">Year</option>
-                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                                        </select>
+                                        <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-issueDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                                          <select
+                                              value={cert.issueMonth}
+                                              onChange={(e) => handleChange(idx, "issueMonth", e.target.value)}
+                                              className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                          >
+                                              <option value="">Month</option>
+                                              {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                                          </select>
+                                        </div>
+                                        <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-issueDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                                          <select
+                                              value={cert.issueYear}
+                                              onChange={(e) => handleChange(idx, "issueYear", e.target.value)}
+                                              className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                          >
+                                              <option value="">Year</option>
+                                              {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                                          </select>
+                                        </div>
                                     </div>
-                                    {errors[`${idx}-issueDate`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-issueDate`]}</p>}
+                                    {errors[`${idx}-issueDate`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-issueDate`]}</p>}
                                 </div>
 
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Credential URL</label>
-                                    <input
-                                        type="text"
-                                        value={cert.credentialUrl}
-                                        onChange={(e) => handleChange(idx, "credentialUrl", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                        placeholder="Ex: https://credentials.com/123"
-                                    />
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Duration (Optional)</label>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                      <input
+                                          type="text"
+                                          value={cert.duration}
+                                          onChange={(e) => handleChange(idx, "duration", e.target.value)}
+                                          className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                          placeholder="Ex: 3 Weeks"
+                                      />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Credential URL</label>
+                                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                  <input
+                                      type="text"
+                                      value={cert.credentialUrl}
+                                      onChange={(e) => handleChange(idx, "credentialUrl", e.target.value)}
+                                      className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                      placeholder="Ex: https://credentials.com/123"
+                                  />
                                 </div>
                             </div>
 
                             <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description (Optional)</label>
-                                <textarea
-                                    value={cert.description}
-                                    onChange={(e) => handleChange(idx, "description", e.target.value)}
-                                    rows={2}
-                                    className={`w-full p-3 rounded-xl border-2 outline-none transition resize-none ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                    placeholder="What skills did you learn..."
-                                />
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description (Optional)</label>
+                                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                  <textarea
+                                      value={cert.description}
+                                      onChange={(e) => handleChange(idx, "description", e.target.value)}
+                                      rows={2}
+                                      className={`w-full p-3 rounded-[calc(0.75rem-2px)] outline-none transition resize-none ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                      placeholder="What skills did you learn..."
+                                  />
+                                </div>
                             </div>
 
                             <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>Proof of Certificate</label>
-                                <div className={`flex items-center gap-4 p-3 rounded-xl border-2 border-dashed ${darkMode ? 'border-white/20' : 'border-gray-300'}`}>
-                                    {cert.proofImage ? (
-                                        <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
-                                            <img src={cert.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
-                                            <button 
-                                                onClick={() => {
-                                                    const updated = [...certificates];
-                                                    updated[idx].proofImage = "";
-                                                    updated[idx].proofImageFile = null;
-                                                    setCertificates(updated);
-                                                }}
-                                                className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
-                                            >
-                                                <X className="w-3 h-3" />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className={`w-16 h-16 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-white/5`}>
-                                            <Award className="w-6 h-6 text-gray-400" />
-                                        </div>
-                                    )}
-                                    <div className="flex-1">
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            id={`cert-proof-${idx}`}
-                                            className="hidden"
-                                            onChange={(e) => handleImageChange(idx, e)}
-                                        />
-                                        <label htmlFor={`cert-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
-                                            {cert.proofImage ? "Change Image" : "Upload Certificate Image"}
-                                        </label>
-                                        <p className="text-xs text-gray-500 mt-1">Max 2MB (JPG, PNG)</p>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>Proof of Certificate</label>
+                                <div className={`flex flex-col gap-2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                    <div className={`flex items-center gap-4 p-3 rounded-[calc(0.75rem-2px)] w-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                      {cert.proofImage ? (
+                                          <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
+                                              <img src={cert.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
+                                              <button 
+                                                  onClick={() => {
+                                                      const updated = [...certificates];
+                                                      updated[idx].proofImage = "";
+                                                      updated[idx].proofImageFile = null;
+                                                      setCertificates(updated);
+                                                  }}
+                                                  className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
+                                              >
+                                                  <X className="w-3 h-3" />
+                                              </button>
+                                          </div>
+                                      ) : (
+                                          <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+                                              <Award className="w-6 h-6 text-gray-400" />
+                                          </div>
+                                      )}
+                                      <div className="flex-1">
+                                          <input
+                                              type="file"
+                                              accept="image/*"
+                                              id={`cert-proof-${idx}`}
+                                              className="hidden"
+                                              onChange={(e) => handleImageChange(idx, e)}
+                                          />
+                                          <label htmlFor={`cert-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
+                                              {cert.proofImage ? "Change Image" : "Upload Certificate Image"}
+                                          </label>
+                                          <p className="text-xs text-gray-500 mt-1">Max 2MB (JPG, PNG)</p>
+                                      </div>
+                                      {cert.proofImage && (
+                                          <button 
+                                              onClick={() => setSelectedProofImage(cert.proofImage)}
+                                              className="text-blue-500 hover:text-blue-600"
+                                          >
+                                              <ExternalLink className="w-5 h-5" />
+                                          </button>
+                                      )}
                                     </div>
-                                    {cert.proofImage && (
-                                        <button 
-                                            onClick={() => setSelectedProofImage(cert.proofImage)}
-                                            className="text-blue-500 hover:text-blue-600"
-                                        >
-                                            <ExternalLink className="w-5 h-5" />
-                                        </button>
-                                    )}
+                                    <div className={`px-4 pb-3 rounded-b-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                        <label className={`flex items-center gap-2 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-gray-700'}`}>
+                                            <input 
+                                                type="checkbox" 
+                                                checked={cert.isPrivate} 
+                                                onChange={(e) => handleChange(idx, "isPrivate", e.target.checked)} 
+                                                className="rounded text-blue-600 focus:ring-blue-500" 
+                                            />
+                                            Keep proof image private (only faculty/admin can view)
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     )}
+                  </div>
                 </div>
               ))}
 
-              <button
-                  onClick={addCertificate}
-                  className={`w-full py-4 border-2 border-dashed rounded-xl transition flex items-center justify-center gap-2 font-bold ${darkMode ? 'border-white/10 text-blue-400 hover:border-blue-500 hover:bg-blue-500/10' : 'border-gray-200 text-blue-600 hover:border-blue-400 hover:bg-blue-50'}`}
-              >
-                  <Plus className="w-5 h-5" /> Add Another Certificate
-              </button>
+              <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm w-full transition-all hover:scale-[1.01]">
+                <button
+                    onClick={addCertificate}
+                    className={`w-full py-4 rounded-[calc(0.75rem-2px)] flex items-center justify-center gap-2 font-bold ${darkMode ? 'bg-[#121213] text-white hover:bg-[#1a1a1b]' : 'bg-white text-black hover:bg-gray-50'}`}
+                >
+                    <Plus className="w-5 h-5" /> Add Another Certificate
+                </button>
+              </div>
             </div>
 
             {/* Footer */}
@@ -435,11 +497,11 @@ export default function EditCertificatesModal({
                   background: transparent;
               }
               .custom-scrollbar::-webkit-scrollbar-thumb {
-                  background: ${darkMode ? '#333' : '#d1d5db'};
+                  background: linear-gradient(to bottom, #2563eb, #9333ea);
                   border-radius: 10px;
               }
               .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                  background: ${darkMode ? '#555' : '#9ca3af'};
+                  background: linear-gradient(to bottom, #1d4ed8, #7e22ce);
               }
           `}</style>
         </div>
