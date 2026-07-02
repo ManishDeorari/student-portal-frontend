@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import {
   X, Trash2, Plus, Save, ChevronDown, ChevronRight,
-  Award, Calendar, Link as LinkIcon, Eye, EyeOff, Image as ImageIcon, Upload, Info
+  Award, Calendar, Link as LinkIcon, Eye, EyeOff, Image as ImageIcon, Upload, Info, Globe, Lock
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
@@ -19,7 +19,7 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [expandedIndex, setExpandedIndex] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState(null);
   const [selectedProofImage, setSelectedProofImage] = useState(null);
 
   useEffect(() => {
@@ -49,10 +49,11 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
           activeTab: ach.proofImage ? 'image' : 'link'
         };
       });
-      setAchievements(transformed.length ? transformed : [{
+        setAchievements(transformed.length ? transformed : [{
         title: "", description: "", month: "", year: "",
         link: "", isLinkPublic: false, proofImage: "", proofImageFile: null, isProofPublic: false, activeTab: 'link'
       }]);
+      setExpandedIndex(null);
     } else {
         setAchievements([]);
     }
@@ -237,7 +238,8 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
               {achievements.map((ach, idx) => (
-                <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${expandedIndex === idx ? (darkMode ? 'bg-[#1e1e1e] border-blue-500' : 'bg-blue-50 border-blue-400') : (darkMode ? 'bg-transparent border-white/5 hover:border-white/10' : 'bg-white border-gray-100 hover:border-gray-200')}`}>
+                <div key={idx} className={`p-[2px] rounded-xl shadow-sm transition-all duration-300 bg-gradient-to-tr from-blue-600 to-purple-600 ${expandedIndex === idx ? 'scale-[1.01]' : 'hover:scale-[1.01]'}`}>
+                  <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                     <div 
                         className="flex justify-between items-center cursor-pointer"
                         onClick={() => setExpandedIndex(expandedIndex === idx ? -1 : idx)}
@@ -266,54 +268,62 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
                         <div className="mt-4 space-y-4 pt-4 border-t border-gray-200 dark:border-white/10">
                             
                             <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title</label>
-                                <input
-                                    type="text"
-                                    value={ach.title}
-                                    onChange={(e) => handleChange(idx, "title", e.target.value)}
-                                    className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-title`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    placeholder="Ex: 1st Place Hackathon, Best Employee Award"
-                                />
-                                {errors[`${idx}-title`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-title`]}</p>}
-                            </div>
-
-                            <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Date</label>
-                                <div className="flex gap-2">
-                                    <select
-                                        value={ach.month}
-                                        onChange={(e) => handleChange(idx, "month", e.target.value)}
-                                        className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-date`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    >
-                                        <option value="">Month</option>
-                                        {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                                    </select>
-                                    <select
-                                        value={ach.year}
-                                        onChange={(e) => handleChange(idx, "year", e.target.value)}
-                                        className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-date`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    >
-                                        <option value="">Year</option>
-                                        {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                                    </select>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title <span className="text-red-500">*</span></label>
+                                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-title`] ? 'from-red-500 to-red-600' : ''}`}>
+                                    <input
+                                        type="text"
+                                        value={ach.title}
+                                        onChange={(e) => handleChange(idx, "title", e.target.value)}
+                                        className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        placeholder="Ex: 1st Place Hackathon, Best Employee Award"
+                                    />
                                 </div>
-                                {errors[`${idx}-date`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-date`]}</p>}
+                                {errors[`${idx}-title`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-title`]}</p>}
                             </div>
 
                             <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description</label>
-                                <textarea
-                                    value={ach.description}
-                                    onChange={(e) => handleChange(idx, "description", e.target.value)}
-                                    rows={3}
-                                    className={`w-full p-3 rounded-xl border-2 outline-none transition resize-none ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                    placeholder="Describe your achievement..."
-                                />
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Date <span className="text-red-500">*</span></label>
+                                <div className="flex gap-2">
+                                    <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-date`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <select
+                                            value={ach.month}
+                                            onChange={(e) => handleChange(idx, "month", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        >
+                                            <option value="">Month</option>
+                                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                                        </select>
+                                    </div>
+                                    <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-date`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <select
+                                            value={ach.year}
+                                            onChange={(e) => handleChange(idx, "year", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        >
+                                            <option value="">Year</option>
+                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+                                {errors[`${idx}-date`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-date`]}</p>}
+                            </div>
+
+                            <div>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description <span className="text-red-500">*</span></label>
+                                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                    <textarea
+                                        value={ach.description}
+                                        onChange={(e) => handleChange(idx, "description", e.target.value)}
+                                        rows={3}
+                                        className={`w-full p-3 rounded-[calc(0.75rem-2px)] outline-none transition resize-none ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        placeholder="Describe your achievement..."
+                                    />
+                                </div>
                             </div>
 
                             <div>
                                 <div className="flex justify-between items-center mb-2">
-                                    <label className={`block text-xs font-black uppercase tracking-widest ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Proof</label>
+                                    <label className={`block text-xs font-black uppercase tracking-widest ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Proof <span className="text-pink-500 font-bold lowercase tracking-normal bg-pink-500/10 px-1.5 py-0.5 rounded ml-1">(Needed for points)</span></label>
                                     <div className={`flex rounded-lg overflow-hidden border ${darkMode ? 'border-white/10' : 'border-gray-200'}`}>
                                         <button
                                             onClick={() => handleChange(idx, 'activeTab', 'link')}
@@ -331,60 +341,121 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
                                 </div>
 
                                 {ach.activeTab === 'link' ? (
-                                    <div className="relative">
-                                        <LinkIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                        <input
-                                            type="text"
-                                            value={ach.link}
-                                            onChange={(e) => handleChange(idx, "link", e.target.value)}
-                                            className={`w-full p-2.5 pl-10 pr-24 rounded-xl border-2 outline-none transition ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                            placeholder="https://..."
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className={`flex items-center gap-4 p-3 rounded-xl border-2 border-dashed ${darkMode ? 'border-white/20' : 'border-gray-300'}`}>
-                                        {ach.proofImage ? (
-                                            <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
-                                                <img src={ach.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
-                                                <button 
-                                                    onClick={() => removeProofImage(idx)}
-                                                    className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
+                                    <div className="flex flex-col gap-2">
+                                        <div className={`relative p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                            <LinkIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
+                                            <input
+                                                type="text"
+                                                value={ach.link}
+                                                onChange={(e) => handleChange(idx, "link", e.target.value)}
+                                                className={`w-full p-2.5 pl-10 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                                placeholder="https://..."
+                                            />
+                                        </div>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm mt-1`}>
+                                            <div className={`p-1.5 rounded-[calc(0.75rem-2px)] flex gap-1 ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.preventDefault(); handleChange(idx, "isLinkPublic", true); }}
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                        ach.isLinkPublic 
+                                                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md' 
+                                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
+                                                    }`}
                                                 >
-                                                    <X className="w-3 h-3" />
+                                                    <Globe className="w-4 h-4" /> Public
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.preventDefault(); handleChange(idx, "isLinkPublic", false); }}
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                        !ach.isLinkPublic 
+                                                            ? 'bg-gradient-to-r from-slate-600 to-gray-700 text-white shadow-md' 
+                                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
+                                                    }`}
+                                                >
+                                                    <Lock className="w-4 h-4" /> Private
                                                 </button>
                                             </div>
-                                        ) : (
-                                            <div className={`w-16 h-16 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-white/5`}>
-                                                <Upload className="w-6 h-6 text-gray-400" />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-2">
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                            <div className={`flex items-center gap-4 p-3 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                                                {ach.proofImage ? (
+                                                    <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
+                                                        <img src={ach.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
+                                                        <button 
+                                                            onClick={() => removeProofImage(idx)}
+                                                            className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
+                                                        >
+                                                            <X className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div className={`w-16 h-16 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-white/5`}>
+                                                        <Upload className="w-6 h-6 text-gray-400" />
+                                                    </div>
+                                                )}
+                                                <div className="flex-1">
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        id={`ach-proof-${idx}`}
+                                                        className="hidden"
+                                                        onChange={(e) => handleFileChange(idx, e)}
+                                                    />
+                                                    <label htmlFor={`ach-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
+                                                        {ach.proofImage ? "Change Image" : "Upload Proof Image"}
+                                                    </label>
+                                                    <p className="text-xs text-gray-500 mt-1">Max 5MB (JPG, PNG)</p>
+                                                </div>
                                             </div>
-                                        )}
-                                        <div className="flex-1">
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                id={`ach-proof-${idx}`}
-                                                className="hidden"
-                                                onChange={(e) => handleFileChange(idx, e)}
-                                            />
-                                            <label htmlFor={`ach-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
-                                                {ach.proofImage ? "Change Image" : "Upload Proof Image"}
-                                            </label>
-                                            <p className="text-xs text-gray-500 mt-1">Max 5MB (JPG, PNG)</p>
+                                        </div>
+                                        <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm mt-1`}>
+                                            <div className={`p-1.5 rounded-[calc(0.75rem-2px)] flex gap-1 ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.preventDefault(); handleChange(idx, "isProofPublic", true); }}
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                        ach.isProofPublic 
+                                                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md' 
+                                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
+                                                    }`}
+                                                >
+                                                    <Globe className="w-4 h-4" /> Public
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => { e.preventDefault(); handleChange(idx, "isProofPublic", false); }}
+                                                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                        !ach.isProofPublic 
+                                                            ? 'bg-gradient-to-r from-slate-600 to-gray-700 text-white shadow-md' 
+                                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
+                                                    }`}
+                                                >
+                                                    <Lock className="w-4 h-4" /> Private
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
                             </div>
                         </div>
                     )}
+                  </div>
                 </div>
               ))}
 
-              <button
-                  onClick={addAchievement}
-                  className={`w-full py-4 border-2 border-dashed rounded-xl transition flex items-center justify-center gap-2 font-bold ${darkMode ? 'border-white/10 text-blue-400 hover:border-blue-500 hover:bg-blue-500/10' : 'border-gray-200 text-blue-600 hover:border-blue-400 hover:bg-blue-50'}`}
-              >
-                  <Plus className="w-5 h-5" /> Add Another Achievement
-              </button>
+              <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm w-full transition-all hover:scale-[1.01]">
+                  <button
+                      onClick={addAchievement}
+                      className={`w-full py-4 rounded-[calc(0.75rem-2px)] flex items-center justify-center gap-2 font-bold ${darkMode ? 'bg-[#121213] text-white hover:bg-[#1a1a1b]' : 'bg-white text-black hover:bg-gray-50'}`}
+                  >
+                      <Plus className="w-5 h-5" /> Add Another Achievement
+                  </button>
+              </div>
             </div>
 
             {/* Footer */}
