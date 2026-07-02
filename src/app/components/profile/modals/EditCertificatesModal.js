@@ -415,9 +415,10 @@ export default function EditCertificatesModal({
                                                       updated[idx].proofImageFile = null;
                                                       setCertificates(updated);
                                                   }}
-                                                  className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
+                                                  className="absolute top-1 right-1 p-1.5 bg-red-500/90 hover:bg-red-600 text-white rounded-md backdrop-blur-sm transition-colors"
+                                                  title="Remove Image"
                                               >
-                                                  <X className="w-3 h-3" />
+                                                  <Trash2 className="w-3.5 h-3.5" />
                                               </button>
                                           </div>
                                       ) : (
