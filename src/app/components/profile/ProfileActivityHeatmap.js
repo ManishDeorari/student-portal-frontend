@@ -9,8 +9,11 @@ export default function ProfileActivityHeatmap({ profile }) {
     const { darkMode } = useTheme();
     const heatmapData = profile?.activityHeatmap || {};
 
-    const now = new Date();
-    const todayDateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    // Keep todayDateString stable inside useMemo to avoid stale date at midnight
+    const todayDateString = useMemo(() => {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    }, []);
 
     // Generate grid aligned to Full Calendar Months
     const { columns, monthLabels, totalActivity, currentStreak } = useMemo(() => {
@@ -62,15 +65,32 @@ export default function ProfileActivityHeatmap({ profile }) {
             }
 
             // Trailing nulls so total length is a multiple of 7
-            while (monthDays.length % 7 !== 0) {
-                monthDays.push(null);
+            // Only pad if it's NOT the current month (current month is still in progress)
+            const isCurrentMonth = month === today.getMonth() && year === today.getFullYear();
+            if (!isCurrentMonth) {
+                while (monthDays.length % 7 !== 0) {
+                    monthDays.push(null);
+                }
+            } else {
+                // Still pad trailing to fill last incomplete week for alignment
+                while (monthDays.length % 7 !== 0) {
+                    monthDays.push(null);
+                }
             }
 
             // Split flat array into 7-row columns
             const isFirstDisplayedMonth = mi === 0;
             for (let i = 0; i < monthDays.length; i += 7) {
                 const isNewMonth = i === 0 && !isFirstDisplayedMonth;
-                if (isNewMonth) {
+                const isFirstColOfMonth = i === 0;
+                if (isFirstColOfMonth && !isFirstDisplayedMonth) {
+                    mLabels.push({
+                        label: firstOfMonth.toLocaleString('default', { month: 'long' }),
+                        colIndex: resultCols.length
+                    });
+                }
+                // Also label the very first month's first column
+                if (isFirstDisplayedMonth && i === 0) {
                     mLabels.push({
                         label: firstOfMonth.toLocaleString('default', { month: 'long' }),
                         colIndex: resultCols.length
@@ -163,7 +183,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
                                 className="overflow-hidden -mx-4 px-4 -mb-4 pb-4"
                             >
-                                <div className="flex flex-col gap-3 overflow-x-auto pt-6 pb-4 px-1 sm:px-0 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+                                <div className="flex flex-col gap-3 overflow-x-auto pt-6 pb-4 px-1 sm:px-0 custom-scrollbar">
                                     
                                     <div className="flex gap-2.5 pr-6 sm:mx-auto w-max relative">
                                         {/* Y-Axis Labels (Days of Week) */}
@@ -208,7 +228,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                                     onMouseEnter={(e) => {
                                                                         const rect = e.target.getBoundingClientRect();
                                                                         setTooltip({
-                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} activities on ${new Date(day.dateObj).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} ${day.count === 1 ? 'activity' : 'activities'} on ${day.dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}`,
                                                                             x: rect.left + rect.width / 2,
                                                                             y: rect.top - 8
                                                                         });
@@ -217,7 +237,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                                     onClick={(e) => {
                                                                         const rect = e.target.getBoundingClientRect();
                                                                         setTooltip({
-                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} activities on ${new Date(day.dateObj).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} ${day.count === 1 ? 'activity' : 'activities'} on ${day.dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}`,
                                                                             x: rect.left + rect.width / 2,
                                                                             y: rect.top - 8
                                                                         });
@@ -282,6 +302,12 @@ export default function ProfileActivityHeatmap({ profile }) {
                     </motion.div>
                 )}
             </AnimatePresence>
+            <style jsx>{`
+                .custom-scrollbar::-webkit-scrollbar { height: 5px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: linear-gradient(to right, #2563eb, #9333ea); border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: linear-gradient(to right, #1d4ed8, #7e22ce); }
+            `}</style>
         </>
     );
 }
