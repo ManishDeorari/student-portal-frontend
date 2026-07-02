@@ -209,7 +209,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
       const isSchool = edu.degree === "High School (Secondary - Class 10)" || edu.degree === "Intermediate (Higher Secondary - Class 12)";
       const hasData = edu.institution || edu.course || edu.startMonth || edu.startYear || edu.endMonth || edu.endYear || edu.grade || edu.activities || edu.description;
       
-      if (hasData || edu.isMandatory) {
+      if (hasData) {
         if (!edu.institution) newErrors[`${idx}-institution`] = isSchool ? "Name of School is required" : "Institution is required";
         
         if (edu.institution === "Graphic Era Hill University" && !edu.campus) {
@@ -243,7 +243,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
     setLoading(true);
     try {
       const validEducations = educations.filter(edu =>
-        edu.institution || edu.course || edu.startMonth || edu.startYear || edu.endMonth || edu.endYear || edu.grade || edu.activities || edu.description || edu.isMandatory
+        edu.institution || edu.course || edu.startMonth || edu.startYear || edu.endMonth || edu.endYear || edu.grade || edu.activities || edu.description
       );
 
       const finalData = validEducations.map(edu => {
