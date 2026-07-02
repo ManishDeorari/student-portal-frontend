@@ -44,8 +44,8 @@ export default function AddFeaturedModal({ onClose, onSave, editItem }) {
         <div className={`relative p-6 rounded-[calc(1rem-2px)] w-full h-full ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
           <button
             onClick={onClose}
-            className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${
-              darkMode ? "hover:bg-white/10 text-white" : "hover:bg-gray-100 text-black"
+            className={`absolute top-4 right-4 p-1 border-2 transition rounded-xl ${
+              darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'
             }`}
           >
             <X size={20} />
@@ -101,21 +101,22 @@ export default function AddFeaturedModal({ onClose, onSave, editItem }) {
                   const Icon = t.icon;
                   const isSelected = type === t.id;
                   return (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => setType(t.id)}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${
-                        isSelected
-                          ? "bg-purple-600 text-white shadow-lg"
-                          : darkMode
-                          ? "bg-slate-800 text-gray-300 hover:bg-slate-700"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      <Icon size={16} />
-                      {t.label}
-                    </button>
+                    <div key={t.id} className={`p-[2px] rounded-xl bg-gradient-to-tr ${isSelected ? 'from-blue-500 to-purple-600' : 'from-blue-500/40 to-purple-600/40'} shadow-sm`}>
+                      <button
+                        type="button"
+                        onClick={() => setType(t.id)}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-2px)] text-sm font-bold transition-all ${
+                          isSelected
+                            ? "bg-gradient-to-tr from-blue-600 to-purple-600 text-white shadow-lg"
+                            : darkMode
+                            ? "bg-[#121213] text-gray-300 hover:bg-slate-800"
+                            : "bg-white text-gray-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        <Icon size={16} />
+                        {t.label}
+                      </button>
+                    </div>
                   );
                 })}
               </div>
