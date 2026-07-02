@@ -10,7 +10,7 @@ const MONTHS = [
 ];
 
 const currentYearForDropdown = new Date().getFullYear();
-const YEARS = Array.from({ length: currentYearForDropdown + 5 - 2000 + 1 }, (_, i) => currentYearForDropdown + 5 - i);
+const YEARS = Array.from({ length: currentYearForDropdown + 5 - 1950 + 1 }, (_, i) => currentYearForDropdown + 5 - i);
 
 const DEGREE_SUGGESTIONS = [
   "High School (Secondary - Class 10)",

@@ -12,7 +12,7 @@ const MONTHS = [
   "January", "February", "March", "April", "May", "June", 
   "July", "August", "September", "October", "November", "December"
 ];
-const YEARS = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i);
+const YEARS = Array.from({ length: new Date().getFullYear() - 1950 + 1 }, (_, i) => new Date().getFullYear() - i);
 
 export default function EditAchievementsModal({ isOpen, onClose, currentAchievements, onSave }) {
   const { darkMode } = useTheme();

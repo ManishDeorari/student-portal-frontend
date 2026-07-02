@@ -48,7 +48,7 @@ const MONTHS = [
 ];
 
 const YEARS = Array.from(
-  { length: 50 },
+  { length: new Date().getFullYear() - 1950 + 1 },
   (_, i) => new Date().getFullYear() - i,
 );
 

@@ -11,7 +11,7 @@ const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
-const YEARS = Array.from({ length: 30 }, (_, i) => new Date().getFullYear() - i);
+const YEARS = Array.from({ length: new Date().getFullYear() - 1950 + 1 }, (_, i) => new Date().getFullYear() - i);
 const TYPES = ["Research Paper", "Patent", "Publication", "Whitepaper", "Article"];
 
 export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave }) {
