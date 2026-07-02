@@ -316,6 +316,18 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
 
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+              
+              {/* Guide Text */}
+              <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 rounded-xl mb-6">
+                  <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
+                      <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm leading-relaxed">
+                          <p className="font-bold mb-0.5">Build a Strong Profile!</p>
+                          <p>Adding your complete educational background helps others understand your academic journey. Make sure to include all mandatory fields marked with <span className="text-red-500">*</span>.</p>
+                      </div>
+                  </div>
+              </div>
+
               {educations.map((edu, idx) => {
                 const isSchool = edu.degree === "High School (Secondary - Class 10)" || edu.degree === "Intermediate (Higher Secondary - Class 12)";
                 

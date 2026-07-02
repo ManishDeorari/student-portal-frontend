@@ -258,17 +258,20 @@ export default function EditCertificatesModal({
                 </button>
             </div>
 
-            {/* Hint Banner */}
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-blue-500/20 p-3 shrink-0 flex items-start gap-2">
-                <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Add proof images for your certificates to earn profile points! (Max 3 proofs, 10 pts each). 
-                    Current points from certificates: <span className="font-bold text-blue-500">{expPointsEarning} / 30</span>
-                </p>
-            </div>
-
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+              
+              {/* Guide Text */}
+              <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 rounded-xl mb-6">
+                  <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
+                      <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm leading-relaxed">
+                          <p className="font-bold mb-0.5">Automated Points System Active!</p>
+                          <p>Add proof images for your certificates to earn profile points! (Max 3 proofs, 10 pts each). Current points: <span className="font-bold text-blue-600 dark:text-blue-400">{expPointsEarning} / 30</span></p>
+                      </div>
+                  </div>
+              </div>
+
               {certificates.map((cert, idx) => (
                 <div key={idx} className="p-[2px] rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 mb-4 transition-all">
                   <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
