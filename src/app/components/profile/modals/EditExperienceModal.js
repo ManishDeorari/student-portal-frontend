@@ -662,23 +662,11 @@ export default function EditExperienceModal({
                           <div className={`flex items-center gap-4 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
                             <div className={`flex items-center gap-4 p-3 rounded-[calc(0.75rem-2px)] w-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                               {exp.proofImage ? (
-                                <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
+                                <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 shrink-0">
                                   <img src={exp.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
-                                  <button
-                                    onClick={() => {
-                                      const updated = [...experiences];
-                                      updated[idx].proofImage = "";
-                                      updated[idx].proofImageFile = null;
-                                      setExperiences(updated);
-                                    }}
-                                    className="absolute top-1 right-1 p-1.5 bg-red-500/90 hover:bg-red-600 text-white rounded-md backdrop-blur-sm transition-colors"
-                                    title="Remove Image"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
                                 </div>
                               ) : (
-                                <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+                                <div className={`w-16 h-16 rounded-lg flex items-center justify-center shrink-0 ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
                                   <Award className="w-6 h-6 text-gray-400" />
                                 </div>
                               )}
@@ -690,9 +678,25 @@ export default function EditExperienceModal({
                                   className="hidden"
                                   onChange={(e) => handleFileChange(idx, e)}
                                 />
-                                <label htmlFor={`proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
-                                  {exp.proofImage ? "Change Image" : "Upload Certificate/Offer Letter"}
-                                </label>
+                                <div className="flex items-center gap-2">
+                                  <label htmlFor={`proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
+                                    {exp.proofImage ? "Change Image" : "Upload Certificate/Offer Letter"}
+                                  </label>
+                                  {exp.proofImage && (
+                                    <button
+                                      onClick={() => {
+                                        const updated = [...experiences];
+                                        updated[idx].proofImage = "";
+                                        updated[idx].proofImageFile = null;
+                                        setExperiences(updated);
+                                      }}
+                                      className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg transition-colors"
+                                      title="Remove Image"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  )}
+                                </div>
                                 <p className="text-xs text-gray-500 mt-1">Max 5MB (JPG, PNG)</p>
                               </div>
                               {exp.proofImage && (

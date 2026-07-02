@@ -323,7 +323,7 @@ export default function EditEducationModal({ isOpen, onClose, currentEducation, 
                       <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
                       <div className="text-sm leading-relaxed">
                           <p className="font-bold mb-0.5">Build a Strong Profile!</p>
-                          <p>Adding your complete educational background helps others understand your academic journey. Make sure to include all mandatory fields marked with <span className="text-red-500">*</span>.</p>
+                          <p>Add your complete educational background! Please make sure to add at least 3 out of the 4 main educational stages (High School, Intermediate, Bachelor's, and Master's) to complete your profile.</p>
                       </div>
                   </div>
               </div>
