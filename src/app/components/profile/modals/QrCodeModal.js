@@ -80,9 +80,11 @@ export default function QrCodeModal({ isOpen, onClose, publicId, name }) {
             </div>
             <button
               onClick={onClose}
-              className={`p-1 border-2 transition rounded-xl ${darkMode ? "border-white text-white hover:bg-white/20" : "border-black text-black hover:bg-black/10"}`}
+              className={`p-[2px] rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 group transition-all hover:scale-105`}
             >
-              <X className="w-5 h-5" />
+              <div className={`p-1 rounded-full ${darkMode ? 'bg-[#121213] group-hover:bg-slate-900' : 'bg-white group-hover:bg-gray-50'}`}>
+                  <X className={`w-5 h-5 ${darkMode ? 'text-white' : 'text-black'}`} />
+              </div>
             </button>
           </div>
 
@@ -103,60 +105,45 @@ export default function QrCodeModal({ isOpen, onClose, publicId, name }) {
               </div>
             </div>
 
-            {/* Profile ID label */}
-            <div className="text-center">
-              <p className={`text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            {/* Download QR Button */}
+            <button
+              onClick={downloadQRCode}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-[1.02] active:scale-95 transition-all shadow-md"
+            >
+              <Download className="w-4 h-4" />
+              Download QR
+            </button>
+
+            {/* Profile ID label with Copy */}
+            <div className="w-full flex flex-col items-center mt-2">
+              <p className={`text-xs font-black uppercase tracking-widest mb-2 ${darkMode ? "text-white" : "text-black"}`}>
                 Public ID
               </p>
-              <span className={`text-base font-bold px-3 py-1 rounded-lg ${darkMode ? "bg-white/5 text-white" : "bg-gray-100 text-gray-800"}`}>
-                @{publicId}
-              </span>
-            </div>
-
-            {/* Copyable URL row */}
-            <div className="w-full">
-              <p className={`text-xs font-black uppercase tracking-widest mb-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                Profile URL
-              </p>
-              <div className="p-[2px] bg-gradient-to-tr from-blue-500 to-purple-600 rounded-xl">
-                <div className={`flex items-center gap-2 px-3 py-2.5 rounded-[calc(0.75rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
-                  <LinkIcon className={`w-4 h-4 flex-shrink-0 ${darkMode ? "text-blue-400" : "text-blue-600"}`} />
-                  <span className={`text-xs font-semibold truncate flex-1 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                    {profileUrl}
-                  </span>
-                  <button
-                    onClick={handleCopy}
-                    className={`flex-shrink-0 p-1.5 rounded-lg transition-colors ${darkMode ? "hover:bg-white/10 text-blue-400" : "hover:bg-blue-50 text-blue-600"}`}
-                    title="Copy link"
-                  >
-                    {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                  </button>
-                </div>
+              <div className="flex items-center gap-2 justify-center">
+                <span className={`text-lg font-bold px-4 py-2 rounded-lg ${darkMode ? "bg-white/10 text-white" : "bg-gray-100 text-black"}`}>
+                  @{publicId}
+                </span>
+                <button
+                  onClick={handleCopy}
+                  className={`p-2.5 rounded-lg transition-colors ${darkMode ? "hover:bg-white/10 text-white" : "hover:bg-gray-200 text-black"}`}
+                  title="Copy Profile Link"
+                >
+                  {copied ? <Check className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
+                </button>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="w-full grid grid-cols-2 gap-3">
-              {/* Share Button */}
-              <button
-                onClick={handleShare}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-[1.02] active:scale-95 transition-all shadow-md"
-              >
-                <Share2 className="w-4 h-4" />
-                Share
-              </button>
+            {/* Share Button */}
+            <button
+              onClick={handleShare}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-[1.02] active:scale-95 transition-all shadow-md"
+            >
+              <Share2 className="w-4 h-4" />
+              Share
+            </button>
 
-              {/* Download QR */}
-              <button
-                onClick={downloadQRCode}
-                className={`flex items-center justify-center gap-2 px-4 py-2.5 font-bold rounded-xl border-2 hover:scale-[1.02] active:scale-95 transition-all ${darkMode ? "border-white/20 text-white hover:bg-white/10" : "border-gray-200 text-gray-700 hover:bg-gray-50"}`}
-              >
-                <Download className="w-4 h-4" />
-                Download QR
-              </button>
-            </div>
-
-            <p className={`text-center text-xs ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+            {/* Footer Text */}
+            <p className={`text-center text-xs font-bold mt-2 ${darkMode ? "text-white" : "text-black"}`}>
               Scan the QR code to instantly view this profile on the portal.
             </p>
           </div>
