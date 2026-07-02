@@ -336,6 +336,7 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
                             </div>
                         </div>
                     )}
+                  </div>
                 </div>
               ))}
 
