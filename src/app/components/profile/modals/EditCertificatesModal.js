@@ -447,7 +447,7 @@ export default function EditCertificatesModal({
                                           </button>
                                       )}
                                     </div>
-                                    <div className={`px-4 pb-3 rounded-b-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                    <div className={`pt-2 px-4 pb-3 rounded-b-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                                         <label className={`flex items-center gap-2 text-xs font-bold cursor-pointer ${darkMode ? 'text-white' : 'text-gray-700'}`}>
                                             <input 
                                                 type="checkbox" 
