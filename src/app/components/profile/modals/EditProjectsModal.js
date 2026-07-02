@@ -190,7 +190,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                   </div>
               </div>
               {projects.map((project, idx) => (
-                <div key={idx} className={`p-[2px] rounded-xl shadow-sm transition-all duration-300 ${expandedIndex === idx ? 'bg-gradient-to-tr from-blue-600 to-purple-600 scale-[1.01]' : (darkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-200 hover:bg-gray-300')}`}>
+                <div key={idx} className={`p-[2px] rounded-xl shadow-sm transition-all duration-300 bg-gradient-to-tr from-blue-600 to-purple-600 ${expandedIndex === idx ? 'scale-[1.01]' : 'hover:scale-[1.01]'}`}>
                   <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                     <div 
                         className="flex justify-between items-center cursor-pointer"

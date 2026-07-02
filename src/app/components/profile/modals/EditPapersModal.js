@@ -176,7 +176,7 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
               {papers.map((paper, idx) => (
-                <div key={idx} className={`p-[2px] rounded-xl shadow-sm transition-all duration-300 ${expandedIndex === idx ? 'bg-gradient-to-tr from-blue-600 to-purple-600 scale-[1.01]' : (darkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-200 hover:bg-gray-300')}`}>
+                <div key={idx} className={`p-[2px] rounded-xl shadow-sm transition-all duration-300 bg-gradient-to-tr from-blue-600 to-purple-600 ${expandedIndex === idx ? 'scale-[1.01]' : 'hover:scale-[1.01]'}`}>
                   <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                     <div 
                         className="flex justify-between items-center cursor-pointer"
@@ -205,21 +205,21 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
                     {expandedIndex === idx && (
                         <div className="mt-4 space-y-4 pt-4 border-t border-gray-200 dark:border-white/10">
                             
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title <span className="text-red-500">*</span></label>
-                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-title`] ? 'from-red-500 to-red-600' : ''}`}>
-                                        <input
-                                            type="text"
-                                            value={paper.title}
-                                            onChange={(e) => handleChange(idx, "title", e.target.value)}
-                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
-                                            placeholder="Title of Publication or Patent"
-                                        />
-                                    </div>
-                                    {errors[`${idx}-title`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-title`]}</p>}
+                            <div>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title <span className="text-red-500">*</span></label>
+                                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-title`] ? 'from-red-500 to-red-600' : ''}`}>
+                                    <input
+                                        type="text"
+                                        value={paper.title}
+                                        onChange={(e) => handleChange(idx, "title", e.target.value)}
+                                        className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        placeholder="Title of Publication or Patent"
+                                    />
                                 </div>
-                                
+                                {errors[`${idx}-title`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-title`]}</p>}
+                            </div>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Type <span className="text-red-500">*</span></label>
                                     <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-type`] ? 'from-red-500 to-red-600' : ''}`}>
@@ -234,9 +234,7 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
                                     </div>
                                     {errors[`${idx}-type`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-type`]}</p>}
                                 </div>
-                            </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Publisher / Venue <span className="text-red-500">*</span></label>
                                     <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-publisher`] ? 'from-red-500 to-red-600' : ''}`}>
@@ -250,33 +248,33 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
                                     </div>
                                     {errors[`${idx}-publisher`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-publisher`]}</p>}
                                 </div>
+                            </div>
 
-                                <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Publish Date <span className="text-red-500">*</span></label>
-                                    <div className="flex gap-2">
-                                        <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-publishDate`] ? 'from-red-500 to-red-600' : ''}`}>
-                                            <select
-                                                value={paper.publishMonth}
-                                                onChange={(e) => handleChange(idx, "publishMonth", e.target.value)}
-                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
-                                            >
-                                                <option value="">Month</option>
-                                                {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                                            </select>
-                                        </div>
-                                        <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-publishDate`] ? 'from-red-500 to-red-600' : ''}`}>
-                                            <select
-                                                value={paper.publishYear}
-                                                onChange={(e) => handleChange(idx, "publishYear", e.target.value)}
-                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
-                                            >
-                                                <option value="">Year</option>
-                                                {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                                            </select>
-                                        </div>
+                            <div>
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Publish Date <span className="text-red-500">*</span></label>
+                                <div className="flex gap-2">
+                                    <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-publishDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <select
+                                            value={paper.publishMonth}
+                                            onChange={(e) => handleChange(idx, "publishMonth", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        >
+                                            <option value="">Month</option>
+                                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                                        </select>
                                     </div>
-                                    {errors[`${idx}-publishDate`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-publishDate`]}</p>}
+                                    <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-publishDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <select
+                                            value={paper.publishYear}
+                                            onChange={(e) => handleChange(idx, "publishYear", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        >
+                                            <option value="">Year</option>
+                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                                        </select>
+                                    </div>
                                 </div>
+                                {errors[`${idx}-publishDate`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-publishDate`]}</p>}
                             </div>
 
                             <div>
