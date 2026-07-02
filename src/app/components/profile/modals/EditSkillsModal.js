@@ -77,7 +77,7 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
                             Skills & Competencies
                         </h2>
-                        <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors text-gray-500 dark:text-gray-400">
+                        <button onClick={onClose} className={`p-1 border-2 transition rounded-xl ml-3 ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`}>
                             <X className="w-5 h-5" />
                         </button>
                     </div>
@@ -165,7 +165,7 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         </div>
                     </div>
 
-                    <div className="p-6 border-t border-gray-200 dark:border-white/10 flex justify-end gap-3 flex-shrink-0 bg-gray-50 dark:bg-white/5 rounded-b-[1.5rem]">
+                    <div className={`p-6 border-t flex justify-end gap-3 flex-shrink-0 rounded-b-[1.5rem] ${darkMode ? 'border-white/10 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
                         <button
                             onClick={handleSave}
                             disabled={loading}

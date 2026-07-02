@@ -197,20 +197,24 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
                     {formData.customLinks.map((link, index) => (
                         <div key={index} className="flex gap-2 items-start">
                             <div className="flex-1 space-y-2">
-                                <input
-                                    type="text"
-                                    value={link.title}
-                                    onChange={(e) => handleCustomLinkChange(index, "title", e.target.value)}
-                                    placeholder="Link Title (e.g. Medium, Dev.to)"
-                                    className={`w-full p-2 rounded-lg border-2 outline-none transition text-sm ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-purple-500' : 'bg-white text-gray-900 border-gray-200 focus:border-purple-500'}`}
-                                />
-                                <input
-                                    type="url"
-                                    value={link.url}
-                                    onChange={(e) => handleCustomLinkChange(index, "url", e.target.value)}
-                                    placeholder="https://..."
-                                    className={`w-full p-2 rounded-lg border-2 outline-none transition text-sm ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-purple-500' : 'bg-white text-gray-900 border-gray-200 focus:border-purple-500'}`}
-                                />
+                                <div className={`p-[2px] bg-gradient-to-tr from-purple-600 to-pink-600 rounded-xl shadow-sm`}>
+                                    <input
+                                        type="text"
+                                        value={link.title}
+                                        onChange={(e) => handleCustomLinkChange(index, "title", e.target.value)}
+                                        placeholder="Link Title (e.g. Medium, Dev.to)"
+                                        className={`w-full p-2 rounded-[calc(0.75rem-2px)] outline-none transition text-sm ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                    />
+                                </div>
+                                <div className={`p-[2px] bg-gradient-to-tr from-purple-600 to-pink-600 rounded-xl shadow-sm`}>
+                                    <input
+                                        type="url"
+                                        value={link.url}
+                                        onChange={(e) => handleCustomLinkChange(index, "url", e.target.value)}
+                                        placeholder="https://..."
+                                        className={`w-full p-2 rounded-[calc(0.75rem-2px)] outline-none transition text-sm ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                    />
+                                </div>
                             </div>
                             <button
                                 type="button"
