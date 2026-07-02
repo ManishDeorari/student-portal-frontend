@@ -201,7 +201,7 @@ export default function EditResumeAndLinksModal({ isOpen, onClose, currentData, 
                                       <button
                                           type="button"
                                           onClick={() => removeCustomLink(index)}
-                                          className={`p-1.5 rounded-full ${darkMode ? 'hover:bg-slate-800 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-500'} transition-colors`}
+                                          className="p-1.5 rounded-full text-red-500 hover:bg-red-500/10 transition-colors"
                                           title="Remove Link"
                                       >
                                           <Trash2 className="w-4 h-4" />
