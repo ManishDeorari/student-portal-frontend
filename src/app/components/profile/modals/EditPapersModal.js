@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import {
   X, Trash2, Plus, Save, ChevronDown, ChevronRight,
-  BookOpen, Calendar, Link as LinkIcon, Building2, Eye, EyeOff, Tag, Info
+  BookOpen, Calendar, Link as LinkIcon, Building2, Eye, EyeOff, Tag, Info, Globe, Lock
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import LoadingOverlay from "@/app/components/ui/LoadingOverlay";
@@ -19,9 +19,12 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
   const [papers, setPapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [expandedIndex, setExpandedIndex] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   useEffect(() => {
+    if (isOpen) {
+      setExpandedIndex(null);
+    }
     if (currentPapers && isOpen) {
       const transformed = currentPapers.map((p) => {
         const parseDate = (dateStr) => {
@@ -173,7 +176,8 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
               {papers.map((paper, idx) => (
-                <div key={idx} className={`p-4 rounded-xl border-2 transition-all ${expandedIndex === idx ? (darkMode ? 'bg-[#1e1e1e] border-blue-500' : 'bg-blue-50 border-blue-400') : (darkMode ? 'bg-transparent border-white/5 hover:border-white/10' : 'bg-white border-gray-100 hover:border-gray-200')}`}>
+                <div key={idx} className={`p-[2px] rounded-xl shadow-sm transition-all duration-300 ${expandedIndex === idx ? 'bg-gradient-to-tr from-blue-600 to-purple-600 scale-[1.01]' : (darkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-200 hover:bg-gray-300')}`}>
+                  <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                     <div 
                         className="flex justify-between items-center cursor-pointer"
                         onClick={() => setExpandedIndex(expandedIndex === idx ? -1 : idx)}
@@ -203,91 +207,131 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
                             
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title</label>
-                                    <input
-                                        type="text"
-                                        value={paper.title}
-                                        onChange={(e) => handleChange(idx, "title", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-title`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        placeholder="Title of Publication or Patent"
-                                    />
-                                    {errors[`${idx}-title`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-title`]}</p>}
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Title <span className="text-red-500">*</span></label>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-title`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <input
+                                            type="text"
+                                            value={paper.title}
+                                            onChange={(e) => handleChange(idx, "title", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                            placeholder="Title of Publication or Patent"
+                                        />
+                                    </div>
+                                    {errors[`${idx}-title`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-title`]}</p>}
                                 </div>
                                 
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Type</label>
-                                    <select
-                                        value={paper.type}
-                                        onChange={(e) => handleChange(idx, "type", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-type`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    >
-                                        <option value="">Select Type</option>
-                                        {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                    </select>
-                                    {errors[`${idx}-type`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-type`]}</p>}
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>Type <span className="text-red-500">*</span></label>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-type`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <select
+                                            value={paper.type}
+                                            onChange={(e) => handleChange(idx, "type", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        >
+                                            <option value="">Select Type</option>
+                                            {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                                        </select>
+                                    </div>
+                                    {errors[`${idx}-type`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-type`]}</p>}
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Publisher / Venue</label>
-                                    <input
-                                        type="text"
-                                        value={paper.publisher}
-                                        onChange={(e) => handleChange(idx, "publisher", e.target.value)}
-                                        className={`w-full p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-publisher`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        placeholder="Ex: IEEE, Springer, Patent Office"
-                                    />
-                                    {errors[`${idx}-publisher`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-publisher`]}</p>}
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Publisher / Venue <span className="text-red-500">*</span></label>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-publisher`] ? 'from-red-500 to-red-600' : ''}`}>
+                                        <input
+                                            type="text"
+                                            value={paper.publisher}
+                                            onChange={(e) => handleChange(idx, "publisher", e.target.value)}
+                                            className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                            placeholder="Ex: IEEE, Springer, Patent Office"
+                                        />
+                                    </div>
+                                    {errors[`${idx}-publisher`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-publisher`]}</p>}
                                 </div>
 
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Publish Date</label>
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>Publish Date <span className="text-red-500">*</span></label>
                                     <div className="flex gap-2">
-                                        <select
-                                            value={paper.publishMonth}
-                                            onChange={(e) => handleChange(idx, "publishMonth", e.target.value)}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-publishDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        >
-                                            <option value="">Month</option>
-                                            {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
-                                        </select>
-                                        <select
-                                            value={paper.publishYear}
-                                            onChange={(e) => handleChange(idx, "publishYear", e.target.value)}
-                                            className={`w-1/2 p-2.5 rounded-xl border-2 outline-none transition ${errors[`${idx}-publishDate`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                        >
-                                            <option value="">Year</option>
-                                            {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                                        </select>
+                                        <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-publishDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                                            <select
+                                                value={paper.publishMonth}
+                                                onChange={(e) => handleChange(idx, "publishMonth", e.target.value)}
+                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                            >
+                                                <option value="">Month</option>
+                                                {MONTHS.map(m => <option key={m} value={m}>{m}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className={`w-1/2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-publishDate`] ? 'from-red-500 to-red-600' : ''}`}>
+                                            <select
+                                                value={paper.publishYear}
+                                                onChange={(e) => handleChange(idx, "publishYear", e.target.value)}
+                                                className={`w-full p-2.5 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                            >
+                                                <option value="">Year</option>
+                                                {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                                            </select>
+                                        </div>
                                     </div>
-                                    {errors[`${idx}-publishDate`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-publishDate`]}</p>}
+                                    {errors[`${idx}-publishDate`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-publishDate`]}</p>}
                                 </div>
                             </div>
 
                             <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description (Abstract)</label>
-                                <textarea
-                                    value={paper.description}
-                                    onChange={(e) => handleChange(idx, "description", e.target.value)}
-                                    rows={3}
-                                    className={`w-full p-3 rounded-xl border-2 outline-none transition resize-none ${errors[`${idx}-description`] ? 'border-red-500' : (darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500')}`}
-                                    placeholder="Brief abstract or description..."
-                                />
-                                {errors[`${idx}-description`] && <p className="text-red-500 text-xs mt-1">{errors[`${idx}-description`]}</p>}
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-orange-400' : 'text-orange-600'}`}>Description (Abstract) <span className="text-red-500">*</span></label>
+                                <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm ${errors[`${idx}-description`] ? 'from-red-500 to-red-600' : ''}`}>
+                                    <textarea
+                                        value={paper.description}
+                                        onChange={(e) => handleChange(idx, "description", e.target.value)}
+                                        rows={3}
+                                        className={`w-full p-3 rounded-[calc(0.75rem-2px)] outline-none transition resize-none ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                        placeholder="Brief abstract or description..."
+                                    />
+                                </div>
+                                {errors[`${idx}-description`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-description`]}</p>}
                             </div>
 
                             <div>
-                                <label className={`block text-xs font-black uppercase tracking-widest mb-1 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>URL Link</label>
-                                <div className="relative">
-                                    <LinkIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        value={paper.link}
-                                        onChange={(e) => handleChange(idx, "link", e.target.value)}
-                                        className={`w-full p-2.5 pl-10 rounded-xl border-2 outline-none transition ${darkMode ? 'bg-[#121213] text-white border-white/10 focus:border-blue-500' : 'bg-white text-gray-900 border-gray-200 focus:border-blue-500'}`}
-                                        placeholder="https://..."
-                                    />
+                                <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>URL Link <span className="text-pink-500 font-bold lowercase tracking-normal bg-pink-500/10 px-1.5 py-0.5 rounded ml-1">(Needed for points)</span></label>
+                                <div className="flex flex-col gap-2">
+                                    <div className={`relative p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
+                                        <LinkIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
+                                        <input
+                                            type="text"
+                                            value={paper.link}
+                                            onChange={(e) => handleChange(idx, "link", e.target.value)}
+                                            className={`w-full p-2.5 pl-10 rounded-[calc(0.75rem-2px)] outline-none transition ${darkMode ? 'bg-[#121213] text-white' : 'bg-white text-gray-900'}`}
+                                            placeholder="https://..."
+                                        />
+                                    </div>
+                                    <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm mt-1`}>
+                                        <div className={`p-1.5 rounded-[calc(0.75rem-2px)] flex gap-1 ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => { e.preventDefault(); handleChange(idx, "isLinkPublic", true); }}
+                                                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                    paper.isLinkPublic 
+                                                        ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md' 
+                                                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
+                                                }`}
+                                            >
+                                                <Globe className="w-4 h-4" /> Public
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => { e.preventDefault(); handleChange(idx, "isLinkPublic", false); }}
+                                                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                                    !paper.isLinkPublic 
+                                                        ? 'bg-gradient-to-r from-slate-600 to-gray-700 text-white shadow-md' 
+                                                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-white/5'
+                                                }`}
+                                            >
+                                                <Lock className="w-4 h-4" /> Private
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -295,12 +339,14 @@ export default function EditPapersModal({ isOpen, onClose, currentPapers, onSave
                 </div>
               ))}
 
-              <button
-                  onClick={addPaper}
-                  className={`w-full py-4 border-2 border-dashed rounded-xl transition flex items-center justify-center gap-2 font-bold ${darkMode ? 'border-white/10 text-blue-400 hover:border-blue-500 hover:bg-blue-500/10' : 'border-gray-200 text-blue-600 hover:border-blue-400 hover:bg-blue-50'}`}
-              >
-                  <Plus className="w-5 h-5" /> Add Another Publication
-              </button>
+              <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm w-full transition-all hover:scale-[1.01]">
+                  <button
+                      onClick={addPaper}
+                      className={`w-full py-4 rounded-[calc(0.75rem-2px)] flex items-center justify-center gap-2 font-bold ${darkMode ? 'bg-[#121213] text-white hover:bg-[#1a1a1b]' : 'bg-white text-black hover:bg-gray-50'}`}
+                  >
+                      <Plus className="w-5 h-5" /> Add Another Publication
+                  </button>
+              </div>
             </div>
 
             {/* Footer */}
