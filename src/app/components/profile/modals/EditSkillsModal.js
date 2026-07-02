@@ -198,3 +198,4 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
         </div>
     );
 }
+
