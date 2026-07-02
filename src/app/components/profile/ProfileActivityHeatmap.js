@@ -16,96 +16,89 @@ export default function ProfileActivityHeatmap({ profile }) {
     const { columns, monthLabels, totalActivity, currentStreak } = useMemo(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
+
+        const targetMonths = 6;
         let total = 0;
         let streak = 0;
-        let isCurrentStreakActive = true;
 
-        // Ensure we render exactly 6 full calendar months, avoiding broken half-months
-        const targetMonths = 6;
-        const startDate = new Date(today.getFullYear(), today.getMonth() - (targetMonths - 1), 1);
-        
-        // Push startDate back to the previous Sunday to ensure grid alignment
-        const startDayOfWeek = startDate.getDay();
-        startDate.setDate(startDate.getDate() - startDayOfWeek);
+        const resultCols = [];
+        const mLabels = [];
 
-        // Calculate exact number of days to render safely (avoids DST offset bugs)
-        let totalDaysToRender = 0;
-        let tempDate = new Date(startDate);
-        while (tempDate <= today) {
-            totalDaysToRender++;
-            tempDate.setDate(tempDate.getDate() + 1);
+        // Generate 6 months ending with the current month
+        for (let mi = 0; mi < targetMonths; mi++) {
+            const monthOffset = -(targetMonths - 1 - mi);
+            const firstOfMonth = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
+            const year = firstOfMonth.getFullYear();
+            const month = firstOfMonth.getMonth();
+            const lastOfMonth = new Date(year, month + 1, 0);
+
+            // For the current month, only show up to today
+            const lastDayToShow = (month === today.getMonth() && year === today.getFullYear())
+                ? today.getDate()
+                : lastOfMonth.getDate();
+
+            const startDayOfWeek = firstOfMonth.getDay(); // 0=Sun .. 6=Sat
+
+            // Build flat array: null pads before 1st + actual days + null pads to fill last week
+            const monthDays = [];
+
+            // Leading nulls so the 1st lands on the right row
+            for (let p = 0; p < startDayOfWeek; p++) {
+                monthDays.push(null);
+            }
+
+            // Actual days of this month (up to lastDayToShow)
+            for (let d = 1; d <= lastDayToShow; d++) {
+                const date = new Date(year, month, d);
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const count = heatmapData[dateString] || 0;
+                total += count;
+                monthDays.push({
+                    date: dateString,
+                    dateObj: date,
+                    count,
+                    level: count === 0 ? 0 : count <= 2 ? 1 : count <= 4 ? 2 : count <= 6 ? 3 : 4
+                });
+            }
+
+            // Trailing nulls so total length is a multiple of 7
+            while (monthDays.length % 7 !== 0) {
+                monthDays.push(null);
+            }
+
+            // Split flat array into 7-row columns
+            const isFirstDisplayedMonth = mi === 0;
+            for (let i = 0; i < monthDays.length; i += 7) {
+                const isNewMonth = i === 0 && !isFirstDisplayedMonth;
+                if (isNewMonth) {
+                    mLabels.push({
+                        label: firstOfMonth.toLocaleString('default', { month: 'long' }),
+                        colIndex: resultCols.length
+                    });
+                }
+                resultCols.push({
+                    days: monthDays.slice(i, i + 7),
+                    isNewMonth
+                });
+            }
         }
 
-        const allDays = [];
-        // Build all days using safe date arithmetic (clone to avoid mutation)
-        for (let i = totalDaysToRender - 1; i >= 0; i--) {
-            const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
-            const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-            const count = heatmapData[dateString] || 0;
-            total += count;
-
-            allDays.push({
-                date: dateString,
-                dateObj: date,
-                count,
-                level: count === 0 ? 0 : count <= 2 ? 1 : count <= 4 ? 2 : count <= 6 ? 3 : 4
-            });
-        }
-
-        // Calculate streak: count consecutive active days backwards from today
-        for (let i = allDays.length - 1; i >= 0; i--) {
-            if (allDays[i].count > 0) {
+        // Streak: walk backwards from today through all actual (non-null) days
+        const allActualDays = resultCols.flatMap(col => col.days).filter(d => d !== null);
+        for (let i = allActualDays.length - 1; i >= 0; i--) {
+            if (allActualDays[i].count > 0) {
                 streak++;
             } else {
-                // Allow today to be inactive (still building streak from yesterday)
-                if (i === allDays.length - 1) continue;
+                if (i === allActualDays.length - 1) continue; // today can be inactive
                 break;
             }
         }
 
-        const resultCols = [];
-        const mLabels = [];
-        let currentMonth = -1;
-
-        for (let i = 0; i < allDays.length; i += 7) {
-            const colDays = allDays.slice(i, i + 7);
-            let isNewMonth = false;
-            let newMonthDay = null;
-
-            if (resultCols.length === 0) {
-                // Initialize currentMonth from first column without adding a label
-                if (colDays[0]) currentMonth = colDays[0].dateObj.getMonth();
-            } else {
-                // Scan all days in this column for a month boundary (day === 1)
-                for (const day of colDays) {
-                    if (day && day.dateObj.getDate() === 1 && day.dateObj.getMonth() !== currentMonth) {
-                        isNewMonth = true;
-                        newMonthDay = day;
-                        currentMonth = day.dateObj.getMonth();
-                        break;
-                    }
-                }
-            }
-
-            if (isNewMonth && newMonthDay) {
-                mLabels.push({
-                    label: newMonthDay.dateObj.toLocaleString('default', { month: 'long' }),
-                    colIndex: resultCols.length
-                });
-            }
-
-            resultCols.push({
-                days: colDays,
-                isNewMonth
-            });
-        }
-        
-        return { 
-            columns: resultCols, 
+        return {
+            columns: resultCols,
             monthLabels: mLabels,
-            totalActivity: total, 
-            currentStreak: streak 
+            totalActivity: total,
+            currentStreak: streak
         };
     }, [heatmapData]);
 
@@ -204,6 +197,10 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                         </div>
 
                                                         {col.days.map((day, rowIndex) => {
+                                                            // Null = empty slot at month edge (padding)
+                                                            if (!day) {
+                                                                return <div key={`pad-${rowIndex}`} className="w-[18px] h-[18px]" />;
+                                                            }
                                                             const isToday = day.date === todayDateString;
                                                             return (
                                                                 <div
@@ -211,7 +208,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                                     onMouseEnter={(e) => {
                                                                         const rect = e.target.getBoundingClientRect();
                                                                         setTooltip({
-                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} activities on ${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} activities on ${new Date(day.dateObj).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
                                                                             x: rect.left + rect.width / 2,
                                                                             y: rect.top - 8
                                                                         });
@@ -220,7 +217,7 @@ export default function ProfileActivityHeatmap({ profile }) {
                                                                     onClick={(e) => {
                                                                         const rect = e.target.getBoundingClientRect();
                                                                         setTooltip({
-                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} activities on ${new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+                                                                            text: `${isToday ? 'TODAY: ' : ''}${day.count} activities on ${new Date(day.dateObj).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
                                                                             x: rect.left + rect.width / 2,
                                                                             y: rect.top - 8
                                                                         });
