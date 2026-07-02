@@ -324,19 +324,21 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
                             <div>
                                 <div className="flex justify-between items-center mb-2">
                                     <label className={`block text-xs font-black uppercase tracking-widest ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Proof <span className="text-pink-500 font-bold lowercase tracking-normal bg-pink-500/10 px-1.5 py-0.5 rounded ml-1">(Needed for points)</span></label>
-                                    <div className={`flex rounded-lg overflow-hidden border ${darkMode ? 'border-white/10' : 'border-gray-200'}`}>
-                                        <button
-                                            onClick={() => handleChange(idx, 'activeTab', 'link')}
-                                            className={`px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 transition ${ach.activeTab === 'link' ? (darkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
-                                        >
-                                            <LinkIcon className="w-3.5 h-3.5" /> URL Link
-                                        </button>
-                                        <button
-                                            onClick={() => handleChange(idx, 'activeTab', 'image')}
-                                            className={`px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 transition ${ach.activeTab === 'image' ? (darkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
-                                        >
-                                            <ImageIcon className="w-3.5 h-3.5" /> Image Proof
-                                        </button>
+                                    <div className={`flex rounded-lg overflow-hidden p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 shadow-sm`}>
+                                        <div className={`flex w-full rounded-[calc(0.5rem-2px)] overflow-hidden ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                            <button
+                                                onClick={() => handleChange(idx, 'activeTab', 'link')}
+                                                className={`flex-1 px-3 py-1.5 text-xs font-bold flex items-center justify-center gap-1.5 transition ${ach.activeTab === 'link' ? (darkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
+                                            >
+                                                <LinkIcon className="w-3.5 h-3.5" /> URL Link
+                                            </button>
+                                            <button
+                                                onClick={() => handleChange(idx, 'activeTab', 'image')}
+                                                className={`flex-1 px-3 py-1.5 text-xs font-bold flex items-center justify-center gap-1.5 transition ${ach.activeTab === 'image' ? (darkMode ? 'bg-white/10 text-white' : 'bg-gray-100 text-gray-900') : (darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900')}`}
+                                            >
+                                                <ImageIcon className="w-3.5 h-3.5" /> Image Proof
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -384,18 +386,12 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
                                         <div className={`p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
                                             <div className={`flex items-center gap-4 p-3 rounded-[calc(0.75rem-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
                                                 {ach.proofImage ? (
-                                                    <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200">
+                                                    <div className="relative w-16 h-16 rounded-[10px] overflow-hidden border border-gray-300 dark:border-white/20">
                                                         <img src={ach.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
-                                                        <button 
-                                                            onClick={() => removeProofImage(idx)}
-                                                            className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-bl-lg"
-                                                        >
-                                                            <X className="w-3 h-3" />
-                                                        </button>
                                                     </div>
                                                 ) : (
-                                                    <div className={`w-16 h-16 rounded-lg flex items-center justify-center bg-gray-100 dark:bg-white/5`}>
-                                                        <Upload className="w-6 h-6 text-gray-400" />
+                                                    <div className={`w-16 h-16 rounded-[10px] flex items-center justify-center shrink-0 border border-gray-300 dark:border-white/20 ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+                                                        <Award className="w-6 h-6 text-gray-400" />
                                                     </div>
                                                 )}
                                                 <div className="flex-1">
@@ -406,9 +402,20 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
                                                         className="hidden"
                                                         onChange={(e) => handleFileChange(idx, e)}
                                                     />
-                                                    <label htmlFor={`ach-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
-                                                        {ach.proofImage ? "Change Image" : "Upload Proof Image"}
-                                                    </label>
+                                                    <div className="flex items-center gap-2">
+                                                        <label htmlFor={`ach-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition border border-gray-300 dark:border-white/20 ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-black'}`}>
+                                                            {ach.proofImage ? "Change Image" : "Upload Proof Image"}
+                                                        </label>
+                                                        {ach.proofImage && (
+                                                            <button 
+                                                                onClick={() => removeProofImage(idx)}
+                                                                className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg transition-colors"
+                                                                title="Remove Image"
+                                                            >
+                                                                <Trash2 className="w-4 h-4" />
+                                                            </button>
+                                                        )}
+                                                    </div>
                                                     <p className="text-xs text-gray-500 mt-1">Max 5MB (JPG, PNG)</p>
                                                 </div>
                                             </div>
