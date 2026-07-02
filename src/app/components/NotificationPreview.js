@@ -137,7 +137,7 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
                                                         })() : (note.type === "points_earned" || note.type === "silent_points_deducted") ? (() => {
                                                             let msg = note.message;
                                                             let pts = "0";
-                                                            const match = note.message?.match(/\+?(\d+)\s*(?:PTS|pts|points|Points)/i);
+                                                            const match = note.message?.match(/\+?(\d+)\s*(?:PTS|points?|point\(s\))/i);
                                                             if (match) {
                                                                 pts = match[1];
                                                                 msg = note.message.replace(match[0], '').trim() || "Points Update";
@@ -202,3 +202,4 @@ export default function NotificationPreview({ notifications = [], darkMode }) {
         </motion.div>
     );
 }
+

@@ -226,17 +226,20 @@ export default function EditAchievementsModal({ isOpen, onClose, currentAchievem
                 </button>
             </div>
 
-            {/* Hint Banner */}
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-blue-500/20 p-3 shrink-0 flex items-start gap-2">
-                <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                <p className={`text-xs ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Add proof images or links for your achievements to earn profile points! (Max 3 proofs, 15 pts each). 
-                    Current points from achievements: <span className="font-bold text-blue-500">{achPointsEarning} / 45</span>
-                </p>
-            </div>
-
             {/* Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+              
+              {/* Guide Text */}
+              <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 rounded-xl mb-6">
+                  <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
+                      <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm leading-relaxed">
+                          <p className="font-bold mb-0.5">Automated Points System Active!</p>
+                          <p>Add proof images or links for your achievements to earn profile points! (Max 3 proofs, 15 pts each). Current points: <span className="font-bold text-blue-600 dark:text-blue-400">{achPointsEarning} / 45</span></p>
+                      </div>
+                  </div>
+              </div>
+
               {achievements.map((ach, idx) => (
                 <div key={idx} className={`p-[2px] rounded-xl shadow-sm transition-all duration-300 bg-gradient-to-tr from-blue-600 to-purple-600 ${expandedIndex === idx ? 'scale-[1.01]' : 'hover:scale-[1.01]'}`}>
                   <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
