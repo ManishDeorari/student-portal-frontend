@@ -72,21 +72,17 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
     return (
         <div className="fixed inset-0 h-[100dvh] w-full z-50 flex justify-center items-center p-4 bg-black/60 backdrop-blur-sm" onClick={!loading ? onClose : undefined}>
             <div className={`relative w-full max-w-lg p-[2.5px] bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-600 rounded-[calc(1.5rem+2.5px)] shadow-2xl overflow-hidden transform transition-all duration-300 scale-100`} onClick={e => e.stopPropagation()}>
-                <div className={`relative w-full h-full rounded-[1.5rem] p-6 flex flex-col max-h-[85vh] ${darkMode ? 'bg-slate-900 text-white' : 'bg-white text-gray-900'}`}>
-                    
-                    <div className="flex items-center justify-between mb-6 flex-shrink-0">
-                        <h2 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">
-                            Edit Skills
+                <div className={`relative w-full h-full rounded-[1.5rem] flex flex-col max-h-[85vh] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                    <div className="p-6 border-b border-gray-200 dark:border-white/10 flex justify-between items-center flex-shrink-0">
+                        <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+                            Skills & Competencies
                         </h2>
-                        
-                        <div className="flex items-center">
-                            <button onClick={onClose} className={`p-1 border-2 transition rounded-xl ml-3 ${darkMode ? 'border-white text-white hover:bg-white/20' : 'border-black text-black hover:bg-black/10'}`}>
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
+                        <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors text-gray-500 dark:text-gray-400">
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
 
-                    <div className="overflow-y-auto flex-1 pr-2 custom-scrollbar space-y-6">
+                    <div className="p-6 overflow-y-auto flex-1 custom-scrollbar space-y-6">
                         <div className="p-[2px] bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-500 rounded-xl">
                             <div className={`p-4 rounded-[calc(0.75rem-2px)] flex items-start gap-3 ${darkMode ? 'bg-[#121213] text-blue-300' : 'bg-blue-50 text-blue-800'}`}>
                                 <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -139,35 +135,37 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                             )}
                             
                             {Array.from(new Set(skills.map(s => s.category || "Other"))).map(category => (
-                                <div key={category} className={`p-4 rounded-2xl border ${darkMode ? 'bg-slate-800/40 border-gray-700' : 'bg-gray-50 border-gray-200'} space-y-3`}>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-sm"></div>
-                                        <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                            {category}
-                                        </h4>
-                                    </div>
-                                    <div className="flex flex-wrap gap-3">
-                                        {skills.filter(s => (s.category || "Other") === category).map((skill, idx) => (
-                                            <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md relative z-10">
-                                                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(9999px-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
-                                                    <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{skill.name}</span>
-                                                    <button
-                                                        onClick={() => handleRemoveSkill(skill.name)}
-                                                        className={`p-1 rounded-full ${darkMode ? 'hover:bg-slate-800 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-500'} transition-colors`}
-                                                        title="Remove skill"
-                                                    >
-                                                        <X className="w-3.5 h-3.5" />
-                                                    </button>
+                                <div key={category} className="p-[2px] rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 shadow-sm transition-transform hover:scale-[1.01]">
+                                    <div className={`p-4 rounded-[calc(1rem-2px)] h-full ${darkMode ? 'bg-[#121213]' : 'bg-white'} space-y-3`}>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-sm"></div>
+                                            <h4 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                                {category}
+                                            </h4>
+                                        </div>
+                                        <div className="flex flex-wrap gap-3">
+                                            {skills.filter(s => (s.category || "Other") === category).map((skill, idx) => (
+                                                <div key={idx} className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md relative z-10">
+                                                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(9999px-2px)] ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
+                                                        <span className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{skill.name}</span>
+                                                        <button
+                                                            onClick={() => handleRemoveSkill(skill.name)}
+                                                            className={`p-1 rounded-full ${darkMode ? 'hover:bg-slate-800 text-gray-400 hover:text-red-400' : 'hover:bg-gray-100 text-gray-500 hover:text-red-500'} transition-colors`}
+                                                            title="Remove skill"
+                                                        >
+                                                            <X className="w-3.5 h-3.5" />
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="mt-8 pt-6 border-t flex justify-end gap-3 flex-shrink-0 border-opacity-20 border-gray-500">
+                    <div className="p-6 border-t border-gray-200 dark:border-white/10 flex justify-end gap-3 flex-shrink-0 bg-gray-50 dark:bg-white/5 rounded-b-[1.5rem]">
                         <button
                             onClick={handleSave}
                             disabled={loading}
@@ -187,15 +185,16 @@ export default function EditSkillsModal({ isOpen, onClose, currentSkills, onSave
                         background: transparent;
                     }
                     .custom-scrollbar::-webkit-scrollbar-thumb {
-                        background: ${darkMode ? '#333' : '#d1d5db'};
+                        background: linear-gradient(to bottom, #2563eb, #9333ea);
                         border-radius: 10px;
                     }
                     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                        background: ${darkMode ? '#555' : '#9ca3af'};
+                        background: linear-gradient(to bottom, #1d4ed8, #7e22ce);
                     }
                 `}</style>
             </div>
         </div>
     );
 }
+
 
