@@ -5,6 +5,7 @@ import { Copy, Pencil, UserPlus, Check, Award, QrCode, Download, ArrowLeft } fro
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import dynamic from 'next/dynamic';
+import { motion } from "framer-motion";
 import ProfileAvatar from "./ProfileAvatar";
 import ProfileBanner from "./ProfileBanner";
 import UserNameWithBadge from "../ui/UserNameWithBadge";
@@ -207,15 +208,26 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                     {/* Action Icons - Top Right */}
                     <div className="absolute top-[8.5rem] sm:top-20 right-2 sm:right-4 z-20 flex items-center gap-2">
                         {/* QR Code Button - Available to everyone */}
-                        <div className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg">
-                            <button
-                                onClick={() => setShowQrModal(true)}
-                                className={`p-3 sm:p-2 rounded-[calc(9999px-2px)] transition-all hover:scale-105 ${darkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-white text-gray-900 hover:bg-gray-50'}`}
-                                title="Show QR Code"
-                            >
+                        <motion.div
+                            animate={{
+                                rotate: [0, -12, 12, -10, 10, -6, 6, 0],
+                                scale:  [1, 1.05, 1.05, 1.05, 1.05, 1.05, 1.05, 1],
+                            }}
+                            transition={{
+                                duration: 0.8,
+                                ease: "easeInOut",
+                                repeat: Infinity,
+                                repeatDelay: 4,
+                            }}
+                            whileHover={{ rotate: 0, scale: 1.1, transition: { duration: 0.2 } }}
+                            className="p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-lg cursor-pointer"
+                            onClick={() => setShowQrModal(true)}
+                            title="Share / Scan Profile"
+                        >
+                            <div className={`p-3 sm:p-2 rounded-[calc(9999px-2px)] transition-colors ${darkMode ? 'bg-slate-800 text-white' : 'bg-white text-gray-900'}`}>
                                 <QrCode className="w-5 h-5 sm:w-5 sm:h-5" />
-                            </button>
-                        </div>
+                            </div>
+                        </motion.div>
                         
                         {/* Edit Profile Icon - Only for owner */}
                         {!isPublicView && (
@@ -259,13 +271,6 @@ export default function ProfileBasicInfo({ profile, setProfile, onRefresh, isPub
                                 <span className={`select-all px-2 py-0.5 rounded-md transition-all cursor-text ${darkMode ? 'bg-[#121213]/50 text-white/70 border border-white/5' : 'bg-[#FAFAFA]/70 text-black border border-black/5'}`}>
                                     @{profile.publicId}
                                 </span>
-                                <button 
-                                    onClick={() => copyToClipboard(`${window.location.origin}/profile/${profile.publicId}`, "publicId")} 
-                                    className={`p-1 rounded-md transition-colors ${darkMode ? 'hover:bg-white/10 text-blue-400' : 'hover:bg-black/5 text-blue-600'}`}
-                                    title="Copy Profile Link"
-                                >
-                                    {copied === "publicId" ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
-                                </button>
                             </div>
                         )}
                     </div>
