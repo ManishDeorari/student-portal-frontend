@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SectionCard from "./SectionCard";
 import EditCertificatesModal from "./modals/EditCertificatesModal";
 import ImageViewerModal from "./ImageViewerModal";
-import { Award, Calendar, ExternalLink, ShieldCheck } from "lucide-react";
+import { Award, Calendar, ExternalLink, ShieldCheck, Globe, Lock } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
 export default function ProfileCertificates({ profile, setProfile, isPublicView }) {
@@ -88,7 +88,7 @@ export default function ProfileCertificates({ profile, setProfile, isPublicView 
 
                                         {/* Proof Image visible to owner or admin/faculty */}
                                         {cert.proofImage && (
-                                            <div className="mt-3 pt-2">
+                                            <div className="mt-3 pt-2 flex flex-wrap items-center gap-3">
                                                 {(() => {
                                                     const currentUserRole = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || "{}")?.role : null;
                                                     const canViewProof = !isPublicView || ["admin", "faculty"].includes(currentUserRole) || !cert.isPrivate;
@@ -100,8 +100,19 @@ export default function ProfileCertificates({ profile, setProfile, isPublicView 
                                                         >
                                                             <ExternalLink className="w-3 h-3" /> View Proof Image
                                                         </button>
+                                                    ) : cert.proofImage && cert.isPrivate && isPublicView ? (
+                                                        <span className={`inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${darkMode ? 'text-slate-500 border-slate-700' : 'text-gray-400 border-gray-200'}`}>
+                                                            <Lock className="w-3 h-3" /> Image Private
+                                                        </span>
                                                     ) : null;
                                                 })()}
+                                                
+                                                {/* Visibility badge - show only to owner */}
+                                                {!isPublicView && (
+                                                    <span className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 ${!cert.isPrivate ? (darkMode ? 'text-green-400' : 'text-green-600') : (darkMode ? 'text-slate-500' : 'text-gray-400')}`}>
+                                                        {!cert.isPrivate ? <><Globe className="w-3 h-3" /> Public</> : <><Lock className="w-3 h-3" /> Private</>}
+                                                    </span>
+                                                )}
                                             </div>
                                         )}
                                     </div>

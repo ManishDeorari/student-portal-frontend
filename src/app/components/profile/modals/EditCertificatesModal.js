@@ -42,7 +42,7 @@ export default function EditCertificatesModal({
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [expandedIndex, setExpandedIndex] = useState(-1);
+  const [expandedIndex, setExpandedIndex] = useState(null);
   const [selectedProofImage, setSelectedProofImage] = useState(null);
 
   const isCertComplete = (cert) =>
@@ -411,11 +411,13 @@ export default function EditCertificatesModal({
                                 <div className={`flex flex-col gap-2 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
                                     <div className={`flex items-center gap-4 p-3 rounded-[calc(0.75rem-2px)] w-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                                       {cert.proofImage ? (
-                                          <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 shrink-0">
-                                              <img src={cert.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
+                                          <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[10px] shrink-0 shadow-sm">
+                                            <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-white">
+                                                <img src={cert.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
+                                            </div>
                                           </div>
                                       ) : (
-                                          <div className={`w-16 h-16 rounded-lg flex items-center justify-center shrink-0 ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+                                          <div className={`w-16 h-16 rounded-[10px] flex items-center justify-center shrink-0 border border-gray-300 dark:border-white/20 ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
                                               <Award className="w-6 h-6 text-gray-400" />
                                           </div>
                                       )}
@@ -428,7 +430,7 @@ export default function EditCertificatesModal({
                                               onChange={(e) => handleImageChange(idx, e)}
                                           />
                                           <div className="flex items-center gap-2">
-                                              <label htmlFor={`cert-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
+                                              <label htmlFor={`cert-proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition border border-gray-300 dark:border-white/20 ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-black'}`}>
                                                   {cert.proofImage ? "Change Image" : "Upload Certificate Image"}
                                               </label>
                                               {cert.proofImage && (

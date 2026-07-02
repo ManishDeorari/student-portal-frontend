@@ -662,11 +662,13 @@ export default function EditExperienceModal({
                           <div className={`flex items-center gap-4 p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
                             <div className={`flex items-center gap-4 p-3 rounded-[calc(0.75rem-2px)] w-full ${darkMode ? 'bg-[#121213]' : 'bg-white'}`}>
                               {exp.proofImage ? (
-                                <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-200 shrink-0">
-                                  <img src={exp.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
+                                <div className="p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[10px] shrink-0 shadow-sm">
+                                  <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-white">
+                                    <img src={exp.proofImage} alt="Proof preview" className="w-full h-full object-cover" />
+                                  </div>
                                 </div>
                               ) : (
-                                <div className={`w-16 h-16 rounded-lg flex items-center justify-center shrink-0 ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+                                <div className={`w-16 h-16 rounded-[10px] flex items-center justify-center shrink-0 border border-gray-300 dark:border-white/20 ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
                                   <Award className="w-6 h-6 text-gray-400" />
                                 </div>
                               )}
@@ -679,7 +681,7 @@ export default function EditExperienceModal({
                                   onChange={(e) => handleFileChange(idx, e)}
                                 />
                                 <div className="flex items-center gap-2">
-                                  <label htmlFor={`proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
+                                  <label htmlFor={`proof-${idx}`} className={`cursor-pointer inline-block px-4 py-2 rounded-lg text-sm font-bold transition border border-gray-300 dark:border-white/20 ${darkMode ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-black'}`}>
                                     {exp.proofImage ? "Change Image" : "Upload Certificate/Offer Letter"}
                                   </label>
                                   {exp.proofImage && (

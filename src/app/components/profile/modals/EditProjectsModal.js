@@ -18,7 +18,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [expandedIndex, setExpandedIndex] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   useEffect(() => {
     if (currentProjects && isOpen) {
@@ -329,7 +329,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                                 {errors[`${idx}-description`] && <p className="text-red-500 text-[10px] font-bold mt-1.5 ml-1">{errors[`${idx}-description`]}</p>}
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-4">
                                 <div>
                                     <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-fuchsia-400' : 'text-fuchsia-600'}`}>Tools / Tech (comma separated)</label>
                                     <div className={`relative p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
@@ -345,7 +345,7 @@ export default function EditProjectsModal({ isOpen, onClose, currentProjects, on
                                 </div>
                                 
                                 <div>
-                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Project Link (Optional)</label>
+                                    <label className={`block text-xs font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>Project Link <span className="text-pink-500 font-bold lowercase tracking-normal bg-pink-500/10 px-1.5 py-0.5 rounded ml-1">(Needed for points)</span></label>
                                     <div className="flex flex-col gap-2">
                                         <div className={`relative p-[2px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl shadow-sm`}>
                                             <LinkIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
