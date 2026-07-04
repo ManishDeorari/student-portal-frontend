@@ -26,6 +26,67 @@ export const fetchPosts = async (page = 1, limit = 10, type = "Regular") => {
   return res.json();
 };
 
+export const checkEnrollmentNumber = async (enrollmentNumber) => {
+  const res = await fetch(`${BASE}/user/check-enrollment?enrollmentNumber=${enrollmentNumber}`);
+  if (!res.ok) throw new Error("Failed to check enrollment number");
+  return res.json();
+};
+
+// ================== EVENT REPOSTS ==================
+export const fetchEventReposts = async (eventId) => {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${BASE}/events/${eventId}/reposts`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Failed to fetch event reposts');
+  return res.json();
+};
+
+export const downloadEventRepostsCSV = async (eventId, title) => {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${BASE}/events/${eventId}/reposts`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error('Failed to fetch event reposts');
+  
+  const data = await res.json();
+  const reposts = data.reposts || [];
+  
+  if (reposts.length === 0) {
+    throw new Error('No reposts found for this event');
+  }
+
+  // Define CSV headers
+  const headers = ['Name', 'Enrollment Number', 'Email', 'Phone Number', 'Course', 'Course Year', 'Branch Name'];
+  
+  // Create CSV rows
+  const csvRows = [
+    headers.join(','),
+    ...reposts.map(r => {
+      const u = r.user || {};
+      return [
+        `"${u.name || ''}"`,
+        `"${u.enrollmentNumber || ''}"`,
+        `"${u.email || ''}"`,
+        `"${u.phoneNumber || ''}"`,
+        `"${u.course || ''}"`,
+        `"${u.courseYear || ''}"`,
+        `"${u.branch || ''}"`
+      ].join(',');
+    })
+  ];
+  
+  const csvContent = csvRows.join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `Reposts_${title.replace(/[^a-z0-9]/gi, '_')}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export const createPost = async (contentOrData, image, video, type = "Regular", documents = [], customFolders = {}, onProgress = null) => {
   let imageObjects = [];
   let videoObject = null;

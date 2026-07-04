@@ -72,7 +72,7 @@ export default function TopEarnersWidget({ darkMode }) {
               <div key={user._id} className="p-[1.5px] bg-gradient-to-tr from-yellow-400 via-orange-500 to-red-500 rounded-[17px] shadow-sm hover:shadow-md transition-all group shrink-0 flex-none h-[60px]">
                 <div className={`flex items-center px-3 rounded-[15.5px] transition-all h-full ${darkMode ? 'bg-[#1a1a1c] hover:bg-[#222225]' : 'bg-white hover:bg-orange-50/50'}`}>
                   <div 
-                    className="relative shrink-0 mr-3 w-10 h-10 min-w-[40px] min-h-[40px] cursor-pointer group/avatar"
+                    className="relative shrink-0 mr-3 w-10 h-10 min-w-[40px] min-h-[40px] cursor-pointer group/avatar rounded-full overflow-hidden"
                     onClick={(e) => {
                       e.stopPropagation();
                       setViewerImage(user.profilePicture || "/default-profile.jpg");
@@ -85,7 +85,7 @@ export default function TopEarnersWidget({ darkMode }) {
                       alt={user.name} 
                       width={40}
                       height={40}
-                      wrapperClassName="w-full h-full aspect-square flex items-center justify-center overflow-hidden"
+                      wrapperClassName="w-full h-full aspect-square flex items-center justify-center overflow-hidden rounded-full"
                       className={`w-full h-full aspect-square rounded-full object-cover border-2 transition-transform duration-300 group-hover/avatar:scale-110 ${index === 0 ? 'border-yellow-400' : index === 1 ? 'border-gray-300' : index === 2 ? 'border-amber-600' : 'border-transparent'}`}
                     />
                     {index === 0 && (

@@ -18,6 +18,7 @@ import CommentInput from "./Visual/CommentInput";
 const CommentCard = dynamic(() => import("./Visual/commentCard"), { ssr: false });
 import EventRegistrationModal from "./EventRegistrationModal";
 import AdminRegistrationsModal from "./AdminRegistrationsModal";
+import AdminRepostsModal from "./AdminRepostsModal";
 import CreateEventRepostModal from "./CreateEventRepostModal";
 import ReactionModal from "./Visual/ReactionModal";
 import FullImageViewer from "./utils/FullImageViewer";
@@ -57,7 +58,9 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
   // Event specific states
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showAdminRepostsModal, setShowAdminRepostsModal] = useState(false);
   const [showRepostModal, setShowRepostModal] = useState(false);
+  const [showMyRepostModal, setShowMyRepostModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const textareaRef = useRef(null);
@@ -448,12 +451,22 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                     {(currentUser?.isAdmin || currentUser?.role === 'faculty' || post.user?._id === currentUser?._id) ? (
                       post.eventType !== "no_registration" && (
                         <>
-                          <button
-                            onClick={() => setShowAdminModal(true)}
-                            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
-                          >
-                            View Registrations
-                          </button>
+                          {post.eventType !== "no_registration" && (
+                            <button
+                              onClick={() => setShowAdminModal(true)}
+                              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
+                            >
+                              View Registrations
+                            </button>
+                          )}
+                          {post.eventType === "no_registration" && (
+                            <button
+                              onClick={() => setShowAdminRepostsModal(true)}
+                              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
+                            >
+                              View Reposts
+                            </button>
+                          )}
                           {post.showRegistrationInsights && (
                             <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl border transition-all duration-300 ${darkMode ? "bg-blue-500/10 border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]" : "bg-blue-50 border-blue-100 shadow-sm"}`}>
                               <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
@@ -479,11 +492,35 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                             // Assuming backend populates currentUser with eventPointsAwarded or similar, or we just trust the UI
                             const alreadyClaimed = currentUser?.eventPointsAwarded?.includes(post._id);
 
-                            if (alreadyClaimed) {
+                            if (alreadyClaimed || post.myRepostId) {
                               return (
-                                <span className="text-[10px] font-black uppercase tracking-widest text-green-500 italic bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
-                                  Points Claimed
-                                </span>
+                                <div className="flex flex-col items-center gap-2">
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-green-500 italic bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
+                                    Already Reposted
+                                  </span>
+                                  {post.myRepostId && (
+                                    <>
+                                      <button 
+                                        onClick={(e) => { e.stopPropagation(); setShowMyRepostModal(true); }} 
+                                        className="text-[10px] font-bold text-blue-500 hover:underline cursor-pointer bg-transparent border-none p-0 z-50 relative"
+                                        style={{ pointerEvents: 'auto' }}
+                                      >
+                                        View your repost
+                                      </button>
+                                      {showMyRepostModal && (
+                                        <div onClick={(e) => e.stopPropagation()}>
+                                          <SmartPostModal
+                                            post={{ _id: post.myRepostId, type: "EventRepost" }}
+                                            currentUser={currentUser}
+                                            showModal={showMyRepostModal}
+                                            setShowModal={setShowMyRepostModal}
+                                            darkMode={darkMode}
+                                          />
+                                        </div>
+                                      )}
+                                    </>
+                                  )}
+                                </div>
                               );
                             } else if (deadlinePassed) {
                               return (
@@ -904,6 +941,14 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
               event={post}
               isOpen={showAdminModal}
               onClose={() => setShowAdminModal(false)}
+              darkMode={darkMode}
+            />
+          )}
+          {showAdminRepostsModal && (
+            <AdminRepostsModal
+              event={post}
+              isOpen={showAdminRepostsModal}
+              onClose={() => setShowAdminRepostsModal(false)}
               darkMode={darkMode}
             />
           )}
