@@ -33,9 +33,9 @@ export const NotificationProvider = ({ children }) => {
   const userRef = useRef(null);
   const recentToastsRef = useRef(new Map());
 
-  const fetchNotifications = useCallback(async (token) => {
+  const fetchNotifications = useCallback(async (token, page = 1) => {
     try {
-      const res = await fetch(`${API_URL}/api/notifications`, {
+      const res = await fetch(`${API_URL}/api/notifications?page=${page}&limit=50`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -44,9 +44,18 @@ export const NotificationProvider = ({ children }) => {
           ...n,
           isRead: n.isRead === true || n.isRead === "true" || n.isRead === 1 || n.isRead === "1"
         }));
-        setNotifications(normalized);
-        const unread = normalized.filter(n => !n.isRead).length;
-        setUnreadCount(unread);
+        
+        if (page === 1) {
+            setNotifications(normalized);
+            const unread = normalized.filter(n => !n.isRead).length;
+            setUnreadCount(unread);
+        } else {
+            setNotifications(prev => {
+                const existingIds = new Set(prev.map(p => p._id));
+                const newItems = normalized.filter(n => !existingIds.has(n._id));
+                return [...prev, ...newItems];
+            });
+        }
       }
     } catch (err) {
       if (err.name !== "TypeError" || err.message !== "Failed to fetch") {
@@ -150,6 +159,31 @@ export const NotificationProvider = ({ children }) => {
       toast.error("Failed to clear notifications");
     }
   }, [API_URL]);
+
+  const deleteNotification = useCallback(async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const res = await fetch(`${API_URL}/api/notifications/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (res.ok) {
+        setNotifications(prev => prev.filter(n => n._id !== id));
+      }
+    } catch (err) {
+      console.error("Failed to delete notification:", err);
+    }
+  }, [API_URL]);
+
+  const loadMoreNotifications = useCallback((page) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+          fetchNotifications(token, page);
+      }
+  }, [fetchNotifications]);
 
   const handleDailyLoginPoints = useCallback((awardedPoints) => {
     const token = localStorage.getItem("token");
@@ -482,6 +516,8 @@ export const NotificationProvider = ({ children }) => {
     markAsRead,
     markAllAsRead,
     clearReadNotifications,
+    deleteNotification,
+    loadMoreNotifications,
     handleDailyLoginPoints, // Exported for direct triggering from API responses
     refreshNotifications: () => {
         const token = localStorage.getItem("token");

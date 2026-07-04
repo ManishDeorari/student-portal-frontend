@@ -53,12 +53,16 @@ export default function NotificationsPage() {
     markAsRead, 
     markAllAsRead,
     clearReadNotifications,
+    deleteNotification,
+    loadMoreNotifications,
     refreshNotifications 
   } = useNotifications();
   
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("ALL");
+  const [readFilter, setReadFilter] = useState("ALL");
+  const [page, setPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
   const [showPostModal, setShowPostModal] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
@@ -115,7 +119,7 @@ export default function NotificationsPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleNotificationClick = async (note) => {
+  const handleNavigate = async (note) => {
     if (!note.isRead) {
       markAsRead(note._id);
     }
@@ -171,6 +175,10 @@ export default function NotificationsPage() {
   const filteredAndGroupedNotifications = useMemo(() => {
     let filtered = notifications;
 
+    if (readFilter === "UNREAD") {
+      filtered = filtered.filter(n => !n.isRead);
+    }
+
     // 1. Filter by Tab
     if (activeTab === "FEEDBACK") {
       filtered = notifications.filter(n => n.type === "feedback");
@@ -217,7 +225,7 @@ export default function NotificationsPage() {
     });
 
     return Object.entries(groups).filter(([_, group]) => group.items.length > 0);
-  }, [notifications, activeTab]);
+  }, [notifications, activeTab, readFilter]);
 
   const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
@@ -295,6 +303,22 @@ export default function NotificationsPage() {
           </div>
         </div>
 
+        {/* Read / Unread Tabs */}
+        <div className={`flex items-center gap-2 mb-4 p-1 rounded-xl w-fit ${darkMode ? 'bg-white/5' : 'bg-gray-100'}`}>
+          <button
+            onClick={() => setReadFilter("ALL")}
+            className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${readFilter === "ALL" ? (darkMode ? 'bg-white/20 text-white' : 'bg-white text-slate-800 shadow-sm') : (darkMode ? 'text-white/50 hover:text-white/80' : 'text-slate-500 hover:text-slate-700')}`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setReadFilter("UNREAD")}
+            className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${readFilter === "UNREAD" ? (darkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-white text-blue-600 shadow-sm') : (darkMode ? 'text-white/50 hover:text-white/80' : 'text-slate-500 hover:text-slate-700')}`}
+          >
+            Unread
+          </button>
+        </div>
+
         {/* Subsections (Tabs) */}
         <div className="relative p-[2px] mb-6 sm:mb-8 rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 w-full sm:w-fit shadow-md">
           <div className={`flex gap-1.5 sm:gap-2 p-1.5 rounded-[calc(1rem-2px)] w-full backdrop-blur-xl overflow-x-auto no-scrollbar ${darkMode ? 'bg-black/90' : 'bg-white'}`}>
@@ -360,7 +384,7 @@ export default function NotificationsPage() {
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.98 }}
-                        onClick={() => handleNotificationClick(note)}
+                        onClick={() => { if(!note.isRead) markAsRead(note._id); }}
                         className={`relative p-[2px] bg-gradient-to-r ${(note.type === 'points_earned' || note.type === 'silent_points_deducted') ? 'from-amber-400 via-yellow-500 to-amber-500' : 'from-blue-500 via-purple-500 to-pink-500'} rounded-2xl transition-all duration-300 group shadow-md`}
                       >
                         <div className={`relative flex items-start gap-2.5 sm:gap-4 p-2.5 sm:py-3 sm:px-5 rounded-[calc(1rem-2px)] transition-all ${
@@ -529,8 +553,29 @@ export default function NotificationsPage() {
                                   </span>
                                 </div>
                               </div>
-                              <ChevronRight className={`w-5 h-5 transition-all ${!note.isRead ? (darkMode ? 'text-white/20 group-hover:text-white' : 'text-slate-300 group-hover:text-blue-500') : 'opacity-0'} group-hover:translate-x-1`} />
                             </div>
+                          </div>
+
+                          <div className="absolute -top-3 -right-2 flex items-center gap-1.5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            {[
+                              "connect_request", "connect_accept", "profile_visit",
+                              "group_joined", "group_added", "post_like", "post_comment",
+                              "comment_like", "comment_reply", "reply_like", "comment_reaction",
+                              "reply_reaction", "points_earned", "silent_points_deducted"
+                            ].includes(note.type) && (
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); handleNavigate(note); }}
+                                className={`p-2 rounded-full shadow-lg ${darkMode ? 'bg-slate-800 text-blue-400 hover:bg-slate-700' : 'bg-white text-blue-600 hover:bg-gray-100'} transition-transform active:scale-95`}
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                            )}
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); deleteNotification(note._id); }}
+                              className={`p-2 rounded-full shadow-lg ${darkMode ? 'bg-slate-800 text-red-400 hover:bg-slate-700' : 'bg-white text-red-500 hover:bg-gray-100'} transition-transform active:scale-95`}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
                           </div>
 
                           {!note.isRead && (
@@ -543,6 +588,22 @@ export default function NotificationsPage() {
                 </div>
               </div>
             ))}
+
+            {/* Load More Button */}
+            {notifications.length > 0 && notifications.length % 50 === 0 && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={() => {
+                    const nextPage = page + 1;
+                    setPage(nextPage);
+                    loadMoreNotifications(nextPage);
+                  }}
+                  className={`px-8 py-3 rounded-xl text-sm font-bold transition-all shadow-md active:scale-95 ${darkMode ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-white text-blue-600 border border-blue-100 hover:bg-blue-50'}`}
+                >
+                  Load Older Notifications
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
