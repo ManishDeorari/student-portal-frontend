@@ -85,8 +85,8 @@ export default function TopEarnersWidget({ darkMode }) {
                       alt={user.name} 
                       width={40}
                       height={40}
-                      wrapperClassName="w-full h-full aspect-square"
-                      className={`rounded-full object-cover border-2 transition-transform duration-300 group-hover/avatar:scale-110 ${index === 0 ? 'border-yellow-400' : index === 1 ? 'border-gray-300' : index === 2 ? 'border-amber-600' : 'border-transparent'}`}
+                      wrapperClassName="w-full h-full aspect-square flex items-center justify-center overflow-hidden"
+                      className={`w-full h-full aspect-square rounded-full object-cover border-2 transition-transform duration-300 group-hover/avatar:scale-110 ${index === 0 ? 'border-yellow-400' : index === 1 ? 'border-gray-300' : index === 2 ? 'border-amber-600' : 'border-transparent'}`}
                     />
                     {index === 0 && (
                       <div className="absolute -top-2.5 -right-2.5 text-xl drop-shadow-md z-10 animate-pulse">👑</div>
