@@ -12,7 +12,9 @@ import PostReactions from "./PostReactions";
 import getEmojiFromUnified from "../utils/getEmojiFromUnified";
 import EventRegistrationModal from "../EventRegistrationModal";
 import AdminRegistrationsModal from "../AdminRegistrationsModal";
+import CreateEventRepostModal from "../CreateEventRepostModal";
 import ConfirmationModal from "./ConfirmationModal";
+import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
 import UserAvatar from "../../ui/UserAvatar";
 import UserNameWithBadge from "../../ui/UserNameWithBadge";
 import { Eye } from "lucide-react";
@@ -31,6 +33,7 @@ export default function PostModal(props) {
 
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showRepostModal, setShowRepostModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const editKey = `draft-${post?._id}`;
@@ -98,6 +101,158 @@ export default function PostModal(props) {
               hideViewFullPost={true}
             />
           </div>
+
+          {post.type === "Event" && (
+            <div className="mt-1 sm:mt-2 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr from-blue-500 to-purple-600 shadow-xl overflow-hidden mb-6">
+              <div className={`p-2 sm:p-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90" : "bg-white"} space-y-1.5 sm:space-y-2`}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                  <div className="flex flex-col">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Start</span>
+                    <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.startDate).toLocaleDateString()} at {post.startTime}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-purple-400/60" : "text-purple-600/60"}`}>Ends</span>
+                    <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{new Date(post.endDate).toLocaleDateString()}</span>
+                  </div>
+                  <div className="sm:col-span-2 flex flex-col pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-red-400/60" : "text-red-600/60"}`}>
+                      {post.eventType === "no_registration" ? "Reposting Deadline" : "Registration Deadline"}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">⏰</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.registrationCloseDate ? new Date(post.registrationCloseDate).toLocaleString() : "N/A"}</span>
+                    </div>
+                  </div>
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="sm:col-span-2 flex flex-wrap gap-2 pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
+                      {post.tags.map((tag, i) => (
+                        <span key={i} className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${darkMode ? "bg-white/10 text-gray-300" : "bg-black/5 text-gray-700"}`}>
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {post.pointsAssigned > 0 && (
+                    <div className="sm:col-span-2 flex flex-col pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-green-400/60" : "text-green-600/60"}`}>Points Assigned</span>
+                      <span className={`text-sm font-black ${darkMode ? "text-green-400" : "text-green-600"}`}>+{post.pointsAssigned} PTS</span>
+                    </div>
+                  )}
+                </div>
+
+                {post.documents && post.documents.length > 0 && (
+                  <div className="pt-4 border-t border-white/5 space-y-2">
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Attached Documents</span>
+                    <div className="flex flex-col gap-2">
+                      {post.documents.map((doc, idx) => (
+                        <div
+                          key={idx}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            downloadFileSilently(doc.url, doc.original_filename);
+                          }}
+                          className={`flex items-center justify-between p-3 rounded-xl border transition-all hover:scale-[1.01] cursor-pointer ${darkMode ? "bg-[#1A1A1B] border-white/10 hover:border-blue-500/50" : "bg-white border-gray-200 hover:border-blue-300"}`}
+                        >
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <span className="text-xl shrink-0">📄</span>
+                            <span className={`text-xs font-bold truncate ${darkMode ? "text-white" : "text-gray-800"}`}>
+                              {doc.original_filename || `Document ${idx + 1}`}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shrink-0 ${darkMode ? "bg-white/10 text-gray-400" : "bg-gray-100 text-gray-600"}`}>
+                              {doc.format || "FILE"}
+                            </span>
+                            <div className="w-6 h-6 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-500">
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-2 items-start sm:items-center justify-between border-t border-white/5 pt-6">
+                  <div className="flex items-center gap-4">
+                    {(currentUser?.isAdmin || currentUser?.role === 'faculty' || post.user?._id === currentUser?._id) ? (
+                      post.eventType !== "no_registration" && (
+                        <>
+                          <button
+                            onClick={() => setShowAdminModal(true)}
+                            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
+                          >
+                            View Registrations
+                          </button>
+                          {post.showRegistrationInsights && (
+                            <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl border transition-all duration-300 ${darkMode ? "bg-blue-500/10 border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]" : "bg-blue-50 border-blue-100 shadow-sm"}`}>
+                              <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
+                                👥
+                              </div>
+                              <div className="flex flex-col">
+                                <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
+                                <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
+                                  Registered: <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.registrationCount || 0}</span>
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )
+                    ) : (
+                      currentUser?.role === 'student' && (
+                        post.eventType === "no_registration" ? (
+                          (() => {
+                            const eventEndTime = new Date(post.endDate).getTime();
+                            const nowTime = Date.now();
+                            const deadlinePassed = nowTime > eventEndTime + (48 * 60 * 60 * 1000); // 48 hours after end
+                            // Assuming backend populates currentUser with eventPointsAwarded or similar, or we just trust the UI
+                            const alreadyClaimed = currentUser?.eventPointsAwarded?.includes(post._id);
+
+                            if (alreadyClaimed) {
+                              return (
+                                <span className="text-[10px] font-black uppercase tracking-widest text-green-500 italic bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
+                                  Points Claimed
+                                </span>
+                              );
+                            } else if (deadlinePassed) {
+                              return (
+                                <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/20">
+                                  Deadline Passed (48h)
+                                </span>
+                              );
+                            } else {
+                              return (
+                                <button
+                                  onClick={() => setShowRepostModal(true)}
+                                  className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105`}
+                                >
+                                  Repost & Claim Points
+                                </button>
+                              );
+                            }
+                          })()
+                        ) : (
+                          Date.now() < new Date(post.registrationCloseDate) ? (
+                            <button
+                              onClick={() => setShowRegistrationModal(true)}
+                              className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 ${post.isRegistered ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:scale-105"}`}
+                            >
+                              {post.isRegistered ? "Edit Registration" : "Register Now"}
+                            </button>
+                          ) : (
+                            <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/20">
+                              Registration Closed
+                            </span>
+                          )
+                        )
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Event Repost Link */}
           {post.type === "EventRepost" && post.eventRepostDetails && (
@@ -379,6 +534,45 @@ export default function PostModal(props) {
                 </div>
               </div>
             </>
+          )}
+
+          {post.eventType !== "no_registration" && (
+            <EventRegistrationModal
+              isOpen={showRegistrationModal}
+              onClose={() => setShowRegistrationModal(false)}
+              event={post}
+              currentUser={currentUser}
+              darkMode={darkMode}
+              onRegisterSuccess={(newRegistration) => {
+                if (setPosts) {
+                  setPosts(prev => prev.map(p =>
+                    p._id === post._id
+                      ? { ...p, isRegistered: true, myRegistration: newRegistration, registrationCount: (p.registrationCount || 0) + (newRegistration.isGroup ? newRegistration.groupMembers.length + 1 : 1) }
+                      : p
+                  ));
+                }
+              }}
+            />
+          )}
+
+          {post.eventType === "no_registration" && (
+            <CreateEventRepostModal
+              isOpen={showRepostModal}
+              onClose={() => setShowRepostModal(false)}
+              event={post}
+              currentUser={currentUser}
+              darkMode={darkMode}
+              setPosts={setPosts}
+            />
+          )}
+
+          {showAdminModal && (
+            <AdminRegistrationsModal
+              event={post}
+              isOpen={showAdminModal}
+              onClose={() => setShowAdminModal(false)}
+              darkMode={darkMode}
+            />
           )}
 
           <ConfirmationModal
