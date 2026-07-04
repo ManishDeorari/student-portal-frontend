@@ -179,39 +179,37 @@ export default function PostModal(props) {
                 <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-2 items-start sm:items-center justify-between border-t border-white/5 pt-6">
                   <div className="flex items-center gap-4">
                     {(currentUser?.isAdmin || currentUser?.role === 'faculty' || post.user?._id === currentUser?._id) ? (
-                      post.eventType !== "no_registration" && (
-                        <>
-                          {post.eventType !== "no_registration" && (
-                            <button
-                              onClick={() => setShowAdminModal(true)}
-                              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
-                            >
-                              View Registrations
-                            </button>
-                          )}
-                          {post.eventType === "no_registration" && (
-                            <button
-                              onClick={() => setShowAdminRepostsModal(true)}
-                              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
-                            >
-                              View Reposts
-                            </button>
-                          )}
-                          {post.showRegistrationInsights && (
-                            <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl border transition-all duration-300 ${darkMode ? "bg-blue-500/10 border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]" : "bg-blue-50 border-blue-100 shadow-sm"}`}>
-                              <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
-                                👥
-                              </div>
-                              <div className="flex flex-col">
-                                <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
-                                <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
-                                  Registered: <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.registrationCount || 0}</span>
-                                </span>
-                              </div>
+                      <>
+                        {post.eventType !== "no_registration" && (
+                          <button
+                            onClick={() => setShowAdminModal(true)}
+                            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
+                          >
+                            View Registrations
+                          </button>
+                        )}
+                        {post.eventType === "no_registration" && (
+                          <button
+                            onClick={() => setShowAdminRepostsModal(true)}
+                            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
+                          >
+                            View Reposts
+                          </button>
+                        )}
+                        {post.showRegistrationInsights && (
+                          <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl border transition-all duration-300 ${darkMode ? "bg-blue-500/10 border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]" : "bg-blue-50 border-blue-100 shadow-sm"}`}>
+                            <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
+                              👥
                             </div>
-                          )}
-                        </>
-                      )
+                            <div className="flex flex-col">
+                              <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
+                              <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
+                                Registered: <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.registrationCount || 0}</span>
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </>
                     ) : (
                       currentUser?.role === 'student' && (
                         post.eventType === "no_registration" ? (
