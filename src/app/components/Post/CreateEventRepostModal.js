@@ -97,7 +97,7 @@ const CreateEventRepostModal = ({ isOpen, onClose, currentUser, darkMode = false
         video, 
         "EventRepost", 
         [], 
-        { images: "student/events/reposts", videos: "student/events/reposts" },
+        {},
         setUploadProgress
       );
 
