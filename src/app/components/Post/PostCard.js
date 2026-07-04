@@ -502,10 +502,10 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                     <>
                                       <button 
                                         onClick={(e) => { e.stopPropagation(); setShowMyRepostModal(true); }} 
-                                        className="text-[10px] font-bold text-blue-500 hover:underline cursor-pointer bg-transparent border-none p-0 z-50 relative"
+                                        className="px-5 py-2 mt-1 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-md transition-all active:scale-95 bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:scale-105 flex items-center gap-1.5 z-50 relative"
                                         style={{ pointerEvents: 'auto' }}
                                       >
-                                        View your repost
+                                        <span>🔗</span> View Your Repost
                                       </button>
                                       {showMyRepostModal && (
                                         <div onClick={(e) => e.stopPropagation()}>
