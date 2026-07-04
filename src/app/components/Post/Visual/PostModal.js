@@ -216,9 +216,7 @@ export default function PostModal(props) {
                       currentUser?.role === 'student' && (
                         post.eventType === "no_registration" ? (
                           (() => {
-                            const eventEndTime = new Date(post.endDate).getTime();
-                            const nowTime = Date.now();
-                            const deadlinePassed = nowTime > eventEndTime + (48 * 60 * 60 * 1000); // 48 hours after end
+                            const deadlinePassed = Date.now() > new Date(post.registrationCloseDate).getTime();
                             // Assuming backend populates currentUser with eventPointsAwarded or similar, or we just trust the UI
                             const alreadyClaimed = currentUser?.eventPointsAwarded?.includes(post._id);
 
