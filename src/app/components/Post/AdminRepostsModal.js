@@ -85,14 +85,14 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false }) => {
             <div className="text-center py-10 opacity-50">No reposts yet.</div>
           ) : (
             <div className="space-y-4">
-              {data.reposts.map((reg) => (
-                <div key={reg._id} className="p-[1.2px] rounded-2xl bg-gradient-to-r from-blue-500/30 to-purple-600/30 hover:from-blue-500 hover:to-purple-600 transition-all duration-300">
+              {data.reposts.map((repost) => (
+                <div key={repost._id} className="p-[1.2px] rounded-2xl bg-gradient-to-r from-blue-500/30 to-purple-600/30 hover:from-blue-500 hover:to-purple-600 transition-all duration-300">
                   <div 
-                    onClick={() => toggleRow(reg._id)}
+                    onClick={() => toggleRow(repost._id)}
                     className={`p-4 rounded-[15px] flex items-center gap-4 cursor-pointer transition-all ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black hover:bg-gray-50"}`}
                   >
                     <UserAvatar 
-                      user={reg.userId}
+                      user={repost.user}
                       width={40}
                       height={40}
                       className="object-cover w-full h-full"
@@ -100,28 +100,18 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false }) => {
                     />
                     <div className="flex-1 min-w-0">
                       <p className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>
-                        {reg.isGroup && reg.groupName && (
-                          <span className={`text-[10px] font-bold uppercase tracking-widest mr-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                            [{reg.groupName}]
-                          </span>
-                        )}
-                        {reg.userId?.name}
+                        {repost.user?.name || "Unknown User"}
                       </p>
                       <p className={`text-xs flex items-center flex-wrap gap-2 ${darkMode ? "text-white/50" : "text-black/50"}`}>
-                        <span className="truncate">{reg.userId?.email}</span>
-                        {reg.isGroup && (
-                          <span className="inline-flex items-center gap-1 text-blue-500 font-bold bg-blue-500/10 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider">
-                            👥 Group ({reg.groupMembers?.length + 1})
-                          </span>
-                        )}
+                        <span className="truncate">{repost.user?.enrollmentNumber || "N/A"}</span>
                       </p>
                     </div>
                     <div className="text-right flex items-center gap-3">
                       <div>
-                        <p className={`text-[10px] font-bold ${darkMode ? "text-white/40" : "text-black/40"}`}>{new Date(reg.registeredAt).toLocaleDateString()}</p>
-                        <p className={`text-[10px] font-bold ${darkMode ? "text-white/40" : "text-black/40"}`}>{new Date(reg.registeredAt).toLocaleTimeString()}</p>
+                        <p className={`text-[10px] font-bold ${darkMode ? "text-white/40" : "text-black/40"}`}>{new Date(repost.createdAt).toLocaleDateString()}</p>
+                        <p className={`text-[10px] font-bold ${darkMode ? "text-white/40" : "text-black/40"}`}>{new Date(repost.createdAt).toLocaleTimeString()}</p>
                       </div>
-                      <div className={`text-gray-400 transition-transform duration-300 ${expandedRows[reg._id] ? "rotate-180" : ""}`}>
+                      <div className={`text-gray-400 transition-transform duration-300 ${expandedRows[repost._id] ? "rotate-180" : ""}`}>
                         ▼
                       </div>
                     </div>
@@ -129,7 +119,7 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false }) => {
                   
                   {/* Expanded Details */}
                   <AnimatePresence>
-                    {expandedRows[reg._id] && (
+                    {expandedRows[repost._id] && (
                       <motion.div 
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
@@ -137,64 +127,44 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false }) => {
                         className={`overflow-hidden ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} rounded-b-[15px]`}
                       >
                         <div className="p-4 pt-0 space-y-3">
-                           {/* Member 1 / Personal Answers */}
                            <div className="p-[1px] rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-600/20">
                               <div className={`p-4 rounded-[11px] ${darkMode ? "bg-slate-800 text-white" : "bg-blue-50/30 text-black"} space-y-3`}>
                                  <div className="flex justify-between items-center border-b border-dashed border-gray-500/20 pb-2">
-                                   <p className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Member 1 (Primary)</p>
-                                   <p className={`text-[10px] font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Headcount +1</p>
+                                   <p className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Repost Details</p>
+                                   <a href={`/profile/${repost.user?._id}/posts`} target="_blank" rel="noopener noreferrer" className={`text-[10px] font-bold text-blue-500 hover:underline`}>
+                                     🔗 View User's Reposts
+                                   </a>
                                  </div>
                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
                                     <div className="flex flex-col">
                                       <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Full Name</span>
-                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{reg.userId?.name}</span>
+                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.name || "N/A"}</span>
                                     </div>
                                     <div className="flex flex-col">
-                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Email Address</span>
-                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{reg.userId?.email}</span>
+                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Enrollment Number</span>
+                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.enrollmentNumber || "N/A"}</span>
                                     </div>
                                     <div className="flex flex-col">
-                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Enrollment #</span>
-                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{reg.userId?.enrollmentNumber}</span>
+                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Course</span>
+                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.course || "N/A"}</span>
                                     </div>
-                                    {Object.entries(reg.answers || {}).map(([key, value]) => {
-                                      if (!value || key === "$init") return null;
-                                      const normalizedKey = key.toLowerCase().trim();
-                                      if (['name', 'email', 'enrollmentnumber'].includes(normalizedKey)) return null;
-                                      
-                                      return (
-                                        <div key={key} className="flex flex-col">
-                                          <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-black/50"}`}>{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                          <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{String(value)}</span>
-                                        </div>
-                                      );
-                                    })}
+                                    <div className="flex flex-col">
+                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Semester</span>
+                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.semester || "N/A"}</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Branch & Section</span>
+                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.branch || "N/A"}</span>
+                                    </div>
+                                    {repost.content && (
+                                      <div className="flex flex-col sm:col-span-2">
+                                        <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Repost Caption</span>
+                                        <span className={`text-[11px] font-bold italic ${darkMode ? "text-white/80" : "text-black/80"}`}>"{repost.content}"</span>
+                                      </div>
+                                    )}
                                  </div>
                               </div>
                            </div>
-
-                           {/* Other Group Members */}
-                           {reg.isGroup && reg.groupMembers?.map((member, idx) => (
-                              <div key={idx} className="p-[1px] rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-600/10">
-                                <div className={`p-4 rounded-[11px] ${darkMode ? "bg-slate-800/40 text-white" : "bg-[#FAFAFA] text-black"} space-y-3 shadow-sm`}>
-                                   <div className="flex justify-between items-center border-b border-dashed border-gray-500/20 pb-2">
-                                     <p className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Member {idx + 2}</p>
-                                     <p className={`text-[10px] font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Headcount +1</p>
-                                   </div>
-                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
-                                     {Object.entries(member).map(([key, value]) => {
-                                       if (!value) return null;
-                                       return (
-                                         <div key={key} className="flex flex-col">
-                                           <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                           <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{String(value)}</span>
-                                         </div>
-                                       );
-                                     })}
-                                   </div>
-                                </div>
-                              </div>
-                           ))}
                         </div>
                       </motion.div>
                     )}
