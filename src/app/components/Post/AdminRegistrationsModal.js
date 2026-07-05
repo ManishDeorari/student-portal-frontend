@@ -147,17 +147,23 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                                    <p className={`text-[10px] font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Headcount +1</p>
                                  </div>
                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                                    <div className={`flex flex-col p-2.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-100 shadow-sm"}`}>
-                                      <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Full Name</span>
-                                      <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{reg.userId?.name || "N/A"}</span>
+                                    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                      <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Full Name</span>
+                                        <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{reg.userId?.name || "N/A"}</span>
+                                      </div>
                                     </div>
-                                    <div className={`flex flex-col p-2.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-100 shadow-sm"}`}>
-                                      <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Email Address</span>
-                                      <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{reg.userId?.email || "N/A"}</span>
+                                    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                      <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Email Address</span>
+                                        <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{reg.userId?.email || "N/A"}</span>
+                                      </div>
                                     </div>
-                                    <div className={`flex flex-col p-2.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-100 shadow-sm"}`}>
-                                      <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Enrollment #</span>
-                                      <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{reg.userId?.enrollmentNumber || "N/A"}</span>
+                                    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                      <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Enrollment #</span>
+                                        <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{reg.userId?.enrollmentNumber || "N/A"}</span>
+                                      </div>
                                     </div>
                                     {Object.entries(reg.answers || {}).map(([key, value]) => {
                                       if (!value || key === "$init") return null;
@@ -165,9 +171,11 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                                       if (['name', 'email', 'enrollmentnumber'].includes(normalizedKey)) return null;
                                       
                                       return (
-                                        <div key={key} className={`flex flex-col p-2.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-100 shadow-sm"}`}>
-                                          <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                          <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{String(value)}</span>
+                                        <div key={key} className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                          <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                            <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                            <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{String(value)}</span>
+                                          </div>
                                         </div>
                                       );
                                     })}
@@ -187,9 +195,11 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                                      {Object.entries(member).map(([key, value]) => {
                                        if (!value) return null;
                                        return (
-                                         <div key={key} className={`flex flex-col p-2.5 rounded-xl border ${darkMode ? "bg-white/5 border-white/10" : "bg-white border-gray-100 shadow-sm"}`}>
-                                           <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                                           <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{String(value)}</span>
+                                         <div key={key} className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                           <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                             <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                                             <span className={`text-[12px] font-bold ${darkMode ? "text-white" : "text-slate-900"}`}>{String(value)}</span>
+                                           </div>
                                          </div>
                                        );
                                      })}

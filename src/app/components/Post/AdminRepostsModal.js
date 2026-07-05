@@ -145,31 +145,43 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUs
                                      🔗 View Post
                                    </button>
                                  </div>
-                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
-                                    <div className="flex flex-col">
-                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Full Name</span>
-                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.name || "N/A"}</span>
+                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                      <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Full Name</span>
+                                        <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.name || "N/A"}</span>
+                                      </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Enrollment Number</span>
-                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.enrollmentNumber || "N/A"}</span>
+                                    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                      <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Enrollment Number</span>
+                                        <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.enrollmentNumber || "N/A"}</span>
+                                      </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Course</span>
-                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.course || "N/A"}</span>
+                                    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                      <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Course</span>
+                                        <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.course || "N/A"}</span>
+                                      </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Semester</span>
-                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.semester || "N/A"}</span>
+                                    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                      <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Semester</span>
+                                        <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.semester || "N/A"}</span>
+                                      </div>
                                     </div>
-                                    <div className="flex flex-col">
-                                      <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Branch & Section</span>
-                                      <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.branch || "N/A"}</span>
+                                    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">
+                                      <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Branch & Section</span>
+                                        <span className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{repost.user?.branch || "N/A"}</span>
+                                      </div>
                                     </div>
                                     {repost.content && (
-                                      <div className="flex flex-col sm:col-span-2">
-                                        <span className={`text-[9px] font-black uppercase tracking-tighter ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Repost Caption</span>
-                                        <span className={`text-[11px] font-bold italic ${darkMode ? "text-white/80" : "text-black/80"}`}>"{repost.content}"</span>
+                                      <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm sm:col-span-2">
+                                        <div className={`flex flex-col p-2.5 rounded-[10.5px] h-full ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                          <span className={`text-[9px] font-black uppercase tracking-widest mb-1 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>Repost Caption</span>
+                                          <span className={`text-[11px] font-bold italic ${darkMode ? "text-white/80" : "text-black/80"}`}>"{repost.content}"</span>
+                                        </div>
                                       </div>
                                     )}
                                  </div>
