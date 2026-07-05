@@ -849,23 +849,25 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                       />
                     ))}
 
-                  {(post.comments || []).length > visibleComments && (
-                    <button
-                      onClick={handleLoadMore}
-                      className="mt-2 text-sm text-blue-600 hover:underline"
-                    >
-                      Load more comments
-                    </button>
-                  )}
+                  <div className="flex justify-center items-center gap-4 mt-4 mb-2">
+                    {(post.comments || []).length > visibleComments && (
+                      <button
+                        onClick={handleLoadMore}
+                        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm border ${darkMode ? "bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20" : "bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100"}`}
+                      >
+                        Load more comments
+                      </button>
+                    )}
 
-                  {visibleComments > 2 && (
-                    <button
-                      onClick={() => setVisibleComments(2)}
-                      className="mt-1 text-sm text-red-500 hover:underline"
-                    >
-                      Show less comments
-                    </button>
-                  )}
+                    {visibleComments > 2 && (
+                      <button
+                        onClick={() => setVisibleComments(2)}
+                        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm border ${darkMode ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"}`}
+                      >
+                        Show less
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </>

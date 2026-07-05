@@ -473,10 +473,10 @@ export default function CommentCard({
                 />
               ))}
 
-            <div className="flex gap-4 ml-6 mt-2">
+            <div className="flex justify-center items-center gap-4 mt-3 mb-1">
               {replies.length > visibleReplies && (
                 <button
-                  className="text-[10px] font-black uppercase tracking-widest text-blue-500 hover:text-blue-400"
+                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm border ${darkMode ? "bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20" : "bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100"}`}
                   onClick={() => setVisibleReplies((v) => v + 2)}
                 >
                   Load more
@@ -485,10 +485,10 @@ export default function CommentCard({
 
               {visibleReplies > 2 && (
                 <button
-                  className="text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300"
+                  className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm border ${darkMode ? "bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20" : "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"}`}
                   onClick={() => setVisibleReplies(2)}
                 >
-                  Less
+                  Show less
                 </button>
               )}
             </div>
