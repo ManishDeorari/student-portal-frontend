@@ -1,13 +1,15 @@
 // components/Post/ImageGallery.js
 import Image from "next/image";
 
+import { getOptimizedImageUrl } from "../../../utils/cloudinaryHelper";
+
 export default function ImageGallery({ images, onImageClick, isRestricted }) {
   if (!images?.length) return null;
 
   return (
     <div className="mt-2 flex gap-2 overflow-x-auto max-w-full pb-2 custom-scrollbar snap-x snap-mandatory">
       {images.map((image, index) => {
-        const proxiedUrl = image.url;
+        const proxiedUrl = getOptimizedImageUrl(image.url, 800);
         return (
           <div key={index} className="relative flex-shrink-0 h-48 sm:h-64 w-64 sm:w-80 rounded-lg border overflow-hidden snap-center">
             <Image

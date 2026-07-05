@@ -15,33 +15,34 @@ export const getCloudinaryDownloadUrl = (url, originalName) => {
 
 /**
  * Formats a Cloudinary image URL to be optimized (auto quality, auto format).
+ * Adds a width restriction to prevent downloading full-res images (e.g. for feed).
  */
-export const getOptimizedImageUrl = (url) => {
+export const getOptimizedImageUrl = (url, width = 800) => {
   if (!url || !url.includes("res.cloudinary.com")) return url;
   if (url.includes("q_auto") || url.includes("f_auto")) return url;
 
   const parts = url.split("/upload/");
   if (parts.length === 2) {
-    return `${parts[0]}/upload/q_auto,f_auto/${parts[1]}`;
+    return `${parts[0]}/upload/w_${width},q_auto,f_auto/${parts[1]}`;
   }
   return url;
 };
 
 /**
  * Formats a Cloudinary image URL specifically for small profile pictures.
- * Uses AI Face Detection (g_face) to guarantee the user's face is centered,
- * even if they uploaded a landscape image.
+ * Uses AI Face Detection (g_face) to guarantee the user's face is centered.
+ * Uses eco quality for small avatars to save massive bandwidth.
  */
-export const getAvatarImageUrl = (url, width = 400) => {
+export const getAvatarImageUrl = (url, width = 150) => {
   if (!url || !url.includes("res.cloudinary.com")) return url;
   if (url.includes("g_face")) return url; // Already optimized for face
 
-  const size = Math.max(width, 400); // Enforce a minimum of 400px for sharpness
+  const size = Math.max(width, 100); // Enforce a minimum of 100px for sharpness, not 400px
 
   const parts = url.split("/upload/");
   if (parts.length === 2) {
-    // c_fill (fill area), g_face (center on face), q_auto:best (highest quality)
-    return `${parts[0]}/upload/c_fill,g_face,w_${size},h_${size},q_auto:best,f_auto/${parts[1]}`;
+    // c_fill (fill area), g_face (center on face), q_auto:eco (bandwidth friendly)
+    return `${parts[0]}/upload/c_fill,g_face,w_${size},h_${size},q_auto:eco,f_auto/${parts[1]}`;
   }
   return url;
 };

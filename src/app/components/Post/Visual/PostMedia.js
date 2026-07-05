@@ -21,7 +21,7 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
 
   const isRestricted = post.user?._id !== currentUser?._id && currentUser?.role !== 'admin';
 
-  const singleImageSrc = post.image ? post.image : null;
+  const singleImageSrc = post.image ? getOptimizedImageUrl(post.image, 800) : null;
   const videoSrc = post.video?.url ? post.video.url : null;
 
   return (
