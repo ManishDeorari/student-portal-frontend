@@ -467,15 +467,18 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                           </button>
                         )}
                         {post.showRegistrationInsights && (
-                          <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl border transition-all duration-300 ${darkMode ? "bg-blue-500/10 border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]" : "bg-blue-50 border-blue-100 shadow-sm"}`}>
-                            <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
-                              👥
-                            </div>
-                            <div className="flex flex-col">
-                              <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
-                              <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
-                                Registered: <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.registrationCount || 0}</span>
-                              </span>
+                          <div className={`p-[1.5px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm hover:shadow-md transition-all duration-300`}>
+                            <div className={`flex items-center gap-3 px-5 py-2.5 rounded-[14.5px] transition-all duration-300 ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                              <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
+                                👥
+                              </div>
+                              <div className="flex flex-col">
+                                <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
+                                <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
+                                  {post.eventType === "no_registration" ? "Reposted: " : "Registered: "}
+                                  <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.eventType === "no_registration" ? (post.repostCount || 0) : (post.registrationCount || 0)}</span>
+                                </span>
+                              </div>
                             </div>
                           </div>
                         )}
