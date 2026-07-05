@@ -62,8 +62,12 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
             <div className={`px-8 py-6 border-b ${darkMode ? "border-white/10" : "border-gray-100"} flex items-center justify-between`}>
               <div>
                 <h2 className={`text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>Event Registrations</h2>
-                <p className={`text-xs ${darkMode ? "text-white/60" : "text-black/60"}`}>{event.title} • Total: {data.totalCount}</p>
-            </div>
+                <p className="text-sm font-bold mt-1">
+                  <span className={darkMode ? "text-orange-400" : "text-orange-600"}>{event.title}</span>
+                  <span className={`mx-2 ${darkMode ? "text-white/40" : "text-black/40"}`}>•</span>
+                  <span className={darkMode ? "text-blue-400" : "text-blue-600"}>Total: {data.totalCount}</span>
+                </p>
+              </div>
             <div className="flex gap-4 items-center">
               <button 
                 onClick={handleDownloadCSV}
@@ -144,7 +148,7 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                               <div className={`p-4 rounded-[11px] ${darkMode ? "bg-slate-800 text-white" : "bg-blue-50/30 text-black"} space-y-3`}>
                                  <div className="flex justify-between items-center border-b border-dashed border-gray-500/20 pb-2">
                                    <p className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Member 1 (Primary)</p>
-                                   <p className={`text-[10px] font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Headcount +1</p>
+                                   <p className={`text-[10px] font-bold ${darkMode ? "text-white" : "text-black"}`}>Headcount +1</p>
                                  </div>
                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                                     <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-orange-400 to-red-500 shadow-sm">

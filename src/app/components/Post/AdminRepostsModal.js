@@ -64,8 +64,12 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUs
             <div className={`px-8 py-6 border-b ${darkMode ? "border-white/10" : "border-gray-100"} flex items-center justify-between`}>
               <div>
                 <h2 className={`text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>Event Reposts</h2>
-                <p className={`text-xs ${darkMode ? "text-white/60" : "text-black/60"}`}>{event.title} • Total: {data.totalCount}</p>
-            </div>
+                <p className="text-sm font-bold mt-1">
+                  <span className={darkMode ? "text-orange-400" : "text-orange-600"}>{event.title}</span>
+                  <span className={`mx-2 ${darkMode ? "text-white/40" : "text-black/40"}`}>•</span>
+                  <span className={darkMode ? "text-blue-400" : "text-blue-600"}>Total: {data.totalCount}</span>
+                </p>
+              </div>
             <div className="flex gap-4 items-center">
               <button 
                 onClick={handleDownloadCSV}
