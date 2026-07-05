@@ -4,6 +4,7 @@ import UserAvatar from "../ui/UserAvatar";
 import { fetchEventReposts, downloadEventRepostsCSV } from "../../../api/dashboard";
 import toast from "react-hot-toast";
 
+import { motion, AnimatePresence } from "framer-motion";
 import PostModal from "./Visual/PostModal";
 
 const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUser }) => {
