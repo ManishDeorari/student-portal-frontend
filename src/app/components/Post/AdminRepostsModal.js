@@ -208,8 +208,8 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUs
       {selectedRepost && (
         <PostModal
           post={selectedRepost}
-          isOpen={true}
-          onClose={() => setSelectedRepost(null)}
+          showModal={true}
+          setShowModal={() => setSelectedRepost(null)}
           darkMode={darkMode}
           currentUser={currentUser}
         />
