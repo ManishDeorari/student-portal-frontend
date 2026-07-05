@@ -86,10 +86,10 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
           ) : (
             <div className="space-y-4">
               {data.registrations.map((reg) => (
-                <div key={reg._id} className="p-[1.2px] rounded-2xl bg-gradient-to-r from-blue-500/30 to-purple-600/30 hover:from-blue-500 hover:to-purple-600 transition-all duration-300">
+                <div key={reg._id} className="p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm hover:shadow-md transition-all duration-300">
                   <div 
                     onClick={() => toggleRow(reg._id)}
-                    className={`p-4 rounded-[15px] flex items-center gap-4 cursor-pointer transition-all ${darkMode ? "bg-[#121213] text-white" : "bg-[#FAFAFA] text-black hover:bg-gray-50"}`}
+                    className={`p-4 rounded-[14px] flex items-center gap-4 cursor-pointer transition-all ${darkMode ? "bg-[#121213]" : "bg-white"} hover:opacity-90`}
                   >
                     <UserAvatar 
                       user={reg.userId}
@@ -99,16 +99,16 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                       wrapperClassName="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
                     />
                     <div className="flex-1 min-w-0 flex flex-col justify-center">
-                      <p className={`text-base font-black tracking-tight flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+                      <p className={`text-lg font-black tracking-tight flex items-center gap-2 ${darkMode ? "text-orange-400" : "text-orange-600"}`}>
                         {reg.isGroup && reg.groupName && (
-                          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md ${darkMode ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" : "bg-blue-100 text-blue-700 border border-blue-200"}`}>
+                          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md ${darkMode ? "bg-orange-500/20 text-orange-400 border border-orange-500/30" : "bg-orange-100 text-orange-700 border border-orange-200"}`}>
                             {reg.groupName}
                           </span>
                         )}
                         {reg.userId?.name || "Unknown User"}
                       </p>
                       <div className="mt-1 flex items-center flex-wrap gap-2">
-                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase ${darkMode ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" : "bg-purple-100 text-purple-700 border border-purple-200"}`}>
+                        <span className={`inline-block px-3 py-0.5 rounded-full text-xs font-black tracking-widest uppercase ${darkMode ? "bg-blue-500 text-white" : "bg-blue-600 text-white"}`}>
                           {reg.userId?.enrollmentNumber || reg.userId?.email || "N/A"}
                         </span>
                         {reg.isGroup && (
@@ -120,8 +120,8 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                     </div>
                     <div className="text-right flex items-center gap-3">
                       <div className="flex flex-col items-end justify-center">
-                        <p className={`text-[11px] font-black uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{new Date(reg.registeredAt).toLocaleDateString()}</p>
-                        <p className={`text-[10px] font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>{new Date(reg.registeredAt).toLocaleTimeString()}</p>
+                        <p className={`text-xs font-black uppercase tracking-wider ${darkMode ? "text-white" : "text-black"}`}>{new Date(reg.registeredAt).toLocaleDateString()}</p>
+                        <p className={`text-[11px] font-bold ${darkMode ? "text-white" : "text-black"}`}>{new Date(reg.registeredAt).toLocaleTimeString()}</p>
                       </div>
                       <div className={`text-gray-400 transition-transform duration-300 ${expandedRows[reg._id] ? "rotate-180" : ""}`}>
                         ▼
