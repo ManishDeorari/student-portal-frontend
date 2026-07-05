@@ -98,28 +98,30 @@ const AdminRegistrationsModal = ({ event, isOpen, onClose, darkMode = false }) =
                       className="object-cover w-full h-full"
                       wrapperClassName="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
                     />
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>
+                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                      <p className={`text-base font-black tracking-tight flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
                         {reg.isGroup && reg.groupName && (
-                          <span className={`text-[10px] font-bold uppercase tracking-widest mr-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-                            [{reg.groupName}]
+                          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md ${darkMode ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" : "bg-blue-100 text-blue-700 border border-blue-200"}`}>
+                            {reg.groupName}
                           </span>
                         )}
-                        {reg.userId?.name}
+                        {reg.userId?.name || "Unknown User"}
                       </p>
-                      <p className={`text-xs flex items-center flex-wrap gap-2 ${darkMode ? "text-white/50" : "text-black/50"}`}>
-                        <span className="truncate">{reg.userId?.email}</span>
+                      <div className="mt-1 flex items-center flex-wrap gap-2">
+                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase ${darkMode ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" : "bg-purple-100 text-purple-700 border border-purple-200"}`}>
+                          {reg.userId?.enrollmentNumber || reg.userId?.email || "N/A"}
+                        </span>
                         {reg.isGroup && (
-                          <span className="inline-flex items-center gap-1 text-blue-500 font-bold bg-blue-500/10 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider">
+                          <span className="inline-flex items-center gap-1 text-blue-500 font-bold bg-blue-500/10 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider border border-blue-500/20">
                             👥 Group ({reg.groupMembers?.length + 1})
                           </span>
                         )}
-                      </p>
+                      </div>
                     </div>
                     <div className="text-right flex items-center gap-3">
-                      <div>
-                        <p className={`text-[10px] font-bold ${darkMode ? "text-white/40" : "text-black/40"}`}>{new Date(reg.registeredAt).toLocaleDateString()}</p>
-                        <p className={`text-[10px] font-bold ${darkMode ? "text-white/40" : "text-black/40"}`}>{new Date(reg.registeredAt).toLocaleTimeString()}</p>
+                      <div className="flex flex-col items-end justify-center">
+                        <p className={`text-[11px] font-black uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{new Date(reg.registeredAt).toLocaleDateString()}</p>
+                        <p className={`text-[10px] font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>{new Date(reg.registeredAt).toLocaleTimeString()}</p>
                       </div>
                       <div className={`text-gray-400 transition-transform duration-300 ${expandedRows[reg._id] ? "rotate-180" : ""}`}>
                         ▼

@@ -4,13 +4,14 @@ import UserAvatar from "../ui/UserAvatar";
 import { fetchEventReposts, downloadEventRepostsCSV } from "../../../api/dashboard";
 import toast from "react-hot-toast";
 
-import { motion, AnimatePresence } from "framer-motion";
+import PostModal from "./Visual/PostModal";
 
-const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false }) => {
+const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUser }) => {
   const [loading, setLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const [data, setData] = useState({ totalCount: 0, reposts: [] });
   const [expandedRows, setExpandedRows] = useState({});
+  const [selectedRepost, setSelectedRepost] = useState(null);
 
   useEffect(() => {
     if (isOpen && event?._id) {
@@ -98,18 +99,20 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false }) => {
                       className="object-cover w-full h-full"
                       wrapperClassName="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
                     />
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>
+                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                      <p className={`text-base font-black tracking-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
                         {repost.user?.name || "Unknown User"}
                       </p>
-                      <p className={`text-xs flex items-center flex-wrap gap-2 ${darkMode ? "text-white/50" : "text-black/50"}`}>
-                        <span className="truncate">{repost.user?.enrollmentNumber || "N/A"}</span>
+                      <p className="mt-1">
+                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase ${darkMode ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" : "bg-blue-100 text-blue-700 border border-blue-200"}`}>
+                          {repost.user?.enrollmentNumber || "N/A"}
+                        </span>
                       </p>
                     </div>
                     <div className="text-right flex items-center gap-3">
-                      <div>
-                        <p className={`text-[10px] font-bold ${darkMode ? "text-white/40" : "text-black/40"}`}>{new Date(repost.createdAt).toLocaleDateString()}</p>
-                        <p className={`text-[10px] font-bold ${darkMode ? "text-white/40" : "text-black/40"}`}>{new Date(repost.createdAt).toLocaleTimeString()}</p>
+                      <div className="flex flex-col items-end justify-center">
+                        <p className={`text-[11px] font-black uppercase tracking-wider ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{new Date(repost.createdAt).toLocaleDateString()}</p>
+                        <p className={`text-[10px] font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>{new Date(repost.createdAt).toLocaleTimeString()}</p>
                       </div>
                       <div className={`text-gray-400 transition-transform duration-300 ${expandedRows[repost._id] ? "rotate-180" : ""}`}>
                         ▼
@@ -129,11 +132,17 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false }) => {
                         <div className="p-4 pt-0 space-y-3">
                            <div className="p-[1px] rounded-xl bg-gradient-to-r from-blue-500/20 to-purple-600/20">
                               <div className={`p-4 rounded-[11px] ${darkMode ? "bg-slate-800 text-white" : "bg-blue-50/30 text-black"} space-y-3`}>
-                                 <div className="flex justify-between items-center border-b border-dashed border-gray-500/20 pb-2">
+                                 <div className="flex justify-between items-center border-b border-dashed border-gray-500/20 pb-3">
                                    <p className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Repost Details</p>
-                                   <a href={`/profile/${repost.user?._id}/posts`} target="_blank" rel="noopener noreferrer" className={`text-[10px] font-bold text-blue-500 hover:underline`}>
-                                     🔗 View User's Reposts
-                                   </a>
+                                   <button 
+                                     onClick={(e) => {
+                                       e.stopPropagation();
+                                       setSelectedRepost(repost);
+                                     }}
+                                     className={`px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md transition-all active:scale-95 ${darkMode ? "bg-blue-600 text-white hover:bg-blue-500" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                                   >
+                                     🔗 View Post
+                                   </button>
                                  </div>
                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
                                     <div className="flex flex-col">
@@ -177,6 +186,17 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false }) => {
         </div>
         </motion.div>
       </div>
+      
+      {/* Post Modal for viewing the Repost */}
+      {selectedRepost && (
+        <PostModal
+          post={selectedRepost}
+          isOpen={true}
+          onClose={() => setSelectedRepost(null)}
+          darkMode={darkMode}
+          currentUser={currentUser}
+        />
+      )}
     </AnimatePresence>
   );
 };
