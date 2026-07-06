@@ -186,7 +186,7 @@ export default function EditCertificatesModal({
               );
               if (uploadRes.ok) {
                 const data = await uploadRes.json();
-                proofImageUrl = data.secure_url;
+                proofImageUrl = data.public_id ? `${data.public_id}.${data.format}` : data.secure_url;
               } else {
                 toast.error(`Failed to upload proof image for ${cert.name}`);
               }

@@ -114,7 +114,7 @@ export default function GroupChatWindow({
                 const data = await res.json();
                 if (data.secure_url) {
                     mediaData = {
-                        mediaUrl: data.secure_url,
+                        mediaUrl: data.public_id ? `${data.public_id}.${data.format}` : data.secure_url,
                         mediaPublicId: data.public_id,
                         type: "image"
                     };
@@ -142,7 +142,7 @@ export default function GroupChatWindow({
                 const data = await res.json();
                 if (data.secure_url) {
                     mediaData = {
-                        mediaUrl: data.secure_url,
+                        mediaUrl: data.public_id ? `${data.public_id}.${data.format}` : data.secure_url,
                         mediaPublicId: data.public_id,
                         type: "document",
                         fileName: selectedDocument.name

@@ -75,7 +75,7 @@ export default function CreateGroupModal({ isOpen, onClose, onCreate }) {
                 });
                 const data = await res.json();
                 if (data.secure_url) {
-                    finalImageUrl = data.secure_url;
+                    finalImageUrl = data.public_id ? `${data.public_id}.${data.format}` : data.secure_url;
                     finalPublicId = data.public_id;
                 }
             } catch (err) {

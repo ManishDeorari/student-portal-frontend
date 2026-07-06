@@ -153,7 +153,7 @@ export default function ProfileEditorModal({ onClose, onUploaded, userId, curren
           toast.error("❌ Upload to Cloudinary failed.");
           return;
         }
-        uploadedUrl = uploadJson.secure_url;
+        uploadedUrl = uploadJson.public_id ? `${uploadJson.public_id}.${uploadJson.format}` : uploadJson.secure_url;
       }
 
       const updatePayload = {
