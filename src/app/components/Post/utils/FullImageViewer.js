@@ -177,6 +177,7 @@ export default function FullImageViewer({ images, startIndex, onClose, isRestric
           <img
             src={images[currentIndex]}
             alt={`Image ${currentIndex + 1}`}
+            loading="lazy"
             className={`max-w-[90vw] max-h-[90vh] object-contain rounded-xl shadow-2xl transition-shadow ${isRestricted ? 'select-none pointer-events-none shadow-none' : ''}`}
             onContextMenu={(e) => isRestricted && e.preventDefault()}
             draggable={false}
