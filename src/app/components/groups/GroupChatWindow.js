@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
+import imageCompression from "browser-image-compression";
 import UserAvatar from "../ui/UserAvatar";
 import { FaPaperPlane, FaSmile, FaInfoCircle, FaUserPlus, FaUsers, FaImage, FaTimes, FaExpand, FaEdit, FaFileAlt, FaDownload } from "react-icons/fa";
 import { useTheme } from "@/context/ThemeContext";
@@ -92,8 +93,17 @@ export default function GroupChatWindow({
         if (selectedFile) {
             setUploading(true);
             try {
+                let fileToUpload = selectedFile;
+                if (selectedFile.type && selectedFile.type.startsWith("image/") && !selectedFile.type.includes("gif")) {
+                    try {
+                        const options = { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true };
+                        fileToUpload = await imageCompression(selectedFile, options);
+                    } catch (error) {
+                        console.error("Image compression error:", error);
+                    }
+                }
                 const formData = new FormData();
-                formData.append("file", selectedFile);
+                formData.append("file", fileToUpload);
                 formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
                 formData.append("folder", "student/groups/images");
 

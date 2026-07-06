@@ -1,7 +1,8 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import imageCompression from "browser-image-compression";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -129,8 +130,17 @@ export default function BannerEditorModal({ onClose, onUploaded, userId, current
 
       let uploadedUrl = null;
       if (selectedFile) {
+        let fileToUpload = selectedFile;
+        if (selectedFile.type && selectedFile.type.startsWith("image/") && !selectedFile.type.includes("gif")) {
+          try {
+            const options = { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true };
+            fileToUpload = await imageCompression(selectedFile, options);
+          } catch (error) {
+            console.error("Image compression error:", error);
+          }
+        }
         const formData = new FormData();
-        formData.append("file", selectedFile);
+        formData.append("file", fileToUpload);
         formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
         formData.append("folder", "student/profiles/banners");
         const newPublicId = `banner_${crypto.randomUUID()}_${Date.now()}`;

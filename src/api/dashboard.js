@@ -1,10 +1,21 @@
 import axios from "axios";
+import imageCompression from "browser-image-compression";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL + "/api";
 
 const uploadToCloudinaryWithProgress = async (file, folder, uploadUrl, onProgress) => {
+  let fileToUpload = file;
+  if (file.type && file.type.startsWith("image/") && !file.type.includes("gif")) {
+    try {
+      const options = { maxSizeMB: 1, maxWidthOrHeight: 1920, useWebWorker: true };
+      fileToUpload = await imageCompression(file, options);
+    } catch (error) {
+      console.error("Image compression error:", error);
+    }
+  }
+
   const data = new FormData();
-  data.append("file", file);
+  data.append("file", fileToUpload);
   data.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
   data.append("folder", folder);
 
@@ -109,11 +120,12 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
       try {
         const uploadJson = await uploadToCloudinaryWithProgress(img, customFolders.images || "student/images", process.env.NEXT_PUBLIC_CLOUDINARY_IMAGE_UPLOAD_URL, null);
         if (uploadJson.secure_url && uploadJson.public_id) {
+          const shortFileName = `${uploadJson.public_id}.${uploadJson.format}`;
           imageObjects.push({
-            url: uploadJson.secure_url,
+            url: shortFileName, // Sending short filename for R2 migration
             public_id: uploadJson.public_id,
           });
-          console.log("✅ Image uploaded:", uploadJson.secure_url);
+          console.log("✅ Image uploaded (short name):", shortFileName);
         }
       } catch (err) {
         console.error("❌ Image upload failed:", err);
@@ -128,11 +140,12 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
     try {
       const uploadJson = await uploadToCloudinaryWithProgress(video, customFolders.videos || "student/videos", process.env.NEXT_PUBLIC_CLOUDINARY_VIDEO_UPLOAD_URL, onProgress);
       if (uploadJson.secure_url && uploadJson.public_id) {
+        const shortFileName = `${uploadJson.public_id}.${uploadJson.format}`;
         videoObject = {
-          url: uploadJson.secure_url,
+          url: shortFileName, // Sending short filename for R2 migration
           public_id: uploadJson.public_id,
         };
-        console.log("✅ Video uploaded:", uploadJson.secure_url);
+        console.log("✅ Video uploaded (short name):", shortFileName);
       }
     } catch (err) {
       console.error("❌ Video upload failed:", err);
@@ -147,13 +160,15 @@ export const createPost = async (contentOrData, image, video, type = "Regular", 
       try {
         const uploadJson = await uploadToCloudinaryWithProgress(doc, "student/documents", RAW_UPLOAD_URL, !video ? onProgress : null);
         if (uploadJson.secure_url && uploadJson.public_id) {
+          const docFormat = doc.name.split('.').pop();
+          const shortFileName = `${uploadJson.public_id}.${docFormat}`;
           documentObjects.push({
-            url: uploadJson.secure_url,
+            url: shortFileName, // Sending short filename for R2 migration
             public_id: uploadJson.public_id,
             original_filename: doc.name,
-            format: doc.name.split('.').pop(),
+            format: docFormat,
           });
-          console.log("✅ Document uploaded:", uploadJson.secure_url);
+          console.log("✅ Document uploaded (short name):", shortFileName);
         }
       } catch (err) {
         console.error("❌ Document upload failed:", err);

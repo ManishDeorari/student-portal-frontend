@@ -1,7 +1,10 @@
+import { getImageUrl } from "../../../utils/media";
+
 /**
  * Formats a Cloudinary URL to force download with a specific filename.
  */
-export const getCloudinaryDownloadUrl = (url, originalName) => {
+export const getCloudinaryDownloadUrl = (rawUrl, originalName) => {
+  const url = getImageUrl(rawUrl);
   if (!url || !url.includes("res.cloudinary.com")) return url;
   if (url.includes("fl_attachment")) return url;
 
@@ -17,7 +20,8 @@ export const getCloudinaryDownloadUrl = (url, originalName) => {
  * Formats a Cloudinary image URL to be optimized (auto quality, auto format).
  * Adds a width restriction to prevent downloading full-res images (e.g. for feed).
  */
-export const getOptimizedImageUrl = (url, width = 800) => {
+export const getOptimizedImageUrl = (rawUrl, width = 800) => {
+  const url = getImageUrl(rawUrl);
   if (!url || !url.includes("res.cloudinary.com")) return url;
   if (url.includes("q_auto") || url.includes("f_auto")) return url;
 
@@ -33,7 +37,8 @@ export const getOptimizedImageUrl = (url, width = 800) => {
  * Uses AI Face Detection (g_face) to guarantee the user's face is centered.
  * Uses eco quality for small avatars to save massive bandwidth.
  */
-export const getAvatarImageUrl = (url, width = 150) => {
+export const getAvatarImageUrl = (rawUrl, width = 150) => {
+  const url = getImageUrl(rawUrl);
   if (!url || !url.includes("res.cloudinary.com")) return url;
   if (url.includes("g_face")) return url; // Already optimized for face
 
@@ -50,7 +55,8 @@ export const getAvatarImageUrl = (url, width = 150) => {
 /**
  * Formats a Cloudinary image URL to use focal point cropping
  */
-export const getFocalImageUrl = (url, width, height, focus = null) => {
+export const getFocalImageUrl = (rawUrl, width, height, focus = null) => {
+  const url = getImageUrl(rawUrl);
   if (!url || !url.includes("res.cloudinary.com")) return url;
 
   // Remove existing transformations
@@ -82,7 +88,8 @@ export const getFocalImageUrl = (url, width, height, focus = null) => {
  * Fetches the file and forces a silent download to avoid opening a new tab
  * and hides the raw Cloudinary URL.
  */
-export const downloadFileSilently = async (url, originalName) => {
+export const downloadFileSilently = async (rawUrl, originalName) => {
+  const url = getImageUrl(rawUrl);
   if (!url) return;
   
   if (!url.includes("res.cloudinary.com")) {
