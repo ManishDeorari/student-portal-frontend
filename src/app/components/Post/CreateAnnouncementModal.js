@@ -433,7 +433,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                      key={num}
                                      type="button"
                                      onClick={() => addGroupWinnerRows(num)}
-                                     className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black transition-all ${darkMode ? "bg-white/5 hover:bg-white/10 text-white border border-white/10" : "bg-gray-50 hover:bg-blue-600 hover:text-white text-black border border-gray-100 shadow-sm"}`}
+                                     className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black transition-all ${darkMode ? "bg-white/5 hover:bg-orange-500/20 text-white border border-orange-500/50" : "bg-white hover:bg-orange-50 hover:text-orange-600 text-black border border-orange-400 shadow-sm"}`}
                                    >
                                      {num}
                                    </button>
@@ -457,7 +457,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                             <React.Fragment key={idx}>
                               {isFirstInGroup && (
                                 <div className="mt-4 mb-2 flex items-center gap-4">
-                                  <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
+                                  <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
                                   <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-orange-500 to-red-600 shadow-xl min-w-[300px]`}>
                                     <input 
                                       value={winner.groupName} 
@@ -466,7 +466,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                       className={`w-full h-[52px] p-4 text-xs font-black rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"} outline-none border-none italic text-center uppercase tracking-[0.2em]`}
                                     />
                                   </div>
-                                  <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
+                                  <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
                                 </div>
                               )}
 
@@ -514,20 +514,20 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
 
                                   {/* Row 2: Metadata Grid */}
                                   <div className="grid grid-cols-4 gap-2 w-full">
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
-                                      <span className="text-[9px] font-black uppercase opacity-100">ENR</span>
+                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-orange-500/50 text-white" : "bg-white border-orange-400 text-black"}`}>
+                                      <span className="text-[9px] font-black uppercase text-orange-500">ENR</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.enrollmentNumber || "-"}</span>
                                     </div>
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
-                                      <span className="text-[9px] font-black uppercase opacity-100">CRS</span>
+                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-orange-500/50 text-white" : "bg-white border-orange-400 text-black"}`}>
+                                      <span className="text-[9px] font-black uppercase text-orange-500">CRS</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.course || "-"}</span>
                                     </div>
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
-                                      <span className="text-[9px] font-black uppercase opacity-100">DOM</span>
+                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-orange-500/50 text-white" : "bg-white border-orange-400 text-black"}`}>
+                                      <span className="text-[9px] font-black uppercase text-orange-500">BRN</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.branch || "-"}</span>
                                     </div>
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-white/20 text-blue-400" : "bg-gray-50 border-gray-300 text-blue-600"}`}>
-                                      <span className="text-[9px] font-black uppercase opacity-100">SEM</span>
+                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-orange-500/50 text-white" : "bg-white border-orange-400 text-black"}`}>
+                                      <span className="text-[9px] font-black uppercase text-orange-500">SEM</span>
                                       <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.semester || "-"}</span>
                                     </div>
                                   </div>
@@ -535,8 +535,8 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                   {/* Row 3: Rank and Points */}
                                   {(isFirstInGroup || isIndividual) && (
                                     <div className={`flex gap-3 pt-3 mt-1 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
-                                      <div className={`flex-1 h-12 flex items-center rounded-xl border ${errors.includes(`winner-rank-${idx}`) ? "border-red-500 animate-pulse" : (darkMode ? "border-white/10 bg-slate-900" : "border-gray-200 bg-white")}`}>
-                                        <span className={`pl-3 pr-2 text-[10px] font-black uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Rank/Pos</span>
+                                      <div className={`flex-1 h-12 flex items-center rounded-xl border ${errors.includes(`winner-rank-${idx}`) ? "border-red-500 animate-pulse" : (darkMode ? "border-orange-500/50 bg-slate-900" : "border-orange-400 bg-white")}`}>
+                                        <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-orange-500`}>Rank/Pos</span>
                                         <input 
                                           value={winner.rank} 
                                           onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}
@@ -544,8 +544,8 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                           className={`w-full h-full p-2 text-sm font-black rounded-r-xl bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
                                         />
                                       </div>
-                                      <div className={`flex-1 h-12 flex items-center rounded-xl border ${errors.includes(`winner-points-${idx}`) ? "border-red-500 animate-pulse" : (darkMode ? "border-white/10 bg-slate-900" : "border-gray-200 bg-white")}`}>
-                                        <span className={`pl-3 pr-2 text-[10px] font-black uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Points</span>
+                                      <div className={`flex-1 h-12 flex items-center rounded-xl border ${errors.includes(`winner-points-${idx}`) ? "border-red-500 animate-pulse" : (darkMode ? "border-orange-500/50 bg-slate-900" : "border-orange-400 bg-white")}`}>
+                                        <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-orange-500`}>Points</span>
                                         <input 
                                           type="text"
                                           inputMode="numeric"
@@ -557,7 +557,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                           placeholder="0"
                                           className={`w-full h-full p-2 text-sm font-black bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
                                         />
-                                        <span className={`pr-3 text-[10px] font-black tracking-tighter ${darkMode ? "text-white/40" : "text-black/40"}`}>PTS</span>
+                                        <span className={`pr-3 text-[10px] font-black tracking-tighter text-orange-500`}>PTS</span>
                                       </div>
                                     </div>
                                   )}
