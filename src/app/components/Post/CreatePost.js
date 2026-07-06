@@ -199,8 +199,8 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-gray-100 dark:border-white/5 pt-3">
-                    <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-t border-gray-100 dark:border-white/5 pt-3 gap-4 sm:gap-0">
+                    <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                       <label className={`cursor-pointer ${darkMode ? "text-blue-400" : "text-blue-600"} font-bold hover:underline text-sm flex items-center gap-1.5`}>
                         <span>📷</span> Photo
                         <input

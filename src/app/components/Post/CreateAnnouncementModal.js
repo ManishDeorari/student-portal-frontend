@@ -72,7 +72,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
     updatedWinners[index].profilePicture = user.profilePicture || "";
     updatedWinners[index].enrollmentNumber = user.enrollmentNumber || "";
     updatedWinners[index].course = user.course || "";
-    updatedWinners[index].domain = user.branch || "";
+    updatedWinners[index].branch = user.branch || "";
     updatedWinners[index].semester = user.semester || "";
     setWinners(updatedWinners);
   };
