@@ -12,7 +12,7 @@ import PostMedia from "./Visual/PostMedia";
 import { getOptimizedImageUrl, downloadFileSilently } from "../../utils/cloudinaryHelper";
 import PostReactions from "./Visual/PostReactions";
 import dynamic from "next/dynamic";
-const PostModal = dynamic(() => import("./Visual/PostModal"), { ssr: false });
+
 import SmartPostModal from "./SmartPostModal";
 import CommentInput from "./Visual/CommentInput";
 const CommentCard = dynamic(() => import("./Visual/commentCard"), { ssr: false });

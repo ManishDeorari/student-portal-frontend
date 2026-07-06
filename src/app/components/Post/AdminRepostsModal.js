@@ -5,7 +5,7 @@ import { fetchEventReposts, downloadEventRepostsCSV } from "../../../api/dashboa
 import toast from "react-hot-toast";
 
 import { motion, AnimatePresence } from "framer-motion";
-import PostModal from "./Visual/PostModal";
+import SmartPostModal from "./SmartPostModal";
 
 const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUser }) => {
   const [loading, setLoading] = useState(true);
@@ -206,7 +206,7 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUs
       
       {/* Post Modal for viewing the Repost */}
       {selectedRepost && (
-        <PostModal
+        <SmartPostModal
           post={selectedRepost}
           showModal={true}
           setShowModal={() => setSelectedRepost(null)}
