@@ -429,14 +429,15 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                </div>
                                <div className="flex gap-2">
                                  {[2, 3, 4].map(num => (
-                                   <button
-                                     key={num}
-                                     type="button"
-                                     onClick={() => addGroupWinnerRows(num)}
-                                     className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black transition-all ${darkMode ? "bg-white/5 hover:bg-orange-500/20 text-white border border-orange-500/50" : "bg-white hover:bg-orange-50 hover:text-orange-600 text-black border border-orange-400 shadow-sm"}`}
-                                   >
-                                     {num}
-                                   </button>
+                                   <div key={num} className="p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 shadow-sm hover:scale-105 transition-transform cursor-pointer">
+                                     <button
+                                       type="button"
+                                       onClick={() => addGroupWinnerRows(num)}
+                                       className={`w-9 h-9 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center text-xs font-black transition-all ${darkMode ? "bg-slate-800 hover:bg-slate-700" : "bg-white hover:bg-orange-50"}`}
+                                     >
+                                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">{num}</span>
+                                     </button>
+                                   </div>
                                  ))}
                                </div>
                              </div>
@@ -514,50 +515,62 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
 
                                   {/* Row 2: Metadata Grid */}
                                   <div className="grid grid-cols-4 gap-2 w-full">
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-orange-500/50 text-white" : "bg-white border-orange-400 text-black"}`}>
-                                      <span className="text-[9px] font-black uppercase text-orange-500">ENR</span>
-                                      <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.enrollmentNumber || "-"}</span>
+                                    <div className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 opacity-80 cursor-not-allowed`}>
+                                      <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
+                                        <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">ENR</span>
+                                        <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.enrollmentNumber || "-"}</span>
+                                      </div>
                                     </div>
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-orange-500/50 text-white" : "bg-white border-orange-400 text-black"}`}>
-                                      <span className="text-[9px] font-black uppercase text-orange-500">CRS</span>
-                                      <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.course || "-"}</span>
+                                    <div className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 opacity-80 cursor-not-allowed`}>
+                                      <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
+                                        <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">CRS</span>
+                                        <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.course || "-"}</span>
+                                      </div>
                                     </div>
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-orange-500/50 text-white" : "bg-white border-orange-400 text-black"}`}>
-                                      <span className="text-[9px] font-black uppercase text-orange-500">BRN</span>
-                                      <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.branch || "-"}</span>
+                                    <div className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 opacity-80 cursor-not-allowed`}>
+                                      <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
+                                        <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">BRN</span>
+                                        <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.branch || "-"}</span>
+                                      </div>
                                     </div>
-                                    <div className={`p-2 flex flex-col items-center justify-center rounded-xl border cursor-not-allowed ${darkMode ? "bg-slate-900 border-orange-500/50 text-white" : "bg-white border-orange-400 text-black"}`}>
-                                      <span className="text-[9px] font-black uppercase text-orange-500">SEM</span>
-                                      <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.semester || "-"}</span>
+                                    <div className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 opacity-80 cursor-not-allowed`}>
+                                      <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
+                                        <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">SEM</span>
+                                        <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.semester || "-"}</span>
+                                      </div>
                                     </div>
                                   </div>
 
                                   {/* Row 3: Rank and Points */}
                                   {(isFirstInGroup || isIndividual) && (
                                     <div className={`flex gap-3 pt-3 mt-1 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
-                                      <div className={`flex-1 h-12 flex items-center rounded-xl border ${errors.includes(`winner-rank-${idx}`) ? "border-red-500 animate-pulse" : (darkMode ? "border-orange-500/50 bg-slate-900" : "border-orange-400 bg-white")}`}>
-                                        <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-orange-500`}>Rank/Pos</span>
-                                        <input 
-                                          value={winner.rank} 
-                                          onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}
-                                          placeholder="e.g. 1st..."
-                                          className={`w-full h-full p-2 text-sm font-black rounded-r-xl bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
-                                        />
+                                      <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-rank-${idx}`) ? "animate-pulse" : ""}`}>
+                                        <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                          <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank/Pos</span>
+                                          <input 
+                                            value={winner.rank} 
+                                            onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}
+                                            placeholder="e.g. 1st..."
+                                            className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                          />
+                                        </div>
                                       </div>
-                                      <div className={`flex-1 h-12 flex items-center rounded-xl border ${errors.includes(`winner-points-${idx}`) ? "border-red-500 animate-pulse" : (darkMode ? "border-orange-500/50 bg-slate-900" : "border-orange-400 bg-white")}`}>
-                                        <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-orange-500`}>Points</span>
-                                        <input 
-                                          type="text"
-                                          inputMode="numeric"
-                                          value={winner.points} 
-                                          onChange={(e) => {
-                                             const val = e.target.value.replace(/[^0-9]/g, '');
-                                             handleWinnerChange(idx, "points", val);
-                                          }}
-                                          placeholder="0"
-                                          className={`w-full h-full p-2 text-sm font-black bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
-                                        />
-                                        <span className={`pr-3 text-[10px] font-black tracking-tighter text-orange-500`}>PTS</span>
+                                      <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-points-${idx}`) ? "animate-pulse" : ""}`}>
+                                        <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                          <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Points</span>
+                                          <input 
+                                            type="text"
+                                            inputMode="numeric"
+                                            value={winner.points} 
+                                            onChange={(e) => {
+                                               const val = e.target.value.replace(/[^0-9]/g, '');
+                                               handleWinnerChange(idx, "points", val);
+                                            }}
+                                            placeholder="0"
+                                            className={`w-full h-full p-2 text-sm font-black bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                          />
+                                          <span className={`pr-3 text-[10px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>PTS</span>
+                                        </div>
                                       </div>
                                     </div>
                                   )}
