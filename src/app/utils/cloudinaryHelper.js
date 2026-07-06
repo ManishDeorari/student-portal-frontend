@@ -1,4 +1,4 @@
-import { getImageUrl } from "../../../utils/media";
+import { getImageUrl } from '../../utils/media';
 
 /**
  * Formats a Cloudinary URL to force download with a specific filename.
