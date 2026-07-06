@@ -22,7 +22,10 @@ import { Eye } from "lucide-react";
 
 export default function PostModal(props) {
   const {
-    showModal, setShowModal, post, currentUser, handleReact, getReactionCount, userReacted,
+    showModal, setShowModal, post, currentUser, 
+    handleReact = () => {}, 
+    getReactionCount = () => 0, 
+    userReacted = () => false,
     reactionEffect, setReactionEffect, showThread, setShowThread, handleReply,
     handleDeleteComment, handleComment, handleEditComment, handleEditReply, handleDeleteReply,
     handleReactToReply, handleReactToComment, handlePinComment, comment, setComment,
