@@ -6,7 +6,7 @@ import { useTheme } from "@/context/ThemeContext";
 import SmartPostModal from "../Post/SmartPostModal";
 import socket from "@/utils/socket";
 
-export default function ProfileEventParticipation({ profile, setProfile, isPublicView }) {
+export default function ProfileEventParticipation({ profile, setProfile, isPublicView, currentUser }) {
     const { darkMode } = useTheme();
     const [activeTab, setActiveTab] = useState("participated"); // "participated" or "won"
     const [showPostModal, setShowPostModal] = useState(false);
@@ -270,7 +270,7 @@ export default function ProfileEventParticipation({ profile, setProfile, isPubli
                     setShowModal={setShowPostModal}
                     post={selectedPost} 
                     darkMode={darkMode}
-                    currentUser={profile}
+                    currentUser={currentUser || profile}
                 />
             )}
         </>

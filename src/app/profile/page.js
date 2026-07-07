@@ -196,7 +196,7 @@ function ProfileContent() {
         <ProfileLanguages profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileActivity profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         {(profile.role === "student" || profile.role === "alumni") && (
-          <ProfileEventParticipation profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
+          <ProfileEventParticipation profile={profile} setProfile={setProfile} isPublicView={isPublicView} currentUser={user} />
         )}
       </div>
     </GooeyGradientBackground>
