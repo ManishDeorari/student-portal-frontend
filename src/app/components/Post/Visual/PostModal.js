@@ -611,6 +611,7 @@ export default function PostModal(props) {
               isOpen={showAdminModal}
               onClose={() => setShowAdminModal(false)}
               darkMode={darkMode}
+              currentUser={currentUser}
             />
           )}
 
@@ -620,6 +621,7 @@ export default function PostModal(props) {
               isOpen={showAdminRepostsModal}
               onClose={() => setShowAdminRepostsModal(false)}
               darkMode={darkMode}
+              currentUser={currentUser}
             />
           )}
 

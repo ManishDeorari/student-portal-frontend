@@ -152,7 +152,7 @@ export default function SmartPostModal({
 
   const userReacted = (emoji) => {
     const users = post.reactions?.[emoji];
-    return Array.isArray(users) ? users.includes(currentUser._id || currentUser.id) : false;
+    return Array.isArray(users) ? users.includes(currentUser?._id || currentUser?.id) : false;
   };
 
   return (
