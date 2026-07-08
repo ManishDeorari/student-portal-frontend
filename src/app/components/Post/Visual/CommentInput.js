@@ -7,6 +7,7 @@ export default function CommentInput({
   setComment,
   onSubmit,
   postId,
+  currentUser,
   inputRef,
   darkMode = false
 }) {

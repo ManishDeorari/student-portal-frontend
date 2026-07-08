@@ -943,6 +943,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
               isOpen={showAdminModal}
               onClose={() => setShowAdminModal(false)}
               darkMode={darkMode}
+              currentUser={currentUser}
             />
           )}
           {showAdminRepostsModal && (
@@ -951,6 +952,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
               isOpen={showAdminRepostsModal}
               onClose={() => setShowAdminRepostsModal(false)}
               darkMode={darkMode}
+              currentUser={currentUser}
             />
           )}
           {/* Confirmation Modal */}
