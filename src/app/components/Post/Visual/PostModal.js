@@ -565,6 +565,7 @@ export default function PostModal(props) {
                   setComment={setComment}
                   onSubmit={() => handleComment(comment)}
                   currentUser={currentUser}
+                  inputRef={textareaRef}
                   darkMode={darkMode}
                 />
                 <div className="mt-6 space-y-4">

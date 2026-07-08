@@ -7,10 +7,9 @@ export default function CommentInput({
   setComment,
   onSubmit,
   postId,
-  currentUser,
+  inputRef,
   darkMode = false
 }) {
-  const inputRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleEmojiClick = (emojiObject) => {
