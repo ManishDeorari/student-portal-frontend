@@ -19,7 +19,9 @@ import { downloadFileSilently } from "../../../utils/cloudinaryHelper";
 import UserAvatar from "../../ui/UserAvatar";
 import UserNameWithBadge from "../../ui/UserNameWithBadge";
 import { Eye } from "lucide-react";
+import dynamic from "next/dynamic";
 
+const SmartPostModal = dynamic(() => import("../SmartPostModal"), { ssr: false });
 export default function PostModal(props) {
   const {
     showModal, setShowModal, post, currentUser, 
@@ -34,6 +36,13 @@ export default function PostModal(props) {
     textareaRef, setShowViewer, setStartIndex, hasLiked, isLiking, likeIconRef,
     darkMode = false, setPosts, hideInteractions = false, onShowOriginalEvent
   } = props;
+
+  const sortedComments = React.useMemo(() => {
+    const comments = post?.comments || [];
+    const pinned = comments.filter(c => c.isPinned);
+    const unpinned = comments.filter(c => !c.isPinned);
+    return [...pinned.slice().reverse(), ...unpinned.slice().reverse()];
+  }, [post?.comments]);
 
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -543,6 +552,12 @@ export default function PostModal(props) {
                 isLiking={isLiking}
                 likeIconRef={likeIconRef}
                 darkMode={darkMode}
+                setShowComments={() => {
+                  if (textareaRef && textareaRef.current) {
+                    textareaRef.current.focus();
+                    textareaRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }}
               />
               <div className="mt-6 border-t border-gray-200 dark:border-gray-800 pt-6">
                 <CommentInput
@@ -553,20 +568,22 @@ export default function PostModal(props) {
                   darkMode={darkMode}
                 />
                 <div className="mt-6 space-y-4">
-                  {(post.comments || []).map((c) => (
+                  {sortedComments.map((c) => (
                     <CommentCard
                       key={c._id || Math.random()}
                       comment={c}
                       currentUser={currentUser}
-                      post={post}
-                      handleReply={handleReply}
-                      handleDeleteComment={handleDeleteComment}
-                      handleEditComment={handleEditComment}
-                      handleEditReply={handleEditReply}
-                      handleDeleteReply={handleDeleteReply}
-                      handleReactToReply={handleReactToReply}
-                      handleReactToComment={handleReactToComment}
-                      handlePinComment={handlePinComment}
+                      postId={post._id}
+                      onReply={handleReply}
+                      onDelete={handleDeleteComment}
+                      onEdit={handleEditComment}
+                      replies={c.replies || []}
+                      onEditReply={handleEditReply}
+                      onDeleteReply={handleDeleteReply}
+                      onReactToReply={handleReactToReply}
+                      onReactToComment={handleReactToComment}
+                      onPinComment={handlePinComment}
+                      isPostOwner={post.user?._id === currentUser?._id || post.user === currentUser?._id}
                       darkMode={darkMode}
                     />
                   ))}
