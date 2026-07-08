@@ -5,7 +5,7 @@ import PostCard from "@/app/components/Post/PostCard";
 import { Activity } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
-export default function ProfileActivity({ profile, setProfile, isPublicView }) {
+export default function ProfileActivity({ profile, setProfile, isPublicView, currentUser }) {
     const { darkMode } = useTheme();
     const [displayLimit, setDisplayLimit] = useState(3);
 
@@ -28,7 +28,7 @@ export default function ProfileActivity({ profile, setProfile, isPublicView }) {
                             <PostCard
                                 key={`${item._id}-${idx}`}
                                 post={item}
-                                currentUser={profile}
+                                currentUser={currentUser || profile}
                                 setPosts={(updateFn) =>
                                     setProfile((prev) => ({
                                         ...prev,

@@ -194,7 +194,7 @@ function ProfileContent() {
         <ProfileSkills profile={profile} setProfile={setProfile} isPublicView={isPublicView} currentUserId={user?._id} />
         <ProfileAchievements profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileLanguages profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
-        <ProfileActivity profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
+        <ProfileActivity profile={profile} setProfile={setProfile} isPublicView={isPublicView} currentUser={user} />
         {(profile.role === "student" || profile.role === "alumni") && (
           <ProfileEventParticipation profile={profile} setProfile={setProfile} isPublicView={isPublicView} currentUser={user} />
         )}
