@@ -64,7 +64,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
                                 </div>
                                 <button 
                                     onClick={onClose}
-                                    className={`p-3 rounded-full hover:bg-gray-100/10 transition-all ${darkMode ? "text-white/40 hover:text-white" : "text-gray-400 hover:text-gray-900"}`}
+                                    className={`p-2 rounded-full border-2 transition-all hover:rotate-90 ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}
                                 >
                                     <X className="w-6 h-6" />
                                 </button>

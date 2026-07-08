@@ -88,7 +88,7 @@ const UserSearchInput = ({ value, onChange, placeholder, onSelect, darkMode = fa
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className={`p-2 rounded-full transition-colors ${darkMode ? "hover:bg-white/10 text-gray-400" : "hover:bg-gray-100 text-gray-500"}`}
+                  className={`p-2 rounded-full border-2 transition-all hover:rotate-90 ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}
                 >
                   <FaTimes size={20} />
                 </button>

@@ -84,7 +84,7 @@ export default function GlobalSearchModal({ isOpen, onClose, onPostSelect, darkM
             placeholder="Search users..."
             className={`w-full bg-transparent border-none outline-none text-lg font-bold ${darkMode ? "text-white placeholder-gray-400" : "text-black placeholder-gray-500"}`}
           />
-          <button onClick={onClose} className={`text-xl font-black rounded-full w-8 h-8 flex items-center justify-center transition-colors ${darkMode ? "hover:bg-white/10 text-white" : "hover:bg-black/5 text-black"}`}>×</button>
+          <button onClick={onClose} className={`text-xl font-black rounded-full w-8 h-8 flex items-center justify-center border-2 transition-all hover:rotate-90 ${darkMode ? "text-white border-white hover:bg-white/10" : "text-black border-black hover:bg-black/5"}`}>×</button>
         </div>
 
         <div className="max-h-[60vh] overflow-y-auto p-2">

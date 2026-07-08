@@ -189,7 +189,7 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
         <div className={`relative w-full h-full ${darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]"} rounded-xl sm:rounded-[2rem] overflow-hidden`}>
           <div className={`px-4 sm:px-8 py-3 sm:py-4 border-b ${darkMode ? "border-white/10" : "border-gray-100"} flex items-center justify-between`}>
             <h2 className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-black"}`}>Register for Event</h2>
-            <button onClick={onClose} className={`text-2xl w-10 h-10 flex items-center justify-center rounded-full border transition-colors ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}>&times;</button>
+            <button onClick={onClose} className={`text-3xl font-black w-12 h-12 flex items-center justify-center rounded-full border-2 transition-all hover:rotate-90 ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}>&times;</button>
           </div>
 
           <form onSubmit={handleRegister} className="p-4 sm:p-8 space-y-4 sm:space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
