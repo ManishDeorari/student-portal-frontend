@@ -563,7 +563,7 @@ export default function PostModal(props) {
                 <CommentInput
                   comment={comment}
                   setComment={setComment}
-                  handleComment={handleComment}
+                  onSubmit={() => handleComment(comment)}
                   currentUser={currentUser}
                   darkMode={darkMode}
                 />

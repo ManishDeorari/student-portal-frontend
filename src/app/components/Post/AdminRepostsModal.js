@@ -102,7 +102,7 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUs
                       width={40}
                       height={40}
                       className="object-cover w-full h-full"
-                      wrapperClassName="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
+                      wrapperClassName="w-11 h-11 rounded-full p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 shadow-sm shrink-0"
                     />
                     <div className="flex-1 min-w-0 flex flex-col justify-center">
                       <p className={`text-lg font-black tracking-tight ${darkMode ? "text-orange-400" : "text-orange-600"}`}>

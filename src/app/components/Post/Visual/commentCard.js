@@ -372,9 +372,18 @@ export default function CommentCard({
             <button
               ref={reactButtonRef}
               onClick={toggleEmojiPicker}
-              className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-white/5 ${darkMode ? "text-white hover:text-blue-400" : "text-slate-900 hover:text-blue-600"}`}
+              className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-1.5 px-2 py-1 rounded-md 
+                ${(reactions && Object.values(reactions).some(users => Array.isArray(users) && users.includes(currentUser?._id)))
+                  ? (darkMode ? "text-white bg-pink-500/10 border border-pink-500/50" : "text-pink-600 bg-pink-50 border border-pink-500/50")
+                  : (darkMode ? "text-white hover:text-pink-400 hover:bg-white/5" : "text-slate-900 hover:text-pink-600 hover:bg-black/5")}
+              `}
             >
-              👍 React
+              <span className={`${(reactions && Object.values(reactions).some(users => Array.isArray(users) && users.includes(currentUser?._id))) ? "scale-110" : ""}`}>
+                {(reactions && Object.keys(reactions).find(emoji => Array.isArray(reactions[emoji]) && reactions[emoji].includes(currentUser?._id))) || "👍"}
+              </span>
+              <span className={`${(reactions && Object.values(reactions).some(users => Array.isArray(users) && users.includes(currentUser?._id))) ? "bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-orange-500" : ""}`}>
+                {(reactions && Object.values(reactions).some(users => Array.isArray(users) && users.includes(currentUser?._id))) ? "REACTED" : "REACT"}
+              </span>
             </button>
 
             {showEmoji && createPortal(
