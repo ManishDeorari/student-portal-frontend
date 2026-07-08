@@ -8,7 +8,8 @@ export const getImageUrl = (imageKey) => {
   if (!imageKey) return '/default-avatar.png'; // Fallback for null/undefined
 
   // If the database already holds a full HTTP URL (e.g. old Cloudinary URL), return it as-is
-  if (imageKey.startsWith('http://') || imageKey.startsWith('https://')) {
+  // Also return as-is if it's a local static asset (starts with '/') or base64 (starts with 'data:')
+  if (imageKey.startsWith('http://') || imageKey.startsWith('https://') || imageKey.startsWith('/') || imageKey.startsWith('data:')) {
     return imageKey;
   }
 
