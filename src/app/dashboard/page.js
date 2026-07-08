@@ -169,8 +169,10 @@ export default function DashboardPage() {
       });
     };
 
-    const removePost = ({ postId }) =>
+    const removePost = ({ postId }) => {
       setPosts((prev) => prev.filter((p) => p._id !== postId));
+      setPendingPosts((prev) => prev.filter((p) => p._id !== postId));
+    };
 
     const updateEventRegCount = ({ postId, registrationCount }) => {
       setPosts((prev) =>
