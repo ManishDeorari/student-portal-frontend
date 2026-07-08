@@ -220,7 +220,9 @@ export default function DashboardPage() {
           {/* Left Column: Points Scenario */}
           <div className="hidden lg:block lg:w-[calc(25vw-2rem)] order-2 lg:order-1 shrink-0 z-40">
             <aside className="lg:fixed lg:top-24 lg:left-8 w-full lg:w-[calc(25vw-2rem)] h-[calc(100vh-7rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
-              <PointsScenario darkMode={darkMode} user={user} />
+              {(!['admin', 'faculty', 'mainAdmin'].includes(user?.role) && !user?.isAdmin && !user?.isMainAdmin) && (
+                <PointsScenario darkMode={darkMode} user={user} />
+              )}
             </aside>
           </div>
 

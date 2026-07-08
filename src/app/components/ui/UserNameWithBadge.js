@@ -6,8 +6,8 @@ import { BadgeCheck } from "lucide-react";
 export default function UserNameWithBadge({ user, className = "", badgeClassName = "w-[1.1em] h-[1.1em] text-blue-500 shrink-0", onClick, href }) {
   if (!user) return null;
 
-  const isVerified = user?.profileCompletionAwarded === true;
-  
+  const isAdminOrFaculty = user?.role === 'admin' || user?.role === 'faculty' || user?.isAdmin || user?.isMainAdmin;
+  const isVerified = user?.profileCompletionAwarded === true && !isAdminOrFaculty;
   const innerContent = (
     <>
       <span className="truncate">{user.name || "Unknown User"}</span>

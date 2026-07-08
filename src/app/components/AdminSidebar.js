@@ -130,7 +130,7 @@ export default function AdminSidebar() {
             </AnimatePresence>
           </div>
           <Link href="/profile" className="hover:text-gray-200 relative group flex items-center gap-2" title="Profile">
-            {currentUser && currentUser.points && currentUser.role !== "admin" && (
+            {currentUser && currentUser.points && currentUser.role !== "admin" && currentUser.role !== "faculty" && !currentUser.isAdmin && !currentUser.isMainAdmin && (
               <div className="flex flex-col items-end mr-1">
                 <span className={`text-[9px] font-black tracking-widest uppercase ${getGamificationTier(currentUser?.points?.total || 0).colorClass}`}>
                   {getGamificationTier(currentUser?.points?.total || 0).name}
