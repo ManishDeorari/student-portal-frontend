@@ -103,15 +103,15 @@ export default function PostReactions({
                 onClick={handleEmojiButtonClick}
                 className={`relative font-black text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-2 px-4 py-1.5 rounded-xl border overflow-hidden group 
                   ${hasReacted 
-                    ? (darkMode ? "text-white border-blue-500/50 bg-blue-500/10" : "text-blue-600 border-blue-500/50 bg-blue-50") 
-                    : (darkMode ? "text-white border-white/10 hover:border-blue-500/50" : "text-slate-900 border-black/5 hover:border-blue-500/50")}`}
+                    ? (darkMode ? "text-white border-pink-500/50 bg-pink-500/10" : "text-pink-600 border-pink-500/50 bg-pink-50") 
+                    : (darkMode ? "text-white border-white/10 hover:border-pink-500/50" : "text-slate-900 border-black/5 hover:border-pink-500/50")}`}
                 ref={buttonRef}
               >
-                {!hasReacted && <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
+                {!hasReacted && <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
                 <span className={`text-lg group-hover:scale-110 transition-transform duration-300 ${hasReacted ? "scale-110" : ""}`}>
                   {hasReacted ? userReactionEmoji : "👍"}
                 </span> 
-                <span className={`relative z-10 ${hasReacted ? "bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500" : "group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:to-purple-500"}`}>
+                <span className={`relative z-10 ${hasReacted ? "bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-orange-500" : "group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:to-orange-500"}`}>
                   {hasReacted ? "Reacted" : "React"}
                 </span>
               </button>
