@@ -197,7 +197,7 @@ export default function CommentCard({
               </div>
 
               {editing ? (
-                <div className="flex gap-2 mt-1.5 items-start relative bg-black/5 p-1.5 rounded-lg">
+                <div className={`flex gap-2 mt-1.5 items-start relative p-1.5 rounded-lg border ${darkMode ? 'border-white bg-black/20' : 'border-black bg-black/5'}`}>
                   <input
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}
@@ -215,7 +215,7 @@ export default function CommentCard({
               )}
 
               <div className="flex items-center gap-2 mt-1.5">
-                <span className="text-[9px] font-black uppercase tracking-widest opacity-40">
+                <span className={`text-[9px] font-black uppercase tracking-widest opacity-100 ${darkMode ? "text-white" : "text-black"}`}>
                   {new Date(comment.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
                 {comment.editedAt && (
@@ -228,7 +228,7 @@ export default function CommentCard({
               isOwn && (
                 <div className="flex items-center gap-2 ml-2">
                   <button
-                    className="text-[9px] font-black uppercase tracking-widest text-blue-500 hover:text-blue-400 transition-colors font-bold"
+                    className={`text-[9px] font-black uppercase tracking-widest transition-colors border px-2 py-1 rounded-md ${darkMode ? 'border-white text-white hover:bg-white/10' : 'border-black text-black hover:bg-black/10'}`}
                     onClick={() => {
                       if (isReply) {
                         onEditReply(comment.parentId, comment._id, editText);
@@ -242,7 +242,7 @@ export default function CommentCard({
                     Save
                   </button>
                   <button
-                    className="text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-gray-400 transition-colors font-bold"
+                    className={`text-[9px] font-black uppercase tracking-widest transition-colors border px-2 py-1 rounded-md ${darkMode ? 'border-gray-400 text-gray-300 hover:bg-gray-400/10' : 'border-gray-600 text-gray-700 hover:bg-gray-600/10'}`}
                     onClick={() => {
                       setEditing(false);
                       setEditText(comment.text);
@@ -255,17 +255,19 @@ export default function CommentCard({
               )
             ) : (
               (isOwn || currentUser?.role === 'admin' || currentUser?.isMainAdmin || (isPostOwner && !isReply)) && (
-                <div className="relative ml-2" ref={dropdownRef}>
-                  <button
-                    onClick={() => setShowDropdown(prev => !prev)}
-                    className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md ${darkMode ? "text-white bg-white/15 hover:bg-white/25 border border-white/20" : "text-black bg-black/10 hover:bg-black/15 border border-black/15"}`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
-                      <circle cx="12" cy="5" r="2.25" />
-                      <circle cx="12" cy="12" r="2.25" />
-                      <circle cx="12" cy="19" r="2.25" />
-                    </svg>
-                  </button>
+                <div className="relative ml-2 flex items-center" ref={dropdownRef}>
+                  <div className="p-[1.5px] rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 shadow-md transition-all hover:scale-110 active:scale-95 flex items-center justify-center">
+                    <button
+                      onClick={() => setShowDropdown(prev => !prev)}
+                      className={`w-7 h-7 rounded-full flex items-center justify-center ${darkMode ? "text-white bg-slate-900 hover:bg-slate-800" : "text-black bg-white hover:bg-gray-100"}`}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
+                        <circle cx="12" cy="5" r="2.25" />
+                        <circle cx="12" cy="12" r="2.25" />
+                        <circle cx="12" cy="19" r="2.25" />
+                      </svg>
+                    </button>
+                  </div>
 
                   <AnimatePresence>
                     {showDropdown && (

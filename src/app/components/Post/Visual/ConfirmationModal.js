@@ -105,8 +105,8 @@ export default function ConfirmationModal({
                   onClick={onClose}
                   className={`flex-1 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95 border-2 ${
                     darkMode
-                      ? "border-white/10 text-gray-300 hover:bg-white/5"
-                      : "border-gray-100 text-gray-500 hover:bg-gray-50"
+                      ? "border-gray-500 text-white hover:bg-white/10"
+                      : "border-gray-500 text-black hover:bg-gray-100"
                   }`}
                 >
                   {cancelText}
