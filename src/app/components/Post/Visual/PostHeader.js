@@ -96,16 +96,18 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
       
       {!hideActions && (isAdmin || canEdit || canDelete) && (
         <div className="relative ml-auto" ref={dropdownRef}>
-          <button
-            onClick={() => setShowDropdown(prev => !prev)}
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md ${darkMode ? "text-white bg-white/15 hover:bg-white/25 border border-white/20" : "text-black bg-black/10 hover:bg-black/15 border border-black/15"}`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
-              <circle cx="12" cy="5" r="2.25" />
-              <circle cx="12" cy="12" r="2.25" />
-              <circle cx="12" cy="19" r="2.25" />
-            </svg>
-          </button>
+          <div className="relative p-[1.5px] rounded-full bg-gradient-to-tr from-orange-400 via-pink-500 to-purple-500 shadow-md transition-transform hover:scale-110 active:scale-95">
+            <button
+              onClick={() => setShowDropdown(prev => !prev)}
+              className={`w-7 h-7 rounded-full flex items-center justify-center ${darkMode ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-white text-gray-900 hover:bg-gray-50"}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                <circle cx="12" cy="5" r="2.25" />
+                <circle cx="12" cy="12" r="2.25" />
+                <circle cx="12" cy="19" r="2.25" />
+              </svg>
+            </button>
+          </div>
           
           <AnimatePresence>
             {showDropdown && (

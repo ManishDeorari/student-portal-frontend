@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
+import { Eye } from "lucide-react";
 
 // Emoji to label mapping
 const emojiLabels = {
@@ -93,25 +94,50 @@ export default function PostReactions({
       <div className="relative mt-2">
         <div className="flex items-center justify-between border-t border-white/5 pt-3">
           {/* React Button (left) */}
-          <button
-            onClick={handleEmojiButtonClick}
-            className={`font-black text-sm uppercase tracking-widest ${darkMode ? "text-white hover:text-blue-400" : "text-slate-900 hover:text-blue-600"} transition-all flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5`}
-            ref={buttonRef}
-          >
-            <span className="text-lg">👍</span> React
-          </button>
+          {(() => {
+            const userReactionEmoji = post.reactions ? Object.keys(post.reactions).find(emoji => userReacted(emoji)) : null;
+            const hasReacted = !!userReactionEmoji;
+            
+            return (
+              <button
+                onClick={handleEmojiButtonClick}
+                className={`relative font-black text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-2 px-4 py-1.5 rounded-xl border overflow-hidden group 
+                  ${hasReacted 
+                    ? (darkMode ? "text-white border-blue-500/50 bg-blue-500/10" : "text-blue-600 border-blue-500/50 bg-blue-50") 
+                    : (darkMode ? "text-white border-white/10 hover:border-blue-500/50" : "text-slate-900 border-black/5 hover:border-blue-500/50")}`}
+                ref={buttonRef}
+              >
+                {!hasReacted && <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>}
+                <span className={`text-lg group-hover:scale-110 transition-transform duration-300 ${hasReacted ? "scale-110" : ""}`}>
+                  {hasReacted ? userReactionEmoji : "👍"}
+                </span> 
+                <span className={`relative z-10 ${hasReacted ? "bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500" : "group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:to-purple-500"}`}>
+                  {hasReacted ? "Reacted" : "React"}
+                </span>
+              </button>
+            );
+          })()}
 
           {/* View Counter (center) */}
           <div className={`font-black text-sm uppercase tracking-widest ${darkMode ? "text-white" : "text-black"} flex items-center gap-2`}>
-            <span className="text-lg opacity-100">👁️</span> {(post.viewedBy || []).length}
+            <svg width="0" height="0" className="absolute">
+              <linearGradient id="eye-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop stopColor="#f97316" offset="0%" />
+                <stop stopColor="#ec4899" offset="50%" />
+                <stop stopColor="#a855f7" offset="100%" />
+              </linearGradient>
+            </svg>
+            <Eye className="w-5 h-5" style={{ stroke: "url(#eye-gradient)" }} /> {(post.viewedBy || []).length}
           </div>
 
           {/* Comment Button (right, slightly left-pushed) */}
           <button
             onClick={() => setShowComments((prev) => !prev)}
-            className={`font-black text-sm uppercase tracking-widest ${darkMode ? "text-white hover:text-blue-400" : "text-slate-900 hover:text-blue-600"} cursor-pointer transition-all flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 mr-2`}
+            className={`relative font-black text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-2 px-4 py-1.5 rounded-xl border overflow-hidden group mr-2 ${darkMode ? "text-white border-white/10 hover:border-pink-500/50" : "text-slate-900 border-black/5 hover:border-pink-500/50"}`}
           >
-            <span className="text-lg">💬</span> Comment ({(post.comments || []).length})
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="text-lg group-hover:scale-110 transition-transform duration-300">💬</span> 
+            <span className="relative z-10 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:to-orange-500">Comment ({(post.comments || []).length})</span>
           </button>
         </div>
 
