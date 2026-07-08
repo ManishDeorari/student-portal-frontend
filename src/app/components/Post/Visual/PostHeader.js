@@ -76,7 +76,9 @@ export default function PostHeader({ post, currentUser, editing, toggleEdit, han
               className={`max-w-[150px] ${darkMode ? "text-blue-400 decoration-blue-500" : "text-blue-700 decoration-blue-400"}`} 
             />
           )}
-          <GamificationBadge points={post.user?.points?.total} />
+          {post.user?.role !== 'admin' && post.user?.role !== 'mainAdmin' && post.user?.role !== 'faculty' && (
+            <GamificationBadge points={post.user?.points?.total} />
+          )}
           {isOwn && (
             <span className={`text-[10px] px-1.5 py-[1px] rounded-full font-bold flex-shrink-0 ${darkMode ? "bg-blue-600/30 text-blue-300 border border-blue-500/30" : "bg-blue-100 text-blue-600"}`}>
               You

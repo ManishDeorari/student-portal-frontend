@@ -207,7 +207,7 @@ const PointsScenario = ({ darkMode = false, user = null }) => {
                                                 <h4 className={`font-black text-sm ${darkMode ? t.titleColDark : t.titleColLight} truncate`}>{t.name}</h4>
                                                 <p className={`text-[8px] font-bold uppercase tracking-widest ${darkMode ? t.descDark : t.descLight}`}>{t.points}</p>
                                             </div>
-                                            {isActive && (
+                                            {isActive && user && !["admin", "mainAdmin", "faculty"].includes(user.role) && (
                                                 <div className="shrink-0 text-green-500 dark:text-green-400 animate-pulse">
                                                     <CheckCircle2 className="w-4 h-4" />
                                                 </div>
