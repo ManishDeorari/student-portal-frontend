@@ -242,7 +242,7 @@ export default function CommentCard({
                     Save
                   </button>
                   <button
-                    className={`text-[9px] font-black uppercase tracking-widest transition-colors border px-2 py-1 rounded-md ${darkMode ? 'border-gray-400 text-gray-300 hover:bg-gray-400/10' : 'border-gray-600 text-gray-700 hover:bg-gray-600/10'}`}
+                    className={`text-[9px] font-black uppercase tracking-widest transition-colors border px-2 py-1 rounded-md ${darkMode ? 'border-white text-white hover:bg-white/10' : 'border-black text-black hover:bg-black/10'}`}
                     onClick={() => {
                       setEditing(false);
                       setEditText(comment.text);
