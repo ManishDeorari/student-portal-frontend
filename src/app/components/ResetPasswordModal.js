@@ -86,7 +86,7 @@ const ResetPasswordModal = ({ isOpen, onClose }) => {
 
                             <button
                                 onClick={onClose}
-                                className={`absolute top-5 right-5 transition-all hover:rotate-90 p-2 rounded-full ${darkMode ? "text-white/40 hover:text-white hover:bg-white/10" : "text-gray-400 hover:text-gray-900 hover:bg-gray-100"}`}
+                                className={`absolute top-5 right-5 transition-all hover:rotate-90 p-2 rounded-full border ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}
                             >
                                 <FaTimes size={18} />
                             </button>

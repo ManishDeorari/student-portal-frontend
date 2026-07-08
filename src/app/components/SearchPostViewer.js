@@ -36,10 +36,10 @@ export default function SearchPostViewer({ post, currentUser, darkMode, onClose 
           <div className="relative">
             <button
               onClick={onClose}
-              className={`absolute top-4 right-4 z-[100] p-2 rounded-full transition-all hover:scale-110 shadow-lg ${
+              className={`absolute top-4 right-4 z-[100] p-2 rounded-full border transition-all hover:scale-110 shadow-lg ${
                 darkMode
-                  ? "bg-slate-800 text-white hover:bg-slate-700"
-                  : "bg-white text-gray-700 hover:bg-gray-100"
+                  ? "text-white border-white hover:bg-white/20"
+                  : "text-black border-black hover:bg-black/10"
               }`}
               aria-label="Close"
             >

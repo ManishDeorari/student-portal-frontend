@@ -44,7 +44,7 @@ const SettingsDrawer = ({ isOpen, onClose, onResetPassword, onSignout }) => {
                                 </div>
                                 <button
                                     onClick={onClose}
-                                    className={`p-2 rounded-full transition-colors ${darkMode ? "hover:bg-[#FAFAFA]/10 text-gray-400" : "hover:bg-gray-100 text-gray-500"}`}
+                                    className={`p-2 rounded-full border transition-colors ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}
                                 >
                                     <FaTimes size={20} />
                                 </button>

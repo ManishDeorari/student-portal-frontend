@@ -262,7 +262,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                   </p>
                </div>
             </div>
-            <button onClick={onClose} className={`text-3xl ${darkMode ? "text-gray-400 hover:text-white" : "text-gray-400 hover:text-black"} transition-colors`}>
+            <button onClick={onClose} className={`text-3xl w-10 h-10 flex items-center justify-center rounded-full border transition-colors ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}>
               &times;
             </button>
           </div>

@@ -78,7 +78,7 @@ const AdminRepostsModal = ({ event, isOpen, onClose, darkMode = false, currentUs
               >
                 {isDownloading ? "⏳ Downloading..." : "📊 Download CSV"}
               </button>
-              <button onClick={onClose} className="text-2xl text-gray-400 hover:text-red-500 transition-colors">&times;</button>
+              <button onClick={onClose} className={`text-2xl w-10 h-10 flex items-center justify-center rounded-full border transition-colors ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}>&times;</button>
             </div>
           </div>
 

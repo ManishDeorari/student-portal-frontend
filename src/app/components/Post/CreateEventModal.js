@@ -187,7 +187,7 @@ const CreateEventModal = ({ isOpen, onClose, currentUser, darkMode = false, setP
           <h2 className={`text-lg sm:text-2xl font-black ${darkMode ? "text-white" : "text-gray-900"} tracking-tight flex items-center gap-2`}>
             <span>📅</span> Create Event
           </h2>
-          <button onClick={onClose} className={`text-2xl ${darkMode ? "text-gray-400 hover:text-white" : "text-gray-400 hover:text-black"} transition-colors`}>
+          <button onClick={onClose} className={`text-2xl w-10 h-10 flex items-center justify-center rounded-full border transition-colors ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}>
             &times;
           </button>
         </div>
