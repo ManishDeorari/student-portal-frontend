@@ -132,7 +132,7 @@ export default function PostReactions({
 
           {/* Comment Button (right, slightly left-pushed) */}
           <button
-            onClick={() => setShowComments((prev) => !prev)}
+            onClick={() => setShowComments && setShowComments((prev) => !prev)}
             className={`relative font-black text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-2 px-4 py-1.5 rounded-xl border overflow-hidden group mr-2 ${darkMode ? "text-white border-white/10 hover:border-pink-500/50" : "text-slate-900 border-black/5 hover:border-pink-500/50"}`}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
