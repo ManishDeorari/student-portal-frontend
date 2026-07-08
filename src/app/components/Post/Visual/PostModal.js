@@ -399,7 +399,7 @@ export default function PostModal(props) {
               </h3>
               <div className="space-y-3">
                 {(() => {
-                  const groupedWinners = post.announcementDetails.winners.reduce((acc, current) => {
+                  const groupedWinners = (post.announcementDetails.winners || []).reduce((acc, current) => {
                     if (current.groupId) {
                       const existing = acc.find(g => g.groupId === current.groupId);
                       if (existing) {
