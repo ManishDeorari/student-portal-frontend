@@ -372,7 +372,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
                 </h2>
                 <button 
                   onClick={() => setIsMainModalOpen(false)} 
-                  className={`text-3xl font-black w-12 h-12 flex items-center justify-center rounded-full border-2 transition-all hover:rotate-90 ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}
+                  className={`text-2xl font-black w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all hover:rotate-90 ${darkMode ? "text-white border-white hover:bg-white/20" : "text-black border-black hover:bg-black/10"}`}
                 >
                   &times;
                 </button>
