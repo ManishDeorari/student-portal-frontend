@@ -544,7 +544,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                         </div>
                                       ))}
                                     </div>
-                                    <div className={`flex gap-3 pt-4 mt-2 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
+                                    <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 mt-2 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
                                       <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
                                         <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
                                           <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank</span>
@@ -635,7 +635,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                         );
                                       })}
                                     </div>
-                                    <div className={`flex gap-3 pt-3 mt-1 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
+                                    <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 mt-1 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
                                       <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-rank-${idx}`) ? "animate-pulse" : ""}`}>
                                         <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
                                           <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank</span>
