@@ -433,7 +433,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shrink-0 ${darkMode ? "bg-white/10 text-gray-400" : "bg-gray-100 text-gray-600"}`}>
+                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shrink-0 ${darkMode ? "bg-white/10 text-white" : "bg-gray-100 text-gray-600"}`}>
                               {doc.format || "FILE"}
                             </span>
                             <div className="w-6 h-6 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-500">
@@ -622,126 +622,140 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   }, []);
 
                   return groupedWinners.map((entry, gidx) => (
-                    <div key={gidx} className="p-[2px] rounded-[2rem] bg-gradient-to-tr from-blue-500 to-purple-600 shadow-xl">
-                      <div className={`rounded-[calc(2rem-2px)] overflow-hidden ${darkMode ? "bg-slate-900/90" : "bg-white"}`}>
+                    <div key={gidx} className={`p-[2px] rounded-3xl shadow-xl ${entry.type === 'group' ? 'bg-gradient-to-r from-orange-500 to-red-600' : 'bg-gradient-to-r from-blue-500 to-purple-600'}`}>
+                      <div className={`rounded-[calc(1.5rem-2px)] overflow-hidden ${darkMode ? "bg-slate-900/90" : "bg-white"}`}>
                         {entry.type === 'group' && (
-                          <div className={`${darkMode ? "bg-blue-600/20" : "bg-blue-50"} px-3 sm:px-4 py-2 border-b border-blue-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2`}>
+                          <div className={`${darkMode ? "bg-slate-800/80" : "bg-orange-50/50"} px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3`}>
                             <div className="flex items-center gap-3">
-                              <span className="text-xl">🏆</span>
-                              <span className={`text-xs font-black uppercase tracking-[0.2em] ${darkMode ? "text-blue-300" : "text-blue-800"}`}>
+                              <span className="text-2xl">🏆</span>
+                              <span className={`text-sm font-black uppercase tracking-[0.2em] ${darkMode ? "text-orange-400" : "text-orange-600"}`}>
                                 {entry.groupName || "Team Achievement"}
                               </span>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"}`}>
+                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"}`}>
                                 Rank: {entry.rank}
                               </span>
-                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${darkMode ? "bg-green-500/20 text-green-300" : "bg-green-100 text-green-700"}`}>
+                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${darkMode ? "bg-green-500/20 text-green-300" : "bg-green-100 text-green-700"}`}>
+                                +{entry.points} PTS
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {entry.type === 'individual' && (
+                          <div className={`${darkMode ? "bg-slate-800/80" : "bg-blue-50/50"} px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b ${darkMode ? "border-white/10" : "border-blue-100"}`}>
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl">🌟</span>
+                              <span className={`text-xs font-black uppercase tracking-[0.2em] ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
+                                {entry.groupName || "Individual Achievement"}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"}`}>
+                                Rank: {entry.rank}
+                              </span>
+                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${darkMode ? "bg-green-500/20 text-green-300" : "bg-green-100 text-green-700"}`}>
                                 +{entry.points} PTS
                               </span>
                             </div>
                           </div>
                         )}
 
-                        <div className="divide-y divide-white/5">
-                          {(entry.type === 'group' ? entry.members : [entry]).map((member, midx) => (
-                            <div key={midx} className={`p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-blue-50/50"}`}>
-                              <div className="flex items-center gap-4 flex-1 min-w-0">
-                                <div className="rounded-full shadow-lg flex-shrink-0 relative">
-                                  {(() => {
-                                    const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
-                                    const isRestricted = !isAdmin;
-                                    return (
-                                      <>
-                                        <UserAvatar
-                                          user={typeof member.userId === 'object' ? member.userId : member}
-                                          src={member.profilePicture || member.userId?.profilePicture}
-                                          alt={member.name}
-                                          width={40}
-                                          height={40}
-                                          wrapperClassName="w-10 h-10"
-                                          className={`rounded-full object-cover border-2 ${darkMode ? 'border-blue-500/50' : 'border-blue-400/50'} ${isRestricted ? "select-none pointer-events-none" : ""}`}
-                                          onContextMenu={(e) => { if (isRestricted) e.preventDefault(); }}
-                                          onDragStart={(e) => { if (isRestricted) e.preventDefault(); }}
+                        <div className={`${entry.type === 'group' ? 'flex flex-col' : 'p-0'}`}>
+                          {(entry.type === 'group' ? entry.members : [entry]).map((member, midx, arr) => (
+                            <div key={midx} className="flex flex-col w-full">
+                              <div className={`p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-gray-50/50"}`}>
+                                <div className="flex items-center gap-4 flex-1 min-w-0">
+                                  <div className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md flex-shrink-0 relative">
+                                    {(() => {
+                                      const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
+                                      const isRestricted = !isAdmin;
+                                      return (
+                                        <>
+                                          <div className={`w-10 h-10 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-gray-100"}`}>
+                                            <UserAvatar
+                                              user={typeof member.userId === 'object' ? member.userId : member}
+                                              src={member.profilePicture || member.userId?.profilePicture}
+                                              alt={member.name}
+                                              width={40}
+                                              height={40}
+                                              wrapperClassName="w-full h-full"
+                                              className={`w-full h-full object-cover ${isRestricted ? "select-none pointer-events-none" : ""}`}
+                                              onContextMenu={(e) => { if (isRestricted) e.preventDefault(); }}
+                                              onDragStart={(e) => { if (isRestricted) e.preventDefault(); }}
+                                            />
+                                          </div>
+                                          {isRestricted && (
+                                            <div
+                                              className="absolute inset-0 z-10 cursor-pointer rounded-full"
+                                              onContextMenu={(e) => e.preventDefault()}
+                                            />
+                                          )}
+                                        </>
+                                      );
+                                    })()}
+                                  </div>
+                                  <div className="flex flex-col min-w-0 w-full mt-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      {member.userId?.publicId ? (
+                                        <UserNameWithBadge 
+                                          user={member.userId}
+                                          href={`/profile/${member.userId.publicId}`} 
+                                          className={`font-black text-[13px] truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-black"}`}
                                         />
-                                        {isRestricted && (
-                                          <div
-                                            className="absolute inset-0 z-10 cursor-pointer rounded-full"
-                                            onContextMenu={(e) => e.preventDefault()}
-                                          />
-                                        )}
-                                      </>
-                                    );
-                                  })()}
-                                </div>
-                                <div className="flex flex-col min-w-0 w-full mt-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    {member.userId?.publicId ? (
-                                      <UserNameWithBadge 
-                                        user={member.userId}
-                                        href={`/profile/${member.userId.publicId}`} 
-                                        className={`font-black text-sm truncate hover:text-blue-500 transition-colors ${darkMode ? "text-white" : "text-gray-900"}`}
-                                      />
-                                    ) : (
-                                      <UserNameWithBadge 
-                                        user={member.userId || member}
-                                        className={`font-black text-sm truncate ${darkMode ? "text-white" : "text-gray-900"}`}
-                                      />
-                                    )}
-                                    {member.userId && <span className="text-[8px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-bold flex-shrink-0">MATCHED</span>}
-                                  </div>
-                                  <div className="flex flex-wrap items-center gap-3 text-left">
-                                    <div className="flex flex-col">
-                                      <span className={`text-[8px] font-black uppercase tracking-widest text-orange-500`}>Enrollment No.</span>
-                                      <span className={`text-[10px] font-black font-mono tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
-                                        {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
-                                      </span>
+                                      ) : (
+                                        <UserNameWithBadge 
+                                          user={member.userId || member}
+                                          className={`font-black text-[13px] truncate ${darkMode ? "text-white" : "text-black"}`}
+                                        />
+                                      )}
+                                      {member.userId && <span className="text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-black flex-shrink-0 tracking-widest shadow-sm">MATCHED</span>}
                                     </div>
-                                    {(member.userId?.course || member.course) && (
-                                      <div className="flex flex-col border-l border-white/10 pl-3">
-                                        <span className={`text-[8px] font-black uppercase tracking-widest text-orange-500`}>Course</span>
-                                        <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
-                                          {member.userId?.course || member.course}
+                                    <div className="flex flex-wrap items-center gap-4 text-left">
+                                      <div className="flex flex-col">
+                                        <span className={`text-[9px] font-black uppercase tracking-[0.2em] text-orange-500`}>Enrollment No.</span>
+                                        <span className={`text-[11px] font-black tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
+                                          {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
                                         </span>
                                       </div>
-                                    )}
-                                    {(member.userId?.branch || member.branch) && (
-                                      <div className="flex flex-col border-l border-white/10 pl-3">
-                                        <span className={`text-[8px] font-black uppercase tracking-widest text-orange-500`}>Branch</span>
-                                        <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
-                                          {member.userId?.branch || member.branch}
-                                        </span>
-                                      </div>
-                                    )}
-                                    {(member.userId?.semester || member.semester) && (
-                                      <div className="flex flex-col border-l border-white/10 pl-3">
-                                        <span className={`text-[8px] font-black uppercase tracking-widest text-orange-500`}>Semester</span>
-                                        <span className={`text-[10px] font-black ${darkMode ? "text-white" : "text-black"}`}>
-                                          {member.userId?.semester || member.semester}
-                                        </span>
-                                      </div>
-                                    )}
+                                      {(member.userId?.course || member.course) && (
+                                        <div className="flex flex-col">
+                                          <span className={`text-[9px] font-black uppercase tracking-[0.2em] text-orange-500`}>Course</span>
+                                          <span className={`text-[11px] font-black tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
+                                            {member.userId?.course || member.course}
+                                          </span>
+                                        </div>
+                                      )}
+                                      {(member.userId?.branch || member.branch) && (
+                                        <div className="flex flex-col">
+                                          <span className={`text-[9px] font-black uppercase tracking-[0.2em] text-orange-500`}>Branch</span>
+                                          <span className={`text-[11px] font-black tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
+                                            {member.userId?.branch || member.branch}
+                                          </span>
+                                        </div>
+                                      )}
+                                      {(member.userId?.semester || member.semester) && (
+                                        <div className="flex flex-col">
+                                          <span className={`text-[9px] font-black uppercase tracking-[0.2em] text-orange-500`}>Semester</span>
+                                          <span className={`text-[11px] font-black tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
+                                            {member.userId?.semester || member.semester}
+                                          </span>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
+                                {entry.type === 'group' && (
+                                  <div className="flex flex-col sm:items-end justify-center">
+                                    <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-white" : "text-black"}`}>
+                                      {midx === 0 ? "Captain" : "Member"}
+                                    </span>
+                                  </div>
+                                )}
                               </div>
-
-                              {entry.type === 'individual' && (
-                                <div className="flex items-center gap-3 w-full sm:w-auto justify-start sm:justify-end pl-[56px] sm:pl-0 mt-1 sm:mt-0 pt-2 sm:pt-0 border-t border-black/5 dark:border-white/5 sm:border-t-0">
-                                  <div className="flex flex-col items-start sm:items-end">
-                                    <span className={`text-[8px] font-black uppercase mb-0.5 text-orange-500`}>Rank</span>
-                                    <span className={`text-sm font-black ${darkMode ? "text-blue-300" : "text-blue-700"}`}>{entry.rank}</span>
-                                  </div>
-                                  <div className="flex flex-col items-start sm:items-end border-l border-black/10 dark:border-white/10 pl-3">
-                                    <span className={`text-[8px] font-black uppercase mb-0.5 text-orange-500`}>Points</span>
-                                    <span className={`px-2 py-0.5 rounded-md text-xs font-black ${darkMode ? "bg-green-500/20 text-green-300" : "bg-green-100 text-green-700"}`}>+{entry.points}</span>
-                                  </div>
-                                </div>
-                              )}
-
-                              {entry.type === 'group' && (
-                                <span className={`text-[8px] font-black uppercase tracking-widest opacity-30 ${darkMode ? "text-white" : "text-black"}`}>
-                                  {midx === 0 ? "Captain" : "Member"}
-                                </span>
+                              {entry.type === 'group' && midx !== arr.length - 1 && (
+                                <div className={`h-[1px] w-full bg-gradient-to-r from-transparent ${darkMode ? "via-orange-500/30" : "via-orange-500/20"} to-transparent`} />
                               )}
                             </div>
                           ))}
@@ -815,7 +829,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
               />
 
               {someoneTyping && (
-                <p className={`text-xs ${darkMode ? "text-gray-500" : "text-gray-400"} mt-1 ml-2 italic`}>
+                <p className={`text-xs ${darkMode ? "text-white" : "text-white"} mt-1 ml-2 italic`}>
                   Someone is typing...
                 </p>
               )}

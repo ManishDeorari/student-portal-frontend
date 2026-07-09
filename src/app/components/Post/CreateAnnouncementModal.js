@@ -257,7 +257,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                   <h2 className={`text-lg sm:text-2xl font-black ${darkMode ? "text-white" : "text-gray-900"} tracking-tight leading-none`}>
                     Create Announcement
                   </h2>
-                  <p className={`text-[10px] uppercase tracking-widest font-bold mt-1 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                  <p className={`text-[10px] uppercase tracking-widest font-bold mt-1 ${darkMode ? "text-white" : "text-white"}`}>
                     Posts with structured winner tables & points
                   </p>
                </div>
@@ -277,17 +277,17 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                   <div className="flex justify-center gap-12 mb-2">
                     <label className="cursor-pointer group flex flex-col items-center">
                       <span className="text-3xl block filter grayscale group-hover:grayscale-0 transition-all">📷</span>
-                      <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Add Photo</span>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-white" : "text-white"}`}>Add Photo</span>
                       <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                     </label>
                     <label className="cursor-pointer group flex flex-col items-center">
                       <span className="text-3xl block filter grayscale group-hover:grayscale-0 transition-all">🎥</span>
-                      <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Add Video</span>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-white" : "text-white"}`}>Add Video</span>
                       <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
                     </label>
                     <label className="cursor-pointer group flex flex-col items-center">
                       <span className="text-3xl block filter grayscale group-hover:grayscale-0 transition-all">📄</span>
-                      <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Add Document</span>
+                      <span className={`text-[9px] font-black uppercase tracking-widest ${darkMode ? "text-white" : "text-white"}`}>Add Document</span>
                       <input type="file" accept=".pdf,.doc,.docx,.txt" multiple onChange={handleDocumentChange} className="hidden" />
                     </label>
                   </div>
@@ -343,7 +343,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
               {/* Description */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-black"}`}>Announcement Content</label>
+                  <label className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-white" : "text-black"}`}>Announcement Content</label>
                   <EmojiPickerToggle onEmojiSelect={handleEmojiSelect} icon="😀" darkMode={darkMode} />
                 </div>
                 <div className={getErrorClass("content")}>
@@ -393,7 +393,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                       </div>
 
                       <div className="space-y-2">
-                         <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-gray-400" : "text-black/60"}`}>Event Name</label>
+                         <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-white" : "text-black"}`}>Event Name</label>
                          <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 ${errors.includes("eventName") ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
                            <EventSearchInput 
                              value={formData.eventName}
@@ -410,30 +410,35 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                          </div>
                       </div>
                       <div className="space-y-4">
-                        <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-gray-400" : "text-black/60"}`}>Select Achievement Type</label>
-                        <div className="grid grid-cols-1 gap-3 sm:gap-4 w-full">
-                          <button
-                            type="button"
-                            onClick={addWinnerRow}
-                            className={`flex items-center justify-center gap-2 sm:gap-4 py-3 sm:py-5 px-4 sm:px-8 rounded-2xl transition-all shadow-xl active:scale-95 bg-gradient-to-r from-blue-600 to-purple-700 text-white w-full h-[52px] sm:h-[68px] hover:shadow-blue-500/25 group`}
-                          >
-                            <span className="text-2xl group-hover:scale-110 transition-transform">👤</span>
-                            <span className="text-[11px] font-black uppercase tracking-[0.2em]">Add Individual</span>
-                          </button>
-                          
-                          <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-xl h-[52px] sm:h-[68px]`}>
-                             <div className={`flex items-center justify-between h-full px-3 sm:px-8 py-2 rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-800" : "bg-white"}`}>
-                               <div className="flex items-center gap-3">
-                                 <span className="text-2xl">👥</span>
-                                 <span className={`text-[11px] font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Add Group:</span>
+                        <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-white" : "text-black"}`}>Select Achievement Type</label>
+                        <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-xl h-[52px] sm:h-[68px] w-full`}>
+                           <div className={`flex items-center justify-between h-full px-3 sm:px-6 py-2 rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                             <div className="flex items-center gap-2 sm:gap-3">
+                               <span className="text-xl sm:text-2xl hidden sm:block">👤</span>
+                               <span className={`text-[10px] sm:text-[11px] font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Add:</span>
+                               <div className="p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 shadow-sm hover:scale-105 transition-transform cursor-pointer">
+                                 <button
+                                   type="button"
+                                   onClick={addWinnerRow}
+                                   className={`w-7 h-7 sm:w-9 sm:h-9 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center text-xs font-black transition-all ${darkMode ? "bg-slate-800 hover:bg-slate-700" : "bg-white hover:bg-orange-50"}`}
+                                 >
+                                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">1</span>
+                                 </button>
                                </div>
-                               <div className="flex gap-2">
+                             </div>
+                             
+                             <div className="h-8 w-[1px] bg-gradient-to-b from-transparent via-blue-500/50 to-transparent mx-1 sm:mx-2"></div>
+                             
+                             <div className="flex items-center gap-2 sm:gap-3">
+                               <span className="text-xl sm:text-2xl hidden sm:block">👥</span>
+                               <span className={`text-[10px] sm:text-[11px] font-black uppercase tracking-widest ${darkMode ? "text-purple-400" : "text-purple-600"}`}>Group:</span>
+                               <div className="flex gap-1.5 sm:gap-2">
                                  {[2, 3, 4].map(num => (
                                    <div key={num} className="p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 shadow-sm hover:scale-105 transition-transform cursor-pointer">
                                      <button
                                        type="button"
                                        onClick={() => addGroupWinnerRows(num)}
-                                       className={`w-9 h-9 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center text-xs font-black transition-all ${darkMode ? "bg-slate-800 hover:bg-slate-700" : "bg-white hover:bg-orange-50"}`}
+                                       className={`w-7 h-7 sm:w-9 sm:h-9 rounded-[calc(0.75rem-1.5px)] flex items-center justify-center text-xs font-black transition-all ${darkMode ? "bg-slate-800 hover:bg-slate-700" : "bg-white hover:bg-orange-50"}`}
                                      >
                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">{num}</span>
                                      </button>
@@ -441,7 +446,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                  ))}
                                </div>
                              </div>
-                          </div>
+                           </div>
                         </div>
                       </div>
                     </div>
@@ -449,106 +454,193 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                   <div className={`p-[2px] rounded-[3rem] bg-gradient-to-br from-blue-500 to-purple-600 shadow-2xl shadow-blue-500/10`}>
                     <div className={`p-4 sm:p-6 rounded-[calc(3rem-2px)] ${darkMode ? "bg-[#0f172a]" : "bg-white"} min-h-[150px] sm:min-h-[200px] overflow-x-auto`}>
                       <div className="flex flex-col gap-4">
-                        {winners.map((winner, idx) => {
-                          const isFirstInGroup = winner.groupId && winners.findIndex(w => w.groupId === winner.groupId) === idx;
-                          const isSubsequent = winner.groupId && !isFirstInGroup;
-                          const isIndividual = !winner.groupId;
-                          
-                          return (
-                            <React.Fragment key={idx}>
-                              {isFirstInGroup && (
-                                <div className="mt-4 mb-2 flex items-center gap-4">
-                                  <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
-                                  <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-orange-500 to-red-600 shadow-xl min-w-[300px]`}>
-                                    <input 
-                                      value={winner.groupName} 
-                                      onChange={(e) => handleWinnerChange(idx, "groupName", e.target.value)}
-                                      placeholder="Enter Team/Group Name..."
-                                      className={`w-full h-[52px] p-4 text-xs font-black rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"} outline-none border-none italic text-center uppercase tracking-[0.2em]`}
-                                    />
+                        {(() => {
+                          const groupedWinners = [];
+                          winners.forEach((w, idx) => {
+                            if (w.groupId) {
+                              let group = groupedWinners.find(g => g.groupId === w.groupId);
+                              if (!group) {
+                                group = { isGroup: true, groupId: w.groupId, groupName: w.groupName, rank: w.rank, points: w.points, members: [] };
+                                groupedWinners.push(group);
+                              }
+                              group.members.push({ ...w, originalIdx: idx });
+                            } else {
+                              groupedWinners.push({ isGroup: false, member: { ...w, originalIdx: idx } });
+                            }
+                          });
+
+                          return groupedWinners.map((groupOrMember, groupIdx) => {
+                            if (groupOrMember.isGroup) {
+                              return (
+                                <div key={`group-${groupIdx}`} className="relative p-[2px] rounded-3xl bg-gradient-to-r from-orange-500 to-pink-600 shadow-xl mb-6">
+                                  <div className={`relative flex flex-col p-4 sm:p-6 rounded-[calc(1.5rem-2px)] ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                    
+                                    {/* GROUP X BUTTON */}
+                                    <button 
+                                      type="button" 
+                                      onClick={() => {
+                                        setWinners(winners.filter(w => w.groupId !== groupOrMember.groupId));
+                                      }} 
+                                      className={`absolute top-3 right-3 sm:top-4 sm:right-4 border-2 ${darkMode ? "border-white text-white hover:border-red-500" : "border-black text-black hover:border-red-500"} bg-transparent hover:bg-red-500 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-xl transition-all font-black z-10`}
+                                    >&times;</button>
+
+                                    <div className="mb-4 pr-12 sm:pr-14">
+                                      <div className="p-[2px] rounded-[calc(1rem+2px)] bg-gradient-to-r from-orange-500 to-red-600 shadow-sm">
+                                        <input 
+                                          value={groupOrMember.groupName} 
+                                          onChange={(e) => {
+                                            groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "groupName", e.target.value));
+                                          }}
+                                          placeholder="Enter Team/Group Name..."
+                                          className={`w-full h-[52px] p-4 text-sm font-black rounded-2xl ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"} outline-none border-none uppercase tracking-[0.2em] text-center italic`}
+                                        />
+                                      </div>
+                                    </div>
+                                    
+                                    <div className="flex flex-col gap-4">
+                                      {groupOrMember.members.map((member, mIdx) => (
+                                        <div key={mIdx} className="relative p-[2px] rounded-2xl bg-gradient-to-r from-blue-500/50 to-purple-600/50">
+                                          <div className={`relative flex flex-col gap-4 p-4 rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-900/50" : "bg-gray-50"}`}>
+                                            <div className="flex items-center gap-3">
+                                              <div className="flex items-center justify-center w-10 h-10 text-2xl shrink-0">🔗</div>
+                                              <div className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md">
+                                                <div className={`w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ${darkMode ? "bg-slate-700" : "bg-gray-100"}`}>
+                                                   <Image src={member.profilePicture || "/default-profile.jpg"} alt="avatar" width={40} height={40} className="w-full h-full object-cover" />
+                                                </div>
+                                              </div>
+                                              <div className={`flex-1 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${member.originalIdx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
+                                                <UserSearchInput 
+                                                  darkMode={darkMode}  placeholder="Search member name..." value={member.name}
+                                                  className={`!bg-transparent !border-none !shadow-none font-black !py-2 !text-[12px] h-full w-full ${darkMode ? "!text-white" : "!text-black"}`}
+                                                  onChange={(val) => {
+                                                     handleWinnerChange(member.originalIdx, "name", val);
+                                                     if (!val) {
+                                                       handleWinnerChange(member.originalIdx, "uniqueId", "");
+                                                       handleWinnerChange(member.originalIdx, "profilePicture", "");
+                                                       handleWinnerChange(member.originalIdx, "enrollmentNumber", "");
+                                                       handleWinnerChange(member.originalIdx, "course", "");
+                                                       handleWinnerChange(member.originalIdx, "branch", "");
+                                                       handleWinnerChange(member.originalIdx, "semester", "");
+                                                     }
+                                                  }}
+                                                  onSelect={(u) => handleUserSelect(member.originalIdx, u)}
+                                                />
+                                              </div>
+                                            </div>
+                                            <div className="grid grid-cols-4 gap-2 w-full">
+                                              {["ENR", "CRS", "BRN", "SEM"].map((label, lIdx) => {
+                                                const val = label === "ENR" ? member.enrollmentNumber : label === "CRS" ? member.course : label === "BRN" ? member.branch : member.semester;
+                                                return (
+                                                  <div key={lIdx} className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
+                                                    <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
+                                                      <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">{label}</span>
+                                                      <span className={`text-[11px] font-black truncate w-full text-center mt-0.5 ${darkMode ? "text-white" : "text-black"}`}>{val || "-"}</span>
+                                                    </div>
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                    <div className={`flex gap-3 pt-4 mt-2 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
+                                      <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
+                                        <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                          <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank/Pos</span>
+                                          <input 
+                                            value={groupOrMember.rank} 
+                                            onChange={(e) => {
+                                              groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "rank", e.target.value));
+                                            }}
+                                            placeholder="e.g. 1st..."
+                                            className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                          />
+                                        </div>
+                                      </div>
+                                      <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
+                                        <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                          <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Points</span>
+                                          <input 
+                                            type="text" inputMode="numeric" value={groupOrMember.points} 
+                                            onChange={(e) => {
+                                               const val = e.target.value.replace(/[^0-9]/g, '');
+                                               groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "points", val));
+                                            }}
+                                            placeholder="0"
+                                            className={`w-full h-full p-2 text-sm font-black bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                          />
+                                          <span className={`pr-3 text-[10px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>PTS</span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
                                 </div>
-                              )}
-
-                              <div className={`relative p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm transition-all ${isSubsequent ? "opacity-90 ml-4" : ""}`}>
-                                <div className={`relative flex flex-col gap-4 p-4 rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-800" : "bg-white"}`}>
-                                  {/* Delete Button */}
-                                  <button type="button" onClick={() => removeWinnerRow(idx)} className="absolute top-2 right-2 text-red-500/40 hover:text-red-500 text-xl hover:bg-red-50 dark:hover:bg-red-900/20 w-8 h-8 flex items-center justify-center rounded-xl transition-all font-light z-10">&times;</button>
-                                  
-                                  {/* Row 1: Icon, Avatar, Search */}
-                                  <div className="flex items-center gap-3 pr-8">
-                                    <div className="flex items-center justify-center w-10 h-10 text-2xl shrink-0">
-                                      {winner.groupId ? "🔗" : "👤"}
-                                    </div>
-                                    <div className={`w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ${darkMode ? "bg-slate-700" : "bg-gray-100"}`}>
-                                       <Image 
-                                         src={winner.profilePicture || "/default-profile.jpg"} 
-                                         alt="avatar"
-                                         width={40}
-                                         height={40}
-                                         className="w-full h-full object-cover"
-                                       />
-                                    </div>
-                                    <div className={`flex-1 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${idx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
-                                      <UserSearchInput 
-                                        darkMode={darkMode}
-                                        role="student"
-                                        placeholder={winner.groupId ? "Search member name..." : "Search student name..."} 
-                                        value={winner.name}
-                                        className={`!bg-transparent !border-none !shadow-none font-black !py-2 !text-[12px] h-full w-full ${darkMode ? "!text-white" : "!text-black"}`}
-                                        onChange={(val) => {
-                                           handleWinnerChange(idx, "name", val);
-                                           if (!val) {
-                                             handleWinnerChange(idx, "uniqueId", "");
-                                             handleWinnerChange(idx, "profilePicture", "");
-                                             handleWinnerChange(idx, "enrollmentNumber", "");
-                                             handleWinnerChange(idx, "course", "");
-                                             handleWinnerChange(idx, "branch", "");
-                                             handleWinnerChange(idx, "semester", "");
-                                           }
-                                        }}
-                                        onSelect={(u) => handleUserSelect(idx, u)}
-                                      />
-                                    </div>
-                                  </div>
-
-                                  {/* Row 2: Metadata Grid */}
-                                  <div className="grid grid-cols-4 gap-2 w-full">
-                                    <div className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 opacity-80 cursor-not-allowed`}>
-                                      <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
-                                        <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">ENR</span>
-                                        <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.enrollmentNumber || "-"}</span>
+                              );
+                            } else {
+                              const member = groupOrMember.member;
+                              const idx = member.originalIdx;
+                              return (
+                                <div key={`indiv-${groupIdx}`} className="relative p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm mb-6">
+                                  <div className={`relative flex flex-col gap-4 p-4 sm:p-6 rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-800" : "bg-white"}`}>
+                                    <button type="button" onClick={() => removeWinnerRow(idx)} className={`absolute top-3 right-3 sm:top-4 sm:right-4 border-2 ${darkMode ? "border-white text-white hover:border-red-500" : "border-black text-black hover:border-red-500"} bg-transparent hover:bg-red-500 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-xl transition-all font-black z-10`}>&times;</button>
+                                    
+                                    <div className="mb-0 pr-12 sm:pr-14">
+                                      <div className="p-[2px] rounded-[calc(1rem+2px)] bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm">
+                                        <input 
+                                          value={member.groupName || ""} 
+                                          onChange={(e) => handleWinnerChange(idx, "groupName", e.target.value)}
+                                          placeholder="Enter Title / Achievement..."
+                                          className={`w-full h-[52px] p-4 text-sm font-black rounded-2xl ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"} outline-none border-none uppercase tracking-[0.2em] text-center italic`}
+                                        />
                                       </div>
                                     </div>
-                                    <div className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 opacity-80 cursor-not-allowed`}>
-                                      <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
-                                        <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">CRS</span>
-                                        <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.course || "-"}</span>
+                                    
+                                    <div className="flex items-center gap-3">
+                                      <div className="flex items-center justify-center w-10 h-10 text-2xl shrink-0">👤</div>
+                                      <div className="p-[2px] rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-md">
+                                        <div className={`w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ${darkMode ? "bg-slate-700" : "bg-gray-100"}`}>
+                                           <Image src={member.profilePicture || "/default-profile.jpg"} alt="avatar" width={40} height={40} className="w-full h-full object-cover" />
+                                        </div>
+                                      </div>
+                                      <div className={`flex-1 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${idx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
+                                        <UserSearchInput 
+                                          darkMode={darkMode}  placeholder="Search student name..." value={member.name}
+                                          className={`!bg-transparent !border-none !shadow-none font-black !py-2 !text-[12px] h-full w-full ${darkMode ? "!text-white" : "!text-black"}`}
+                                          onChange={(val) => {
+                                             handleWinnerChange(idx, "name", val);
+                                             if (!val) {
+                                               handleWinnerChange(idx, "uniqueId", "");
+                                               handleWinnerChange(idx, "profilePicture", "");
+                                               handleWinnerChange(idx, "enrollmentNumber", "");
+                                               handleWinnerChange(idx, "course", "");
+                                               handleWinnerChange(idx, "branch", "");
+                                               handleWinnerChange(idx, "semester", "");
+                                             }
+                                          }}
+                                          onSelect={(u) => handleUserSelect(idx, u)}
+                                        />
                                       </div>
                                     </div>
-                                    <div className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 opacity-80 cursor-not-allowed`}>
-                                      <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
-                                        <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">BRN</span>
-                                        <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.branch || "-"}</span>
-                                      </div>
+                                    <div className="grid grid-cols-4 gap-2 w-full">
+                                      {["ENR", "CRS", "BRN", "SEM"].map((label, lIdx) => {
+                                        const val = label === "ENR" ? member.enrollmentNumber : label === "CRS" ? member.course : label === "BRN" ? member.branch : member.semester;
+                                        return (
+                                          <div key={lIdx} className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
+                                            <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
+                                              <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">{label}</span>
+                                              <span className={`text-[11px] font-black truncate w-full text-center mt-0.5 ${darkMode ? "text-white" : "text-black"}`}>{val || "-"}</span>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
                                     </div>
-                                    <div className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 opacity-80 cursor-not-allowed`}>
-                                      <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
-                                        <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">SEM</span>
-                                        <span className="text-[11px] font-bold truncate w-full text-center mt-0.5">{winner.semester || "-"}</span>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* Row 3: Rank and Points */}
-                                  {(isFirstInGroup || isIndividual) && (
                                     <div className={`flex gap-3 pt-3 mt-1 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
                                       <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-rank-${idx}`) ? "animate-pulse" : ""}`}>
                                         <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
                                           <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank/Pos</span>
                                           <input 
-                                            value={winner.rank} 
+                                            value={member.rank} 
                                             onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}
                                             placeholder="e.g. 1st..."
                                             className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
@@ -559,9 +651,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                         <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
                                           <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Points</span>
                                           <input 
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={winner.points} 
+                                            type="text" inputMode="numeric" value={member.points} 
                                             onChange={(e) => {
                                                const val = e.target.value.replace(/[^0-9]/g, '');
                                                handleWinnerChange(idx, "points", val);
@@ -573,12 +663,12 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                         </div>
                                       </div>
                                     </div>
-                                  )}
+                                  </div>
                                 </div>
-                              </div>
-                            </React.Fragment>
-                          );
-                        })}
+                              );
+                            }
+                          });
+                        })()}
                       </div>
                     </div>
                   </div>

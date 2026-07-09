@@ -279,26 +279,7 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
                           </button>
                         </div>
                       ))}
-                    </div>
-                  )}
 
-                  {previewVideo && (
-                    <div className="relative mt-3 max-h-64">
-                      <video
-                        src={previewVideo}
-                        controls
-                        className="rounded-lg max-h-64 w-full"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setVideo(null);
-                          setPreviewVideo(null);
-                        }}
-                        className="absolute top-2 right-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded-full text-sm"
-                      >
-                        ❌
-                      </button>
                     </div>
                   )}
 
@@ -363,7 +344,8 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
 
       {isMainModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-          <div className={`w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl transition-all ${darkMode ? "bg-[#1a1a1c]" : "bg-white"}`}>
+          <div className="w-full max-w-3xl p-[2px] rounded-3xl bg-gradient-to-tr from-blue-500 to-purple-600 shadow-2xl">
+            <div className={`w-full h-full rounded-[calc(1.5rem-2px)] overflow-hidden transition-all ${darkMode ? "bg-[#1a1a1c]" : "bg-white"}`}>
             {/* Modal Header & Tabs */}
             <div className={`p-4 sm:p-6 border-b ${darkMode ? "border-white/10" : "border-gray-200"}`}>
               <div className="flex items-center justify-between mb-4">
@@ -402,9 +384,10 @@ const CreatePost = ({ setPosts, currentUser, darkMode = false }) => {
             </div>
           </div>
         </div>
+        </div>
       )}
 
-      <PostLoadingScreen loading={loading} type={selectedType} darkMode={darkMode} progress={uploadProgress} />
+      <PostLoadingScreen loading={loading} type={selectedType} darkMode={darkMode} progress={typeof uploadProgress !== 'undefined' ? uploadProgress : 0} />
       </div>
     </div>
   );

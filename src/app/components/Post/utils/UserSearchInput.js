@@ -74,11 +74,10 @@ const UserSearchInput = ({ value, onChange, placeholder, onSelect, darkMode = fa
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className={`w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl flex flex-col ${
-                darkMode ? "bg-[#121213] border border-white/10" : "bg-white border border-gray-200"
-              }`}
+              className="w-full max-w-lg p-[2px] rounded-3xl bg-gradient-to-tr from-blue-500 to-purple-600 shadow-2xl"
               style={{ maxHeight: '80vh' }}
             >
+              <div className={`w-full h-full flex flex-col rounded-[calc(1.5rem-2px)] overflow-hidden ${darkMode ? "bg-[#121213]" : "bg-white"}`}>
               {/* Modal Header */}
               <div className={`p-5 sm:p-6 border-b flex items-center justify-between ${darkMode ? "border-white/10" : "border-gray-100"}`}>
                 <h3 className={`text-xl font-black flex items-center gap-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
@@ -162,6 +161,7 @@ const UserSearchInput = ({ value, onChange, placeholder, onSelect, darkMode = fa
                   </div>
                 )}
               </div>
+            </div>
             </motion.div>
           </div>
         )}
