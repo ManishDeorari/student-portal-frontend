@@ -508,7 +508,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                                    <Image src={member.profilePicture || "/default-profile.jpg"} alt="avatar" width={40} height={40} className="w-full h-full object-cover" />
                                                 </div>
                                               </div>
-                                              <div className={`flex-1 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${member.originalIdx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
+                                              <div className={`flex-1 min-w-0 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${member.originalIdx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
                                                 <UserSearchInput 
                                                   darkMode={darkMode}  placeholder="Search member name..." value={member.name}
                                                   className={`!bg-transparent !border-none !shadow-none font-black !py-2 !text-[12px] h-full w-full ${darkMode ? "!text-white" : "!text-black"}`}
@@ -527,12 +527,12 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                                 />
                                               </div>
                                             </div>
-                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full">
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 w-full">
                                               {["ENR", "CRS", "BRN", "SEM"].map((label, lIdx) => {
                                                 const val = label === "ENR" ? member.enrollmentNumber : label === "CRS" ? member.course : label === "BRN" ? member.branch : member.semester;
                                                 return (
                                                   <div key={lIdx} className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
-                                                    <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
+                                                    <div className={`w-full h-full p-1 sm:p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
                                                       <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">{label}</span>
                                                       <span className={`text-[11px] font-black truncate w-full text-center mt-0.5 ${darkMode ? "text-white" : "text-black"}`}>{val || "-"}</span>
                                                     </div>
@@ -547,7 +547,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                     <div className={`flex gap-3 pt-4 mt-2 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
                                       <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
                                         <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
-                                          <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank/Pos</span>
+                                          <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank</span>
                                           <input 
                                             value={groupOrMember.rank} 
                                             onChange={(e) => {
@@ -603,7 +603,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                            <Image src={member.profilePicture || "/default-profile.jpg"} alt="avatar" width={40} height={40} className="w-full h-full object-cover" />
                                         </div>
                                       </div>
-                                      <div className={`flex-1 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${idx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
+                                      <div className={`flex-1 min-w-0 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${idx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
                                         <UserSearchInput 
                                           darkMode={darkMode}  placeholder="Search student name..." value={member.name}
                                           className={`!bg-transparent !border-none !shadow-none font-black !py-2 !text-[12px] h-full w-full ${darkMode ? "!text-white" : "!text-black"}`}
@@ -622,12 +622,12 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                         />
                                       </div>
                                     </div>
-                                    <div className="grid grid-cols-4 gap-2 w-full">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 w-full">
                                       {["ENR", "CRS", "BRN", "SEM"].map((label, lIdx) => {
                                         const val = label === "ENR" ? member.enrollmentNumber : label === "CRS" ? member.course : label === "BRN" ? member.branch : member.semester;
                                         return (
                                           <div key={lIdx} className={`p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
-                                            <div className={`w-full h-full p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
+                                            <div className={`w-full h-full p-1 sm:p-2 flex flex-col items-center justify-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"}`}>
                                               <span className="text-[9px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">{label}</span>
                                               <span className={`text-[11px] font-black truncate w-full text-center mt-0.5 ${darkMode ? "text-white" : "text-black"}`}>{val || "-"}</span>
                                             </div>
@@ -638,7 +638,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                     <div className={`flex gap-3 pt-3 mt-1 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
                                       <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-rank-${idx}`) ? "animate-pulse" : ""}`}>
                                         <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
-                                          <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank/Pos</span>
+                                          <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank</span>
                                           <input 
                                             value={member.rank} 
                                             onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}

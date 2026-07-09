@@ -679,16 +679,26 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                       )}
                                       {member.userId && <span className="text-[9px] bg-green-500 text-white px-2 py-0.5 rounded-full font-black flex-shrink-0 tracking-widest shadow-sm">MATCHED</span>}
                                     </div>
-                                    <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-4 text-left">
-                                      <div className="flex flex-col">
-                                        <span className={`text-[9px] font-black uppercase tracking-[0.2em] text-orange-500`}>Enrollment No.</span>
-                                        <span className={`text-[11px] font-black tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
-                                          {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
+                                    <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-[11px] font-black ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
+                                      <span className="flex items-baseline gap-1"><span className="text-orange-500 uppercase tracking-widest text-[9px]">ENR:</span> <span>{member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}</span></span>
+                                      {(member.userId?.course || member.course) && (
+                                        <span className="flex items-baseline gap-2">
+                                          <span className="text-gray-400/50 text-[10px]">•</span>
+                                          <span className="flex items-baseline gap-1"><span className="text-orange-500 uppercase tracking-widest text-[9px]">CRS:</span> <span>{member.userId?.course || member.course}</span></span>
                                         </span>
-                                      </div>
-                                      
-                                      
-                                      
+                                      )}
+                                      {(member.userId?.branch || member.branch) && (
+                                        <span className="flex items-baseline gap-2">
+                                          <span className="text-gray-400/50 text-[10px]">•</span>
+                                          <span className="flex items-baseline gap-1"><span className="text-orange-500 uppercase tracking-widest text-[9px]">BRN:</span> <span>{member.userId?.branch || member.branch}</span></span>
+                                        </span>
+                                      )}
+                                      {(member.userId?.semester || member.semester) && (
+                                        <span className="flex items-baseline gap-2">
+                                          <span className="text-gray-400/50 text-[10px]">•</span>
+                                          <span className="flex items-baseline gap-1"><span className="text-orange-500 uppercase tracking-widest text-[9px]">SEM:</span> <span>{member.userId?.semester || member.semester}</span></span>
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
