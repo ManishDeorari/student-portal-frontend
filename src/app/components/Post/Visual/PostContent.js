@@ -104,7 +104,19 @@ export default function PostContent({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <p className={`whitespace-pre-wrap leading-relaxed ${darkMode ? "text-gray-200" : "text-gray-800"}`}>{formatText(post.content)}</p>
+          <div className="relative">
+            <p className={`whitespace-pre-wrap leading-relaxed ${darkMode ? "text-gray-200" : "text-gray-800"} ${!hideViewFullPost ? "line-clamp-4 sm:line-clamp-none" : ""}`}>
+              {formatText(post.content)}
+            </p>
+            {!hideViewFullPost && post.content?.length > 200 && (
+              <button 
+                onClick={() => setShowModal(true)}
+                className={`mt-1 text-sm font-bold ${darkMode ? "text-blue-400" : "text-blue-600"} hover:underline block sm:hidden`}
+              >
+                See More
+              </button>
+            )}
+          </div>
           {!hideViewFullPost && (
             <div
               onClick={() => setShowModal(true)}

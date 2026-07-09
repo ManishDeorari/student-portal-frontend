@@ -246,7 +246,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
       className={`relative ${transparentBackground ? "" : (darkMode ? "bg-[#121213] shadow-none" : "bg-[#FAFAFA] shadow-[0_20px_60px_rgba(37,99,235,0.2)]")} ${transparentBackground ? "p-0" : "p-1.5 sm:p-2"} rounded-2xl sm:rounded-[2.5rem] transition-all duration-500`}
     >
       <div className={`p-[1.5px] sm:p-[2px] ${darkMode ? "bg-gradient-to-tr from-blue-900 to-purple-900" : "bg-gradient-to-tr from-blue-600 to-purple-700"} rounded-[calc(1rem)] sm:rounded-[2.4rem]`}>
-        <div className={`relative rounded-[calc(1rem-2px)] sm:rounded-[2.3rem] p-2.5 sm:p-3 space-y-1.5 sm:space-y-2 transition-all duration-500 ${isMyPost ? (darkMode ? "bg-slate-800/50" : "bg-gradient-to-tr from-blue-50/50 to-white") : (darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]")} ${darkMode ? "text-white" : "text-gray-900"}`}>
+        <div className={`relative rounded-[calc(1rem-2px)] sm:rounded-[2.3rem] p-2 sm:p-4 space-y-1 sm:space-y-3 transition-all duration-500 ${isMyPost ? (darkMode ? "bg-slate-800/50" : "bg-gradient-to-tr from-blue-50/50 to-white") : (darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]")} ${darkMode ? "text-white" : "text-gray-900"}`}>
           {post.isPinned && (
             <div className={`inline-flex items-center gap-1.5 mb-2 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-gradient-to-r ${darkMode ? "from-orange-500/20 via-pink-500/20 to-purple-500/20 text-pink-300 border border-pink-500/30" : "from-orange-100 via-pink-100 to-purple-100 text-pink-600 border border-pink-200"} shadow-sm`}>
               <span className="animate-bounce">📌</span> Pinned by Admin

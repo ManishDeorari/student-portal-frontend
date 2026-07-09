@@ -39,7 +39,7 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
       {!post.images?.length && post.image && (
         <div 
           onClick={() => setSelectedImage(0)}
-          className={`relative max-h-96 w-full flex justify-center border ${darkMode ? "border-white/10" : "border-gray-200"} rounded-lg overflow-hidden cursor-pointer group`}
+          className={`relative max-h-[250px] sm:max-h-96 w-full flex justify-center border ${darkMode ? "border-white/10" : "border-gray-200"} rounded-lg overflow-hidden cursor-pointer group`}
         >
           <Image
             src={singleImageSrc}
@@ -48,7 +48,7 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
             height={400}
             onContextMenu={(e) => isRestricted && e.preventDefault()}
             onDragStart={(e) => isRestricted && e.preventDefault()}
-            className={`rounded-lg max-h-96 w-full object-contain ${isRestricted ? 'select-none' : ''} transition-transform group-hover:scale-[1.01]`}
+            className={`rounded-lg max-h-[250px] sm:max-h-96 w-full object-contain ${isRestricted ? 'select-none' : ''} transition-transform group-hover:scale-[1.01]`}
           />
           {/* Protective Overlay */}
           {isRestricted && (
@@ -67,7 +67,7 @@ export default function PostMedia({ post, setSelectedImage, currentUser, darkMod
             controls
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => isRestricted && e.preventDefault()}
-            className={`rounded-lg w-full max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} ${isRestricted ? 'select-none' : ''}`}
+            className={`rounded-lg w-full max-h-[250px] sm:max-h-96 border ${darkMode ? "border-white/10" : "border-gray-200"} ${isRestricted ? 'select-none' : ''}`}
             controlsList="nodownload"
           >
             <source src={videoSrc} type="video/mp4" />
