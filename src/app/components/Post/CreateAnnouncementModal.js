@@ -527,7 +527,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                                 />
                                               </div>
                                             </div>
-                                            <div className="grid grid-cols-4 gap-2 w-full">
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full">
                                               {["ENR", "CRS", "BRN", "SEM"].map((label, lIdx) => {
                                                 const val = label === "ENR" ? member.enrollmentNumber : label === "CRS" ? member.course : label === "BRN" ? member.branch : member.semester;
                                                 return (
