@@ -9,7 +9,7 @@ const SectionCard = ({ title, children, onEdit, isPublicView, hasData }) => {
 
   return (
     <div className={`relative p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-[0_20px_60px_rgba(37,99,235,0.25)] transition-all`}>
-      <div className={`p-6 rounded-[calc(1rem-1.5px)] h-full transition-colors duration-500 ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
+      <div className={`p-4 sm:p-6 rounded-[calc(1rem-1.5px)] h-full transition-colors duration-500 ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
         
         <div className="flex items-center justify-between mb-4">
           <h3 className={`text-xl font-black transition-colors ${darkMode ? 'text-white' : 'text-gray-900'}`}>

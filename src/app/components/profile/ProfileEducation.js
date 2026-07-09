@@ -23,7 +23,7 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
                 onEdit={() => setIsEditing(true)}
                 isPublicView={isPublicView}
             >
-                <div className="space-y-8">
+                <div className="space-y-4 sm:space-y-6">
                     {(() => {
                         const sortedEducation = profile.education?.slice().sort((a, b) => {
                             const dateA = new Date(a.startDate);
@@ -32,8 +32,8 @@ export default function ProfileEducation({ profile, setProfile, isPublicView }) 
                         }) || [];
 
                         return sortedEducation.map((edu, idx) => (
-                            <div key={idx} className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] group w-full mb-6 transition-all duration-300 hover:scale-[1.02] hover:z-20 relative">
-                            <div className={`p-5 rounded-[calc(2.5rem-2.5px)] flex gap-4 transition duration-300 ${darkMode ? 'bg-[#121213] hover:bg-slate-900' : 'bg-[#FAFAFA] hover:bg-white'}`}>
+                            <div key={idx} className="p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] shadow-[0_10px_30px_rgba(37,99,235,0.2)] group w-full mb-4 sm:mb-6 transition-all duration-300 hover:scale-[1.02] hover:z-20 relative">
+                            <div className={`p-3.5 sm:p-5 rounded-[calc(2.5rem-2.5px)] flex gap-4 transition duration-300 ${darkMode ? 'bg-[#121213] hover:bg-slate-900' : 'bg-[#FAFAFA] hover:bg-white'}`}>
                                 {/* Institution Icon */}
                                 <div className="flex-shrink-0">
                                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${darkMode ? 'bg-blue-900/30 shadow-none' : 'bg-blue-50 shadow-sm'}`}>
