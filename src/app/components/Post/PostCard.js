@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import UserNameWithBadge from "../ui/UserNameWithBadge";
@@ -9,7 +9,7 @@ import UserAvatar from "../ui/UserAvatar";
 import PostHeader from "./Visual/PostHeader";
 import PostContent from "./Visual/PostContent";
 import PostMedia from "./Visual/PostMedia";
-import { getOptimizedImageUrl, downloadFileSilently } from "../../utils/cloudinaryHelper";
+import { getOptimizedImageUrl } from "../../utils/cloudinaryHelper";
 import PostReactions from "./Visual/PostReactions";
 import dynamic from "next/dynamic";
 
@@ -153,22 +153,20 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
       if (!token) return;
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/posts/${post._id}/tip`, {
         method: "POST",
-        headers: {
+        headers: { 
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}` 
         },
         body: JSON.stringify({ amount })
       });
       const data = await res.json();
       if (res.ok) {
-        toast.success(`🎉 Sent ${amount} points to ${post.user?.name || "the author"}!`);
-        // Optional: force update local point count if we had a global user context, 
-        // but typically a refresh or gamification badge socket event handles it.
+        import("react-hot-toast").then((mod) => mod.default.success(`🎉 Sent ${amount} points to ${post.user?.name || "the author"}!`));
       } else {
-        toast.error(data.message || "Failed to tip points");
+        import("react-hot-toast").then((mod) => mod.default.error(data.message || "Failed to tip points"));
       }
     } catch (err) {
-      toast.error("Error tipping post");
+      import("react-hot-toast").then((mod) => mod.default.error("Error tipping post"));
     }
   };
 
@@ -197,7 +195,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
 
   useEffect(() => {
     if (!postRef.current || !post._id || !currentUser?._id) return;
-
+    
     // Check if we already viewed it
     if (post.viewedBy && post.viewedBy.includes(currentUser._id)) return;
 
@@ -221,7 +219,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
         method: "POST",
         headers: { Authorization: `Bearer ${token}` }
       });
-    } catch (err) { }
+    } catch(err) {}
   };
 
   const handleLoadMore = () => {
@@ -229,24 +227,32 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
     setVisibleComments((prev) => Math.min(prev + 5, total));
   };
 
-  const sortedComments = React.useMemo(() => {
-    const comments = post.comments || [];
-    const pinned = comments.filter(c => c.isPinned);
-    const unpinned = comments.filter(c => !c.isPinned);
-    return [...pinned.slice().reverse(), ...unpinned.slice().reverse()];
-  }, [post.comments]);
-
   const isMyPost = post.user?._id === currentUser._id;
   const isRestricted = !isMyPost && currentUser?.role !== 'admin';
+
+  // Sort comments: Pinned comments first (newest to oldest), then unpinned comments (newest to oldest)
+  const sortedComments = useMemo(() => {
+    if (!post.comments) return [];
+    
+    const pinned = [];
+    const unpinned = [];
+    
+    [...post.comments].reverse().forEach(c => {
+      if (c.isPinned) pinned.push(c);
+      else unpinned.push(c);
+    });
+    
+    return [...pinned, ...unpinned];
+  }, [post.comments]);
 
   // ✅ Everything's clean and ready for the `return` section now.
   return (
     <div
       ref={postRef}
-      className={`relative ${transparentBackground ? "" : (darkMode ? "bg-[#121213] shadow-none" : "bg-[#FAFAFA] shadow-[0_20px_60px_rgba(37,99,235,0.2)]")} ${transparentBackground ? "p-0" : "p-1.5 sm:p-2"} rounded-2xl sm:rounded-[2.5rem] transition-all duration-500`}
+      className={`relative ${transparentBackground ? "" : (darkMode ? "bg-[#121213] shadow-none" : "bg-[#FAFAFA] shadow-[0_20px_60px_rgba(37,99,235,0.2)]")} ${transparentBackground ? "p-0" : "p-1 sm:p-1.5"} rounded-2xl sm:rounded-[2.5rem] transition-all duration-500`}
     >
       <div className={`p-[1.5px] sm:p-[2px] ${darkMode ? "bg-gradient-to-tr from-blue-900 to-purple-900" : "bg-gradient-to-tr from-blue-600 to-purple-700"} rounded-[calc(1rem)] sm:rounded-[2.4rem]`}>
-        <div className={`relative rounded-[calc(1rem-2px)] sm:rounded-[2.3rem] p-2 sm:p-4 space-y-1 sm:space-y-3 transition-all duration-500 ${isMyPost ? (darkMode ? "bg-slate-800/50" : "bg-gradient-to-tr from-blue-50/50 to-white") : (darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]")} ${darkMode ? "text-white" : "text-gray-900"}`}>
+        <div className={`relative rounded-[calc(1rem-2px)] sm:rounded-[2.3rem] p-2 sm:p-3 space-y-1 sm:space-y-2 transition-all duration-500 ${isMyPost ? (darkMode ? "bg-slate-800/50" : "bg-gradient-to-tr from-blue-50/50 to-white") : (darkMode ? "bg-[#121213]" : "bg-[#FAFAFA]")} ${darkMode ? "text-white" : "text-gray-900"}`}>
           {post.isPinned && (
             <div className={`inline-flex items-center gap-1.5 mb-2 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-gradient-to-r ${darkMode ? "from-orange-500/20 via-pink-500/20 to-purple-500/20 text-pink-300 border border-pink-500/30" : "from-orange-100 via-pink-100 to-purple-100 text-pink-600 border border-pink-200"} shadow-sm`}>
               <span className="animate-bounce">📌</span> Pinned by Admin
@@ -315,8 +321,8 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           )}
 
           {post.type === "EventRepost" && post.eventRepostDetails && (
-            <div className={`mt-1 sm:mt-2 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-green-500/80 to-emerald-600/80" : "from-green-400 to-emerald-500"} shadow-xl overflow-hidden relative group/repost`}>
-              <div className={`p-2 sm:p-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} flex flex-col space-y-2`}>
+            <div className={`mt-1 sm:mt-1 p-[1px] sm:p-[1.5px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-green-500/80 to-emerald-600/80" : "from-green-400 to-emerald-500"} shadow-xl overflow-hidden relative group/repost`}>
+              <div className={`p-1.5 sm:p-2 rounded-[calc(0.75rem-1px)] sm:rounded-[calc(2rem-1.5px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} flex flex-col space-y-1`}>
                 <div className="flex justify-between items-start border-b border-dashed border-gray-200 dark:border-white/10 pb-2">
                   <div className="flex flex-col">
                     <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${darkMode ? "text-green-400/80" : "text-green-600/80"} flex items-center gap-2`}>
@@ -332,13 +338,14 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   {post.eventRepostDetails?.originalEventId && (
                     <button
                       onClick={() => setShowOriginalEventModal(true)}
-                      className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${darkMode ? "bg-green-500/20 text-green-300 hover:bg-green-500/30" : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
-                        }`}
+                      className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${
+                        darkMode ? "bg-green-500/20 text-green-300 hover:bg-green-500/30" : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
+                      }`}
                     >
                       <span className="hidden sm:inline">View Original</span>
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
                     </button>
                   )}
@@ -376,8 +383,8 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           )}
 
           {post.type === "Event" && (
-            <div className="mt-1 sm:mt-2 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr from-blue-500 to-purple-600 shadow-xl overflow-hidden">
-              <div className={`p-2 sm:p-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90" : "bg-white"} space-y-1.5 sm:space-y-2`}>
+            <div className="mt-1 sm:mt-1 p-[1px] sm:p-[1.5px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr from-blue-500 to-purple-600 shadow-xl overflow-hidden">
+              <div className={`p-1.5 sm:p-2 rounded-[calc(0.75rem-1px)] sm:rounded-[calc(2rem-1.5px)] ${darkMode ? "bg-slate-900/90" : "bg-white"} space-y-1 sm:space-y-1.5`}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   <div className="flex flex-col">
                     <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Start</span>
@@ -396,99 +403,50 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                       <span className={`text-sm font-black ${darkMode ? "text-white" : "text-gray-900"}`}>{post.registrationCloseDate ? new Date(post.registrationCloseDate).toLocaleString() : "N/A"}</span>
                     </div>
                   </div>
-                  {post.tags && post.tags.length > 0 && (
-                    <div className="sm:col-span-2 flex flex-wrap gap-2 pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
-                      {post.tags.map((tag, i) => (
-                        <span key={i} className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${darkMode ? "bg-white/10 text-gray-300" : "bg-black/5 text-gray-700"}`}>
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  {post.pointsAssigned > 0 && (
-                    <div className="sm:col-span-2 flex flex-col pt-4 border-t border-dashed border-gray-200 dark:border-white/10">
-                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-green-400/60" : "text-green-600/60"}`}>Points Assigned</span>
-                      <span className={`text-sm font-black ${darkMode ? "text-green-400" : "text-green-600"}`}>+{post.pointsAssigned} PTS</span>
-                    </div>
-                  )}
                 </div>
-
-                {post.documents && post.documents.length > 0 && (
-                  <div className="pt-4 border-t border-white/5 space-y-2">
-                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 ${darkMode ? "text-blue-400/60" : "text-blue-600/60"}`}>Attached Documents</span>
-                    <div className="flex flex-col gap-2">
-                      {post.documents.map((doc, idx) => (
-                        <div
-                          key={idx}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            downloadFileSilently(doc.url, doc.original_filename);
-                          }}
-                          className={`flex items-center justify-between p-3 rounded-xl border transition-all hover:scale-[1.01] cursor-pointer ${darkMode ? "bg-[#1A1A1B] border-white/10 hover:border-blue-500/50" : "bg-white border-gray-200 hover:border-blue-300"}`}
-                        >
-                          <div className="flex items-center gap-3 overflow-hidden">
-                            <span className="text-xl shrink-0">📄</span>
-                            <span className={`text-xs font-bold truncate ${darkMode ? "text-white" : "text-gray-800"}`}>
-                              {doc.original_filename || `Document ${idx + 1}`}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md shrink-0 ${darkMode ? "bg-white/10 text-white" : "bg-gray-100 text-gray-600"}`}>
-                              {doc.format || "FILE"}
-                            </span>
-                            <div className="w-6 h-6 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-500">
-                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-2 items-start sm:items-center justify-between border-t border-white/5 pt-6">
                   <div className="flex items-center gap-4">
                     {(currentUser?.isAdmin || currentUser?.role === 'faculty' || post.user?._id === currentUser?._id) ? (
                       <>
-                        {post.eventType !== "no_registration" && (
-                          <button
-                            onClick={() => setShowAdminModal(true)}
-                            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
-                          >
-                            View Registrations
-                          </button>
-                        )}
-                        {post.eventType === "no_registration" && (
-                          <button
-                            onClick={() => setShowAdminRepostsModal(true)}
-                            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
-                          >
-                            View Reposts
-                          </button>
-                        )}
-                        {post.showRegistrationInsights && (
-                          <div className={`p-[1.5px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm hover:shadow-md transition-all duration-300`}>
-                            <div className={`flex items-center gap-3 px-5 py-2.5 rounded-[14.5px] transition-all duration-300 ${darkMode ? "bg-slate-900" : "bg-white"}`}>
-                              <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
-                                👥
-                              </div>
-                              <div className="flex flex-col">
-                                <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
-                                <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
-                                  {post.eventType === "no_registration" ? "Reposted: " : "Registered: "}
-                                  <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.eventType === "no_registration" ? (post.repostCount || 0) : (post.registrationCount || 0)}</span>
-                                </span>
+                          {post.eventType !== "no_registration" && (
+                            <button
+                              onClick={() => setShowAdminModal(true)}
+                              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
+                            >
+                              View Registrations
+                            </button>
+                          )}
+                          {post.eventType === "no_registration" && (
+                            <button
+                              onClick={() => setShowAdminRepostsModal(true)}
+                              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all hover:scale-105"
+                            >
+                              View Reposts
+                            </button>
+                          )}
+                          {post.showRegistrationInsights && (
+                            <div className={`p-[1.5px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-sm hover:shadow-md transition-all duration-300`}>
+                              <div className={`flex items-center gap-3 px-5 py-2.5 rounded-[14.5px] transition-all duration-300 ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                <div className="flex items-center justify-center w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 text-xs shadow-lg transform -rotate-3">
+                                  👥
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className={`text-[8px] font-black uppercase tracking-[0.3em] leading-tight ${darkMode ? "text-blue-400" : "text-blue-600"} opacity-70`}>Live Insight</span>
+                                  <span className={`text-[11px] font-black uppercase tracking-widest leading-tight ${darkMode ? "text-white" : "text-slate-900"}`}>
+                                    {post.eventType === "no_registration" ? "Reposted: " : "Registered: "}
+                                    <span className={darkMode ? "text-blue-400" : "text-blue-600"}>{post.eventType === "no_registration" ? (post.repostCount || 0) : (post.registrationCount || 0)}</span>
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )}
-                      </>
+                          )}
+                        </>
                     ) : (
-                      currentUser?.role === 'student' && (
+                      currentUser?.role === 'alumni' && (
                         post.eventType === "no_registration" ? (
                           (() => {
                             const deadlinePassed = Date.now() > new Date(post.registrationCloseDate).getTime();
-                            // Assuming backend populates currentUser with eventPointsAwarded or similar, or we just trust the UI
                             const alreadyClaimed = currentUser?.eventPointsAwarded?.includes(post._id);
 
                             if (alreadyClaimed || post.myRepostId) {
@@ -538,19 +496,17 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                               );
                             }
                           })()
+                        ) : Date.now() < new Date(post.registrationCloseDate) ? (
+                          <button
+                            onClick={() => setShowRegistrationModal(true)}
+                            className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 ${post.isRegistered ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:scale-105"}`}
+                          >
+                            {post.isRegistered ? "Edit Registration" : "Register Now"}
+                          </button>
                         ) : (
-                          Date.now() < new Date(post.registrationCloseDate) ? (
-                            <button
-                              onClick={() => setShowRegistrationModal(true)}
-                              className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all active:scale-95 ${post.isRegistered ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:scale-105"}`}
-                            >
-                              {post.isRegistered ? "Edit Registration" : "Register Now"}
-                            </button>
-                          ) : (
-                            <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/20">
-                              Registration Closed
-                            </span>
-                          )
+                          <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic bg-red-500/10 px-4 py-2 rounded-xl border border-red-500/20">
+                            Registration Closed
+                          </span>
                         )
                       )
                     )}
@@ -578,15 +534,16 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                   {post.announcementDetails?.originalEventId && (
                     <button
                       onClick={() => setShowOriginalEventModal(true)}
-                      className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
-                        }`}
-                    >
-                      <span className="hidden sm:inline">View Original</span>
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    </button>
+                    className={`flex-shrink-0 flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all active:scale-95 shadow-md ${
+                      darkMode ? "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30" : "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200"
+                    }`}
+                  >
+                    <span className="hidden sm:inline">View Original</span>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </button>
                   )}
                 </div>
               </div>
@@ -594,7 +551,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           )}
 
           {post.type === "Announcement" && post.announcementDetails?.isWinnerAnnouncement && (
-            <div className={`mt-2 p-3 rounded-[2rem] border ${darkMode ? "bg-blue-500/5 border-blue-500/20" : "bg-blue-50 border-blue-100"}`}>
+            <div className={`mt-1 p-2 rounded-2xl border ${darkMode ? "bg-blue-500/5 border-blue-500/20" : "bg-blue-50 border-blue-100"}`}>
               <h3 className={`text-base font-black mb-2 flex items-center gap-2 ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
                 <span>🏆</span> Event Winners
               </h3>
@@ -729,30 +686,9 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                           {member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}
                                         </span>
                                       </div>
-                                      {(member.userId?.course || member.course) && (
-                                        <div className="flex flex-col">
-                                          <span className={`text-[9px] font-black uppercase tracking-[0.2em] text-orange-500`}>Course</span>
-                                          <span className={`text-[11px] font-black tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
-                                            {member.userId?.course || member.course}
-                                          </span>
-                                        </div>
-                                      )}
-                                      {(member.userId?.branch || member.branch) && (
-                                        <div className="flex flex-col">
-                                          <span className={`text-[9px] font-black uppercase tracking-[0.2em] text-orange-500`}>Branch</span>
-                                          <span className={`text-[11px] font-black tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
-                                            {member.userId?.branch || member.branch}
-                                          </span>
-                                        </div>
-                                      )}
-                                      {(member.userId?.semester || member.semester) && (
-                                        <div className="flex flex-col">
-                                          <span className={`text-[9px] font-black uppercase tracking-[0.2em] text-orange-500`}>Semester</span>
-                                          <span className={`text-[11px] font-black tracking-tighter ${darkMode ? "text-white" : "text-black"}`}>
-                                            {member.userId?.semester || member.semester}
-                                          </span>
-                                        </div>
-                                      )}
+                                      
+                                      
+                                      
                                     </div>
                                   </div>
                                 </div>
@@ -782,7 +718,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
               )}
               {post.announcementDetails.pointsStatus === "approved" && (
                 <div className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-green-500 italic">
-                  <span>✅</span> Points Awarded to Student
+                  <span>✅</span> Points Awarded to Alumni
                 </div>
               )}
             </div>
@@ -797,7 +733,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             }}
             darkMode={darkMode}
           />
-
+          
           {!hideActions && (
             <>
               {/* Gradient Separator before Reactions */}
@@ -867,8 +803,8 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                         onDeleteReply={handleDeleteReply}
                         onReactToReply={handleReactToReply}
                         onReactToComment={handleReactToComment}
+                        isPostOwner={isMyPost}
                         onPinComment={handlePinComment}
-                        isPostOwner={post.user?._id === currentUser?._id || post.user === currentUser?._id}
                         darkMode={darkMode}
                       />
                     ))}
@@ -931,11 +867,11 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             />
           )}
 
-          {post.eventType !== "no_registration" && (
+          {showRegistrationModal && post.eventType !== "no_registration" && (
             <EventRegistrationModal
+              event={post}
               isOpen={showRegistrationModal}
               onClose={() => setShowRegistrationModal(false)}
-              event={post}
               currentUser={currentUser}
               darkMode={darkMode}
               onRegisterSuccess={(newRegistration) => {
@@ -951,7 +887,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
           )}
 
           {post.eventType === "no_registration" && (
-            <CreateEventRepostModal
+            <CreateEventRepostModal 
               isOpen={showRepostModal}
               onClose={() => setShowRepostModal(false)}
               event={post}
@@ -1018,3 +954,4 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
     </div>
   );
 }
+
