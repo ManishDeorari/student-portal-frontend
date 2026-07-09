@@ -114,7 +114,7 @@ const UserSearchInput = ({ value, onChange, placeholder, onSelect, darkMode = fa
               </div>
 
               {/* Results Area */}
-              <div className="flex-1 overflow-y-auto p-2 sm:p-4 min-h-[250px] custom-scrollbar">
+              <div className="flex-1 overflow-y-auto p-2 sm:p-4 min-h-[200px] max-h-[300px] sm:max-h-[350px] custom-scrollbar">
                 {query.length < 2 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center opacity-50 p-8">
                     <FaSearch className="text-4xl mb-4" />
