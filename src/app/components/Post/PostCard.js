@@ -516,7 +516,7 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
             </div>
           )}
 
-          {post.type === "Announcement" && (post.announcementDetails?.originalEventId || post.announcementDetails?.eventName) && (
+          {post.type === "Announcement" && !post.announcementDetails?.isAchievementAnnouncement && (post.announcementDetails?.originalEventId || post.announcementDetails?.eventName) && (
             <div className={`mt-1 sm:mt-2 p-[1.5px] sm:p-[2px] rounded-xl sm:rounded-[2rem] bg-gradient-to-tr ${darkMode ? "from-blue-500/80 to-purple-600/80" : "from-blue-400 to-purple-500"} shadow-xl overflow-hidden relative`}>
               <div className={`p-2 sm:p-3 rounded-[calc(0.75rem-1.5px)] sm:rounded-[calc(2rem-2px)] ${darkMode ? "bg-slate-900/90 backdrop-blur-md" : "bg-white"} flex flex-col space-y-2`}>
                 <div className="flex justify-between items-center">
