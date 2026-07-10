@@ -8,9 +8,11 @@ const SectionCard = ({ title, children, onEdit, isPublicView, hasData }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <div className={`relative p-[2.5px] bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl shadow-[0_20px_60px_rgba(37,99,235,0.25)] transition-all`}>
-      <div className={`p-4 sm:p-6 rounded-[calc(1rem-1.5px)] h-full transition-colors duration-500 ${darkMode ? 'bg-[#121213]' : 'bg-[#FAFAFA]'}`}>
-        
+    <div className={`relative p-[2px] bg-gradient-to-tr ${darkMode ? 'from-blue-600/40 via-purple-600/40 to-pink-600/40' : 'from-blue-600/60 via-purple-600/60 to-pink-600/60'} rounded-3xl hover:shadow-[0_0_40px_rgba(168,85,247,0.4)] transition-all duration-500 group backdrop-blur-xl`}>
+      {/* Animated Glow on Hover */}
+      <div className={`absolute inset-0 bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-30 transition-opacity duration-700 blur-2xl -z-10 rounded-3xl`}></div>
+      
+      <div className={`relative p-4 sm:p-6 rounded-[calc(1.5rem-2px)] h-full transition-colors duration-500 ${darkMode ? 'bg-[#121213]/90 backdrop-blur-3xl shadow-inner shadow-white/5' : 'bg-white/90 backdrop-blur-3xl shadow-inner shadow-black/5'}`}>
         <div className="flex items-center justify-between mb-4">
           <h3 className={`text-xl font-black transition-colors ${darkMode ? 'text-white' : 'text-gray-900'}`}>
             {title}
