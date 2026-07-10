@@ -18,7 +18,7 @@ import ProfileResumeAndLinks from "../components/profile/ProfileResumeAndLinks";
 import ProfileBasicInfo from "../components/profile/ProfileBasicInfo";
 import ProfileActivityHeatmap from "../components/profile/ProfileActivityHeatmap";
 import ProfileFeatured from "../components/profile/ProfileFeatured";
-
+import ProfileSpotlights from "../components/profile/ProfileSpotlights";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
@@ -182,6 +182,7 @@ function ProfileContent() {
 
       {/* 🔽 Rest Sections */}
       <div className="max-w-4xl mx-auto px-1 sm:px-4 lg:px-8 mt-6 sm:mt-10 mb-20 space-y-8 pb-32">
+        <ProfileSpotlights userId={profile._id} currentUser={user} darkMode={darkMode} />
         <ProfileAbout profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileEducation profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileExperience profile={profile} setProfile={setProfile} isPublicView={isPublicView} />

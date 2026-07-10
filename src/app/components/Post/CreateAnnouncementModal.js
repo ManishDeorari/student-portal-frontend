@@ -14,13 +14,14 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
   const [errors, setErrors] = useState([]);
   const [formData, setFormData] = useState({
     content: "",
-    isWinnerAnnouncement: false,
+    announcementType: "regular", // regular, winner, achievement
+    achievementCategory: "Placement", // default
     pointsRequested: true,
     eventName: "",
   });
 
   const [winners, setWinners] = useState([
-    { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", branch: "", semester: "" }
+    { name: "", rank: "", points: "", roleTitle: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", branch: "", semester: "" }
   ]);
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState(null);
@@ -78,7 +79,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
   };
 
   const addWinnerRow = () => {
-    setWinners([...winners, { name: "", rank: "", points: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", branch: "", semester: "" }]);
+    setWinners([...winners, { name: "", rank: "", points: "", roleTitle: "", uniqueId: "", isGroup: false, groupId: null, groupName: "", enrollmentNumber: "", course: "", branch: "", semester: "" }]);
   };
 
   const addGroupWinnerRows = (count) => {
@@ -87,6 +88,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
       name: "",
       rank: "",
       points: "",
+      roleTitle: "",
       uniqueId: "",
       isGroup: true,
       groupId: groupId,
@@ -162,15 +164,19 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
       newErrors.push("content");
     }
 
-    if (formData.isWinnerAnnouncement) {
+    if (formData.announcementType === "winner" || formData.announcementType === "achievement") {
       if (!formData.eventName.trim()) {
         newErrors.push("eventName");
       }
 
       winners.forEach((w, i) => {
         if (!w.name?.trim()) newErrors.push(`winner-name-${i}`);
-        if (!w.rank?.trim()) newErrors.push(`winner-rank-${i}`);
-        if (!w.points?.toString().trim()) newErrors.push(`winner-points-${i}`);
+        if (formData.announcementType === "winner") {
+          if (!w.rank?.trim()) newErrors.push(`winner-rank-${i}`);
+          if (!w.points?.toString().trim()) newErrors.push(`winner-points-${i}`);
+        } else if (formData.announcementType === "achievement") {
+          if (!w.roleTitle?.trim()) newErrors.push(`winner-roleTitle-${i}`);
+        }
       });
     }
 
@@ -187,8 +193,9 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
         .filter(w => w.name.trim() !== "")
         .map(w => ({
           name: w.name,
-          rank: w.rank,
-          points: parseInt(w.points) || 0,
+          rank: formData.announcementType === "winner" ? w.rank : "",
+          points: formData.announcementType === "winner" ? (parseInt(w.points) || 0) : 0,
+          roleTitle: formData.announcementType === "achievement" ? w.roleTitle : "",
           uniqueId: w.uniqueId,
           isGroup: !!w.groupId,
           groupId: w.groupId || "",
@@ -204,11 +211,13 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
       const announcementData = {
         content: formData.content,
         announcementDetails: {
-          isWinnerAnnouncement: formData.isWinnerAnnouncement,
-          eventName: formData.isWinnerAnnouncement ? formData.eventName : "",
+          isWinnerAnnouncement: formData.announcementType === "winner",
+          isAchievementAnnouncement: formData.announcementType === "achievement",
+          achievementCategory: formData.announcementType === "achievement" ? formData.achievementCategory : "",
+          eventName: formData.announcementType !== "regular" ? formData.eventName : "",
           originalEventId: formData.originalEventId || undefined,
-          winners: formData.isWinnerAnnouncement ? winnersData : [],
-          pointsRequested: formData.isWinnerAnnouncement, // Always true if winners table exists
+          winners: formData.announcementType !== "regular" ? winnersData : [],
+          pointsRequested: formData.announcementType === "winner", // Only requested if winner
         }
       };
 
@@ -359,54 +368,105 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
               </div>
             </div>
 
-            {/* Winner Table Toggle */}
-            <div className="space-y-4">
-              <div className={`p-[2px] rounded-[2rem] bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 ${formData.isWinnerAnnouncement ? "opacity-100 shadow-[0_0_20px_rgba(59,130,246,0.15)]" : "opacity-60"}`}>
-                <label className={`flex items-center justify-between p-4 sm:p-7 rounded-[calc(2rem-2px)] transition-all duration-300 cursor-pointer ${
-                  formData.isWinnerAnnouncement 
-                    ? (darkMode ? "bg-blue-600/20" : "bg-blue-50/80")
-                    : (darkMode ? "bg-[#18181b]" : "bg-white")
-                }`}>
-                  <div className="flex items-center gap-3 sm:gap-5">
-                     <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-xl sm:text-2xl transition-transform duration-500 ${formData.isWinnerAnnouncement ? "scale-110 rotate-12" : "scale-100"} ${darkMode ? "bg-white/5" : "bg-black/5"}`}>
-                        🏆
-                     </div>
-                     <div>
-                        <span className={`text-sm sm:text-base font-black tracking-tight block ${darkMode ? "text-white" : "text-black"}`}>Include Winners/Ranking Table</span>
-                        <p className={`text-[10px] font-black uppercase tracking-[0.15em] mt-0.5 ${darkMode ? "text-blue-400/80" : "text-blue-600/70"}`}>
-                          Enable to list winners and request points
-                        </p>
-                     </div>
+            {/* Announcement Type Selector */}
+            <div className="space-y-3">
+              <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-white" : "text-black"}`}>Announcement Type</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Regular */}
+                <label className={`cursor-pointer p-[2px] rounded-2xl transition-all ${formData.announcementType === "regular" ? "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg scale-[1.02]" : "bg-transparent border border-gray-200 dark:border-white/10 hover:border-blue-400"}`}>
+                  <div className={`p-4 rounded-[calc(1rem-2px)] flex items-center gap-3 h-full ${formData.announcementType === "regular" ? (darkMode ? "bg-slate-800" : "bg-white") : (darkMode ? "bg-[#18181b]" : "bg-[#FAFAFA]")}`}>
+                    <input type="radio" name="announcementType" value="regular" checked={formData.announcementType === "regular"} onChange={handleInputChange} className="hidden" />
+                    <span className="text-2xl">📢</span>
+                    <div>
+                      <span className={`block text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>Standard</span>
+                      <span className={`block text-[9px] uppercase tracking-wider ${darkMode ? "text-slate-400" : "text-gray-500"}`}>Regular post</span>
+                    </div>
                   </div>
-                  <div className="relative">
-                    <input type="checkbox" name="isWinnerAnnouncement" checked={formData.isWinnerAnnouncement} onChange={handleInputChange} className="w-7 h-7 rounded-full accent-blue-600 cursor-pointer" />
+                </label>
+
+                {/* Winner */}
+                <label className={`cursor-pointer p-[2px] rounded-2xl transition-all ${formData.announcementType === "winner" ? "bg-gradient-to-r from-orange-500 to-red-500 shadow-lg scale-[1.02]" : "bg-transparent border border-gray-200 dark:border-white/10 hover:border-orange-400"}`}>
+                  <div className={`p-4 rounded-[calc(1rem-2px)] flex items-center gap-3 h-full ${formData.announcementType === "winner" ? (darkMode ? "bg-slate-800" : "bg-white") : (darkMode ? "bg-[#18181b]" : "bg-[#FAFAFA]")}`}>
+                    <input type="radio" name="announcementType" value="winner" checked={formData.announcementType === "winner"} onChange={handleInputChange} className="hidden" />
+                    <span className="text-2xl">🏆</span>
+                    <div>
+                      <span className={`block text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>Winners</span>
+                      <span className={`block text-[9px] uppercase tracking-wider ${darkMode ? "text-slate-400" : "text-gray-500"}`}>Rankings & Points</span>
+                    </div>
+                  </div>
+                </label>
+
+                {/* Achievement */}
+                <label className={`cursor-pointer p-[2px] rounded-2xl transition-all ${formData.announcementType === "achievement" ? "bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg scale-[1.02]" : "bg-transparent border border-gray-200 dark:border-white/10 hover:border-emerald-400"}`}>
+                  <div className={`p-4 rounded-[calc(1rem-2px)] flex items-center gap-3 h-full ${formData.announcementType === "achievement" ? (darkMode ? "bg-slate-800" : "bg-white") : (darkMode ? "bg-[#18181b]" : "bg-[#FAFAFA]")}`}>
+                    <input type="radio" name="announcementType" value="achievement" checked={formData.announcementType === "achievement"} onChange={handleInputChange} className="hidden" />
+                    <span className="text-2xl">🎓</span>
+                    <div>
+                      <span className={`block text-sm font-black ${darkMode ? "text-white" : "text-black"}`}>Achievement</span>
+                      <span className={`block text-[9px] uppercase tracking-wider ${darkMode ? "text-slate-400" : "text-gray-500"}`}>Placements, etc.</span>
+                    </div>
                   </div>
                 </label>
               </div>
+            </div>
 
-              {formData.isWinnerAnnouncement && (
-                <div className={`p-[2px] rounded-[3rem] bg-gradient-to-br from-blue-500 to-purple-600`}>
+            <div className="space-y-4">
+              {(formData.announcementType === "winner" || formData.announcementType === "achievement") && (
+                <div className={`p-[2px] rounded-[3rem] ${formData.announcementType === "winner" ? "bg-gradient-to-br from-orange-500 to-red-600" : "bg-gradient-to-br from-emerald-500 to-teal-600"}`}>
                   <div className={`space-y-6 sm:space-y-8 p-4 sm:p-8 rounded-[calc(3rem-2px)] ${darkMode ? "bg-[#121213]" : "bg-white"} shadow-2xl`}>
                     <div className="flex flex-col gap-6">
                       <div className="flex items-center justify-between">
-                         <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Winner List / Ranking Configuration</h3>
+                         <h3 className={`text-sm font-black uppercase tracking-[0.2em] ${formData.announcementType === "winner" ? (darkMode ? "text-orange-400" : "text-orange-600") : (darkMode ? "text-emerald-400" : "text-emerald-600")}`}>
+                           {formData.announcementType === "winner" ? "Winner List / Ranking Configuration" : "Student Achievement Details"}
+                         </h3>
                       </div>
 
+                      {formData.announcementType === "achievement" && (
+                        <div className="space-y-2">
+                           <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-white" : "text-black"}`}>Achievement Category</label>
+                           <select 
+                             name="achievementCategory" 
+                             value={formData.achievementCategory} 
+                             onChange={handleInputChange}
+                             className={`w-full p-4 h-[52px] text-sm font-black rounded-2xl ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black border border-gray-200"} outline-none shadow-sm`}
+                           >
+                             <option value="Placement">💼 Placement</option>
+                             <option value="Internship">🚀 Internship</option>
+                             <option value="Research Paper">📄 Research Paper</option>
+                             <option value="Certification">📜 Certification</option>
+                             <option value="Other">🌟 Other</option>
+                           </select>
+                        </div>
+                      )}
+
                       <div className="space-y-2">
-                         <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-white" : "text-black"}`}>Event Name</label>
-                         <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 ${errors.includes("eventName") ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
-                           <EventSearchInput 
-                             value={formData.eventName}
-                             onChange={(val) => setFormData(prev => ({ ...prev, eventName: val, originalEventId: null }))}
-                             onSelect={(eventPost) => setFormData(prev => ({ 
-                               ...prev, 
-                               eventName: eventPost.title, 
-                               originalEventId: eventPost._id 
-                             }))}
-                             placeholder="e.g. Annual Sports Meet 2024"
-                             darkMode={darkMode}
-                             className={`!w-full !p-4 !h-[52px] !text-sm !font-black !rounded-[calc(1rem-2px)] ${darkMode ? "!bg-slate-800 !text-white !placeholder-gray-500" : "!bg-white !text-black !placeholder-gray-400"} !outline-none !border-none !shadow-inner`}
-                           />
+                         <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-white" : "text-black"}`}>
+                           {formData.announcementType === "winner" ? "Event Name" : "Organization / Company / Event Name"}
+                         </label>
+                         <div className={`p-[2px] rounded-2xl bg-gradient-to-r ${formData.announcementType === "winner" ? "from-orange-500 to-red-600" : "from-emerald-500 to-teal-600"} ${errors.includes("eventName") ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
+                           {formData.announcementType === "winner" ? (
+                             <EventSearchInput 
+                               value={formData.eventName}
+                               onChange={(val) => setFormData(prev => ({ ...prev, eventName: val, originalEventId: null }))}
+                               onSelect={(eventPost) => setFormData(prev => ({ 
+                                 ...prev, 
+                                 eventName: eventPost.title, 
+                                 originalEventId: eventPost._id 
+                               }))}
+                               placeholder="e.g. Annual Sports Meet 2024"
+                               darkMode={darkMode}
+                               className={`!w-full !p-4 !h-[52px] !text-sm !font-black !rounded-[calc(1rem-2px)] ${darkMode ? "!bg-slate-800 !text-white !placeholder-gray-500" : "!bg-white !text-black !placeholder-gray-400"} !outline-none !border-none !shadow-inner`}
+                             />
+                           ) : (
+                             <input 
+                               type="text"
+                               name="eventName"
+                               value={formData.eventName}
+                               onChange={handleInputChange}
+                               placeholder="e.g. Google, IEEE, Microsoft"
+                               className={`w-full p-4 h-[52px] text-sm font-black rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-800 text-white placeholder-gray-500" : "bg-white text-black placeholder-gray-400"} outline-none border-none shadow-inner`}
+                             />
+                           )}
                          </div>
                       </div>
                       <div className="space-y-4">
@@ -545,34 +605,52 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                       ))}
                                     </div>
                                     <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 mt-2 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
-                                      <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
-                                        <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
-                                          <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank</span>
-                                          <input 
-                                            value={groupOrMember.rank} 
-                                            onChange={(e) => {
-                                              groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "rank", e.target.value));
-                                            }}
-                                            placeholder="e.g. 1st..."
-                                            className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
-                                          />
+                                      {formData.announcementType === "winner" ? (
+                                        <>
+                                          <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
+                                            <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                              <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank</span>
+                                              <input 
+                                                value={groupOrMember.rank} 
+                                                onChange={(e) => {
+                                                  groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "rank", e.target.value));
+                                                }}
+                                                placeholder="e.g. 1st..."
+                                                className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
+                                            <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                              <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Points</span>
+                                              <input 
+                                                type="text" inputMode="numeric" value={groupOrMember.points} 
+                                                onChange={(e) => {
+                                                   const val = e.target.value.replace(/[^0-9]/g, '');
+                                                   groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "points", val));
+                                                }}
+                                                placeholder="0"
+                                                className={`w-full h-full p-2 text-sm font-black bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                              />
+                                              <span className={`pr-3 text-[10px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>PTS</span>
+                                            </div>
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600`}>
+                                          <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                            <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600`}>Role</span>
+                                            <input 
+                                              value={groupOrMember.roleTitle || ""} 
+                                              onChange={(e) => {
+                                                groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "roleTitle", e.target.value));
+                                              }}
+                                              placeholder="e.g. Software Engineer..."
+                                              className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600`}>
-                                        <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
-                                          <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Points</span>
-                                          <input 
-                                            type="text" inputMode="numeric" value={groupOrMember.points} 
-                                            onChange={(e) => {
-                                               const val = e.target.value.replace(/[^0-9]/g, '');
-                                               groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "points", val));
-                                            }}
-                                            placeholder="0"
-                                            className={`w-full h-full p-2 text-sm font-black bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
-                                          />
-                                          <span className={`pr-3 text-[10px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>PTS</span>
-                                        </div>
-                                      </div>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -636,32 +714,48 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                       })}
                                     </div>
                                     <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 mt-1 border-t ${darkMode ? "border-white/10" : "border-gray-100"}`}>
-                                      <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-rank-${idx}`) ? "animate-pulse" : ""}`}>
-                                        <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
-                                          <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank</span>
-                                          <input 
-                                            value={member.rank} 
-                                            onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}
-                                            placeholder="e.g. 1st..."
-                                            className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
-                                          />
+                                      {formData.announcementType === "winner" ? (
+                                        <>
+                                          <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-rank-${idx}`) ? "animate-pulse" : ""}`}>
+                                            <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                              <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Rank</span>
+                                              <input 
+                                                value={member.rank} 
+                                                onChange={(e) => handleWinnerChange(idx, "rank", e.target.value)}
+                                                placeholder="e.g. 1st..."
+                                                className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-points-${idx}`) ? "animate-pulse" : ""}`}>
+                                            <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                              <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Points</span>
+                                              <input 
+                                                type="text" inputMode="numeric" value={member.points} 
+                                                onChange={(e) => {
+                                                   const val = e.target.value.replace(/[^0-9]/g, '');
+                                                   handleWinnerChange(idx, "points", val);
+                                                }}
+                                                placeholder="0"
+                                                className={`w-full h-full p-2 text-sm font-black bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                              />
+                                              <span className={`pr-3 text-[10px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>PTS</span>
+                                            </div>
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 ${errors.includes(`winner-roleTitle-${idx}`) ? "animate-pulse" : ""}`}>
+                                          <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
+                                            <span className={`pl-2 pr-1 sm:pl-3 sm:pr-2 text-[9px] sm:text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600`}>Role</span>
+                                            <input 
+                                              value={member.roleTitle || ""} 
+                                              onChange={(e) => handleWinnerChange(idx, "roleTitle", e.target.value)}
+                                              placeholder="e.g. Software Engineer..."
+                                              className={`w-full h-full p-2 text-sm font-black rounded-r-[calc(0.75rem-1.5px)] bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className={`flex-1 p-[1.5px] rounded-xl bg-gradient-to-r from-orange-500 to-red-600 ${errors.includes(`winner-points-${idx}`) ? "animate-pulse" : ""}`}>
-                                        <div className={`w-full h-12 flex items-center rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-slate-900" : "bg-white"}`}>
-                                          <span className={`pl-3 pr-2 text-[10px] font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>Points</span>
-                                          <input 
-                                            type="text" inputMode="numeric" value={member.points} 
-                                            onChange={(e) => {
-                                               const val = e.target.value.replace(/[^0-9]/g, '');
-                                               handleWinnerChange(idx, "points", val);
-                                            }}
-                                            placeholder="0"
-                                            className={`w-full h-full p-2 text-sm font-black bg-transparent outline-none border-none ${darkMode ? "text-white" : "text-black"}`}
-                                          />
-                                          <span className={`pr-3 text-[10px] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600`}>PTS</span>
-                                        </div>
-                                      </div>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -673,21 +767,23 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                     </div>
                   </div>
 
-                  <div className={`p-[2px] rounded-[2rem] bg-gradient-to-r from-green-500 to-emerald-700 shadow-2xl shadow-green-500/20`}>
-                     <div className={`p-6 rounded-[calc(2rem-2px)] transition-all ${darkMode ? "bg-[#0f172a]" : "bg-green-50"}`}>
-                        <div className="flex items-center gap-4">
-                           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl ${darkMode ? "bg-green-500/10" : "bg-green-100/50"}`}>
-                              <span className="animate-pulse">⚡</span>
-                           </div>
-                           <div>
-                              <span className={`text-sm font-black tracking-tight ${darkMode ? "text-white" : "text-black"}`}>Points System Active</span>
-                              <p className={`text-[10px] font-black uppercase tracking-widest mt-0.5 ${darkMode ? "text-green-400" : "text-green-700"}`}>
-                                Points will be automatically awarded to registered users with valid unique IDs upon Admin approval.
-                              </p>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
+                  {formData.announcementType === "winner" && (
+                    <div className={`p-[2px] rounded-[2rem] bg-gradient-to-r from-green-500 to-emerald-700 shadow-2xl shadow-green-500/20`}>
+                       <div className={`p-6 rounded-[calc(2rem-2px)] transition-all ${darkMode ? "bg-[#0f172a]" : "bg-green-50"}`}>
+                          <div className="flex items-center gap-4">
+                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl ${darkMode ? "bg-green-500/10" : "bg-green-100/50"}`}>
+                                <span className="animate-pulse">⚡</span>
+                             </div>
+                             <div>
+                                <span className={`text-sm font-black tracking-tight ${darkMode ? "text-white" : "text-black"}`}>Points System Active</span>
+                                <p className={`text-[10px] font-black uppercase tracking-widest mt-0.5 ${darkMode ? "text-green-400" : "text-green-700"}`}>
+                                  Points will be automatically awarded to registered users with valid unique IDs upon Admin approval.
+                                </p>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

@@ -575,6 +575,122 @@ export default function PostModal(props) {
             </div>
           )}
 
+          {post.type === "Announcement" && post.announcementDetails?.isAchievementAnnouncement && (
+            <div className={`mt-2 p-3 rounded-[2rem] border ${darkMode ? "bg-emerald-500/5 border-emerald-500/20" : "bg-emerald-50 border-emerald-100"}`}>
+              <h3 className={`text-base font-black mb-2 flex items-center gap-2 ${darkMode ? "text-emerald-300" : "text-emerald-700"}`}>
+                <span>🎓</span> College Spotlight
+              </h3>
+              
+              {post.announcementDetails.eventName && (
+                <div className={`mb-3 p-3 rounded-xl border ${darkMode ? "bg-slate-800 border-white/10" : "bg-white border-emerald-100"}`}>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Organization / Event</span>
+                  <p className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>{post.announcementDetails.eventName}</p>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {(() => {
+                  const achievers = post.announcementDetails.winners || [];
+                  return achievers.map((member, midx) => (
+                    <div key={midx} className={`p-[2px] rounded-3xl shadow-xl bg-gradient-to-r from-emerald-500 to-teal-600`}>
+                      <div className={`rounded-[calc(1.5rem-2px)] overflow-hidden flex flex-col w-full ${darkMode ? "bg-slate-900/90" : "bg-white"}`}>
+                        
+                        <div className={`${darkMode ? "bg-slate-800/80" : "bg-emerald-50/50"} px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b ${darkMode ? "border-white/10" : "border-emerald-100"}`}>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xl">🌟</span>
+                            <span className={`text-xs font-black uppercase tracking-[0.2em] ${darkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                              {post.announcementDetails.achievementCategory || "Achievement"}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            {member.roleTitle && (
+                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${darkMode ? "bg-emerald-500/20 text-emerald-300" : "bg-emerald-100 text-emerald-700"}`}>
+                                Role: {member.roleTitle}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className={`p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors ${darkMode ? "hover:bg-white/5" : "hover:bg-gray-50/50"}`}>
+                          <div className="flex items-center gap-4 flex-1 min-w-0">
+                            <div className="p-[2px] rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 shadow-md flex-shrink-0 relative">
+                              {(() => {
+                                const isAdmin = currentUser?.role === 'admin' || currentUser?.isAdmin || currentUser?.isMainAdmin || currentUser?.email === "manishdeorari377@gmail.com";
+                                const isRestricted = !isAdmin;
+                                return (
+                                  <>
+                                    <div className={`w-10 h-10 rounded-full overflow-hidden ${darkMode ? "bg-slate-700" : "bg-gray-100"}`}>
+                                      <UserAvatar
+                                        user={typeof member.userId === 'object' ? member.userId : member}
+                                        src={member.profilePicture || member.userId?.profilePicture}
+                                        alt={member.name}
+                                        width={40}
+                                        height={40}
+                                        wrapperClassName="w-full h-full"
+                                        className={`w-full h-full object-cover ${isRestricted ? "select-none pointer-events-none" : ""}`}
+                                        onContextMenu={(e) => { if (isRestricted) e.preventDefault(); }}
+                                        onDragStart={(e) => { if (isRestricted) e.preventDefault(); }}
+                                      />
+                                    </div>
+                                    {isRestricted && (
+                                      <div
+                                        className="absolute inset-0 z-10 cursor-pointer rounded-full"
+                                        onContextMenu={(e) => e.preventDefault()}
+                                      />
+                                    )}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                            <div className="flex flex-col min-w-0 w-full mt-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                {member.userId?.publicId ? (
+                                  <UserNameWithBadge 
+                                    user={member.userId}
+                                    href={`/profile/${member.userId.publicId}`} 
+                                    className={`font-black text-[13px] truncate hover:text-emerald-500 transition-colors ${darkMode ? "text-white" : "text-black"}`}
+                                  />
+                                ) : (
+                                  <UserNameWithBadge 
+                                    user={member.userId || member}
+                                    className={`font-black text-[13px] truncate ${darkMode ? "text-white" : "text-black"}`}
+                                  />
+                                )}
+                                {member.userId && <span className="text-[9px] bg-emerald-500 text-white px-2 py-0.5 rounded-full font-black flex-shrink-0 tracking-widest shadow-sm">MATCHED</span>}
+                              </div>
+                              <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-[11px] font-black ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
+                                <span className="flex items-baseline gap-1"><span className="text-emerald-500 uppercase tracking-widest text-[9px]">ENR:</span> <span>{member.userId?.enrollmentNumber || member.enrollmentNumber || "-"}</span></span>
+                                {(member.userId?.course || member.course) && (
+                                  <span className="flex items-baseline gap-2">
+                                    <span className="text-gray-400/50 text-[10px]">•</span>
+                                    <span className="flex items-baseline gap-1"><span className="text-emerald-500 uppercase tracking-widest text-[9px]">CRS:</span> <span>{member.userId?.course || member.course}</span></span>
+                                  </span>
+                                )}
+                                {(member.userId?.branch || member.branch) && (
+                                  <span className="flex items-baseline gap-2">
+                                    <span className="text-gray-400/50 text-[10px]">•</span>
+                                    <span className="flex items-baseline gap-1"><span className="text-emerald-500 uppercase tracking-widest text-[9px]">BRN:</span> <span>{member.userId?.branch || member.branch}</span></span>
+                                  </span>
+                                )}
+                                {(member.userId?.semester || member.semester) && (
+                                  <span className="flex items-baseline gap-2">
+                                    <span className="text-gray-400/50 text-[10px]">•</span>
+                                    <span className="flex items-baseline gap-1"><span className="text-emerald-500 uppercase tracking-widest text-[9px]">SEM:</span> <span>{member.userId?.semester || member.semester}</span></span>
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  ));
+                })()}
+              </div>
+            </div>
+          )}
+
           {/* Reactions */}
           {!hideInteractions && (
             <>
