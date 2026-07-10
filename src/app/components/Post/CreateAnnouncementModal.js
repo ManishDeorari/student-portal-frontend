@@ -551,7 +551,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                           onChange={(e) => {
                                             groupOrMember.members.forEach(m => handleWinnerChange(m.originalIdx, "groupName", e.target.value));
                                           }}
-                                          placeholder="Enter Team/Group Name..."
+                                          placeholder="ENTER TEAM NAME / PROJECT TITLE..."
                                           className={`w-full h-[52px] p-4 text-sm font-black rounded-2xl ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"} outline-none border-none uppercase tracking-[0.2em] text-center italic`}
                                         />
                                       </div>
@@ -668,7 +668,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                         <input 
                                           value={member.groupName || ""} 
                                           onChange={(e) => handleWinnerChange(idx, "groupName", e.target.value)}
-                                          placeholder="Enter Title / Achievement..."
+                                          placeholder="ENTER TITLE / ACHIEVEMENT..."
                                           className={`w-full h-[52px] p-4 text-sm font-black rounded-2xl ${darkMode ? "bg-slate-900 text-white" : "bg-white text-black"} outline-none border-none uppercase tracking-[0.2em] text-center italic`}
                                         />
                                       </div>

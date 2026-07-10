@@ -182,7 +182,9 @@ function ProfileContent() {
 
       {/* 🔽 Rest Sections */}
       <div className="max-w-4xl mx-auto px-1 sm:px-4 lg:px-8 mt-6 sm:mt-10 mb-20 space-y-8 pb-32">
-        <ProfileSpotlights userId={profile._id} currentUser={user} darkMode={darkMode} />
+        {(profile.role === "student" || profile.role === "alumni") && (
+          <ProfileSpotlights userId={profile._id} currentUser={user} darkMode={darkMode} />
+        )}
         <ProfileAbout profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileEducation profile={profile} setProfile={setProfile} isPublicView={isPublicView} />
         <ProfileExperience profile={profile} setProfile={setProfile} isPublicView={isPublicView} />

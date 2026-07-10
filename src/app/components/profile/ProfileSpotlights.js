@@ -14,7 +14,8 @@ export default function ProfileSpotlights({ userId, currentUser, darkMode }) {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const res = await axios.get(`http://localhost:5000/api/posts/achievements/${userId}`, {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await axios.get(`${API_URL}/api/posts/achievements/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSpotlights(res.data);
