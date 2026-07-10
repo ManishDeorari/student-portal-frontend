@@ -262,12 +262,12 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                 )}
                 {post.announcementDetails?.winners?.length > 0 && (
                   <div className="flex flex-col gap-2">
-                    <span className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                      Winners Requesting Points
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? (post.announcementDetails.isAchievementAnnouncement ? "text-emerald-400" : "text-gray-400") : (post.announcementDetails.isAchievementAnnouncement ? "text-emerald-600" : "text-gray-500")}`}>
+                      {post.announcementDetails.isAchievementAnnouncement ? "Achievers Requesting Points" : "Winners Requesting Points"}
                     </span>
                     <div className="flex flex-wrap gap-2">
                       {post.announcementDetails.winners.map((w, i) => (
-                        <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
+                        <div key={i} className={`p-[1.5px] rounded-xl bg-gradient-to-tr ${post.announcementDetails.isAchievementAnnouncement ? "from-emerald-400 to-teal-500" : "from-blue-400 to-purple-500"} shadow-sm`}>
                           <div className={`flex items-center gap-3 px-3 py-2 rounded-[calc(0.75rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                             <div className="relative">
                               <img 
@@ -283,17 +283,17 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
                                 {w.isGroup && <span className="ml-1 opacity-50 text-[9px]">(Group)</span>}
                               </span>
                               <div className="flex items-center gap-2">
-                                <span className={`text-[9px] font-bold opacity-100 font-mono tracking-tighter ${darkMode ? "text-blue-200" : "text-blue-600"}`}>
+                                <span className={`text-[9px] font-bold opacity-100 font-mono tracking-tighter ${darkMode ? (post.announcementDetails.isAchievementAnnouncement ? "text-emerald-200" : "text-blue-200") : (post.announcementDetails.isAchievementAnnouncement ? "text-emerald-600" : "text-blue-600")}`}>
                                   {w.userId?.enrollmentNumber || w.enrollmentNumber || w.uniqueId || (w.isGroup && "Group IDs") || "N/A"}
                                 </span>
-                                <span className={`text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md ${darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"}`}>
-                                  Rank {w.rank}
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md ${darkMode ? (post.announcementDetails.isAchievementAnnouncement ? "bg-emerald-500/20 text-emerald-300" : "bg-blue-500/20 text-blue-300") : (post.announcementDetails.isAchievementAnnouncement ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700")}`}>
+                                  {post.announcementDetails.isAchievementAnnouncement ? w.roleTitle || "Achiever" : `Rank ${w.rank}`}
                                 </span>
                               </div>
                             </div>
                             <div className={`flex flex-col items-end border-l pl-3 ml-1 ${darkMode ? "border-white/10" : "border-gray-200"}`}>
                               <span className={`text-[8px] font-black uppercase tracking-widest opacity-50 ${darkMode ? "text-white" : "text-black"}`}>Points</span>
-                              <span className="text-xs font-black text-blue-400">+{w.points}</span>
+                              <span className={`text-xs font-black ${post.announcementDetails.isAchievementAnnouncement ? "text-emerald-400" : "text-blue-400"}`}>+{w.points || "0"}</span>
                             </div>
                           </div>
                         </div>
