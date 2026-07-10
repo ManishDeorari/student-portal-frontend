@@ -583,7 +583,7 @@ export default function PostModal(props) {
               
               {post.announcementDetails.eventName && (
                 <div className={`mb-3 p-3 rounded-xl border ${darkMode ? "bg-slate-800 border-white/10" : "bg-white border-emerald-100"}`}>
-                  <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Organization / Event</span>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-emerald-400" : "text-emerald-600"}`}>Organization / Event</span>
                   <p className={`text-sm font-bold ${darkMode ? "text-white" : "text-black"}`}>{post.announcementDetails.eventName}</p>
                 </div>
               )}
