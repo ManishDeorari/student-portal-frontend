@@ -428,7 +428,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                              name="achievementCategory" 
                              value={formData.achievementCategory} 
                              onChange={handleInputChange}
-                             className={`w-full p-4 h-[52px] text-sm font-black rounded-2xl ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black border border-gray-200"} outline-none shadow-sm`}
+                             className={`w-full p-4 h-[52px] text-sm font-black rounded-2xl ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black border border-gray-200"} outline-none shadow-sm ${errors.includes("achievementCategory") ? "border-2 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]" : ""}`}
                            >
                              <option value="Placement">💼 Placement</option>
                              <option value="Internship">🚀 Internship</option>
@@ -443,7 +443,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                          <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-white" : "text-black"}`}>
                            {formData.announcementType === "winner" ? "Event Name" : "Organization / Company / Event Name"}
                          </label>
-                         <div className={`p-[2px] rounded-2xl bg-gradient-to-r ${formData.announcementType === "winner" ? "from-orange-500 to-red-600" : "from-emerald-500 to-teal-600"} ${errors.includes("eventName") ? "from-red-500 to-red-600 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "shadow-sm"}`}>
+                         <div className={`p-[2px] rounded-2xl bg-gradient-to-r ${formData.announcementType === "winner" ? "from-orange-500 to-red-600" : "from-emerald-500 to-teal-600"} ${errors.includes("eventName") ? "from-red-500 to-red-600 shadow-[0_0_15px_rgba(239,68,68,0.3)]" : "shadow-sm"}`}>
                            {formData.announcementType === "winner" ? (
                              <EventSearchInput 
                                value={formData.eventName}
@@ -568,7 +568,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                                    <Image src={member.profilePicture || "/default-profile.jpg"} alt="avatar" width={40} height={40} className="w-full h-full object-cover" />
                                                 </div>
                                               </div>
-                                              <div className={`flex-1 min-w-0 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${member.originalIdx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
+                                              <div className={`flex-1 min-w-0 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${member.originalIdx}`) ? "border-red-500 bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
                                                 <UserSearchInput 
                                                   darkMode={darkMode}  placeholder="Search member name..." value={member.name}
                                                   className={`!bg-transparent !border-none !shadow-none font-black !py-2 !text-[12px] h-full w-full ${darkMode ? "!text-white" : "!text-black"}`}
@@ -698,7 +698,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                                            <Image src={member.profilePicture || "/default-profile.jpg"} alt="avatar" width={40} height={40} className="w-full h-full object-cover" />
                                         </div>
                                       </div>
-                                      <div className={`flex-1 min-w-0 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${idx}`) ? "border-red-500 animate-pulse bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
+                                      <div className={`flex-1 min-w-0 flex items-center h-10 border rounded-xl ${errors.includes(`winner-name-${idx}`) ? "border-red-500 bg-red-50" : (darkMode ? "border-white/10" : "border-gray-200")}`}>
                                         <UserSearchInput 
                                           darkMode={darkMode}  placeholder="Search student name..." value={member.name}
                                           className={`!bg-transparent !border-none !shadow-none font-black !py-2 !text-[12px] h-full w-full ${darkMode ? "!text-white" : "!text-black"}`}
