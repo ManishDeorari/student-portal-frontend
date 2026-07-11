@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Eye } from 'lucide-react';
 import SmartPostModal from '../Post/SmartPostModal';
-
+import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 export default function ProfileSpotlights({ userId, currentUser, darkMode }) {
   const [spotlights, setSpotlights] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,7 +80,7 @@ export default function ProfileSpotlights({ userId, currentUser, darkMode }) {
           </div>
 
           <div className="space-y-3">
-            {spotlights.map((post, idx) => {
+            {spotlights.slice(0, 5).map((post, idx) => {
                 const eventName = post.announcementDetails?.eventName || "Event / Organization";
                 const achievementCategory = post.announcementDetails?.achievementCategory || "Placement";
                 const winnerInfo = post.announcementDetails?.winners?.find(w => {
@@ -118,6 +119,16 @@ export default function ProfileSpotlights({ userId, currentUser, darkMode }) {
                     </div>
                 );
             })}
+
+            {spotlights.length > 5 && (
+              <div className="pt-2 text-center">
+                <Link href={`/profile/${userId === "me" ? currentUser?._id : userId}/spotlights`} className="inline-block p-[2px] rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:scale-[1.02] transition-transform">
+                  <span className={`block px-6 py-2 rounded-[calc(0.75rem-2px)] text-sm font-black ${darkMode ? "bg-slate-900 text-white" : "bg-white text-emerald-700"}`}>
+                    View All Spotlights ({spotlights.length})
+                  </span>
+                </Link>
+              </div>
+            )}
           </div>
           
         </div>
