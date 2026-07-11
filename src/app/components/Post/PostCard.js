@@ -767,6 +767,11 @@ export default function PostCard({ post, currentUser, setPosts, initialShowComme
                                 Role: {member.roleTitle}
                               </span>
                             )}
+                            {member.points && (
+                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${darkMode ? "bg-teal-500/20 text-teal-300" : "bg-teal-100 text-teal-700"}`}>
+                                +{member.points} PTS
+                              </span>
+                            )}
                           </div>
                         </div>
 
