@@ -194,7 +194,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
         .map(w => ({
           name: w.name,
           rank: formData.announcementType === "winner" ? w.rank : "",
-          points: formData.announcementType === "winner" ? (parseInt(w.points) || 0) : 0,
+          points: (formData.announcementType === "winner" || formData.announcementType === "achievement") ? (parseInt(w.points) || 0) : 0,
           roleTitle: formData.announcementType === "achievement" ? w.roleTitle : "",
           uniqueId: w.uniqueId,
           isGroup: !!w.groupId,
@@ -217,7 +217,7 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
           eventName: formData.announcementType !== "regular" ? formData.eventName : "",
           originalEventId: formData.originalEventId || undefined,
           winners: formData.announcementType !== "regular" ? winnersData : [],
-          pointsRequested: formData.announcementType === "winner", // Only requested if winner
+          pointsRequested: formData.announcementType === "winner" || formData.announcementType === "achievement",
         }
       };
 
