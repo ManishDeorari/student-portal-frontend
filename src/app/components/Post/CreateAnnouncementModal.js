@@ -424,18 +424,20 @@ const CreateAnnouncementModal = ({ isOpen, onClose, currentUser, darkMode = fals
                       {formData.announcementType === "achievement" && (
                         <div className="space-y-2">
                            <label className={`text-[10px] font-black uppercase tracking-widest px-1 ${darkMode ? "text-white" : "text-black"}`}>Achievement Category</label>
-                           <select 
-                             name="achievementCategory" 
-                             value={formData.achievementCategory} 
-                             onChange={handleInputChange}
-                             className={`w-full p-4 h-[52px] text-sm font-black rounded-2xl ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black border border-gray-200"} outline-none shadow-sm ${errors.includes("achievementCategory") ? "border-2 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]" : ""}`}
-                           >
-                             <option value="Placement">💼 Placement</option>
-                             <option value="Internship">🚀 Internship</option>
-                             <option value="Research Paper">📄 Research Paper</option>
-                             <option value="Certification">📜 Certification</option>
-                             <option value="Other">🌟 Other</option>
-                           </select>
+                           <div className={`p-[2px] rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 ${errors.includes("achievementCategory") ? "from-red-500 to-red-600 shadow-[0_0_15px_rgba(239,68,68,0.3)]" : "shadow-sm"}`}>
+                             <select 
+                               name="achievementCategory" 
+                               value={formData.achievementCategory} 
+                               onChange={handleInputChange}
+                               className={`w-full p-4 h-[52px] text-sm font-black rounded-[calc(1rem-2px)] ${darkMode ? "bg-slate-800 text-white" : "bg-white text-black"} outline-none border-none shadow-inner`}
+                             >
+                               <option value="Placement">💼 Placement</option>
+                               <option value="Internship">🚀 Internship</option>
+                               <option value="Research Paper">📄 Research Paper</option>
+                               <option value="Certification">📜 Certification</option>
+                               <option value="Other">🌟 Other</option>
+                             </select>
+                           </div>
                         </div>
                       )}
 
