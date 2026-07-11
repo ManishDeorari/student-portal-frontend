@@ -340,7 +340,7 @@ export const NotificationProvider = ({ children }) => {
             } else if (type === "points_earned") {
               theme = {
                 gradient: "from-yellow-400 via-amber-500 to-yellow-600",
-                icon: <Award className="w-3.5 h-3.5" />,
+                icon: <Award className="w-3.5 h-3.5 text-yellow-500" />,
                 label: "Points Earning",
                 accent: "text-yellow-400",
                 bgAccent: "bg-yellow-500/20"
@@ -364,7 +364,7 @@ export const NotificationProvider = ({ children }) => {
             } else if (type === "admin_notice") {
                 theme = {
                   gradient: "from-red-500 to-rose-700",
-                  icon: <ShieldAlert className="w-3.5 h-3.5 text-red-100" />,
+                  icon: <ShieldAlert className="w-3.5 h-3.5 text-red-500" />,
                   label: "Admin Notice",
                   accent: "text-red-400",
                   bgAccent: "bg-red-500/10"
@@ -372,7 +372,7 @@ export const NotificationProvider = ({ children }) => {
             } else if (type === "academic_update") {
                 theme = {
                   gradient: "from-blue-600 via-indigo-600 to-blue-600",
-                  icon: <ShieldAlert className="w-3.5 h-3.5 text-white" />,
+                  icon: <ShieldAlert className="w-3.5 h-3.5 text-blue-500" />,
                   label: "Academic Update",
                   accent: "text-blue-400",
                   bgAccent: "bg-blue-500/10"

@@ -43,6 +43,7 @@ const CATEGORY_GROUPS = [
         id: "innovationSupport",
         label: "Innovation Support",
         icon: "💡",
+        description: "Earn points for prestigious external achievements, top-tier placements, and spotlight-worthy innovations."
     },
     {
         id: "studentParticipation",
