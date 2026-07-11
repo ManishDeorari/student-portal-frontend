@@ -120,11 +120,11 @@ export default function ProfileSpotlights({ userId, currentUser, darkMode }) {
                 );
             })}
 
-            {spotlights.length > 5 && (
+            {spotlights.length > 0 && (
               <div className="pt-2 text-center">
                 <Link href={`/profile/${userId === "me" ? currentUser?._id : userId}/spotlights`} className="inline-block p-[2px] rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:scale-[1.02] transition-transform">
                   <span className={`block px-6 py-2 rounded-[calc(0.75rem-2px)] text-sm font-black ${darkMode ? "bg-slate-900 text-white" : "bg-white text-emerald-700"}`}>
-                    View All Spotlights ({spotlights.length})
+                    View All Spotlights {spotlights.length > 5 ? `(${spotlights.length})` : ""}
                   </span>
                 </Link>
               </div>
@@ -137,8 +137,8 @@ export default function ProfileSpotlights({ userId, currentUser, darkMode }) {
       {/* SmartPostModal for viewing full announcement details */}
       {showPostModal && selectedPost && (
           <SmartPostModal
-              isOpen={showPostModal}
-              onClose={() => setShowPostModal(false)}
+              showModal={showPostModal}
+              setShowModal={setShowPostModal}
               post={selectedPost}
               currentUser={currentUser}
               darkMode={darkMode}

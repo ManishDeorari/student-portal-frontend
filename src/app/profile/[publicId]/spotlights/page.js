@@ -220,8 +220,8 @@ function SpotlightsContent() {
 
             {showPostModal && selectedPost && (
                 <SmartPostModal 
-                    isOpen={showPostModal}
-                    onClose={() => setShowPostModal(false)}
+                    showModal={showPostModal}
+                    setShowModal={setShowPostModal}
                     post={selectedPost} 
                     darkMode={darkMode}
                     currentUser={currentUser}
