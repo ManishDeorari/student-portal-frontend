@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { registerForEvent } from "../../../api/dashboard";
+import UserSearchInput from "./utils/UserSearchInput";
 
 const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode = false, onRegisterSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -70,13 +71,25 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
     setGroupMembers(updated);
   };
 
-  const addMember = () => {
-    if (groupMembers.length < 3) { // Total 4 (1 + 3)
-      const newMember = {};
+  const addMemberFromSearch = (user) => {
+    if (groupMembers.length < 3) {
+      if (groupMembers.some(m => m.publicId === user.publicId) || currentUser?.publicId === user.publicId) {
+        toast.error("User is already in the group.");
+        return;
+      }
+      
+      const newMember = {
+        name: user.name || "",
+        email: user.email || "",
+        enrollmentNumber: user.enrollmentNumber || "",
+        publicId: user.publicId || "",
+        mobile: user.mobile || user.phoneNumber || "",
+      };
+
       if (event.registrationFields) {
         Object.keys(event.registrationFields).forEach(f => {
-          if (event.registrationFields[f]) {
-            newMember[f === "phoneNumber" || f === "mobileNumber" ? "mobile" : f] = "";
+          if (event.registrationFields[f] && newMember[f] === undefined) {
+            newMember[f === "phoneNumber" || f === "mobileNumber" ? "mobile" : f] = user[f] || user.workProfile?.[f] || "";
           }
         });
       }
@@ -202,7 +215,13 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
                <div className="p-[1px] rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-600/20">
                  <div className={`flex items-center justify-between p-4 ${darkMode ? "bg-slate-800" : "bg-blue-50/20"} rounded-[15px]`}>
                     <span className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Group Event Policy Enabled</span>
-                    <button type="button" onClick={addMember} disabled={groupMembers.length >= 3} className={`px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest ${groupMembers.length >= 3 ? "opacity-30" : "hover:bg-blue-700 active:scale-95 transition-all shadow-lg"}`}>+ Add Member</button>
+                    {groupMembers.length < 3 ? (
+                      <div className="w-52">
+                        <UserSearchInput darkMode={darkMode} onSelect={addMemberFromSearch} />
+                      </div>
+                    ) : (
+                      <span className={`text-[10px] font-black uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Max Members Reached</span>
+                    )}
                  </div>
                </div>
                
