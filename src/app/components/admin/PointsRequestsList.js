@@ -13,12 +13,10 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
   const [showPostModal, setShowPostModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [pointsOverrides, setPointsOverrides] = useState({});
-  const [sessionPointsDefault, setSessionPointsDefault] = useState(30);
 
   const [profileLimit, setProfileLimit] = useState(10);
 
   const [eventLimit, setEventLimit] = useState(10);
-  const [sessionLimit, setSessionLimit] = useState(10);
   const [repostLimit, setRepostLimit] = useState(10);
 
   // ⚡ Live socket updates for pending requests
@@ -65,12 +63,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
     try {
       // Use override if exists, otherwise use the section-level default for sessions
       let awardedPoints = undefined;
-      if (action === "approve") {
-        const post = requests.find(r => r._id === postId);
-        if (post?.type === "Session") {
-          awardedPoints = pointsOverrides[postId] !== undefined ? pointsOverrides[postId] : sessionPointsDefault;
-        }
-      }
+      // You can add logic for other types if needed
 
       const res = await approvePointsRequest(postId, action, awardedPoints);
       if (res.message) {
@@ -114,15 +107,10 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
   );
 
   const eventRequests = requests.filter(r => r.type === "Announcement");
-  const sessionRequests = requests.filter(r => r.type === "Session");
   const repostRequests = requests.filter(r => r.type === "EventRepost");
 
   const RequestCard = ({ post }) => (
-    <div key={post._id} className={`group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] ${
-        post.type === "Session" 
-            ? "bg-gradient-to-r from-orange-500/50 to-red-500/50" 
-            : "bg-gradient-to-r from-blue-500/50 to-purple-500/50"
-    }`}>
+    <div key={post._id} className={`group relative p-[2px] rounded-[2rem] overflow-hidden transition-all hover:scale-[1.01] bg-gradient-to-r from-blue-500/50 to-purple-500/50`}>
       <div className={`p-3 sm:p-6 flex flex-col lg:flex-row gap-4 sm:gap-6 items-start lg:items-center rounded-[calc(2rem-2px)] ${
           darkMode ? "bg-black" : "bg-white"
       }`}>
@@ -144,13 +132,11 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
           
           <div className="flex items-center gap-3">
             <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
-              post.type === "Session"
-                ? (darkMode ? "bg-orange-500/10 text-orange-400" : "bg-orange-50 text-orange-600")
-                : post.type === "EventRepost"
+              post.type === "EventRepost"
                 ? (darkMode ? "bg-green-500/10 text-green-400" : "bg-green-50 text-green-600")
                 : (darkMode ? "bg-blue-500/10 text-blue-400" : "bg-blue-50 text-blue-600")
             }`}>
-              {post.type === "Session" ? "🤝 Session" : post.type === "EventRepost" ? "🏆 Event Repost" : "📢 Announcement"}
+              {post.type === "EventRepost" ? "🏆 Event Repost" : "📢 Announcement"}
             </span>
           </div>
           
@@ -159,19 +145,7 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
           </p>
 
           <div className="flex flex-wrap gap-2">
-            {post.type === "Session" ? (
-               <div className={`flex items-center gap-2 p-[1px] rounded-xl bg-gradient-to-tr from-blue-400 to-purple-500 shadow-sm`}>
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1px)] ${darkMode ? "bg-black" : "bg-white"}`}>
-                  <span className="text-xs">🎯</span>
-                  <div className="flex flex-col">
-                    <span className={`text-[10px] font-black uppercase tracking-tight ${darkMode ? "text-orange-400" : "text-orange-600"}`}>
-                      Campus Engagement
-                    </span>
-                    <span className={`text-[8px] font-black uppercase ${darkMode ? "text-orange-300" : "text-orange-500"}`}>Points for Session</span>
-                  </div>
-                </div>
-              </div>
-            ) : post.type === "EventRepost" ? (
+            {post.type === "EventRepost" ? (
               <div className={`flex items-center gap-2 p-[1px] rounded-xl bg-gradient-to-tr from-green-400 to-emerald-500 shadow-sm`}>
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-[calc(0.75rem-1px)] ${darkMode ? "bg-black" : "bg-white"}`}>
                   <span className="text-xs">✅</span>
@@ -470,76 +444,6 @@ const PointsRequestsList = ({ darkMode = false, user }) => {
         </section>
       </div>
 
-      {/* 2. SESSIONS SECTION */}
-      <div className="relative p-[2px] bg-gradient-to-tr from-orange-400 to-red-400 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500">
-        <section className={`${darkMode ? "bg-black" : "bg-[#FAFAFA]"} p-4 sm:p-10 rounded-[calc(2.5rem-2px)] relative overflow-hidden group`}>
-          <div className="space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between border-b pb-4 border-dashed border-gray-200 dark:border-white/10 gap-4">
-              <div className="flex items-center gap-3">
-                 <h3 className={`text-base sm:text-xl font-black ${darkMode ? "text-white" : "text-slate-900"} flex items-center gap-2 sm:gap-3`}>
-                    <span className="p-2 bg-orange-600/20 rounded-xl text-orange-400">🤝</span>
-                    Student Session Points
-                 </h3>
-                 <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                  sessionRequests.length > 0 
-                    ? "bg-orange-500/10 text-orange-500 border border-orange-500/20" 
-                    : "bg-gray-500/10 text-gray-500 border border-gray-500/20"
-                }`}>
-                  {sessionRequests.length} Pending
-                </span>
-              </div>
-
-              <div className="p-[1.5px] rounded-2xl bg-gradient-to-tr from-orange-400 to-red-500 shadow-md">
-                <div className={`flex items-center gap-4 px-4 py-2 rounded-[calc(1rem-1.5px)] ${darkMode ? "bg-black" : "bg-white"}`}>
-                   <span className={`text-[10px] font-black uppercase tracking-widest ${darkMode ? "text-gray-400" : "text-slate-500"}`}>Point Allocation:</span>
-                   <div className="flex items-center gap-2">
-                      <input 
-                        type="number"
-                        value={sessionPointsDefault}
-                        onChange={(e) => setSessionPointsDefault(Number(e.target.value))}
-                        className={`w-20 p-2 rounded-xl text-center text-sm font-black outline-none border transition-all ${
-                          darkMode ? "bg-slate-900 text-orange-400 border-white/10 focus:border-orange-500/50" : "bg-gray-50 text-orange-600 border-gray-200 focus:border-orange-400"
-                        }`}
-                      />
-                      <span className="text-[10px] font-black text-orange-500 uppercase tracking-tighter">per session</span>
-                   </div>
-                </div>
-              </div>
-            </div>
-
-            {sessionRequests.length === 0 ? (
-              <div className={`p-10 text-center rounded-[2.5rem] border-2 border-dashed ${darkMode ? "border-white/5 bg-white/5" : "border-gray-100 bg-gray-50/50"}`}>
-                <p className={`text-sm font-bold ${darkMode ? "text-gray-500" : "text-gray-400"}`}>No pending session requests! ✨</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6">
-                {sessionRequests.slice(0, sessionLimit).map((post) => <RequestCard key={post._id} post={post} />)}
-              </div>
-            )}
-            
-            <div className="flex flex-col items-center justify-center gap-4 pt-4">
-                {sessionRequests.length > sessionLimit ? (
-                    <button
-                        onClick={() => setSessionLimit(prev => prev + 10)}
-                        className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-[#FAFAFA]/10 hover:bg-[#FAFAFA]/20 border border-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 border border-gray-300 text-gray-800'}`}
-                    >
-                        Show More
-                    </button>
-                ) : sessionRequests.length > 10 ? (
-                    <>
-                        <button
-                            onClick={() => setSessionLimit(10)}
-                            className={`px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-md active:scale-95 ${darkMode ? 'bg-red-900/30 hover:bg-red-900/50 border border-red-500/30 text-red-400' : 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-600'}`}
-                        >
-                            Show Less
-                        </button>
-                        <p className="text-center font-bold uppercase tracking-widest text-[10px] italic opacity-50">No more requests to show</p>
-                    </>
-                ) : null}
-            </div>
-          </div>
-        </section>
-      </div>
 
       {/* 3. EVENT REPOSTS SECTION */}
       <div className="relative p-[2px] bg-gradient-to-tr from-green-400 to-emerald-400 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500">
