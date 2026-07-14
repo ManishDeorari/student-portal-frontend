@@ -6,11 +6,12 @@ import UserSearchInput from "./utils/UserSearchInput";
 
 const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode = false, onRegisterSuccess }) => {
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState([]);
-  const [groupMembers, setGroupMembers] = useState([]);
-  const [isGroup, setIsGroup] = useState(event.allowGroupRegistration);
-  const [groupName, setGroupName] = useState("");
   const [answers, setAnswers] = useState({});
+  const [isGroup, setIsGroup] = useState(false);
+  const [groupName, setGroupName] = useState("");
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [errors, setErrors] = useState([]);
+  const [expandedMemberIdx, setExpandedMemberIdx] = useState(0);
 
   // Sync state whenever event or isOpen changes
   useEffect(() => {
@@ -217,7 +218,7 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
                     <span className={`text-xs font-black uppercase tracking-widest ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Group Event Policy Enabled</span>
                     {groupMembers.length < 3 ? (
                       <div className="w-52">
-                        <UserSearchInput darkMode={darkMode} onSelect={addMemberFromSearch} />
+                        <UserSearchInput darkMode={darkMode} onSelect={addMemberFromSearch} roleFilter="student" />
                       </div>
                     ) : (
                       <span className={`text-[10px] font-black uppercase ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Max Members Reached</span>
@@ -316,13 +317,36 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
               <div className="space-y-6 pt-4 border-t border-gray-100 dark:border-white/5">
                 <h4 className={`text-[10px] font-black uppercase tracking-[0.3em] text-center ${darkMode ? "text-white" : "text-black"}`}>Group Members Details</h4>
                 {groupMembers.map((member, idx) => (
-                  <div key={idx} className="p-[1.2px] rounded-[2rem] bg-gradient-to-r from-blue-500/20 to-purple-600/20 shadow-sm">
-                    <div className={`p-6 rounded-[calc(2rem-1.2px)] ${darkMode ? "bg-[#121213]" : "bg-blue-50/10"} space-y-6`}>
-                      <div className="flex justify-between items-center px-2">
-                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Member {idx + 2}</span>
-                        <button type="button" onClick={() => removeMember(idx)} className="text-red-500 text-[9px] font-black uppercase tracking-widest hover:underline decoration-2 underline-offset-4">Remove Member</button>
+                  <div key={idx} className="p-[1.2px] rounded-[2rem] bg-gradient-to-r from-blue-500/20 to-purple-600/20 shadow-sm transition-all duration-300">
+                    <div className={`p-4 sm:p-6 rounded-[calc(2rem-1.2px)] ${darkMode ? "bg-[#121213]" : "bg-blue-50/10"}`}>
+                      {/* Accordion Header */}
+                      <div 
+                        className="flex justify-between items-center cursor-pointer" 
+                        onClick={() => setExpandedMemberIdx(expandedMemberIdx === idx ? -1 : idx)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`text-[12px] font-black uppercase tracking-[0.2em] ${darkMode ? "text-blue-400" : "text-blue-600"}`}>Member {idx + 2} {member.name ? `- ${member.name}` : ""}</span>
+                          {errors.some(err => err.startsWith(`group_${idx}_`)) && (
+                             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <button 
+                            type="button" 
+                            onClick={(e) => { e.stopPropagation(); removeMember(idx); }} 
+                            className="text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-500/10 px-2 py-1 rounded-lg transition-all"
+                          >
+                            Remove
+                          </button>
+                          <span className={`transform transition-transform duration-300 ${expandedMemberIdx === idx ? "rotate-180" : ""}`}>
+                            ▼
+                          </span>
+                        </div>
                       </div>
 
+                      {/* Accordion Body */}
+                      <div className={`transition-all duration-300 overflow-hidden ${expandedMemberIdx === idx ? "max-h-[2000px] mt-6 opacity-100" : "max-h-0 opacity-0"}`}>
+                        <div className="space-y-6">
                     {/* All dynamic fields for members */}
                     {event.registrationFields && Object.keys(event.registrationFields).map(field => {
                         if (!event.registrationFields[field]) return null;
@@ -391,6 +415,8 @@ const EventRegistrationModal = ({ event, isOpen, onClose, currentUser, darkMode 
                             </div>
                         );
                     })}
+                        </div>
+                      </div>
                   </div>
                 </div>
               ))}
